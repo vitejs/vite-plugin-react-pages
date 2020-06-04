@@ -4,12 +4,20 @@
   "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "rm -rf ./lib && tsc -w",
-    "build": "rm -rf ./lib && tsc"
+    "dev": "rm -rf ./lib && concurrently \"npm:dev-*\"",
+    "build": "rm -rf ./lib && concurrently \"npm:build-*\"",
+    "build-node": "tsc -p src/node",
+    "build-client": "tsc -p src/client",
+    "dev-node": "tsc -pw src/node",
+    "dev-client": "tsc -pw src/client"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.1",
     "@types/glob": "^7.1.1",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-router-dom": "^5.1.5",
+    "concurrently": "^5.2.0",
     "typescript": "^3.9.3",
     "vite": "^0.20.2",
     "vite-plugin-mdx": "^0.0.1",
