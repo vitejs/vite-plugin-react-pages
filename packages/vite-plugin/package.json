@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "rm -rf ./lib && concurrently \"npm:dev-*\"",
     "build": "rm -rf ./lib && concurrently \"npm:build-*\"",
-    "build-node": "tsc -p src/node",
+    "build-node": "tsc -p src",
     "build-client": "tsc -p src/client",
-    "dev-node": "tsc -pw src/node",
-    "dev-client": "tsc -pw src/client"
+    "dev-node": "tsc -w -p src",
+    "dev-client": "tsc -w -p src/client"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.1",
