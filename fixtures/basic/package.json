@@ -1,0 +1,27 @@
+{
+  "name": "basic",
+  "private": true,
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite serve --force",
+    "debug": "node --inspect ./node_modules/vite/bin/vite serve",
+    "debug:build": "npx --node-arg=--inspect vite build --outDir dist",
+    "clean": "rm -rf node_modules/.vite_opt_cache",
+    "build": "vite build --outDir dist"
+  },
+  "dependencies": {
+    "@loadable/component": "^5.12.0",
+    "@pika/react": "^16.13.1",
+    "@pika/react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.35",
+    "@types/react-router-dom": "^5.1.5",
+    "vite": "^0.20.5",
+    "vite-plugin-react": "^2.0.3",
+    "vite-plugin-react-pages": "workspace:^1.0.0"
+  }
+}
