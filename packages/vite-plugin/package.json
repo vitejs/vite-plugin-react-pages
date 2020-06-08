@@ -1,29 +1,35 @@
 {
   "name": "vite-plugin-react-pages",
   "version": "1.0.0",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "rm -rf ./lib && concurrently \"npm:dev-*\"",
-    "build": "rm -rf ./lib && concurrently \"npm:build-*\"",
+    "build": "rm -rf ./dist && concurrently \"npm:build-*\"",
     "build-node": "tsc -p src",
     "build-client": "tsc -p src/client",
+    "build-client-copy": "node scripts/copy",
+    "dev": "rm -rf ./dist && concurrently \"npm:dev-*\"",
     "dev-node": "tsc -w -p src",
-    "dev-client": "tsc -w -p src/client"
+    "dev-client": "tsc -w -p src/client",
+    "dev-client-copy": "node scripts/watchAndCopy"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.1",
-    "@types/glob": "^7.1.1",
+    "@types/glob": "^7.1.2",
+    "@types/loadable__component": "^5.10.0",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "concurrently": "^5.2.0",
-    "typescript": "^3.9.3",
-    "vite": "^0.20.2",
+    "typescript": "^3.9.5",
+    "vite": "^0.20.3",
     "vite-plugin-mdx": "^0.0.1",
-    "vite-plugin-react": "^2.0.3"
+    "vite-plugin-react": "^2.0.3",
+    "@pika/react": "^16.13.1",
+    "@pika/react-dom": "^16.13.1"
   },
   "dependencies": {
+    "@loadable/component": "^5.12.0",
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.1",
     "glob": "^7.1.6",
