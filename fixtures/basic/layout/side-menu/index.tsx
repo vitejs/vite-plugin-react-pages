@@ -1,14 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import data from './data'
+import defaultData from './data'
 
-const SideMenu: React.FC = () => {
+interface IProps {
+  data?: ISideMenuData[]
+}
+
+const SideMenu: React.FC<IProps> = ({data = defaultData}) => {
   return (
     <ul>
       {data.map((item, index) => {
         return (
           <li key={index}>
-            <Link to={item.text}>{item.path}</Link>
+            <Link to={item.path}>{item.text}</Link>
           </li>
         )
       })}
@@ -17,3 +21,5 @@ const SideMenu: React.FC = () => {
 }
 
 export default SideMenu
+
+export type ISideMenuData = { text: string; path: string }

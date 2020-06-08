@@ -1,4 +1,4 @@
-export type ISideMenuData = { text: string; path: string }[]
+import type { ISideMenuData } from '.'
 
 export default [
   {
@@ -9,4 +9,4 @@ export default [
     text: 'page2',
     path: '/page2',
   },
-] as ISideMenuData
+] as ISideMenuData[]

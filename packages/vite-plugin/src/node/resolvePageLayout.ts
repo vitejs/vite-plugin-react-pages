@@ -11,7 +11,7 @@ export async function resolvePageLayout(
   // console.log('pageFile', pageFile)
   // console.log('pagesDirPath', pagesDirPath)
   const result = await findUp(
-    ['_layout.js', '_layout.ts', '_layout.jsx', '_layout.tsx'],
+    ['_render.js', '_render.ts', '_render.jsx', '_render.tsx'],
     {
       type: 'file',
       cwd: currentCwd,
