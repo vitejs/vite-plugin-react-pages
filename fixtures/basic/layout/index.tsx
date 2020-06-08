@@ -1,13 +1,21 @@
 import React from 'react'
 import Topbar from './top-bar'
+import type { ITopNavData } from './top-bar'
 import SideMenu from './side-menu'
+import type { ISideMenuData } from './side-menu'
 
-const Layout: React.FC<{ Content: React.ComponentType }> = ({ Content }) => {
+interface IProps {
+  Content: React.ComponentType
+  sideMenuData?: ISideMenuData[]
+  topNavData?: ITopNavData[]
+}
+
+const Layout: React.FC<IProps> = ({ Content, sideMenuData, topNavData }) => {
   return (
     <div>
-      <Topbar />
+      <Topbar data={topNavData} />
       <div>
-        <SideMenu />
+        <SideMenu data={sideMenuData} />
         <div>
           <Content />
         </div>

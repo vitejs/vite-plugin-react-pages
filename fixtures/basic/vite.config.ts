@@ -5,13 +5,11 @@ import * as path from 'path'
 
 module.exports = {
   jsx: 'react',
+  alias: {
+    '/@layout/': path.join(__dirname, 'layout'),
+  },
   plugins: [
     vpr,
-    pages({
-      pagesDir: path.join(__dirname, 'pages'),
-    }),
+    pages(),
   ],
-  optimizeDeps: {
-    include: ["@loadable/component"]
-  },
 } as UserConfig

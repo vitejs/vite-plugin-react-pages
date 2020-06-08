@@ -33,8 +33,8 @@ const PageLoader: React.FC<{ importFn: () => Promise<IPageLoaded> }> = ({
     return <p>Error: {loadState?.error?.message ?? 'no error message'}</p>
   }
 
-  const { getLayout, PageComponent, pageData } = loadState.pageLoaded
-  const layout = getLayout(PageComponent, pageData)
+  const { renderPage, PageComponent, pageData } = loadState.pageLoaded
+  const layout = renderPage(PageComponent, pageData)
   return <>{layout}</>
 }
 
@@ -43,7 +43,7 @@ export default PageLoader
 export interface IPageLoaded {
   PageComponent: React.ComponentType
   pageData: any
-  getLayout: IGetLayout
+  renderPage: IGetLayout
 }
 
 export type IGetLayout = (

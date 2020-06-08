@@ -8,12 +8,17 @@ import { resolvePageFile } from './resolvePageFile'
 import { resolvePageLayout } from './resolvePageLayout'
 import { CLIENT_PATH } from './constants'
 
-export const configureServer: (
-  pagesDirPath: string
-) => Plugin['configureServer'] = (pagesDirPath: string) => ({
-  app,
-  resolver,
-}) => {
+export const configureServer = (
+  _pagesDirPath?: string
+): Plugin['configureServer'] => ({ app, resolver, root }) => {
+  const pagesDirPath = (() => {
+    if (_pagesDirPath) return _pagesDirPath
+    const pagesPath = path.join(root, 'pages')
+    if (fs.existsSync(pagesPath) && fs.statSync(pagesPath).isDirectory())
+      return pagesPath
+    return root
+  })()
+
   app.use(async (ctx, next) => {
     if (ctx.path === '/@generated/pages') {
       const pages = await findPages(pagesDirPath)
@@ -43,11 +48,11 @@ export default pages;`
 
       ctx.body = `import PageComponent from "${pageFilePublicPath}";
 import * as pageData from "${pageFilePublicPath}";
-import getLayout from "${layoutPublicPath}";
+import renderPage from "${layoutPublicPath}";
 export {
   PageComponent,
   pageData,
-  getLayout,
+  renderPage,
 };
 `
       ctx.type = 'js'
