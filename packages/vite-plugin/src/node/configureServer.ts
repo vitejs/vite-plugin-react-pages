@@ -5,7 +5,7 @@ import * as path from 'path'
 
 import { findPages } from './findPages'
 import { resolvePageFile } from './resolvePageFile'
-import { resolvePageConfig } from './resolvePageConfig'
+import { resolvePageLayout } from './resolvePageLayout'
 import { CLIENT_PATH } from './constants'
 
 export const configureServer: (
@@ -18,7 +18,7 @@ export const configureServer: (
     if (ctx.path === '/@generated/pages') {
       const pages = await findPages(pagesDirPath)
       const pagesCode = pages
-        .map((p, index) => {
+        .map((p) => {
           const path = `/${p}`
           const loadPath = `/@generated/pages/${p}`
           return `pages["${path}"] = {importFn: () => import("${loadPath}")};`
@@ -32,40 +32,25 @@ export default pages;`
       await next()
     } else if (ctx.path.startsWith('/@generated/pages/')) {
       const page = ctx.path.slice('/@generated/pages/'.length)
-      const resolvedFilePath = await resolvePageFile(
-        page,
-        pagesDirPath
-      )
-      if (!resolvedFilePath || !fs.existsSync(resolvedFilePath)) {
+      const pageFilePath = await resolvePageFile(page, pagesDirPath)
+      if (!pageFilePath || !fs.existsSync(pageFilePath)) {
         ctx.status = 404
         return
       }
-      const actualModulePath = resolver.fileToRequest(resolvedFilePath)
-      ctx.body = `export { default } from "${actualModulePath}";
-export * from "${actualModulePath}";`
+      const layoutFilePath = await resolvePageLayout(pageFilePath, pagesDirPath)
+      const layoutPublicPath = resolver.fileToRequest(layoutFilePath)
+      const pageFilePublicPath = resolver.fileToRequest(pageFilePath)
+
+      ctx.body = `import PageComponent from "${pageFilePublicPath}";
+import * as pageData from "${pageFilePublicPath}";
+import getLayout from "${layoutPublicPath}";
+export {
+  PageComponent,
+  pageData,
+  getLayout,
+};
+`
       ctx.type = 'js'
-      await next()
-    } else if (ctx.path === '/page-config' && ctx.query.path) {
-      const pageConfigs = await resolvePageConfig(ctx.query.path, pagesDirPath)
-      const pageConfigImportExp = pageConfigs
-        .map((v) => resolver.fileToRequest(v))
-        .map((publicPath, idx) => {
-          const varName = `config${idx}`
-          return (
-            `import ${varName} from "${publicPath}";\n` +
-            `configs.push(${varName});`
-          )
-        })
-        .join('\n')
-      ctx.body = `export const configs = [];\n${pageConfigImportExp}`
-      ctx.type = 'js'
-      await next()
-    } else if (ctx.path === '/api/pages') {
-      ctx.body = {
-        pages: await findPages(pagesDirPath),
-      }
-      ctx.type = 'json'
-      ctx.status = 200
       await next()
     } else {
       await next()

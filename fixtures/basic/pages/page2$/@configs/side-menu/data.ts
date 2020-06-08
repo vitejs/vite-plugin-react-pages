@@ -1,4 +1,4 @@
-import type { ISideMenuData } from '@root/@configs/side-menu/data'
+import type { ISideMenuData } from '@root/layout/side-menu/data'
 
 export default [
   {

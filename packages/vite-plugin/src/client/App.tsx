@@ -1,30 +1,22 @@
 import React from 'react'
-import loadable from '@loadable/component'
-import { BrowserRouter } from 'react-router-dom'
 import { Switch, Route } from 'react-router-dom'
-// import DocList from './DocList'
-// import PageRenderer from './PageRenderer'
-// import { routes } from '/@generated/routes'
 import pages from '/@generated/pages'
+import PageLoader from './PageLoader'
 
 const routes = Object.entries<any>(pages).map(([path, { importFn }]) => {
-  const Component = loadable(importFn)
   return (
-    <Route exact path={path} key={path}>
-      <Component />
-    </Route>
+    <Route
+      // https://github.com/ReactTraining/react-router/issues/3928#issuecomment-284152397
+      key="same"
+      exact
+      path={path}
+      render={() => <PageLoader importFn={importFn} />}
+    />
   )
 })
 
 const App: React.FC = () => {
-  return (
-    <BrowserRouter>
-      <Switch>{routes}</Switch>
-      {/* <Route>
-          <Redirect to="/" />
-        </Route> */}
-    </BrowserRouter>
-  )
+  return <Switch>{routes}</Switch>
 }
 
 export default App
