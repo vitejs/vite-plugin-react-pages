@@ -1,0 +1,15 @@
+{
+  "name": "vite-pages-theme-basic",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "keywords": [
+    "vite",
+    "react",
+    "vite-plugin-react-pages",
+    "theme"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^3.9.5"
+  }
+}

@@ -2,6 +2,10 @@
   "name": "vite-plugin-react-pages",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "keywords": [
+    "vite",
+    "react"
+  ],
   "license": "MIT",
   "scripts": {
     "build": "rm -rf ./dist && concurrently \"npm:build-*\"",
