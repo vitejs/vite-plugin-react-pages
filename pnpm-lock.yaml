@@ -1,9 +1,6 @@
 importers:
   .:
-    devDependencies:
-      typescript: 3.9.5
-    specifiers:
-      typescript: ^3.9.5
+    specifiers: {}
   fixtures/basic:
     dependencies:
       '@loadable/component': 5.12.0
@@ -26,6 +23,11 @@ importers:
       vite: ^0.20.7
       vite-plugin-react: ^2.0.3
       vite-plugin-react-pages: 'workspace:^1.0.0'
+  packages/theme-basic:
+    devDependencies:
+      typescript: 3.9.5
+    specifiers:
+      typescript: ^3.9.5
   packages/vite-plugin:
     dependencies:
       '@loadable/component': 5.12.0
