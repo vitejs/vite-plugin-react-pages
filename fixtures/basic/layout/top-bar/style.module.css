@@ -1,0 +1,24 @@
+.topBar {
+  border-bottom: 1px solid black;
+  display: flex;
+  height: 50px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  margin-left: 12px;
+}
+
+.navs {
+  margin-right: 12px;
+}
+
+.navsList {
+  list-style: none;
+  display: flex;
+}
+
+.navsListItem {
+  margin: 0 8px;
+}

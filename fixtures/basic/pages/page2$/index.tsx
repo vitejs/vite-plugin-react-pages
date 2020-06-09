@@ -11,9 +11,3 @@ const Page2: React.FC<IProps> = (props) => {
 }
 
 export default Page2
-
-
-// need to be analyzed statically.
-// export const meta = {
-//   name: 'mypage2',
-// }

@@ -3,18 +3,20 @@ import Topbar from './top-bar'
 import type { ITopNavData } from './top-bar'
 import SideMenu from './side-menu'
 import type { ISideMenuData } from './side-menu'
+import s from "./style.module.css";
+
+import './global.css'
 
 interface IProps {
   Content: React.ComponentType
   sideMenuData?: ISideMenuData[]
-  topNavData?: ITopNavData[]
 }
 
-const Layout: React.FC<IProps> = ({ Content, sideMenuData, topNavData }) => {
+const Layout: React.FC<IProps> = ({ Content, sideMenuData }) => {
   return (
-    <div>
-      <Topbar data={topNavData} />
-      <div>
+    <div className={s.layout}>
+      <Topbar/>
+      <div className={s.body}>
         <SideMenu data={sideMenuData} />
         <div>
           <Content />
