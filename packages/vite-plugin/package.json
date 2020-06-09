@@ -22,8 +22,8 @@
     "@types/react-router-dom": "^5.1.5",
     "concurrently": "^5.2.0",
     "typescript": "^3.9.5",
-    "vite": "^0.20.3",
-    "vite-plugin-mdx": "^0.0.1",
+    "vite": "^0.20.7",
+    "vite-plugin-mdx": "^0.0.2",
     "vite-plugin-react": "^2.0.3",
     "@pika/react": "^16.13.1",
     "@pika/react-dom": "^16.13.1"
