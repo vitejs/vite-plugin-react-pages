@@ -4,13 +4,15 @@ import React, { useState, useEffect } from 'react'
 // because it is using useEffect
 
 interface IProps {
-  importFn: () => Promise<IPageLoaded>
   pages: any
   path: string
 }
 
-const PageLoader: React.FC<IProps> = ({ importFn, pages, path }) => {
-  const pageStaticData = pages[path].staticData
+const PageLoader: React.FC<IProps> = ({ pages, path }) => {
+  const { staticData: pageStaticData, importFn } = pages[path] as {
+    importFn: () => Promise<IPageLoaded>
+    staticData: any
+  }
   const [loadState, setLoadState] = useState<ILoadState>(() => ({
     type: 'loading',
   }))
@@ -43,10 +45,14 @@ const PageLoader: React.FC<IProps> = ({ importFn, pages, path }) => {
 
   const { renderPage, pageData } = loadState.pageLoaded
   const { default: PageComponent, ...actualPageData } = pageData
-  const layout = renderPage(PageComponent, {
-    ...pageStaticData,
-    ...actualPageData,
-  }, pages)
+  const layout = renderPage(
+    PageComponent,
+    {
+      ...pageStaticData,
+      ...actualPageData,
+    },
+    pages
+  )
   return <>{layout}</>
 }
 
