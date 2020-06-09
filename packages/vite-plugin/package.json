@@ -14,6 +14,8 @@
     "dev-client-copy": "node scripts/watchAndCopy"
   },
   "devDependencies": {
+    "@pika/react": "^16.13.1",
+    "@pika/react-dom": "^16.13.1",
     "@types/fs-extra": "^9.0.1",
     "@types/glob": "^7.1.2",
     "@types/loadable__component": "^5.10.0",
@@ -24,15 +26,14 @@
     "typescript": "^3.9.5",
     "vite": "^0.20.7",
     "vite-plugin-mdx": "^0.0.2",
-    "vite-plugin-react": "^2.0.3",
-    "@pika/react": "^16.13.1",
-    "@pika/react-dom": "^16.13.1"
+    "vite-plugin-react": "^2.0.3"
   },
   "dependencies": {
     "@loadable/component": "^5.12.0",
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.1",
     "glob": "^7.1.6",
+    "jest-docblock": "^26.0.0",
     "tiny-invariant": "^1.1.0"
   }
 }

@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react'
 
 // This should be the only file that is blocking SSR
+// because it is using useEffect
 
-const PageLoader: React.FC<{ importFn: () => Promise<IPageLoaded> }> = ({
-  importFn,
-}) => {
+interface IProps {
+  importFn: () => Promise<IPageLoaded>
+  pages: any
+  path: string
+}
+
+const PageLoader: React.FC<IProps> = ({ importFn, pages, path }) => {
+  const pageStaticData = pages[path].staticData
   const [loadState, setLoadState] = useState<ILoadState>(() => ({
     type: 'loading',
   }))
-  // console.log(loadState.type)
   useEffect(() => {
     importFn()
       .then((pageLoaded) => {
@@ -25,6 +30,9 @@ const PageLoader: React.FC<{ importFn: () => Promise<IPageLoaded> }> = ({
       })
   }, [importFn])
 
+  if (typeof pageStaticData.title !== 'string') {
+    return <p>Page should define title.</p>
+  }
   if (loadState.type === 'loading') {
     return <p>Loading...</p>
   }
@@ -33,22 +41,26 @@ const PageLoader: React.FC<{ importFn: () => Promise<IPageLoaded> }> = ({
     return <p>Error: {loadState?.error?.message ?? 'no error message'}</p>
   }
 
-  const { renderPage, PageComponent, pageData } = loadState.pageLoaded
-  const layout = renderPage(PageComponent, pageData)
+  const { renderPage, pageData } = loadState.pageLoaded
+  const { default: PageComponent, ...actualPageData } = pageData
+  const layout = renderPage(PageComponent, {
+    ...pageStaticData,
+    ...actualPageData,
+  }, pages)
   return <>{layout}</>
 }
 
 export default PageLoader
 
 export interface IPageLoaded {
-  PageComponent: React.ComponentType
   pageData: any
-  renderPage: IGetLayout
+  renderPage: IRenderPage
 }
 
-export type IGetLayout = (
+export type IRenderPage = (
   PageComponent: React.ComponentType,
-  pageData: any
+  pageData: any,
+  pages: any
 ) => React.ReactNode
 
 export type ILoadState =

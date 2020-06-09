@@ -2,6 +2,7 @@ import type { Plugin } from 'vite'
 import { cachedRead } from 'vite'
 import * as fs from 'fs-extra'
 import * as path from 'path'
+import { extract, parse } from 'jest-docblock'
 
 import { findPages } from './findPages'
 import { resolvePageFile } from './resolvePageFile'
@@ -22,15 +23,23 @@ export const configureServer = (
   app.use(async (ctx, next) => {
     if (ctx.path === '/@generated/pages') {
       const pages = await findPages(pagesDirPath)
-      const pagesCode = pages
-        .map((p) => {
+      const pagesCode = await Promise.all(
+        pages.map(async (p) => {
+          const pageFilePath = await resolvePageFile(p, pagesDirPath)
+          if (!pageFilePath) throw new Error(`can't resolve page. "${p}"`)
+          const pageCode = await fs.readFile(pageFilePath, 'utf-8')
+          const docCode = extract(pageCode)
+          const pageMeta = parse(docCode)
           const path = `/${p}`
           const loadPath = `/@generated/pages/${p}`
-          return `pages["${path}"] = {importFn: () => import("${loadPath}")};`
+          return `pages["${path}"] = {
+              importFn: () => import(${JSON.stringify(loadPath)}),
+              staticData: ${JSON.stringify(pageMeta)},
+          };`
         })
-        .join('\n')
+      )
       ctx.body = `const pages = {};
-${pagesCode}
+${pagesCode.join('\n')}
 export default pages;`
       ctx.type = 'js'
       ctx.status = 200
@@ -46,11 +55,10 @@ export default pages;`
       const layoutPublicPath = resolver.fileToRequest(layoutFilePath)
       const pageFilePublicPath = resolver.fileToRequest(pageFilePath)
 
-      ctx.body = `import PageComponent from "${pageFilePublicPath}";
+      ctx.body = `
 import * as pageData from "${pageFilePublicPath}";
 import renderPage from "${layoutPublicPath}";
 export {
-  PageComponent,
   pageData,
   renderPage,
 };

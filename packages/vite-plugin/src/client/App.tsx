@@ -14,22 +14,27 @@ const App: React.FC = () => {
 export default App
 
 function getRouteFromPagesData(pages: any) {
-  return Object.entries<any>(pages).map(([path, { importFn }]) => {
-    return (
-      <Route
-        // https://github.com/ReactTraining/react-router/issues/3928#issuecomment-284152397
-        key="same"
-        exact
-        path={path}
-        render={() => <PageLoader importFn={importFn} />}
-      />
-    )
-  })
+  return Object.entries<any>(pages).map(
+    ([path, { importFn, staticData }]) => {
+      return (
+        <Route
+          // avoid re-mount layout component
+          // https://github.com/ReactTraining/react-router/issues/3928#issuecomment-284152397
+          key="same"
+          exact
+          path={path}
+        >
+          <PageLoader importFn={importFn} pages={pages} path={path} />
+        </Route>
+      )
+    }
+  )
 }
 
 if (import.meta.hot) {
   // @ts-ignore
   import.meta.hot.acceptDeps('/@generated/pages', (mod) => {
+    // FIXME pages->mod ?
     routes = getRouteFromPagesData(pages)
   })
 }

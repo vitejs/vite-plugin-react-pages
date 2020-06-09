@@ -1,4 +1,6 @@
-// import configs
+/**
+ * @title page2 title
+ */
 
 import React from 'react'
 
@@ -9,3 +11,9 @@ const Page2: React.FC<IProps> = (props) => {
 }
 
 export default Page2
+
+
+// need to be analyzed statically.
+// export const meta = {
+//   name: 'mypage2',
+// }
