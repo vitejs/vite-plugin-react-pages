@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import defaultData from './data'
+import s from "./style.module.css";
 
 interface IProps {
   data?: ISideMenuData[]
@@ -8,7 +9,7 @@ interface IProps {
 
 const SideMenu: React.FC<IProps> = ({data = defaultData}) => {
   return (
-    <ul>
+    <ul className={s.sideMenu}>
       {data.map((item, index) => {
         return (
           <li key={index}>

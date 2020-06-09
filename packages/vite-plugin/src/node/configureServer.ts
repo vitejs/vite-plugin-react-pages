@@ -28,10 +28,13 @@ export const configureServer = (
           const pageFilePath = await resolvePageFile(p, pagesDirPath)
           if (!pageFilePath) throw new Error(`can't resolve page. "${p}"`)
           const pageCode = await fs.readFile(pageFilePath, 'utf-8')
-          const docCode = extract(pageCode)
-          const pageMeta = parse(docCode)
+          const pageMeta = parse(extract(pageCode))
           const path = `/${p}`
-          const loadPath = `/@generated/pages/${p}`
+          // if this is the root index page: /$.tsx or /$/index.tsx
+          // give it a different loadPath
+          // otherwise it will have loadPath '/@generated/pages/'
+          // which will make vite confused when rewriting import
+          const loadPath = `/@generated/pages/${p ? p : '__rootIndex__'}`
           return `pages["${path}"] = {
               importFn: () => import(${JSON.stringify(loadPath)}),
               staticData: ${JSON.stringify(pageMeta)},
@@ -45,7 +48,9 @@ export default pages;`
       ctx.status = 200
       await next()
     } else if (ctx.path.startsWith('/@generated/pages/')) {
-      const page = ctx.path.slice('/@generated/pages/'.length)
+      let page = ctx.path.slice('/@generated/pages/'.length)
+      // resolvePageFile will correctly resolve '' into /$.tsx or /$/index.tsx
+      if (page === '__rootIndex__') page = ''
       const pageFilePath = await resolvePageFile(page, pagesDirPath)
       if (!pageFilePath || !fs.existsSync(pageFilePath)) {
         ctx.status = 404
