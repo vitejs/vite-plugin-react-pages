@@ -32,6 +32,7 @@ importers:
       find-up: 4.1.0
       fs-extra: 9.0.1
       glob: 7.1.6
+      jest-docblock: 26.0.0
       tiny-invariant: 1.1.0
     devDependencies:
       '@pika/react': 16.13.1
@@ -61,6 +62,7 @@ importers:
       find-up: ^4.1.0
       fs-extra: ^9.0.1
       glob: ^7.1.6
+      jest-docblock: ^26.0.0
       tiny-invariant: ^1.1.0
       typescript: ^3.9.5
       vite: ^0.20.7
@@ -1229,6 +1231,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Up8P0clUVwq0FnFjDclzZsy9PadzRn5FFxrr47tQQvMHqyiFYVbpH8oXDzWtF0Q7pYy3l+RPmtBl+BsFF6wH0A==
+  /detect-newline/3.1.0:
+    dev: false
+    engines:
+      node: '>=8'
+    resolution:
+      integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
   /dir-glob/3.0.1:
     dependencies:
       path-type: 4.0.0
@@ -1869,6 +1877,14 @@ packages:
     dev: true
     resolution:
       integrity: sha1-6PvzdNxVb/iUehDcsFctYz8s+hA=
+  /jest-docblock/26.0.0:
+    dependencies:
+      detect-newline: 3.1.0
+    dev: false
+    engines:
+      node: '>= 10.14.2'
+    resolution:
+      integrity: sha512-RDZ4Iz3QbtRWycd8bUEPxQsTlYazfYn/h5R65Fc6gOfwozFhoImx+affzky/FFBuqISPTqjXomoIGJVKBWoo0w==
   /jest-worker/24.9.0:
     dependencies:
       merge-stream: 2.0.0
