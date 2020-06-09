@@ -8,5 +8,5 @@ export default function render(
 ) {
   console.log('pageData', pageData)
   console.log('pages', pages)
-  return <Layout Content={PageComponent} />
+  return <Layout Content={PageComponent} pages={pages} />
 }

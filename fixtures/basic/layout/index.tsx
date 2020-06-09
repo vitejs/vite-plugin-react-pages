@@ -10,14 +10,15 @@ import './global.css'
 interface IProps {
   Content: React.ComponentType
   sideMenuData?: ISideMenuData[]
+  pages: any
 }
 
-const Layout: React.FC<IProps> = ({ Content, sideMenuData }) => {
+const Layout: React.FC<IProps> = ({ Content, sideMenuData, pages }) => {
   return (
     <div className={s.layout}>
       <Topbar/>
       <div className={s.body}>
-        <SideMenu data={sideMenuData} />
+        <SideMenu pages={pages} data={sideMenuData} />
         <div>
           <Content />
         </div>

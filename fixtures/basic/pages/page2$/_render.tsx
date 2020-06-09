@@ -11,11 +11,12 @@ export default function render(
   return (
     <Layout
       Content={PageComponent}
+      pages={pages}
       // get type checking when configuring layout
       sideMenuData={[
         {
-          text: 'page1',
-          path: '/page1',
+          text: 'index',
+          path: '/',
         },
         {
           text: 'page2 custom layout data',
