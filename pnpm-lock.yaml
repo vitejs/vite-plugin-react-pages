@@ -27,10 +27,10 @@ importers:
       react-router-dom: ^5.2.0
       remark-frontmatter: ^2.0.0
       vite: ^0.20.7
-      vite-pages-theme-basic: 'workspace:^0.0.2'
+      vite-pages-theme-basic: 'workspace:^0.0.3'
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
-      vite-plugin-react-pages: 'workspace:^0.0.1'
+      vite-plugin-react-pages: 'workspace:^0.0.2'
   fixtures/basic:
     dependencies:
       '@mdx-js/react': 1.6.5
@@ -41,8 +41,8 @@ importers:
       '@types/react': 16.9.35
       '@types/react-router-dom': 5.1.5
       vite: 0.20.7
-      vite-plugin-mdx: 0.0.2_vite-plugin-react@2.0.3
-      vite-plugin-react: 2.0.3
+      vite-plugin-mdx: 0.0.2_b46904e778278a0668045e7a2c719bb6
+      vite-plugin-react: 2.0.3_vite@0.20.7
       vite-plugin-react-pages: 'link:../../packages/vite-plugin'
     specifiers:
       '@mdx-js/react': ^1.6.5
@@ -54,7 +54,7 @@ importers:
       vite: ^0.20.7
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
-      vite-plugin-react-pages: 'workspace:^0.0.1'
+      vite-plugin-react-pages: 'workspace:^0.0.2'
   fixtures/use-theme:
     dependencies:
       '@mdx-js/react': 1.6.5
@@ -77,10 +77,10 @@ importers:
       '@types/react-router-dom': ^5.1.5
       react-router-dom: ^5.2.0
       vite: ^0.20.7
-      vite-pages-theme-basic: 'workspace:^0.0.2'
+      vite-pages-theme-basic: 'workspace:^0.0.3'
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
-      vite-plugin-react-pages: 'workspace:^0.0.1'
+      vite-plugin-react-pages: 'workspace:^0.0.2'
   packages/theme-basic:
     dependencies:
       github-markdown-css: 4.0.0
@@ -92,6 +92,7 @@ importers:
       chokidar: 3.4.0
       concurrently: 5.2.0
       fs-extra: 9.0.1
+      globby: 11.0.1
       react-router-dom: 5.2.0
       typescript: 3.9.5
       vite-plugin-react-pages: 'link:../vite-plugin'
@@ -104,9 +105,10 @@ importers:
       concurrently: ^5.2.0
       fs-extra: ^9.0.1
       github-markdown-css: ^4.0.0
+      globby: ^11.0.1
       react-router-dom: ^5.2.0
       typescript: ^3.9.5
-      vite-plugin-react-pages: 'workspace:^0.0.1'
+      vite-plugin-react-pages: 'workspace:^0.0.2'
   packages/vite-plugin:
     dependencies:
       '@loadable/component': 5.12.0
@@ -3632,26 +3634,6 @@ packages:
       vite-plugin-react: ^2.0.3
     resolution:
       integrity: sha512-S6qYMmaC9z6w9LiD5GuWO+ixqhqgq6bSFKbqkUrzDAbyqenvmdROh91UjR6xEfh7fLTEYXuwf/UAoJjh54aqXg==
-  /vite-plugin-mdx/0.0.2_vite-plugin-react@2.0.3:
-    dependencies:
-      '@mdx-js/mdx': 1.6.5
-      '@mdx-js/react': 1.6.5
-      vite-plugin-react: 2.0.3
-    dev: true
-    peerDependencies:
-      vite: ^0.20.3
-      vite-plugin-react: ^2.0.3
-    resolution:
-      integrity: sha512-S6qYMmaC9z6w9LiD5GuWO+ixqhqgq6bSFKbqkUrzDAbyqenvmdROh91UjR6xEfh7fLTEYXuwf/UAoJjh54aqXg==
-  /vite-plugin-react/2.0.3:
-    dependencies:
-      '@babel/core': 7.10.2
-      react-refresh: 0.8.3
-    dev: true
-    peerDependencies:
-      vite: '>=0.17.0'
-    resolution:
-      integrity: sha512-CJ04bebCuvv6B1BbVMoT1aEMHJtL8Mo6WmhmRqoWgqgKWnPrRsnjETBAtEDDrAFH57rDThmUUIqxH1PY0MK5Ow==
   /vite-plugin-react/2.0.3_vite@0.20.7:
     dependencies:
       '@babel/core': 7.10.2
