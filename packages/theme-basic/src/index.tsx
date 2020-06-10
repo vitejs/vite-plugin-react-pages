@@ -6,21 +6,21 @@ import type { ITopNavData } from './layout/top-bar'
 
 interface IOption {
   sideMenuData?: ISideMenuData[]
-  topNavs: ITopNavData[]
-  logo: React.ReactNode
+  topNavs?: ITopNavData[]
+  logo?: React.ReactNode
 }
 
 export const createRender = ({
   topNavs,
   logo,
   sideMenuData,
-}: IOption): IRenderPage => {
+}: IOption = {}): IRenderPage => {
   return (pageData, pages) => {
     return (
       <Layout
         Content={pageData.default}
         sideMenuData={sideMenuData ?? defaultMenu(pages)}
-        topNavs={topNavs}
+        topNavs={topNavs ?? []}
         logo={logo}
       />
     )
