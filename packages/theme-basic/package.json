@@ -14,6 +14,9 @@
     "dev": "npm run clean && tsc -w",
     "build": "npm run clean && tsc"
   },
+  "peerDependencies": {
+    "react-router-dom": "^5.2.0"
+  },
   "devDependencies": {
     "@types/react": "^16.9.35",
     "@types/react-router-dom": "^5.1.5",

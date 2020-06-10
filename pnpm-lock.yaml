@@ -3,7 +3,6 @@ importers:
     specifiers: {}
   fixtures/basic:
     dependencies:
-      '@loadable/component': 5.12.0
       '@pika/react': 16.13.1
       '@pika/react-dom': 16.13.1
       react-router-dom: 5.2.0
@@ -14,7 +13,6 @@ importers:
       vite-plugin-react: 2.0.3_vite@0.20.7
       vite-plugin-react-pages: 'link:../../packages/vite-plugin'
     specifiers:
-      '@loadable/component': ^5.12.0
       '@pika/react': ^16.13.1
       '@pika/react-dom': ^16.13.1
       '@types/react': ^16.9.35
@@ -22,7 +20,29 @@ importers:
       react-router-dom: ^5.2.0
       vite: ^0.20.7
       vite-plugin-react: ^2.0.3
-      vite-plugin-react-pages: 'workspace:^1.0.0'
+      vite-plugin-react-pages: 'workspace:^0.0.1'
+  fixtures/use-theme:
+    dependencies:
+      '@pika/react': 16.13.1
+      '@pika/react-dom': 16.13.1
+      react-router-dom: 5.2.0
+      vite-pages-theme-basic: 'link:../../packages/theme-basic'
+    devDependencies:
+      '@types/react': 16.9.35
+      '@types/react-router-dom': 5.1.5
+      vite: 0.20.7
+      vite-plugin-react: 2.0.3_vite@0.20.7
+      vite-plugin-react-pages: 'link:../../packages/vite-plugin'
+    specifiers:
+      '@pika/react': ^16.13.1
+      '@pika/react-dom': ^16.13.1
+      '@types/react': ^16.9.35
+      '@types/react-router-dom': ^5.1.5
+      react-router-dom: ^5.2.0
+      vite: ^0.20.7
+      vite-pages-theme-basic: 'workspace:^0.0.1'
+      vite-plugin-react: ^2.0.3
+      vite-plugin-react-pages: 'workspace:^0.0.1'
   packages/theme-basic:
     devDependencies:
       '@types/react': 16.9.35
