@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/react": "^16.9.35",
     "@types/react-router-dom": "^5.1.5",
+    "remark-frontmatter": "^2.0.0",
     "vite": "^0.20.7",
     "vite-plugin-mdx": "^0.0.2",
     "vite-plugin-react": "^2.0.3",

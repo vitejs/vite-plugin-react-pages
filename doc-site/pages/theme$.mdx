@@ -1,3 +1,7 @@
+---
+sort: 2
+---
+
 # Theme customization
 
 Vite pages provides only one theme API: `_render.tsx`.
@@ -14,6 +18,10 @@ const render: IRenderPage = (pageData, pages) => {
 }
 export default render
 ```
+
+import { Link } from 'react-router-dom'
+
+We will explain the parameters of the render function in <Link to="/page-data">page-data doc</Link>.
 
 > The render function should be pure.
 

@@ -11,6 +11,7 @@ importers:
     devDependencies:
       '@types/react': 16.9.35
       '@types/react-router-dom': 5.1.5
+      remark-frontmatter: 2.0.0
       vite: 0.20.7
       vite-plugin-mdx: 0.0.2_b46904e778278a0668045e7a2c719bb6
       vite-plugin-react: 2.0.3_vite@0.20.7
@@ -22,6 +23,7 @@ importers:
       '@types/react': ^16.9.35
       '@types/react-router-dom': ^5.1.5
       react-router-dom: ^5.2.0
+      remark-frontmatter: ^2.0.0
       vite: ^0.20.7
       vite-pages-theme-basic: 'workspace:^0.0.1'
       vite-plugin-mdx: ^0.0.2
@@ -1470,6 +1472,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-SMIZoZdLh/fgofivvIkmknUXyPnvxRE3DhtZ5Me3Mrsk5gyPL42F0xr51TdRXskBxHfMp+07bcYzfsYEsSQA9Q==
+  /fault/1.0.4:
+    dependencies:
+      format: 0.2.2
+    dev: true
+    resolution:
+      integrity: sha512-CJ0HCB5tL5fYTEA7ToAq5+kTwd++Borf1/bifxd9iT70QcXr4MRrO3Llf8Ifs70q+SJcGHFtnIE/Nw6giCtECA==
   /fill-range/7.0.1:
     dependencies:
       to-regex-range: 5.0.1
@@ -1503,6 +1511,12 @@ packages:
       node: '>=4.0'
     resolution:
       integrity: sha512-KZm0V+ll8PfBrKwMzdo5D13b1bur9Iq9Zd/RMmAoQQcl2PxxFml8cxXPaaPYVbV0RjNjq1CU7zIzAOqtUPudmA==
+  /format/0.2.2:
+    dev: true
+    engines:
+      node: '>=0.4.x'
+    resolution:
+      integrity: sha1-1hcBB+nv3E7TDJ3DkBbflCtctYs=
   /fresh/0.5.2:
     dev: true
     engines:
@@ -2770,6 +2784,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-X9Ncj4cj3/CIvLI2Z9IobHtVi8FVdUrdJkCNaL9kdX8ohfsi18DXHsCVd/A7ssARBdccdDb5ODnt62WuEWaM/g==
+  /remark-frontmatter/2.0.0:
+    dependencies:
+      fault: 1.0.4
+    dev: true
+    resolution:
+      integrity: sha512-uNOQt4tO14qBFWXenF0MLC4cqo3dv8qiHPGyjCl1rwOT0LomSHpcElbjjVh5CwzElInB38HD8aSRVugKQjeyHA==
   /remark-mdx/1.6.5:
     dependencies:
       '@babel/core': 7.9.6
