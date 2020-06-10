@@ -16,10 +16,11 @@
     "dev": "rm -rf ./dist && concurrently \"npm:dev-*\"",
     "dev-tsc": "tsc -w",
     "dev-copy": "node scripts/watchAndCopy",
-    "prepublish": "npm run build"
+    "prepare": "npm run build"
   },
   "peerDependencies": {
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "vite-plugin-react-pages": "workspace:^0.0.1"
   },
   "devDependencies": {
     "@types/react": "^16.9.35",

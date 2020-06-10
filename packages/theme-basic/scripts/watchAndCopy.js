@@ -7,7 +7,7 @@ function toDest(file) {
 }
 
 chokidar
-  .watch('src/**/!(*.ts|tsconfig.json)')
+  .watch('src/**/!(*.ts|*.tsx|tsconfig.json)')
   .on('change', (file) => fs.copy(file, toDest(file)))
   .on('add', (file) => fs.copy(file, toDest(file)))
   .on('unlink', (file) => fs.remove(toDest(file)))

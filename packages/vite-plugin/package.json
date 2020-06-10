@@ -15,7 +15,8 @@
     "dev": "rm -rf ./dist && concurrently \"npm:dev-*\"",
     "dev-node": "tsc -w -p src",
     "dev-client": "tsc -w -p src/client",
-    "dev-client-copy": "node scripts/watchAndCopy"
+    "dev-client-copy": "node scripts/watchAndCopy",
+    "prepare": "npm run build"
   },
   "devDependencies": {
     "@pika/react": "^16.13.1",
