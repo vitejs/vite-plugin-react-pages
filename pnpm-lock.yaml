@@ -25,8 +25,12 @@ importers:
       vite-plugin-react-pages: 'workspace:^1.0.0'
   packages/theme-basic:
     devDependencies:
+      '@types/react': 16.9.35
+      '@types/react-router-dom': 5.1.5
       typescript: 3.9.5
     specifiers:
+      '@types/react': ^16.9.35
+      '@types/react-router-dom': ^5.1.5
       typescript: ^3.9.5
   packages/vite-plugin:
     dependencies:

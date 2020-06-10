@@ -1,6 +1,6 @@
 {
   "name": "vite-pages-theme-basic",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "keywords": [
     "vite",
@@ -9,7 +9,14 @@
     "theme"
   ],
   "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf ./dist",
+    "dev": "npm run clean && tsc -w",
+    "build": "npm run clean && tsc"
+  },
   "devDependencies": {
+    "@types/react": "^16.9.35",
+    "@types/react-router-dom": "^5.1.5",
     "typescript": "^3.9.5"
   }
 }
