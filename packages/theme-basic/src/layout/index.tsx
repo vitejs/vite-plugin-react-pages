@@ -9,25 +9,18 @@ import './global.css'
 
 interface IProps {
   Content: React.ComponentType
-  sideMenuData?: ISideMenuData[]
-  pages: any
-  topNavs?: ITopNavData[]
-  logo?: React.ReactNode
+  sideMenuData: ISideMenuData[]
+  topNavs: ITopNavData[]
+  logo: React.ReactNode
 }
 
-const Layout: React.FC<IProps> = ({
-  Content,
-  sideMenuData,
-  pages,
-  topNavs,
-  logo,
-}) => {
+const Layout: React.FC<IProps> = ({ Content, sideMenuData, topNavs, logo }) => {
   return (
     <div className={s.layout}>
       <Topbar topNavs={topNavs} logo={logo} />
       <div className={s.body}>
-        <SideMenu pages={pages} data={sideMenuData} />
-        <div>
+        <SideMenu data={sideMenuData} />
+        <div className={s.content}>
           <Content />
         </div>
       </div>
@@ -36,3 +29,4 @@ const Layout: React.FC<IProps> = ({
 }
 
 export default Layout
+

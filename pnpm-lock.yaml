@@ -47,11 +47,21 @@ importers:
     devDependencies:
       '@types/react': 16.9.35
       '@types/react-router-dom': 5.1.5
+      chokidar: 3.4.0
+      concurrently: 5.2.0
+      fs-extra: 9.0.1
+      react-router-dom: 5.2.0
       typescript: 3.9.5
+      vite-plugin-react-pages: 'link:../vite-plugin'
     specifiers:
       '@types/react': ^16.9.35
       '@types/react-router-dom': ^5.1.5
+      chokidar: ^3.4.0
+      concurrently: ^5.2.0
+      fs-extra: ^9.0.1
+      react-router-dom: ^5.2.0
       typescript: ^3.9.5
+      vite-plugin-react-pages: 'workspace:^0.0.1'
   packages/vite-plugin:
     dependencies:
       '@loadable/component': 5.12.0
@@ -69,6 +79,7 @@ importers:
       '@types/react': 16.9.35
       '@types/react-dom': 16.9.8
       '@types/react-router-dom': 5.1.5
+      chokidar: 3.4.0
       concurrently: 5.2.0
       typescript: 3.9.5
       vite: 0.20.7
@@ -84,6 +95,7 @@ importers:
       '@types/react': ^16.9.35
       '@types/react-dom': ^16.9.8
       '@types/react-router-dom': ^5.1.5
+      chokidar: ^3.4.0
       concurrently: ^5.2.0
       find-up: ^4.1.0
       fs-extra: ^9.0.1
@@ -300,7 +312,6 @@ packages:
   /@babel/runtime/7.10.2:
     dependencies:
       regenerator-runtime: 0.13.5
-    dev: false
     resolution:
       integrity: sha512-6sF3uQw2ivImfVIl62RZ7MXhO2tap69WeWK57vAaimT6AZbE4FbqjdEJIN1UqoD6wI6B+1n9UiagafH1sxjOtg==
   /@babel/template/7.10.1:
@@ -1631,13 +1642,11 @@ packages:
       tiny-invariant: 1.1.0
       tiny-warning: 1.0.3
       value-equal: 1.0.1
-    dev: false
     resolution:
       integrity: sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==
   /hoist-non-react-statics/3.3.2:
     dependencies:
       react-is: 16.13.1
-    dev: false
     resolution:
       integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
   /hosted-git-info/2.8.8:
@@ -2118,7 +2127,6 @@ packages:
   /loose-envify/1.4.0:
     dependencies:
       js-tokens: 4.0.0
-    dev: false
     hasBin: true
     resolution:
       integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -2226,7 +2234,6 @@ packages:
       '@babel/runtime': 7.10.2
       prop-types: 15.7.2
       tiny-warning: 1.0.3
-    dev: false
     peerDependencies:
       prop-types: ^15.0.0
       react: ^0.14.0 || ^15.0.0 || ^16.0.0
@@ -2567,7 +2574,6 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
-    dev: false
     resolution:
       integrity: sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
   /property-information/5.5.0:
@@ -2584,7 +2590,6 @@ packages:
     resolution:
       integrity: sha512-LwZy+p3SFs1Pytd/jYct4wpv49HiYCqd9Rlc5ZVdk0V+8Yzv6jR5Blk3TRmPL1ft69TxP0IMZGJ+WPFU2BFhww==
   /react-is/16.13.1:
-    dev: false
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
   /react-refresh/0.8.3:
@@ -2602,7 +2607,6 @@ packages:
       react-router: 5.2.0
       tiny-invariant: 1.1.0
       tiny-warning: 1.0.3
-    dev: false
     peerDependencies:
       react: '>=15'
     resolution:
@@ -2619,7 +2623,6 @@ packages:
       react-is: 16.13.1
       tiny-invariant: 1.1.0
       tiny-warning: 1.0.3
-    dev: false
     peerDependencies:
       react: '>=15'
     resolution:
@@ -2661,7 +2664,6 @@ packages:
     resolution:
       integrity: sha512-j2+C8+NtXQgEKWk49MMP5P/u2GhnahTtVkRIHr5R5lVRlbKvmQ+oS+A5aLKWp2ma5VkT8sh6v+v4hbH0YHR66A==
   /regenerator-runtime/0.13.5:
-    dev: false
     resolution:
       integrity: sha512-ZS5w8CpKFinUzOwW3c83oPeVXoNsrLsaCoLtJvAClH135j/R77RuymhiSErhm2lKcwSCIpmvIWSbDkIfAqKQlA==
   /regexpu-core/4.7.0:
@@ -2774,7 +2776,6 @@ packages:
     resolution:
       integrity: sha1-xL2p9e+y/OZSR4c6s2u02DT+Fvc=
   /resolve-pathname/3.0.0:
-    dev: false
     resolution:
       integrity: sha512-C7rARubxI8bXFNB/hqcp/4iUeIXJhJZvFPFPiSPRnhU5UPxzMFIl+2E6yY6c4k9giDJAhtV+enfA+G89N6Csng==
   /resolve/1.17.0:
@@ -3103,11 +3104,9 @@ packages:
     resolution:
       integrity: sha1-5p44obq+lpsBCCB5eLn2K4hgSDk=
   /tiny-invariant/1.1.0:
-    dev: false
     resolution:
       integrity: sha512-ytxQvrb1cPc9WBEI/HSeYYoGD0kWnGEOR8RY6KomWLBVhqz0RgTwVO9dLrGz7dC+nN9llyI7OKAgRq8Vq4ZBSw==
   /tiny-warning/1.0.3:
-    dev: false
     resolution:
       integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==
   /to-fast-properties/2.0.0:
@@ -3292,7 +3291,6 @@ packages:
     resolution:
       integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==
   /value-equal/1.0.1:
-    dev: false
     resolution:
       integrity: sha512-NOJ6JZCAWr0zlxZt+xqCHNTEKOsrks2HQd4MqhP1qy4z1SkbEP467eNx6TgDKXMvUOb+OENfJCZwM+16n7fRfw==
   /vary/1.1.2:
