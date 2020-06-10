@@ -11,6 +11,7 @@
     "build": "rm -rf dist && vite build --outDir dist"
   },
   "dependencies": {
+    "@mdx-js/react": "^1.6.5",
     "@pika/react": "^16.13.1",
     "@pika/react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0"
@@ -19,6 +20,7 @@
     "@types/react": "^16.9.35",
     "@types/react-router-dom": "^5.1.5",
     "vite": "^0.20.7",
+    "vite-plugin-mdx": "^0.0.2",
     "vite-plugin-react": "^2.0.3",
     "vite-plugin-react-pages": "workspace:^0.0.1"
   }

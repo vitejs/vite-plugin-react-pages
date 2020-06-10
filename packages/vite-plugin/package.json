@@ -40,6 +40,7 @@
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.1",
     "glob": "^7.1.6",
+    "gray-matter": "^4.0.2",
     "jest-docblock": "^26.0.0",
     "tiny-invariant": "^1.1.0"
   }

@@ -3,6 +3,7 @@ importers:
     specifiers: {}
   fixtures/basic:
     dependencies:
+      '@mdx-js/react': 1.6.5
       '@pika/react': 16.13.1
       '@pika/react-dom': 16.13.1
       react-router-dom: 5.2.0
@@ -10,19 +11,23 @@ importers:
       '@types/react': 16.9.35
       '@types/react-router-dom': 5.1.5
       vite: 0.20.7
+      vite-plugin-mdx: 0.0.2_vite-plugin-react@2.0.3
       vite-plugin-react: 2.0.3
       vite-plugin-react-pages: 'link:../../packages/vite-plugin'
     specifiers:
+      '@mdx-js/react': ^1.6.5
       '@pika/react': ^16.13.1
       '@pika/react-dom': ^16.13.1
       '@types/react': ^16.9.35
       '@types/react-router-dom': ^5.1.5
       react-router-dom: ^5.2.0
       vite: ^0.20.7
+      vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
       vite-plugin-react-pages: 'workspace:^0.0.1'
   fixtures/use-theme:
     dependencies:
+      '@mdx-js/react': 1.6.5
       '@pika/react': 16.13.1
       '@pika/react-dom': 16.13.1
       react-router-dom: 5.2.0
@@ -31,9 +36,11 @@ importers:
       '@types/react': 16.9.35
       '@types/react-router-dom': 5.1.5
       vite: 0.20.7
+      vite-plugin-mdx: 0.0.2_vite-plugin-react@2.0.3
       vite-plugin-react: 2.0.3
       vite-plugin-react-pages: 'link:../../packages/vite-plugin'
     specifiers:
+      '@mdx-js/react': ^1.6.5
       '@pika/react': ^16.13.1
       '@pika/react-dom': ^16.13.1
       '@types/react': ^16.9.35
@@ -41,6 +48,7 @@ importers:
       react-router-dom: ^5.2.0
       vite: ^0.20.7
       vite-pages-theme-basic: 'workspace:^0.0.1'
+      vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
       vite-plugin-react-pages: 'workspace:^0.0.1'
   packages/theme-basic:
@@ -72,6 +80,7 @@ importers:
       find-up: 4.1.0
       fs-extra: 9.0.1
       glob: 7.1.6
+      gray-matter: 4.0.2
       jest-docblock: 26.0.0
       tiny-invariant: 1.1.0
     devDependencies:
@@ -105,6 +114,7 @@ importers:
       find-up: ^4.1.0
       fs-extra: ^9.0.1
       glob: ^7.1.6
+      gray-matter: ^4.0.2
       jest-docblock: ^26.0.0
       react-router-dom: ^5.2.0
       tiny-invariant: ^1.1.0
@@ -279,7 +289,7 @@ packages:
   /@babel/plugin-proposal-object-rest-spread/7.9.6_@babel+core@7.9.6:
     dependencies:
       '@babel/core': 7.9.6
-      '@babel/helper-plugin-utils': 7.10.1
+      '@babel/helper-plugin-utils': 7.8.3
       '@babel/plugin-syntax-object-rest-spread': 7.8.3_@babel+core@7.9.6
       '@babel/plugin-transform-parameters': 7.10.1_@babel+core@7.9.6
     dev: true
@@ -386,7 +396,6 @@ packages:
     resolution:
       integrity: sha512-DC13eeEM0Dv9OD+UVhyB69BlV29d2eoAmfiR/XdgNl4R7YmRNEPGRD3QvGUdRUDxYdJBHauMz5ZIV507cNXXaA==
   /@mdx-js/react/1.6.5:
-    dev: true
     peerDependencies:
       react: ^16.9.0
     resolution:
@@ -807,7 +816,6 @@ packages:
   /argparse/1.0.10:
     dependencies:
       sprintf-js: 1.0.3
-    dev: true
     resolution:
       integrity: sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
   /array-union/2.1.0:
@@ -1351,7 +1359,6 @@ packages:
     resolution:
       integrity: sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
   /esprima/4.0.1:
-    dev: true
     engines:
       node: '>=4'
     hasBin: true
@@ -1399,6 +1406,14 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-QI2zLa6CjGWdiQsmSkZoGtDx2N+cQIGb3yNolGTdjSQzydzLgYYf8LRuagp7S7fPimjcrzUDSUFd/MgzELMi4Q==
+  /extend-shallow/2.0.1:
+    dependencies:
+      is-extendable: 0.1.1
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-Ua99YUrZqfYQ6huvu5idaxxWiQ8=
   /extend/3.0.2:
     dev: true
     resolution:
@@ -1553,6 +1568,17 @@ packages:
   /graceful-fs/4.2.4:
     resolution:
       integrity: sha512-WjKPNJF79dtJAVniUlGGWHYGz2jWxT6VhN/4m1NdkbZ2nOsEF+cI1Edgql5zCRhs/VsQYRvrXctxktVXZUkixw==
+  /gray-matter/4.0.2:
+    dependencies:
+      js-yaml: 3.14.0
+      kind-of: 6.0.3
+      section-matter: 1.0.0
+      strip-bom-string: 1.0.0
+    dev: false
+    engines:
+      node: '>=6.0'
+    resolution:
+      integrity: sha512-7hB/+LxrOjq/dd8APlK0r24uL/67w7SkYnfwhNFwg/VDIGWGmduTDYf3WNstLW2fbbmRwrDGCVSJ2isuf2+4Hw==
   /has-ansi/2.0.0:
     dependencies:
       ansi-regex: 2.1.1
@@ -1825,6 +1851,12 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-pJEdRugimx4fBMra5z2/5iRdZ63OhYV0vr0Dwm5+xtW4D1FvRkB8hamMIhnWfyJeDdyr/aa7BDyNbtG38VxgoQ==
+  /is-extendable/0.1.1:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-YrEQ4omkcUGOPsNqYX1HLjAd/Ik=
   /is-extglob/2.1.1:
     dev: true
     engines:
@@ -1942,7 +1974,6 @@ packages:
     dependencies:
       argparse: 1.0.10
       esprima: 4.0.1
-    dev: true
     hasBin: true
     resolution:
       integrity: sha512-/4IbIeHcD9VMHFqDR/gQ7EdZdLimOvW2DdcxFjdyyZ9NsbS+ccrXqVWDtab/lRl5AlUqmpBx8EhPaWR+OtY17A==
@@ -1993,6 +2024,12 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha512-iYSchDJ+liQ8iwbSI2QqsQOvqv58eJCEanyJPJi+Khyu8smkcKSFUCbPwzFcL7YVtZ6eONjqRX/38caJ7QjRAQ==
+  /kind-of/6.0.3:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
   /koa-compose/3.2.1:
     dependencies:
       any-promise: 1.3.0
@@ -2872,6 +2909,15 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
+  /section-matter/1.0.0:
+    dependencies:
+      extend-shallow: 2.0.1
+      kind-of: 6.0.3
+    dev: false
+    engines:
+      node: '>=4'
+    resolution:
+      integrity: sha512-vfD3pmTzGpufjScBh50YHKzEu2lxBWhVEHsNGoEXmCmn2hKGfeNLYMzCJpe8cD7gqX7TJluOVpBkAequ6dgMmA==
   /selfsigned/1.10.7:
     dependencies:
       node-forge: 0.9.0
@@ -2977,7 +3023,6 @@ packages:
     resolution:
       integrity: sha512-J+FWzZoynJEXGphVIS+XEh3kFSjZX/1i9gFBaWQcB+/tmpe2qUsSBABpcxqxnAxFdiUFEgAX1bjYGQvIZmoz9Q==
   /sprintf-js/1.0.3:
-    dev: true
     resolution:
       integrity: sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
   /state-toggle/1.0.3:
@@ -3028,6 +3073,12 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-AuvKTrTfQNYNIctbR1K/YGTR1756GycPsg7b9bdV9Duqur4gv6aKqHXah67Z8ImS7WEz5QVcOtlfW2rZEugt6w==
+  /strip-bom-string/1.0.0:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-5SEekiQ2n7uB1jOi8ABE3IztrZI=
   /strip-final-newline/2.0.0:
     dev: true
     engines:
@@ -3332,6 +3383,17 @@ packages:
       '@mdx-js/react': 1.6.5
       vite: 0.20.7
       vite-plugin-react: 2.0.3_vite@0.20.7
+    dev: true
+    peerDependencies:
+      vite: ^0.20.3
+      vite-plugin-react: ^2.0.3
+    resolution:
+      integrity: sha512-S6qYMmaC9z6w9LiD5GuWO+ixqhqgq6bSFKbqkUrzDAbyqenvmdROh91UjR6xEfh7fLTEYXuwf/UAoJjh54aqXg==
+  /vite-plugin-mdx/0.0.2_vite-plugin-react@2.0.3:
+    dependencies:
+      '@mdx-js/mdx': 1.6.5
+      '@mdx-js/react': 1.6.5
+      vite-plugin-react: 2.0.3
     dev: true
     peerDependencies:
       vite: ^0.20.3

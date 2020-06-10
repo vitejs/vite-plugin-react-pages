@@ -1,5 +1,6 @@
 import * as fs from 'fs-extra'
 import { extract, parse } from 'jest-docblock'
+import grayMatter from 'gray-matter'
 
 import { findPages } from './utils/findPages'
 import { resolvePageFile } from './utils/resolvePageFile'
@@ -11,7 +12,13 @@ export default async function pages(pagesDirPath: string) {
       const pageFilePath = await resolvePageFile(p, pagesDirPath)
       if (!pageFilePath) throw new Error(`can't resolve page. "${p}"`)
       const pageCode = await fs.readFile(pageFilePath, 'utf-8')
-      const pageMeta = parse(extract(pageCode))
+      let pageMeta
+      if (/\.mdx?/.test(pageFilePath)) {
+        const { data: frontmatter } = grayMatter(pageCode)
+        pageMeta = frontmatter
+      } else {
+        pageMeta = parse(extract(pageCode))
+      }
       const path = `/${p}`
       // if this is the root index page: /$.tsx or /$/index.tsx
       // give it a different loadPath
