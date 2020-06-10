@@ -5,6 +5,7 @@
 }
 
 .body {
+  overflow: hidden;
   flex: 1 1 auto;
   display: flex;
 }
