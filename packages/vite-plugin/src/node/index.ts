@@ -1,6 +1,6 @@
 import type { Plugin } from 'vite'
-import { configureServer } from './node/configureServer'
-import { CLIENT_PATH } from './node/constants'
+import { configureServer } from './configureServer'
+import { CLIENT_PATH } from './constants'
 
 export interface IOption {
   pagesDir?: string

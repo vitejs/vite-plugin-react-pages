@@ -13,7 +13,7 @@ const App: React.FC = () => {
 
 export default App
 
-function getRouteFromPagesData(pages: any) {
+function getRouteFromPagesData(pages: IPagesInternal) {
   return Object.keys(pages).map((path) => {
     return (
       <Route
@@ -35,3 +35,28 @@ if (import.meta.hot) {
     routes = getRouteFromPagesData(mod.default)
   })
 }
+
+export interface IPages {
+  [path: string]: {
+    staticData: any
+  }
+}
+
+export interface IPagesInternal {
+  [path: string]: {
+    _importFn: () => Promise<IPageLoaded>
+    staticData: any
+  }
+}
+
+export interface IPageLoaded {
+  /** All exports of page module. */
+  pageData: any
+  /** The nearest _render.tsx from the page module */
+  renderPage: IRenderPage
+}
+
+export type IRenderPage = (
+  pageData: any,
+  pages: IPages
+) => React.ReactElement | null
