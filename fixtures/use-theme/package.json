@@ -1,8 +1,7 @@
 {
-  "name": "basic",
-  "private": true,
+  "name": "use-theme",
   "version": "1.0.0",
-  "license": "MIT",
+  "description": "",
   "scripts": {
     "dev": "vite serve --force",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
@@ -10,10 +9,14 @@
     "clean": "rm -rf node_modules/.vite_opt_cache",
     "build": "vite build --outDir dist"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@pika/react": "^16.13.1",
     "@pika/react-dom": "^16.13.1",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "vite-pages-theme-basic": "workspace:^0.0.1"
   },
   "devDependencies": {
     "@types/react": "^16.9.35",
