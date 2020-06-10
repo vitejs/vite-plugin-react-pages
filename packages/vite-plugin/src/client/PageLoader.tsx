@@ -27,6 +27,7 @@ const PageLoader: React.FC<IProps> = ({ pages, path }) => {
           type: 'error',
           error,
         })
+        throw error
       })
   }, [_importFn])
 

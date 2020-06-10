@@ -17,5 +17,6 @@ module.exports = {
   optimizeDeps: {
     exclude: ['vite-pages-theme-basic'],
   },
-  minify: 'esbuild',
+  // minify: 'esbuild',
+  minify: false,
 } as UserConfig

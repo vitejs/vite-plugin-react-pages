@@ -14,6 +14,7 @@ interface IProps {
   topNavs: ITopNavData[]
   logo: React.ReactNode
   applyMdStyle?: boolean
+  path?: string
 }
 
 const Layout: React.FC<IProps> = ({
@@ -22,13 +23,17 @@ const Layout: React.FC<IProps> = ({
   topNavs,
   logo,
   applyMdStyle,
+  path,
 }) => {
   return (
     <div className={s.layout}>
       <Topbar topNavs={topNavs} logo={logo} />
       <div className={s.body}>
         <SideMenu data={sideMenuData} />
-        <div className={s.content + (applyMdStyle ? ` markdown-body` : '')}>
+        <div
+          className={s.content + (applyMdStyle ? ` markdown-body` : '')}
+          key={path}
+        >
           <Content />
         </div>
       </div>
