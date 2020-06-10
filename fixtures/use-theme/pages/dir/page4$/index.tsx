@@ -1,7 +1,3 @@
-/**
- * @title page4 title
- */
-
 import React from 'react'
 
 interface IProps {}

@@ -32,11 +32,10 @@ function defaultMenu(pages: IPages): ISideMenuData[] {
     .sort((a, b) => {
       return a[0].localeCompare(b[0])
     })
-    .filter(([path, { staticData }]) => staticData.title)
     .map(([path, { staticData }]) => {
       return {
         path,
-        text: staticData.title,
+        text: path,
       }
     })
 }
