@@ -15,7 +15,8 @@
     "build-copy": "node scripts/copy",
     "dev": "rm -rf ./dist && concurrently \"npm:dev-*\"",
     "dev-tsc": "tsc -w",
-    "dev-copy": "node scripts/watchAndCopy"
+    "dev-copy": "node scripts/watchAndCopy",
+    "prepublish": "npm run build"
   },
   "peerDependencies": {
     "react-router-dom": "^5.2.0"
