@@ -15,9 +15,9 @@ export default async function pages(pagesDirPath: string) {
       let pageMeta
       if (/\.mdx?/.test(pageFilePath)) {
         const { data: frontmatter } = grayMatter(pageCode)
-        pageMeta = frontmatter
+        pageMeta = { ...frontmatter, sourceType: 'md' }
       } else {
-        pageMeta = parse(extract(pageCode))
+        pageMeta = { ...parse(extract(pageCode)), sourceType: 'js' }
       }
       const path = `/${p}`
       // if this is the root index page: /$.tsx or /$/index.tsx

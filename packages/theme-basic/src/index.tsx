@@ -22,6 +22,7 @@ export const createRender = ({
         sideMenuData={sideMenuData ?? defaultMenu(pages)}
         topNavs={topNavs ?? []}
         logo={logo}
+        applyMdStyle={pageData.sourceType === 'md'}
       />
     )
   }

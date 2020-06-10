@@ -6,21 +6,29 @@ import type { ISideMenuData } from './side-menu'
 import s from './style.module.css'
 
 import './global.css'
+import 'github-markdown-css/github-markdown.css'
 
 interface IProps {
   Content: React.ComponentType
   sideMenuData: ISideMenuData[]
   topNavs: ITopNavData[]
   logo: React.ReactNode
+  applyMdStyle?: boolean
 }
 
-const Layout: React.FC<IProps> = ({ Content, sideMenuData, topNavs, logo }) => {
+const Layout: React.FC<IProps> = ({
+  Content,
+  sideMenuData,
+  topNavs,
+  logo,
+  applyMdStyle,
+}) => {
   return (
     <div className={s.layout}>
       <Topbar topNavs={topNavs} logo={logo} />
       <div className={s.body}>
         <SideMenu data={sideMenuData} />
-        <div className={s.content}>
+        <div className={s.content + (applyMdStyle ? ` markdown-body` : '')}>
           <Content />
         </div>
       </div>
@@ -29,4 +37,3 @@ const Layout: React.FC<IProps> = ({ Content, sideMenuData, topNavs, logo }) => {
 }
 
 export default Layout
-
