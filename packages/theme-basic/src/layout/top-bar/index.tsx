@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 import s from './style.module.css'
 
 interface IProps {
-  topNavs?: ITopNavData[]
-  logo?: React.ReactNode
+  topNavs: ITopNavData[]
+  logo: React.ReactNode
 }
 
 const TopBar: React.FC<IProps> = ({ topNavs, logo }) => {

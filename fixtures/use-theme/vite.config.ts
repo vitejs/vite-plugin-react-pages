@@ -4,8 +4,8 @@ import pages from 'vite-plugin-react-pages'
 
 module.exports = {
   jsx: 'react',
-  plugins: [
-    vpr,
-    pages(),
-  ],
+  plugins: [vpr, pages()],
+  optimizeDeps: {
+    link: ['vite-pages-theme-basic'],
+  },
 } as UserConfig

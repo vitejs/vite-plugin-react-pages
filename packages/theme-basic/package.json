@@ -10,9 +10,12 @@
   ],
   "license": "MIT",
   "scripts": {
-    "clean": "rm -rf ./dist",
-    "dev": "npm run clean && tsc -w",
-    "build": "npm run clean && tsc"
+    "build": "rm -rf ./dist && concurrently \"npm:build-*\"",
+    "build-tsc": "tsc",
+    "build-copy": "node scripts/copy",
+    "dev": "rm -rf ./dist && concurrently \"npm:dev-*\"",
+    "dev-tsc": "tsc -w",
+    "dev-copy": "node scripts/watchAndCopy"
   },
   "peerDependencies": {
     "react-router-dom": "^5.2.0"
@@ -20,6 +23,11 @@
   "devDependencies": {
     "@types/react": "^16.9.35",
     "@types/react-router-dom": "^5.1.5",
-    "typescript": "^3.9.5"
+    "chokidar": "^3.4.0",
+    "concurrently": "^5.2.0",
+    "fs-extra": "^9.0.1",
+    "react-router-dom": "^5.2.0",
+    "typescript": "^3.9.5",
+    "vite-plugin-react-pages": "workspace:^0.0.1"
   }
 }
