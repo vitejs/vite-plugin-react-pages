@@ -9,7 +9,7 @@
     "debug:build": "npx --node-arg=--inspect vite build --outDir dist",
     "clean": "rm -rf node_modules/.vite_opt_cache",
     "build": "rm -rf dist && vite build --outDir dist",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && touch ./dist/.nojekyll && gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
