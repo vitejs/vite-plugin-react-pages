@@ -8,7 +8,8 @@
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
     "debug:build": "npx --node-arg=--inspect vite build --outDir dist",
     "clean": "rm -rf node_modules/.vite_opt_cache",
-    "build": "rm -rf dist && vite build --outDir dist"
+    "build": "rm -rf dist && vite build --outDir dist",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@types/react": "^16.9.35",
     "@types/react-router-dom": "^5.1.5",
+    "gh-pages": "^3.0.0",
     "remark-frontmatter": "^2.0.0",
     "vite": "^0.20.7",
     "vite-plugin-mdx": "^0.0.2",
