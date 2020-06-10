@@ -25,7 +25,7 @@ importers:
       react-router-dom: ^5.2.0
       remark-frontmatter: ^2.0.0
       vite: ^0.20.7
-      vite-pages-theme-basic: 'workspace:^0.0.1'
+      vite-pages-theme-basic: 'workspace:^0.0.2'
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
       vite-plugin-react-pages: 'workspace:^0.0.1'
@@ -64,8 +64,8 @@ importers:
       '@types/react': 16.9.35
       '@types/react-router-dom': 5.1.5
       vite: 0.20.7
-      vite-plugin-mdx: 0.0.2_vite-plugin-react@2.0.3
-      vite-plugin-react: 2.0.3
+      vite-plugin-mdx: 0.0.2_b46904e778278a0668045e7a2c719bb6
+      vite-plugin-react: 2.0.3_vite@0.20.7
       vite-plugin-react-pages: 'link:../../packages/vite-plugin'
     specifiers:
       '@mdx-js/react': ^1.6.5
@@ -75,7 +75,7 @@ importers:
       '@types/react-router-dom': ^5.1.5
       react-router-dom: ^5.2.0
       vite: ^0.20.7
-      vite-pages-theme-basic: 'workspace:^0.0.1'
+      vite-pages-theme-basic: 'workspace:^0.0.2'
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
       vite-plugin-react-pages: 'workspace:^0.0.1'
