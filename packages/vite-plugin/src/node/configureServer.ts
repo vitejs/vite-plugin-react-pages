@@ -36,7 +36,7 @@ export const configureServer = (
           // which will make vite confused when rewriting import
           const loadPath = `/@generated/pages/${p ? p : '__rootIndex__'}`
           return `pages["${path}"] = {
-              importFn: () => import(${JSON.stringify(loadPath)}),
+              _importFn: () => import(${JSON.stringify(loadPath)}),
               staticData: ${JSON.stringify(pageMeta)},
           };`
         })
