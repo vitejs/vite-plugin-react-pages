@@ -1,6 +1,5 @@
 import type { Plugin } from 'vite'
 import { cachedRead } from 'vite'
-import * as fs from 'fs-extra'
 import * as path from 'path'
 
 import { CLIENT_PATH } from './constants'
@@ -8,16 +7,8 @@ import pages from './dynamic-modules/pages'
 import onePage from './dynamic-modules/onePage'
 
 export const configureServer = (
-  _pagesDirPath?: string
-): Plugin['configureServer'] => ({ app, resolver, root }) => {
-  const pagesDirPath = (() => {
-    if (_pagesDirPath) return _pagesDirPath
-    const pagesPath = path.join(root, 'pages')
-    if (fs.existsSync(pagesPath) && fs.statSync(pagesPath).isDirectory())
-      return pagesPath
-    return root
-  })()
-
+  pagesDirPath: string
+): Plugin['configureServer'] => ({ app, resolver }) => {
   app.use(async (ctx, next) => {
     if (ctx.path === '/@generated/pages') {
       ctx.body = await pages(pagesDirPath)

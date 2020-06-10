@@ -29,6 +29,7 @@
     "@types/react-router-dom": "^5.1.5",
     "chokidar": "^3.4.0",
     "concurrently": "^5.2.0",
+    "react-router-dom": "^5.2.0",
     "typescript": "^3.9.5",
     "vite": "^0.20.7",
     "vite-plugin-mdx": "^0.0.2",

@@ -7,7 +7,7 @@
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
     "debug:build": "npx --node-arg=--inspect vite build --outDir dist",
     "clean": "rm -rf node_modules/.vite_opt_cache",
-    "build": "vite build --outDir dist"
+    "build": "rm -rf dist && vite build --outDir dist"
   },
   "keywords": [],
   "author": "",

@@ -8,8 +8,6 @@ module.exports = {
   alias: {
     '/@layout/': path.join(__dirname, 'layout'),
   },
-  plugins: [
-    vpr,
-    pages(),
-  ],
+  plugins: [vpr, pages()],
+  minify: 'esbuild',
 } as UserConfig

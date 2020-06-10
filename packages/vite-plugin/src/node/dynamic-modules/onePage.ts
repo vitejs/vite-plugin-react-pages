@@ -13,7 +13,6 @@ export default async function onePage(
   if (page === '__rootIndex__') page = ''
   const pageFilePath = await resolvePageFile(page, pagesDirPath)
   if (!pageFilePath || !fs.existsSync(pageFilePath)) {
-    // ctx.status = 404
     return null
   }
   const layoutFilePath = await resolvePageLayout(pageFilePath, pagesDirPath)
@@ -21,8 +20,8 @@ export default async function onePage(
   const pageFilePublicPath = fileToRequest(pageFilePath)
 
   return `
-import * as pageData from "${pageFilePublicPath}";
 import renderPage from "${layoutPublicPath}";
+import * as pageData from "${pageFilePublicPath}";
 export {
   pageData,
   renderPage,

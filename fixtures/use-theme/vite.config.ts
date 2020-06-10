@@ -8,4 +8,5 @@ module.exports = {
   optimizeDeps: {
     link: ['vite-pages-theme-basic'],
   },
+  minify: 'esbuild',
 } as UserConfig
