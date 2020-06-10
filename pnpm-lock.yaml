@@ -1,6 +1,32 @@
 importers:
   .:
     specifiers: {}
+  doc-site:
+    dependencies:
+      '@mdx-js/react': 1.6.5
+      '@pika/react': 16.13.1
+      '@pika/react-dom': 16.13.1
+      react-router-dom: 5.2.0
+      vite-pages-theme-basic: 'link:../packages/theme-basic'
+    devDependencies:
+      '@types/react': 16.9.35
+      '@types/react-router-dom': 5.1.5
+      vite: 0.20.7
+      vite-plugin-mdx: 0.0.2_b46904e778278a0668045e7a2c719bb6
+      vite-plugin-react: 2.0.3_vite@0.20.7
+      vite-plugin-react-pages: 'link:../packages/vite-plugin'
+    specifiers:
+      '@mdx-js/react': ^1.6.5
+      '@pika/react': ^16.13.1
+      '@pika/react-dom': ^16.13.1
+      '@types/react': ^16.9.35
+      '@types/react-router-dom': ^5.1.5
+      react-router-dom: ^5.2.0
+      vite: ^0.20.7
+      vite-pages-theme-basic: 'workspace:^0.0.1'
+      vite-plugin-mdx: ^0.0.2
+      vite-plugin-react: ^2.0.3
+      vite-plugin-react-pages: 'workspace:^0.0.1'
   fixtures/basic:
     dependencies:
       '@mdx-js/react': 1.6.5
@@ -52,6 +78,8 @@ importers:
       vite-plugin-react: ^2.0.3
       vite-plugin-react-pages: 'workspace:^0.0.1'
   packages/theme-basic:
+    dependencies:
+      github-markdown-css: 4.0.0
     devDependencies:
       '@pika/react': 16.13.1
       '@pika/react-dom': 16.13.1
@@ -71,6 +99,7 @@ importers:
       chokidar: ^3.4.0
       concurrently: ^5.2.0
       fs-extra: ^9.0.1
+      github-markdown-css: ^4.0.0
       react-router-dom: ^5.2.0
       typescript: ^3.9.5
       vite-plugin-react-pages: 'workspace:^0.0.1'
@@ -1528,6 +1557,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-EXr1FOzrzTfGeL0gQdeFEvOMm2mzMOglyiOXSTpPC+iAjAKftbr3jpCMWynogwYnM+eSj9sHGc6wjIcDvYiygw==
+  /github-markdown-css/4.0.0:
+    dev: false
+    resolution:
+      integrity: sha512-mH0bcIKv4XAN0mQVokfTdKo2OD5K8WJE9+lbMdM32/q0Ie5tXgVN/2o+zvToRMxSTUuiTRcLg5hzkFfOyBYreg==
   /glob-parent/5.1.1:
     dependencies:
       is-glob: 4.0.1

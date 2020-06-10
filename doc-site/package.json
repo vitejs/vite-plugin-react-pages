@@ -1,0 +1,31 @@
+{
+  "name": "doc-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "vite serve --force",
+    "debug": "node --inspect ./node_modules/vite/bin/vite serve",
+    "debug:build": "npx --node-arg=--inspect vite build --outDir dist",
+    "clean": "rm -rf node_modules/.vite_opt_cache",
+    "build": "rm -rf dist && vite build --outDir dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mdx-js/react": "^1.6.5",
+    "@pika/react": "^16.13.1",
+    "@pika/react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "vite-pages-theme-basic": "workspace:^0.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.35",
+    "@types/react-router-dom": "^5.1.5",
+    "vite": "^0.20.7",
+    "vite-plugin-mdx": "^0.0.2",
+    "vite-plugin-react": "^2.0.3",
+    "vite-plugin-react-pages": "workspace:^0.0.1"
+  }
+}

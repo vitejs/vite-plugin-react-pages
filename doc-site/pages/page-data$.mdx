@@ -1,0 +1,78 @@
+# Page data
+
+## Static page metadata
+
+For `.tsx|.jsx` pages, you can define static data with **comment at the top of the file**.
+
+```tsx
+/**
+ * @title index page
+ * @tags tag1,tag2
+ */
+```
+
+This will be resolved into:
+
+```json
+{ "title": "index page", "tags": "tag1,tag2" }
+```
+
+For `.md|.mdx` pages, you can define static data with YAML front matter:
+
+```md
+---
+title: my page
+tags:
+  - tag1
+  - tag2
+---
+```
+
+This will be resolved into:
+
+```json
+{ "title": "my page", "tags": ["tag1", "tag2"] }
+```
+
+## runtime page data
+
+Runtime page data is just anything you export from a page file.
+
+## Difference
+
+Both static data and runtime data will be passed to \_render.js, so the theme can use them to render layout.
+Difference:
+
+- Static data of **all pages** is loaded when the app bootstrap. So you should try to keep the static data small.
+- Runtime data is loaded when user navigate to the page.
+- The value type of static data is limited (string or simple object/array); The value of runtime data can be javascript value (.e.g a React component).
+
+## Where to consume these data
+
+import { Link } from 'react-router-dom'
+
+As stated in the <Link to="/theme">theme doc</Link>, `_render.tsx` should export a **render function** with this type:
+
+```ts
+type IRenderPage = (pageData: any, pages: IPages) => React.ReactElement
+```
+
+The `pageData` will be:
+
+```ts
+{
+  ...pageStaticData, // static data of current page
+  ...pageRuntimeData, // runtime data of current page
+  path: '/page/path',
+}
+```
+
+The `pages` will be the **static data of all pages**:
+
+```ts
+interface IPages {
+  [path: string]: {
+    staticData: any
+  }
+}
+```
