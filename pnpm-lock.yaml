@@ -29,10 +29,10 @@ importers:
       react-router-dom: ^5.2.0
       remark-frontmatter: ^2.0.0
       vite: ^0.20.7
-      vite-pages-theme-basic: 'workspace:^0.0.4'
+      vite-pages-theme-basic: 'workspace:^0.1.0'
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
-      vite-plugin-react-pages: 'workspace:^0.0.4'
+      vite-plugin-react-pages: 'workspace:^0.1.0'
   fixtures/basic:
     dependencies:
       '@mdx-js/react': 1.6.5_react@16.13.1
@@ -60,7 +60,7 @@ importers:
       vite: ^0.20.7
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
-      vite-plugin-react-pages: 'workspace:^0.0.4'
+      vite-plugin-react-pages: 'workspace:^0.1.0'
   fixtures/use-theme:
     dependencies:
       '@mdx-js/react': 1.6.5_react@16.13.1
@@ -87,10 +87,10 @@ importers:
       react-dom: ^16.13.1
       react-router-dom: ^5.2.0
       vite: ^0.20.7
-      vite-pages-theme-basic: 'workspace:^0.0.4'
+      vite-pages-theme-basic: 'workspace:^0.1.0'
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
-      vite-plugin-react-pages: 'workspace:^0.0.4'
+      vite-plugin-react-pages: 'workspace:^0.1.0'
   packages/theme-basic:
     dependencies:
       github-markdown-css: 4.0.0
@@ -114,7 +114,7 @@ importers:
       globby: ^11.0.1
       react: ^16.13.1
       typescript: ^3.9.5
-      vite-plugin-react-pages: 'workspace:^0.0.4'
+      vite-plugin-react-pages: 'workspace:^0.1.0'
   packages/vite-plugin:
     dependencies:
       find-up: 4.1.0
