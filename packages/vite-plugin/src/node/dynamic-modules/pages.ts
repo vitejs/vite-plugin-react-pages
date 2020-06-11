@@ -1,8 +1,8 @@
 import * as fs from 'fs-extra'
 import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
+import globby from 'globby'
 
-import { findPages } from './utils/findPages'
 import { resolvePageFile } from './utils/resolvePageFile'
 
 export interface IPagesData {
@@ -19,7 +19,6 @@ export async function collectPagesData(
     pagePaths.map(
       async (pagePath): Promise<[string, { staticData: any }]> => {
         const pageFilePath = await resolvePageFile(pagePath, pagesDirPath)
-        if (!pageFilePath) throw new Error(`can't resolve page. "${pagePath}"`)
         const pageCode = await fs.readFile(pageFilePath, 'utf-8')
         let staticData
         if (/\.mdx?/.test(pageFilePath)) {
@@ -28,14 +27,14 @@ export async function collectPagesData(
         } else {
           staticData = { ...parse(extract(pageCode)), sourceType: 'js' }
         }
-        return [`/${pagePath}`, { staticData }]
+        return [pagePath, { staticData }]
       }
     )
   )
   return Object.fromEntries(pageDataEntries)
 }
 
-export async function renderPagesData(pagesData: IPagesData) {
+export async function dynamicImportPagesData(pagesData: IPagesData) {
   const codeLines = Object.entries(pagesData).map(
     ([pagePath, { staticData }]) => {
       // if this is the root index page: /$.tsx or /$/index.tsx
@@ -46,7 +45,7 @@ export async function renderPagesData(pagesData: IPagesData) {
         pagePath === '/' ? '/__rootIndex__' : pagePath
       }`
       return `pages["${pagePath}"] = {
-             _importFn: () => import(${JSON.stringify(loadPath)}),
+             _importFn: () => import("${loadPath}"),
              staticData: ${JSON.stringify(staticData)},
          };`
     }
@@ -56,6 +55,34 @@ ${codeLines.join('\n')}
 export default pages;`
 }
 
-export default async function pages(pagesDirPath: string) {
-  return renderPagesData(await collectPagesData(pagesDirPath))
+export async function staticImportPagesData(pagesData: IPagesData) {
+  const codeLines = Object.keys(pagesData).map((pagePath, index) => {
+    const loadPath = `/@generated/pages${
+      pagePath === '/' ? '/__rootIndex__' : pagePath
+    }`
+    return `
+import * as page${index} from "${loadPath}";
+pages["${pagePath}"] = page${index};`
+  })
+  return `
+export const ssrData = {};
+const pages = ssrData.pages = {};
+${codeLines.join('\n')}
+`
+}
+
+async function findPages(root: string) {
+  const pageFiles: string[] = await globby('**/*$.{md,mdx,js,jsx,ts,tsx}', {
+    cwd: root,
+    ignore: ['**/node_modules/**/*'],
+    onlyFiles: true,
+  })
+  const pages = pageFiles.map((pageFile) => {
+    let pagePath = pageFile.replace(/\$\.(md|mdx|js|jsx|ts|tsx)$/, '')
+    pagePath = pagePath.replace(/index$/, '')
+    pagePath = pagePath.replace(/\/$/, '')
+    // ensure starting slash
+    return `/${pagePath}`
+  })
+  return pages
 }

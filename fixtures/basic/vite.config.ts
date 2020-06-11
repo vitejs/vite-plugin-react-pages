@@ -10,5 +10,5 @@ module.exports = {
     '/@layout/': path.join(__dirname, 'layout'),
   },
   plugins: [vpr, mdx, pages()],
-  minify: 'esbuild',
+  minify: false,
 } as UserConfig

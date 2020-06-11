@@ -3,7 +3,10 @@ import { cachedRead } from 'vite'
 import * as path from 'path'
 
 import { CLIENT_PATH } from './constants'
-import pages from './dynamic-modules/pages'
+import {
+  dynamicImportPagesData,
+  collectPagesData,
+} from './dynamic-modules/pages'
 import onePage from './dynamic-modules/onePage'
 
 export const configureServer = (
@@ -11,12 +14,14 @@ export const configureServer = (
 ): Plugin['configureServer'] => ({ app, resolver }) => {
   app.use(async (ctx, next) => {
     if (ctx.path === '/@generated/pages') {
-      ctx.body = await pages(pagesDirPath)
+      ctx.body = await dynamicImportPagesData(
+        await collectPagesData(pagesDirPath)
+      )
       ctx.type = 'js'
       ctx.status = 200
       await next()
     } else if (ctx.path.startsWith('/@generated/pages/')) {
-      let page = ctx.path.slice('/@generated/pages/'.length)
+      let page = ctx.path.slice('/@generated/pages'.length)
       const code = await onePage(page, pagesDirPath, (file) =>
         resolver.fileToRequest(file)
       )

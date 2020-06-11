@@ -3,19 +3,20 @@ importers:
     specifiers: {}
   doc-site:
     dependencies:
-      '@mdx-js/react': 1.6.5
+      '@mdx-js/react': 1.6.5_react@16.13.1
       '@pika/react': 16.13.1
-      '@pika/react-dom': 16.13.1
-      react-router-dom: 5.2.0
+      '@pika/react-dom': 16.13.1_react@16.13.1
+      react-router-dom: 5.2.0_react@16.13.1
       vite-pages-theme-basic: 'link:../packages/theme-basic'
     devDependencies:
       '@types/react': 16.9.36
       '@types/react-router-dom': 5.1.5
       gh-pages: 3.0.0
+      react: 16.13.1
       remark-frontmatter: 2.0.0
-      vite: 0.20.7
-      vite-plugin-mdx: 0.0.2_b46904e778278a0668045e7a2c719bb6
-      vite-plugin-react: 2.0.3_vite@0.20.7
+      vite: 0.20.8
+      vite-plugin-mdx: 0.0.2_03ccb06ccb4b17eb50c910ee8ab38f48
+      vite-plugin-react: 2.0.3_vite@0.20.8
       vite-plugin-react-pages: 'link:../packages/vite-plugin'
     specifiers:
       '@mdx-js/react': ^1.6.5
@@ -24,13 +25,14 @@ importers:
       '@types/react': ^16.9.35
       '@types/react-router-dom': ^5.1.5
       gh-pages: ^3.0.0
+      react: ^16.13.1
       react-router-dom: ^5.2.0
       remark-frontmatter: ^2.0.0
       vite: ^0.20.7
-      vite-pages-theme-basic: 'workspace:^0.0.3'
+      vite-pages-theme-basic: 'workspace:^0.0.4'
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
-      vite-plugin-react-pages: 'workspace:^0.0.2'
+      vite-plugin-react-pages: 'workspace:^0.0.4'
   fixtures/basic:
     dependencies:
       '@mdx-js/react': 1.6.5_react@16.13.1
@@ -42,9 +44,9 @@ importers:
       '@types/react-router-dom': 5.1.5
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
-      vite: 0.20.7
-      vite-plugin-mdx: 0.0.2_e7f1b82616aec4567fc55b8d804db88f
-      vite-plugin-react: 2.0.3_vite@0.20.7
+      vite: 0.20.8
+      vite-plugin-mdx: 0.0.2_03ccb06ccb4b17eb50c910ee8ab38f48
+      vite-plugin-react: 2.0.3_vite@0.20.8
       vite-plugin-react-pages: 'link:../../packages/vite-plugin'
     specifiers:
       '@mdx-js/react': ^1.6.5
@@ -58,7 +60,7 @@ importers:
       vite: ^0.20.7
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
-      vite-plugin-react-pages: 'workspace:^0.0.2'
+      vite-plugin-react-pages: 'workspace:^0.0.4'
   fixtures/use-theme:
     dependencies:
       '@mdx-js/react': 1.6.5_react@16.13.1
@@ -71,9 +73,9 @@ importers:
       '@types/react-router-dom': 5.1.5
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
-      vite: 0.20.7
-      vite-plugin-mdx: 0.0.2_4bbe378e3be0f2eb6001f81594fce8d5
-      vite-plugin-react: 2.0.3
+      vite: 0.20.8
+      vite-plugin-mdx: 0.0.2_03ccb06ccb4b17eb50c910ee8ab38f48
+      vite-plugin-react: 2.0.3_vite@0.20.8
       vite-plugin-react-pages: 'link:../../packages/vite-plugin'
     specifiers:
       '@mdx-js/react': ^1.6.5
@@ -85,10 +87,10 @@ importers:
       react-dom: ^16.13.1
       react-router-dom: ^5.2.0
       vite: ^0.20.7
-      vite-pages-theme-basic: 'workspace:^0.0.3'
+      vite-pages-theme-basic: 'workspace:^0.0.4'
       vite-plugin-mdx: ^0.0.2
       vite-plugin-react: ^2.0.3
-      vite-plugin-react-pages: 'workspace:^0.0.2'
+      vite-plugin-react-pages: 'workspace:^0.0.4'
   packages/theme-basic:
     dependencies:
       github-markdown-css: 4.0.0
@@ -99,6 +101,7 @@ importers:
       concurrently: 5.2.0
       fs-extra: 9.0.1
       globby: 11.0.1
+      react: 16.13.1
       typescript: 3.9.5
       vite-plugin-react-pages: 'link:../vite-plugin'
     specifiers:
@@ -109,13 +112,15 @@ importers:
       fs-extra: ^9.0.1
       github-markdown-css: ^4.0.0
       globby: ^11.0.1
+      react: ^16.13.1
       typescript: ^3.9.5
-      vite-plugin-react-pages: 'workspace:^0.0.2'
+      vite-plugin-react-pages: 'workspace:^0.0.4'
   packages/vite-plugin:
     dependencies:
       find-up: 4.1.0
       fs-extra: 9.0.1
       glob: 7.1.6
+      globby: 11.0.1
       gray-matter: 4.0.2
       jest-docblock: 26.0.0
       minimist: 1.2.5
@@ -129,8 +134,9 @@ importers:
       '@types/react-router-dom': 5.1.5
       chokidar: 3.4.0
       concurrently: 5.2.0
+      react: 16.13.1
       typescript: 3.9.5
-      vite: 0.20.7
+      vite: 0.20.8
     specifiers:
       '@types/fs-extra': ^9.0.1
       '@types/glob': ^7.1.2
@@ -143,9 +149,11 @@ importers:
       find-up: ^4.1.0
       fs-extra: ^9.0.1
       glob: ^7.1.6
+      globby: ^11.0.1
       gray-matter: ^4.0.2
       jest-docblock: ^26.0.0
       minimist: ^1.2.5
+      react: ^16.13.1
       tiny-invariant: ^1.1.0
       typescript: ^3.9.5
       vite: ^0.20.7
@@ -412,11 +420,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-DC13eeEM0Dv9OD+UVhyB69BlV29d2eoAmfiR/XdgNl4R7YmRNEPGRD3QvGUdRUDxYdJBHauMz5ZIV507cNXXaA==
-  /@mdx-js/react/1.6.5:
-    peerDependencies:
-      react: ^16.9.0
-    resolution:
-      integrity: sha512-y1Yu9baw3KokFrs7g5RxHpJNSU4e1zk/5bAJX94yVATglG5HyAL0lYMySU8YzebXNE+fJJMCx9CuiQHy2ezoew==
   /@mdx-js/react/1.6.5_react@16.13.1:
     dependencies:
       react: 16.13.1
@@ -432,13 +435,11 @@ packages:
     dependencies:
       '@nodelib/fs.stat': 2.0.3
       run-parallel: 1.1.9
-    dev: true
     engines:
       node: '>= 8'
     resolution:
       integrity: sha512-eGmwYQn3gxo4r7jdQnkrrN6bY478C3P+a/y72IJukF8LjB6ZHeB3c+Ehacj3sYeSmUXGlnA67/PmbM9CVwL7Dw==
   /@nodelib/fs.stat/2.0.3:
-    dev: true
     engines:
       node: '>= 8'
     resolution:
@@ -447,17 +448,10 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.3
       fastq: 1.8.0
-    dev: true
     engines:
       node: '>= 8'
     resolution:
       integrity: sha512-1V9XOY4rDW0rehzbrcqAmHnz8e7SKvX27gh8Gt2WgB0+pdzdiLV83p72kZPU+jvMbS1qU5mauP2iOvO8rhmurQ==
-  /@pika/react-dom/16.13.1:
-    dev: false
-    peerDependencies:
-      react: ^16.0.0
-    resolution:
-      integrity: sha512-tCROpA6uP7caCNodaOUcqmauQmpVOmFXsaaKUJgLOMiZdlW+L02ItK3WAqGSOw25rM0bbwDXNC/x9PpfiQ9ESg==
   /@pika/react-dom/16.13.1_react@16.13.1:
     dependencies:
       react: 16.13.1
@@ -861,7 +855,6 @@ packages:
     resolution:
       integrity: sha1-mjRBDk9OPaI96jdb5b5w8kd47Dk=
   /array-union/2.1.0:
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -929,7 +922,6 @@ packages:
   /braces/3.0.2:
     dependencies:
       fill-range: 7.0.1
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -1345,7 +1337,6 @@ packages:
   /dir-glob/3.0.1:
     dependencies:
       path-type: 4.0.0
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -1484,7 +1475,6 @@ packages:
       merge2: 1.4.1
       micromatch: 4.0.2
       picomatch: 2.2.2
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -1496,7 +1486,6 @@ packages:
   /fastq/1.8.0:
     dependencies:
       reusify: 1.0.4
-    dev: true
     resolution:
       integrity: sha512-SMIZoZdLh/fgofivvIkmknUXyPnvxRE3DhtZ5Me3Mrsk5gyPL42F0xr51TdRXskBxHfMp+07bcYzfsYEsSQA9Q==
   /fault/1.0.4:
@@ -1533,7 +1522,6 @@ packages:
   /fill-range/7.0.1:
     dependencies:
       to-regex-range: 5.0.1
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -1654,7 +1642,6 @@ packages:
   /glob-parent/5.1.1:
     dependencies:
       is-glob: 4.0.1
-    dev: true
     engines:
       node: '>= 6'
     resolution:
@@ -1683,7 +1670,6 @@ packages:
       ignore: 5.1.8
       merge2: 1.4.1
       slash: 3.0.0
-    dev: true
     engines:
       node: '>=10'
     resolution:
@@ -1897,7 +1883,6 @@ packages:
     resolution:
       integrity: sha1-Bupvg2ead0njhs/h/oEq5dsiPe0=
   /ignore/5.1.8:
-    dev: true
     engines:
       node: '>= 4'
     resolution:
@@ -2004,7 +1989,6 @@ packages:
     resolution:
       integrity: sha1-YrEQ4omkcUGOPsNqYX1HLjAd/Ik=
   /is-extglob/2.1.1:
-    dev: true
     engines:
       node: '>=0.10.0'
     resolution:
@@ -2024,7 +2008,6 @@ packages:
   /is-glob/4.0.1:
     dependencies:
       is-extglob: 2.1.1
-    dev: true
     engines:
       node: '>=0.10.0'
     resolution:
@@ -2044,7 +2027,6 @@ packages:
     resolution:
       integrity: sha1-Mlj7afeMFNW4FdZkM2tM/7ZEFZE=
   /is-number/7.0.0:
-    dev: true
     engines:
       node: '>=0.12.0'
     resolution:
@@ -2396,7 +2378,6 @@ packages:
     resolution:
       integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==
   /merge2/1.4.1:
-    dev: true
     engines:
       node: '>= 8'
     resolution:
@@ -2405,7 +2386,6 @@ packages:
     dependencies:
       braces: 3.0.2
       picomatch: 2.2.2
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -2430,17 +2410,6 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==
-  /mini-create-react-context/0.4.0_prop-types@15.7.2:
-    dependencies:
-      '@babel/runtime': 7.10.2
-      prop-types: 15.7.2
-      tiny-warning: 1.0.3
-    dev: false
-    peerDependencies:
-      prop-types: ^15.0.0
-      react: ^0.14.0 || ^15.0.0 || ^16.0.0
-    resolution:
-      integrity: sha512-b0TytUgFSbgFJGzJqXPKCFCBWigAjpjo+Fl7Vf7ZbKRDptszpppKxXH6DRXEABZ/gcEQczeb0iZ7JvL8e8jjCA==
   /mini-create-react-context/0.4.0_prop-types@15.7.2+react@16.13.1:
     dependencies:
       '@babel/runtime': 7.10.2
@@ -2679,13 +2648,11 @@ packages:
     resolution:
       integrity: sha512-n43JRhlUKUAlibEJhPeir1ncUID16QnEjNpwzNdO3Lm4ywrBpBZ5oLD0I6br9evr1Y9JTqwRtAh7JLoOzAQdVA==
   /path-type/4.0.0:
-    dev: true
     engines:
       node: '>=8'
     resolution:
       integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
   /picomatch/2.2.2:
-    dev: true
     engines:
       node: '>=8.6'
     resolution:
@@ -2863,20 +2830,6 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
-  /react-router-dom/5.2.0:
-    dependencies:
-      '@babel/runtime': 7.10.2
-      history: 4.10.1
-      loose-envify: 1.4.0
-      prop-types: 15.7.2
-      react-router: 5.2.0
-      tiny-invariant: 1.1.0
-      tiny-warning: 1.0.3
-    dev: false
-    peerDependencies:
-      react: '>=15'
-    resolution:
-      integrity: sha512-gxAmfylo2QUjcwxI63RhQ5G85Qqt4voZpUXSEqCwykV0baaOTQDR1f0PmY8AELqIyVc0NEZUj0Gov5lNGcXgsA==
   /react-router-dom/5.2.0_react@16.13.1:
     dependencies:
       '@babel/runtime': 7.10.2
@@ -2892,23 +2845,6 @@ packages:
       react: '>=15'
     resolution:
       integrity: sha512-gxAmfylo2QUjcwxI63RhQ5G85Qqt4voZpUXSEqCwykV0baaOTQDR1f0PmY8AELqIyVc0NEZUj0Gov5lNGcXgsA==
-  /react-router/5.2.0:
-    dependencies:
-      '@babel/runtime': 7.10.2
-      history: 4.10.1
-      hoist-non-react-statics: 3.3.2
-      loose-envify: 1.4.0
-      mini-create-react-context: 0.4.0_prop-types@15.7.2
-      path-to-regexp: 1.8.0
-      prop-types: 15.7.2
-      react-is: 16.13.1
-      tiny-invariant: 1.1.0
-      tiny-warning: 1.0.3
-    dev: false
-    peerDependencies:
-      react: '>=15'
-    resolution:
-      integrity: sha512-smz1DUuFHRKdcJC0jobGo8cVbhO3x50tCL4icacOlcwDOEQPq4TMqwx3sY1TP+DvtTgz4nm3thuo7A+BK2U0Dw==
   /react-router/5.2.0_react@16.13.1:
     dependencies:
       '@babel/runtime': 7.10.2
@@ -3111,7 +3047,6 @@ packages:
     resolution:
       integrity: sha512-l+sSefzHpj5qimhFSE5a8nufZYAM3sBSVMAPtYkmC+4EH2anSGaEMXSD0izRQbu9nfyQ9y5JrVmp7E8oZrUjvA==
   /reusify/1.0.4:
-    dev: true
     engines:
       iojs: '>=1.0.0'
       node: '>=0.10.0'
@@ -3168,7 +3103,6 @@ packages:
     resolution:
       integrity: sha512-HAk4kyXiV5sdNDnbKWk5zBPnkX/DAgx09Kbp8rRIRDVsTUVN3vnSowR7ZHkV6/lAiE6c2TQ8HtYb72aCPGW4Jw==
   /run-parallel/1.1.9:
-    dev: true
     resolution:
       integrity: sha512-DEqnSRTDw/Tc3FXf49zedI638Z9onwUotBMiUFKmrO2sdFKIbXamXGQ3Axd4qgphxKB4kw/qP1w5kTxnfU1B9Q==
   /rxjs/6.5.5:
@@ -3245,7 +3179,6 @@ packages:
     resolution:
       integrity: sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
   /slash/3.0.0:
-    dev: true
     engines:
       node: '>=8'
     resolution:
@@ -3486,7 +3419,6 @@ packages:
   /to-regex-range/5.0.1:
     dependencies:
       is-number: 7.0.0
-    dev: true
     engines:
       node: '>=8.0'
     resolution:
@@ -3703,12 +3635,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-lRjkpyDGjVlBA7cDQhQ+gNcvB1BGaTHYuSOcY3S7OhDmBtnzX95FhtZZDecSTDm6aajFymyve6S5DN4ZHGezdQ==
-  /vite-plugin-mdx/0.0.2_4bbe378e3be0f2eb6001f81594fce8d5:
+  /vite-plugin-mdx/0.0.2_03ccb06ccb4b17eb50c910ee8ab38f48:
     dependencies:
       '@mdx-js/mdx': 1.6.5
       '@mdx-js/react': 1.6.5_react@16.13.1
-      react: 16.13.1
-      vite-plugin-react: 2.0.3
+      vite: 0.20.8
+      vite-plugin-react: 2.0.3_vite@0.20.8
     dev: true
     peerDependencies:
       react: '*'
@@ -3716,52 +3648,17 @@ packages:
       vite-plugin-react: ^2.0.3
     resolution:
       integrity: sha512-S6qYMmaC9z6w9LiD5GuWO+ixqhqgq6bSFKbqkUrzDAbyqenvmdROh91UjR6xEfh7fLTEYXuwf/UAoJjh54aqXg==
-  /vite-plugin-mdx/0.0.2_b46904e778278a0668045e7a2c719bb6:
-    dependencies:
-      '@mdx-js/mdx': 1.6.5
-      '@mdx-js/react': 1.6.5
-      vite: 0.20.7
-      vite-plugin-react: 2.0.3_vite@0.20.7
-    dev: true
-    peerDependencies:
-      react: '*'
-      vite: ^0.20.3
-      vite-plugin-react: ^2.0.3
-    resolution:
-      integrity: sha512-S6qYMmaC9z6w9LiD5GuWO+ixqhqgq6bSFKbqkUrzDAbyqenvmdROh91UjR6xEfh7fLTEYXuwf/UAoJjh54aqXg==
-  /vite-plugin-mdx/0.0.2_e7f1b82616aec4567fc55b8d804db88f:
-    dependencies:
-      '@mdx-js/mdx': 1.6.5
-      '@mdx-js/react': 1.6.5_react@16.13.1
-      vite: 0.20.7
-      vite-plugin-react: 2.0.3_vite@0.20.7
-    dev: true
-    peerDependencies:
-      react: '*'
-      vite: ^0.20.3
-      vite-plugin-react: ^2.0.3
-    resolution:
-      integrity: sha512-S6qYMmaC9z6w9LiD5GuWO+ixqhqgq6bSFKbqkUrzDAbyqenvmdROh91UjR6xEfh7fLTEYXuwf/UAoJjh54aqXg==
-  /vite-plugin-react/2.0.3:
+  /vite-plugin-react/2.0.3_vite@0.20.8:
     dependencies:
       '@babel/core': 7.10.2
       react-refresh: 0.8.3
+      vite: 0.20.8
     dev: true
     peerDependencies:
       vite: '>=0.17.0'
     resolution:
       integrity: sha512-CJ04bebCuvv6B1BbVMoT1aEMHJtL8Mo6WmhmRqoWgqgKWnPrRsnjETBAtEDDrAFH57rDThmUUIqxH1PY0MK5Ow==
-  /vite-plugin-react/2.0.3_vite@0.20.7:
-    dependencies:
-      '@babel/core': 7.10.2
-      react-refresh: 0.8.3
-      vite: 0.20.7
-    dev: true
-    peerDependencies:
-      vite: '>=0.17.0'
-    resolution:
-      integrity: sha512-CJ04bebCuvv6B1BbVMoT1aEMHJtL8Mo6WmhmRqoWgqgKWnPrRsnjETBAtEDDrAFH57rDThmUUIqxH1PY0MK5Ow==
-  /vite/0.20.7:
+  /vite/0.20.8:
     dependencies:
       '@babel/parser': 7.10.2
       '@rollup/plugin-commonjs': 13.0.0_rollup@2.15.0
@@ -3815,7 +3712,7 @@ packages:
       node: '>=10.0.0'
     hasBin: true
     resolution:
-      integrity: sha512-uAdq3o0JTJXeN4VjSZPe+QC6FC0mo0J7S3AppwDBxLZ9TlP9SzoBrJy9IY1IPFYw9Yho4iovt2Qb1RH7vhtr2A==
+      integrity: sha512-ZqsDaEKp/rUBLAkOtz+avjFKbOhb38ewesvQmgePg/Y9RcJhmWUqF0cUovFqHNeVamDCdQNLI/kdQMjXg9o87g==
   /vue/3.0.0-beta.14:
     dependencies:
       '@vue/compiler-dom': 3.0.0-beta.14

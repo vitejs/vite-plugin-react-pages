@@ -12,10 +12,11 @@ If the filename is `index$.tsx`, the page url path will be the path of the direc
 
 ## Examples
 
-| file path                  | page url path          |
-| -------------------------- | ---------------------- |
-| `index$.tsx`               | `/`                    |
-| `page-one$.tsx`            | `/page-one`            |
-| `page-two$.md`             | `/page-two`            |
-| `dir-name/index$.jsx`      | `/dir-name`            |
-| `dir-name/page-three$.mdx` | `/dir-name/page-three` |
+| file path                                 | page url path          |
+| ----------------------------------------- | ---------------------- |
+| `index$.tsx`                              | `/`                    |
+| `$.tsx` (has same effect as `index$.tsx`) | `/`                    |
+| `page-one$.tsx`                           | `/page-one`            |
+| `page-two$.md`                            | `/page-two`            |
+| `dir-name/index$.jsx`                     | `/dir-name`            |
+| `dir-name/page-three$.mdx`                | `/dir-name/page-three` |

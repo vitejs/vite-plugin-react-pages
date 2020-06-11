@@ -26,6 +26,6 @@
     "vite": "^0.20.7",
     "vite-plugin-mdx": "^0.0.2",
     "vite-plugin-react": "^2.0.3",
-    "vite-plugin-react-pages": "workspace:^0.0.2"
+    "vite-plugin-react-pages": "workspace:^0.0.4"
   }
 }

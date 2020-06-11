@@ -8,10 +8,8 @@ export default async function onePage(
   pagesDirPath: string,
   fileToRequest: (file: string) => string
 ) {
-  let page = pagePublicPath
-  // resolvePageFile will correctly resolve '' into /$.tsx or /$/index.tsx
-  if (page === '__rootIndex__') page = ''
-  const pageFilePath = await resolvePageFile(page, pagesDirPath)
+  if (pagePublicPath === '/__rootIndex__') pagePublicPath = '/'
+  const pageFilePath = await resolvePageFile(pagePublicPath, pagesDirPath)
   if (!pageFilePath || !fs.existsSync(pageFilePath)) {
     return null
   }
