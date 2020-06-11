@@ -20,3 +20,5 @@ function createPlugin(
 }
 
 export default createPlugin
+
+export { ssrBuild } from './build/ssr'

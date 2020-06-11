@@ -33,15 +33,17 @@ importers:
       vite-plugin-react-pages: 'workspace:^0.0.2'
   fixtures/basic:
     dependencies:
-      '@mdx-js/react': 1.6.5
+      '@mdx-js/react': 1.6.5_react@16.13.1
       '@pika/react': 16.13.1
-      '@pika/react-dom': 16.13.1
-      react-router-dom: 5.2.0
+      '@pika/react-dom': 16.13.1_react@16.13.1
+      react-router-dom: 5.2.0_react@16.13.1
     devDependencies:
       '@types/react': 16.9.35
       '@types/react-router-dom': 5.1.5
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
       vite: 0.20.7
-      vite-plugin-mdx: 0.0.2_b46904e778278a0668045e7a2c719bb6
+      vite-plugin-mdx: 0.0.2_e7f1b82616aec4567fc55b8d804db88f
       vite-plugin-react: 2.0.3_vite@0.20.7
       vite-plugin-react-pages: 'link:../../packages/vite-plugin'
     specifiers:
@@ -50,6 +52,8 @@ importers:
       '@pika/react-dom': ^16.13.1
       '@types/react': ^16.9.35
       '@types/react-router-dom': ^5.1.5
+      react: ^16.13.1
+      react-dom: ^16.13.1
       react-router-dom: ^5.2.0
       vite: ^0.20.7
       vite-plugin-mdx: ^0.0.2
@@ -57,16 +61,18 @@ importers:
       vite-plugin-react-pages: 'workspace:^0.0.2'
   fixtures/use-theme:
     dependencies:
-      '@mdx-js/react': 1.6.5
+      '@mdx-js/react': 1.6.5_react@16.13.1
       '@pika/react': 16.13.1
-      '@pika/react-dom': 16.13.1
-      react-router-dom: 5.2.0
+      '@pika/react-dom': 16.13.1_react@16.13.1
+      react-router-dom: 5.2.0_react@16.13.1
       vite-pages-theme-basic: 'link:../../packages/theme-basic'
     devDependencies:
       '@types/react': 16.9.35
       '@types/react-router-dom': 5.1.5
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
       vite: 0.20.7
-      vite-plugin-mdx: 0.0.2_b46904e778278a0668045e7a2c719bb6
+      vite-plugin-mdx: 0.0.2_e7f1b82616aec4567fc55b8d804db88f
       vite-plugin-react: 2.0.3_vite@0.20.7
       vite-plugin-react-pages: 'link:../../packages/vite-plugin'
     specifiers:
@@ -75,6 +81,8 @@ importers:
       '@pika/react-dom': ^16.13.1
       '@types/react': ^16.9.35
       '@types/react-router-dom': ^5.1.5
+      react: ^16.13.1
+      react-dom: ^16.13.1
       react-router-dom: ^5.2.0
       vite: ^0.20.7
       vite-pages-theme-basic: 'workspace:^0.0.3'
@@ -111,16 +119,19 @@ importers:
       vite-plugin-react-pages: 'workspace:^0.0.2'
   packages/vite-plugin:
     dependencies:
-      '@loadable/component': 5.12.0
+      '@loadable/component': 5.12.0_react@16.13.1
       find-up: 4.1.0
       fs-extra: 9.0.1
       glob: 7.1.6
       gray-matter: 4.0.2
       jest-docblock: 26.0.0
+      minimist: 1.2.5
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
       tiny-invariant: 1.1.0
     devDependencies:
       '@pika/react': 16.13.1
-      '@pika/react-dom': 16.13.1
+      '@pika/react-dom': 16.13.1_react@16.13.1
       '@types/fs-extra': 9.0.1
       '@types/glob': 7.1.2
       '@types/loadable__component': 5.10.0
@@ -129,10 +140,10 @@ importers:
       '@types/react-router-dom': 5.1.5
       chokidar: 3.4.0
       concurrently: 5.2.0
-      react-router-dom: 5.2.0
+      react-router-dom: 5.2.0_react@16.13.1
       typescript: 3.9.5
       vite: 0.20.7
-      vite-plugin-mdx: 0.0.2_b46904e778278a0668045e7a2c719bb6
+      vite-plugin-mdx: 0.0.2_e7f1b82616aec4567fc55b8d804db88f
       vite-plugin-react: 2.0.3_vite@0.20.7
     specifiers:
       '@loadable/component': ^5.12.0
@@ -151,6 +162,9 @@ importers:
       glob: ^7.1.6
       gray-matter: ^4.0.2
       jest-docblock: ^26.0.0
+      minimist: ^1.2.5
+      react: ^16.13.1
+      react-dom: ^16.13.1
       react-router-dom: ^5.2.0
       tiny-invariant: ^1.1.0
       typescript: ^3.9.5
@@ -395,10 +409,11 @@ packages:
     dev: true
     resolution:
       integrity: sha512-AD3AwWBSz0AWF0AkCN9VPiWrvldXq+/e3cHa4J89vo4ymjz1XwrBFFVZmkJTsQIPNk+ZVomPSXUJqq8yyjZsng==
-  /@loadable/component/5.12.0:
+  /@loadable/component/5.12.0_react@16.13.1:
     dependencies:
       '@babel/runtime': 7.10.2
       hoist-non-react-statics: 3.3.2
+      react: 16.13.1
     dev: false
     engines:
       node: '>=8'
@@ -435,6 +450,13 @@ packages:
       react: ^16.9.0
     resolution:
       integrity: sha512-y1Yu9baw3KokFrs7g5RxHpJNSU4e1zk/5bAJX94yVATglG5HyAL0lYMySU8YzebXNE+fJJMCx9CuiQHy2ezoew==
+  /@mdx-js/react/1.6.5_react@16.13.1:
+    dependencies:
+      react: 16.13.1
+    peerDependencies:
+      react: ^16.9.0
+    resolution:
+      integrity: sha512-y1Yu9baw3KokFrs7g5RxHpJNSU4e1zk/5bAJX94yVATglG5HyAL0lYMySU8YzebXNE+fJJMCx9CuiQHy2ezoew==
   /@mdx-js/util/1.6.5:
     dev: true
     resolution:
@@ -464,6 +486,13 @@ packages:
     resolution:
       integrity: sha512-1V9XOY4rDW0rehzbrcqAmHnz8e7SKvX27gh8Gt2WgB0+pdzdiLV83p72kZPU+jvMbS1qU5mauP2iOvO8rhmurQ==
   /@pika/react-dom/16.13.1:
+    peerDependencies:
+      react: ^16.0.0
+    resolution:
+      integrity: sha512-tCROpA6uP7caCNodaOUcqmauQmpVOmFXsaaKUJgLOMiZdlW+L02ItK3WAqGSOw25rM0bbwDXNC/x9PpfiQ9ESg==
+  /@pika/react-dom/16.13.1_react@16.13.1:
+    dependencies:
+      react: 16.13.1
     peerDependencies:
       react: ^16.0.0
     resolution:
@@ -2439,13 +2468,23 @@ packages:
       react: ^0.14.0 || ^15.0.0 || ^16.0.0
     resolution:
       integrity: sha512-b0TytUgFSbgFJGzJqXPKCFCBWigAjpjo+Fl7Vf7ZbKRDptszpppKxXH6DRXEABZ/gcEQczeb0iZ7JvL8e8jjCA==
+  /mini-create-react-context/0.4.0_prop-types@15.7.2+react@16.13.1:
+    dependencies:
+      '@babel/runtime': 7.10.2
+      prop-types: 15.7.2
+      react: 16.13.1
+      tiny-warning: 1.0.3
+    peerDependencies:
+      prop-types: ^15.0.0
+      react: ^0.14.0 || ^15.0.0 || ^16.0.0
+    resolution:
+      integrity: sha512-b0TytUgFSbgFJGzJqXPKCFCBWigAjpjo+Fl7Vf7ZbKRDptszpppKxXH6DRXEABZ/gcEQczeb0iZ7JvL8e8jjCA==
   /minimatch/3.0.4:
     dependencies:
       brace-expansion: 1.1.11
     resolution:
       integrity: sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
   /minimist/1.2.5:
-    dev: true
     resolution:
       integrity: sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
   /ms/2.0.0:
@@ -2829,6 +2868,17 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-u7aTucqRXCMlFbIosaArYJBD2+s=
+  /react-dom/16.13.1_react@16.13.1:
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      prop-types: 15.7.2
+      react: 16.13.1
+      scheduler: 0.19.1
+    peerDependencies:
+      react: ^16.13.1
+    resolution:
+      integrity: sha512-81PIMmVLnCNLO/fFOQxdQkvEq/+Hfpv24XNJfpyZhTRfO0QcmQIF/PgCa1zCOj2w1hrn12MFLyaJ/G0+Mxtfag==
   /react-is/16.13.1:
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -2851,6 +2901,20 @@ packages:
       react: '>=15'
     resolution:
       integrity: sha512-gxAmfylo2QUjcwxI63RhQ5G85Qqt4voZpUXSEqCwykV0baaOTQDR1f0PmY8AELqIyVc0NEZUj0Gov5lNGcXgsA==
+  /react-router-dom/5.2.0_react@16.13.1:
+    dependencies:
+      '@babel/runtime': 7.10.2
+      history: 4.10.1
+      loose-envify: 1.4.0
+      prop-types: 15.7.2
+      react: 16.13.1
+      react-router: 5.2.0_react@16.13.1
+      tiny-invariant: 1.1.0
+      tiny-warning: 1.0.3
+    peerDependencies:
+      react: '>=15'
+    resolution:
+      integrity: sha512-gxAmfylo2QUjcwxI63RhQ5G85Qqt4voZpUXSEqCwykV0baaOTQDR1f0PmY8AELqIyVc0NEZUj0Gov5lNGcXgsA==
   /react-router/5.2.0:
     dependencies:
       '@babel/runtime': 7.10.2
@@ -2867,6 +2931,32 @@ packages:
       react: '>=15'
     resolution:
       integrity: sha512-smz1DUuFHRKdcJC0jobGo8cVbhO3x50tCL4icacOlcwDOEQPq4TMqwx3sY1TP+DvtTgz4nm3thuo7A+BK2U0Dw==
+  /react-router/5.2.0_react@16.13.1:
+    dependencies:
+      '@babel/runtime': 7.10.2
+      history: 4.10.1
+      hoist-non-react-statics: 3.3.2
+      loose-envify: 1.4.0
+      mini-create-react-context: 0.4.0_prop-types@15.7.2+react@16.13.1
+      path-to-regexp: 1.8.0
+      prop-types: 15.7.2
+      react: 16.13.1
+      react-is: 16.13.1
+      tiny-invariant: 1.1.0
+      tiny-warning: 1.0.3
+    peerDependencies:
+      react: '>=15'
+    resolution:
+      integrity: sha512-smz1DUuFHRKdcJC0jobGo8cVbhO3x50tCL4icacOlcwDOEQPq4TMqwx3sY1TP+DvtTgz4nm3thuo7A+BK2U0Dw==
+  /react/16.13.1:
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      prop-types: 15.7.2
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==
   /read-cache/1.0.0:
     dependencies:
       pify: 2.3.0
@@ -3112,6 +3202,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
+  /scheduler/0.19.1:
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+    resolution:
+      integrity: sha512-n/zwRWRYSUj0/3g/otKDRPMh6qv2SYMWNq85IEa8iZyAv8od9zDYpGSnpBEjNgcMNq6Scbu5KfIPxNF72R/2EA==
   /section-matter/1.0.0:
     dependencies:
       extend-shallow: 2.0.1
@@ -3630,6 +3726,20 @@ packages:
       vite-plugin-react: 2.0.3_vite@0.20.7
     dev: true
     peerDependencies:
+      react: '*'
+      vite: ^0.20.3
+      vite-plugin-react: ^2.0.3
+    resolution:
+      integrity: sha512-S6qYMmaC9z6w9LiD5GuWO+ixqhqgq6bSFKbqkUrzDAbyqenvmdROh91UjR6xEfh7fLTEYXuwf/UAoJjh54aqXg==
+  /vite-plugin-mdx/0.0.2_e7f1b82616aec4567fc55b8d804db88f:
+    dependencies:
+      '@mdx-js/mdx': 1.6.5
+      '@mdx-js/react': 1.6.5_react@16.13.1
+      vite: 0.20.7
+      vite-plugin-react: 2.0.3_vite@0.20.7
+    dev: true
+    peerDependencies:
+      react: '*'
       vite: ^0.20.3
       vite-plugin-react: ^2.0.3
     resolution:

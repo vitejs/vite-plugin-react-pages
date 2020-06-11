@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import type { IPageLoaded, IPagesInternal } from './App'
+import { ssrDataCtx } from './ssr/ctx'
 
 // This should be the only file that is blocking SSR
 // because it is using useEffect
@@ -11,9 +12,20 @@ interface IProps {
 
 const PageLoader: React.FC<IProps> = ({ pages, path }) => {
   const { staticData: pageStaticData, _importFn } = pages[path]
-  const [loadState, setLoadState] = useState<ILoadState>(() => ({
-    type: 'loading',
-  }))
+  const ssrData = useContext(ssrDataCtx)
+  const [loadState, setLoadState] = useState<ILoadState>(() => {
+    if (ssrData) {
+      // we already have the data in ssr
+      // don't need to dynamic load it
+      return {
+        type: 'loaded',
+        pageLoaded: ssrData.pages[path],
+      }
+    }
+    return {
+      type: 'loading',
+    }
+  })
   useEffect(() => {
     _importFn()
       .then((pageLoaded) => {
