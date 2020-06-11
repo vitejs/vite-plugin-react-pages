@@ -29,9 +29,11 @@
     "dev-client-copy": "node scripts/watchAndCopy",
     "prepare": "npm run build"
   },
+  "peerDependencies": {
+    "vite-plugin-mdx": "^0.0.2",
+    "vite-plugin-react": "^2.0.3"
+  },
   "devDependencies": {
-    "@pika/react": "^16.13.1",
-    "@pika/react-dom": "^16.13.1",
     "@types/fs-extra": "^9.0.1",
     "@types/glob": "^7.1.2",
     "@types/loadable__component": "^5.10.0",
@@ -40,22 +42,16 @@
     "@types/react-router-dom": "^5.1.5",
     "chokidar": "^3.4.0",
     "concurrently": "^5.2.0",
-    "react-router-dom": "^5.2.0",
     "typescript": "^3.9.5",
-    "vite": "^0.20.7",
-    "vite-plugin-mdx": "^0.0.2",
-    "vite-plugin-react": "^2.0.3"
+    "vite": "^0.20.7"
   },
   "dependencies": {
-    "@loadable/component": "^5.12.0",
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.1",
     "glob": "^7.1.6",
     "gray-matter": "^4.0.2",
     "jest-docblock": "^26.0.0",
     "minimist": "^1.2.5",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
     "tiny-invariant": "^1.1.0"
   }
 }

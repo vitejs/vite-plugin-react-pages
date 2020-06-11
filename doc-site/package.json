@@ -4,11 +4,13 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "clean": "rm -rf node_modules/.vite_opt_cache",
     "dev": "vite serve --force",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
-    "debug:build": "npx --node-arg=--inspect vite build --outDir dist",
-    "clean": "rm -rf node_modules/.vite_opt_cache",
     "build": "rm -rf dist && vite build --outDir dist",
+    "debug:build": "node --inspect node_modules/vite/bin/vite.js build --outDir dist",
+    "ssr": "rm -rf dist && vite-pages ssr",
+    "debug:ssr": "rm -rf dist && node --inspect node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr",
     "deploy": "npm run build && touch ./dist/.nojekyll && gh-pages -d dist -t"
   },
   "keywords": [],

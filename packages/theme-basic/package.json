@@ -19,19 +19,15 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "react-router-dom": "^5.2.0",
-    "vite-plugin-react-pages": "workspace:^0.0.1"
+    "vite-plugin-react-pages": "workspace:^0.0.2"
   },
   "devDependencies": {
-    "@pika/react": "^16.13.1",
-    "@pika/react-dom": "^16.13.1",
     "@types/react": "^16.9.35",
     "@types/react-router-dom": "^5.1.5",
     "chokidar": "^3.4.0",
     "concurrently": "^5.2.0",
     "fs-extra": "^9.0.1",
     "globby": "^11.0.1",
-    "react-router-dom": "^5.2.0",
     "typescript": "^3.9.5",
     "vite-plugin-react-pages": "workspace:^0.0.2"
   },
