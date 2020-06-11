@@ -9,7 +9,10 @@ import { ssrDataCtx } from './ctx'
 export function renderToString(url: string) {
   return ReactDOM.renderToString(
     <React.StrictMode>
-      <StaticRouter location={url}>
+      <StaticRouter
+        basename={process.env.BASE_URL?.replace(/\/$/, '')}
+        location={url}
+      >
         <ssrDataCtx.Provider value={ssrData}>
           <App />
         </ssrDataCtx.Provider>

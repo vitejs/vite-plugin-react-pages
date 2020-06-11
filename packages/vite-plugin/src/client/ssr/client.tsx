@@ -5,7 +5,7 @@ import App from '../App'
 
 ReactDOM.hydrate(
   <React.StrictMode>
-    <BrowserRouter basename={process.env.BASE_URL}>
+    <BrowserRouter basename={process.env.BASE_URL?.replace(/\/$/, '')}>
       <App />
     </BrowserRouter>
   </React.StrictMode>,
