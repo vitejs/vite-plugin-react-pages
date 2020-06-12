@@ -13,7 +13,7 @@ const argv = require('minimist')(process.argv.slice(2))
       if (!viteOptions) {
         throw new Error(`can't resolve vite config. cwd: "${process.cwd()}"`)
       }
-      await require('../dist/node').ssrBuild(viteOptions)
+      await require('../dist/node').ssrBuild({ ...viteOptions, ...argv })
       process.exit(0)
 
     default:
