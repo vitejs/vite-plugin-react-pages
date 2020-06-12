@@ -2,7 +2,7 @@
 
 [Document site](https://csr632.github.io/vite-pages-example/)
 
-[vite-plugin-react-page](https://github.com/csr632/vite-plugin-react-pages) is a [vite](https://github.com/vitejs/vite) plugin for React. **It is very suitable for document site. It is also a great React UI demo development environment** (like [storybook](https://storybook.js.org/)).
+[vite-plugin-react-page](https://github.com/csr632/vite-plugin-react-pages) is a [vite](https://github.com/vitejs/vite) plugin for React. **It is very suitable for document site. It also serves as a great React UI development environment** (like [storybook](https://storybook.js.org/)).
 
 ## Highlights
 
