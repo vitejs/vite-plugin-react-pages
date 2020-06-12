@@ -1,1 +1,1 @@
-export type { IPages, IRenderPage } from './App'
+export type { IPages, IRenderPage } from './types'

@@ -23,7 +23,7 @@ export const createRender = ({
         topNavs={topNavs ?? []}
         logo={logo}
         applyMdStyle={pageData.sourceType === 'md'}
-        path={pageData.path}
+        path={pageData._path}
       />
     )
   }

@@ -3,6 +3,7 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import PageLoader from './PageLoader'
+import type { IPagesInternal } from './types'
 import pages from '/@generated/pages'
 
 let routes = getRouteFromPagesData(pages)
@@ -35,28 +36,3 @@ if (import.meta.hot) {
     routes = getRouteFromPagesData(mod.default)
   })
 }
-
-export interface IPages {
-  [path: string]: {
-    staticData: any
-  }
-}
-
-export interface IPagesInternal {
-  [path: string]: {
-    _importFn: () => Promise<IPageLoaded>
-    staticData: any
-  }
-}
-
-export interface IPageLoaded {
-  /** All exports of page module. */
-  pageData: any
-  /** The nearest _render.tsx from the page module */
-  renderPage: IRenderPage
-}
-
-export type IRenderPage = (
-  pageData: any,
-  pages: IPages
-) => React.ReactElement | null

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import type { IPageLoaded, IPagesInternal } from './App'
+import type { IPageLoaded, IPagesInternal } from './types'
 import { ssrDataCtx } from './ssr/ctx'
 
 // This should be the only file that is blocking SSR
@@ -26,6 +26,7 @@ const PageLoader: React.FC<IProps> = ({ pages, path }) => {
       type: 'loading',
     }
   })
+
   useEffect(() => {
     _importFn()
       .then((pageLoaded) => {
@@ -56,7 +57,9 @@ const PageLoader: React.FC<IProps> = ({ pages, path }) => {
     {
       ...pageStaticData,
       ...pageData,
-      path,
+      // pass app state to advanced users
+      _path: path,
+      _loadState: loadState,
     },
     pages
   )
