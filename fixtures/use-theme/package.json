@@ -1,7 +1,7 @@
 {
   "name": "use-theme",
   "version": "1.0.0",
-  "description": "",
+  "private": true,
   "scripts": {
     "clean": "rm -rf node_modules/.vite_opt_cache",
     "dev": "vite serve --force",
