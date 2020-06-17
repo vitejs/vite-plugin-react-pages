@@ -4,71 +4,76 @@ import grayMatter from 'gray-matter'
 import globby from 'globby'
 
 import { resolvePageFile } from './utils/resolvePageFile'
+import { resolvePageTheme } from './utils/resolvePageTheme'
 
 export interface IPagesData {
   [path: string]: {
     staticData: any
+    themePublicPath: string
+    loadPath: string
   }
 }
 
 export async function collectPagesData(
-  pagesDirPath: string
+  pagesDirPath: string,
+  fileToRequest: (file: string) => string
 ): Promise<IPagesData> {
   const pagePaths = await findPages(pagesDirPath)
   const pageDataEntries = await Promise.all(
     pagePaths.map(
-      async (pagePath): Promise<[string, { staticData: any }]> => {
+      async (
+        pagePath
+      ): Promise<
+        [string, { staticData: any; themePublicPath: string; loadPath: string }]
+      > => {
         const pageFilePath = await resolvePageFile(pagePath, pagesDirPath)
-        const pageCode = await fs.readFile(pageFilePath, 'utf-8')
-        let staticData
-        if (/\.mdx?/.test(pageFilePath)) {
-          const { data: frontmatter } = grayMatter(pageCode)
-          staticData = { ...frontmatter, sourceType: 'md' }
-        } else {
-          staticData = { ...parse(extract(pageCode)), sourceType: 'js' }
-        }
-        return [pagePath, { staticData }]
+
+        const themeFilePath = await resolvePageTheme(
+          pageFilePath,
+          pagesDirPath
+        )
+        const themePublicPath = fileToRequest(themeFilePath)
+
+        // if this is the root index page: /$.tsx or /$/index.tsx
+        // give it a different loadPath
+        // otherwise it will have loadPath '/@generated/pages/'
+        // which will make vite confused when rewriting import
+        const loadPath = `/@generated/pages${
+          pagePath === '/' ? '/__rootIndex__' : pagePath
+        }`
+
+        const staticData = await (async () => {
+          const pageCode = await fs.readFile(pageFilePath, 'utf-8')
+          if (/\.mdx?/.test(pageFilePath)) {
+            const { data: frontmatter } = grayMatter(pageCode)
+            return { ...frontmatter, sourceType: 'md' }
+          } else {
+            return { ...parse(extract(pageCode)), sourceType: 'js' }
+          }
+        })()
+
+        return [pagePath, { staticData, themePublicPath, loadPath }]
       }
     )
   )
   return Object.fromEntries(pageDataEntries)
 }
 
-export async function dynamicImportPagesData(pagesData: IPagesData) {
+export async function renderPagesDataDynamic(pagesData: IPagesData) {
   const codeLines = Object.entries(pagesData).map(
-    ([pagePath, { staticData }]) => {
-      // if this is the root index page: /$.tsx or /$/index.tsx
-      // give it a different loadPath
-      // otherwise it will have loadPath '/@generated/pages/'
-      // which will make vite confused when rewriting import
-      const loadPath = `/@generated/pages${
-        pagePath === '/' ? '/__rootIndex__' : pagePath
-      }`
-      return `pages["${pagePath}"] = {
-             _importFn: () => import("${loadPath}"),
-             staticData: ${JSON.stringify(staticData)},
-         };`
+    ([pagePath, { staticData, themePublicPath, loadPath }], index) => {
+      return `
+import theme${index} from "${themePublicPath}";
+pages["${pagePath}"] = {
+    _importFn: () => import("${loadPath}"),
+    staticData: ${JSON.stringify(staticData)},
+    theme: theme${index},
+};`
     }
   )
   return `const pages = {};
 ${codeLines.join('\n')}
 export default pages;`
-}
-
-export async function staticImportPagesData(pagesData: IPagesData) {
-  const codeLines = Object.keys(pagesData).map((pagePath, index) => {
-    const loadPath = `/@generated/pages${
-      pagePath === '/' ? '/__rootIndex__' : pagePath
-    }`
-    return `
-import * as page${index} from "${loadPath}";
-pages["${pagePath}"] = page${index};`
-  })
-  return `
-export const ssrData = {};
-const pages = ssrData.pages = {};
-${codeLines.join('\n')}
-`
 }
 
 async function findPages(root: string) {

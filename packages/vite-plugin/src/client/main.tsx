@@ -1,13 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App'
+import Client from './ssr/Client'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter basename={process.env.BASE_URL?.replace(/\/$/, '')}>
-      <App />
-    </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+ReactDOM.render(<Client />, document.getElementById('root'))

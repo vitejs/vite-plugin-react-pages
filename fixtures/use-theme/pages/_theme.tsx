@@ -1,6 +1,6 @@
-import { createRender } from 'vite-pages-theme-basic'
+import { createTheme } from 'vite-pages-theme-basic'
 
-export default createRender({
+export default createTheme({
   topNavs: [
     { text: 'index', path: '/' },
     { text: 'React', href: 'https://reactjs.org/' },

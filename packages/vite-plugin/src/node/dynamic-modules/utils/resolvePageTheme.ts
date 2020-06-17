@@ -2,7 +2,7 @@ import invariant from 'tiny-invariant'
 import findUp from 'find-up'
 import * as path from 'path'
 
-export async function resolvePageLayout(
+export async function resolvePageTheme(
   pageFilePath: string,
   pagesDirPath: string
 ) {
@@ -11,7 +11,7 @@ export async function resolvePageLayout(
   // console.log('pageFile', pageFile)
   // console.log('pagesDirPath', pagesDirPath)
   const result = await findUp(
-    ['_render.js', '_render.ts', '_render.jsx', '_render.tsx'],
+    ['_theme.js', '_theme.ts', '_theme.jsx', '_theme.tsx'],
     {
       type: 'file',
       cwd: currentCwd,

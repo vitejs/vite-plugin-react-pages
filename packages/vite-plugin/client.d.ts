@@ -1,1 +1,1 @@
-export type { IPages, IRenderPage } from './dist/client'
+export type { IPages, ITheme } from './dist/client'

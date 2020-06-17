@@ -1,5 +1,5 @@
 import React from 'react'
-import type { IRenderPage, IPages } from 'vite-plugin-react-pages/client'
+import type { ITheme, IPages } from 'vite-plugin-react-pages/client'
 import Layout from './layout'
 import type { ISideMenuData } from './layout/side-menu'
 import type { ITopNavData } from './layout/top-bar'
@@ -10,22 +10,65 @@ interface IOption {
   logo?: React.ReactNode
 }
 
-export const createRender = ({
+export function createTheme({
   topNavs,
   logo,
   sideMenuData,
-}: IOption = {}): IRenderPage => {
-  return (pageData, pages) => {
-    return (
-      <Layout
-        Content={pageData.default}
-        sideMenuData={sideMenuData ?? defaultMenu(pages)}
-        topNavs={topNavs ?? []}
-        logo={logo}
-        applyMdStyle={pageData.sourceType === 'md'}
-        path={pageData._path}
-      />
-    )
+}: IOption = {}): ITheme {
+  return {
+    initialLoading(pageStaticData, pages) {
+      return (
+        <Layout
+          sideMenuData={sideMenuData ?? defaultMenu(pages)}
+          topNavs={topNavs ?? []}
+          logo={logo}
+          applyMdStyle={pageStaticData.sourceType === 'md'}
+          path={pageStaticData._path}
+        >
+          <p>initial Loading...</p>
+        </Layout>
+      )
+    },
+    loaded(pageData, pages) {
+      const ContentComp = pageData.default
+      return (
+        <Layout
+          sideMenuData={sideMenuData ?? defaultMenu(pages)}
+          topNavs={topNavs ?? []}
+          logo={logo}
+          applyMdStyle={pageData.sourceType === 'md'}
+          path={pageData._path}
+        >
+          <ContentComp />
+        </Layout>
+      )
+    },
+    transitionLoading(pageStaticData, pages, prevPageData) {
+      return (
+        <Layout
+          sideMenuData={sideMenuData ?? defaultMenu(pages)}
+          topNavs={topNavs ?? []}
+          logo={logo}
+          applyMdStyle={pageStaticData.sourceType === 'md'}
+          path={pageStaticData._path}
+        >
+          <p>transition Loading...</p>
+        </Layout>
+      )
+    },
+    loadError(error, pageStaticData, pages) {
+      return (
+        <Layout
+          sideMenuData={sideMenuData ?? defaultMenu(pages)}
+          topNavs={topNavs ?? []}
+          logo={logo}
+          applyMdStyle={pageStaticData.sourceType === 'md'}
+          path={pageStaticData._path}
+        >
+          <p>Load error</p>
+        </Layout>
+      )
+    },
   }
 }
 

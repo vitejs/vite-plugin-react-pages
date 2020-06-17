@@ -9,6 +9,6 @@ module.exports = {
   alias: {
     '/@layout/': path.join(__dirname, 'layout'),
   },
-  plugins: [vpr, mdx, pages()],
+  plugins: [vpr, mdx(), pages()],
   minify: false,
 } as UserConfig

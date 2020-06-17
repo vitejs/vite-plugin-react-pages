@@ -1,4 +1,12 @@
 .sideMenu {
   width: 240px;
   border-right: 1px solid black;
+  overflow-y: auto;
+  padding: 8px 12px;
+  flex: 0 0 auto;
+}
+
+.sideMenu li {
+  font-size: 24px;
+  margin-bottom: 12px;
 }

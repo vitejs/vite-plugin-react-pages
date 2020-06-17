@@ -1,4 +1,5 @@
 import { createContext } from 'react'
+import { IPages } from '../types'
 
 /**
  * dynamic import don't work in ssr
@@ -7,4 +8,13 @@ import { createContext } from 'react'
  * so the App can render the page data directly
  * instead of render the loading state
  */
-export const ssrDataCtx = createContext<any>(undefined)
+export const dataCacheCtx = createContext<IDataCache>({ pages: {} })
+export const setDataCacheCtx = createContext<
+  React.Dispatch<React.SetStateAction<IDataCache>>
+>(() => {
+  throw new Error(`setDataCacheCtx not found`)
+})
+
+export interface IDataCache {
+  pages: IPages
+}

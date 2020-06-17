@@ -9,7 +9,6 @@ import './global.css'
 import 'github-markdown-css/github-markdown.css'
 
 interface IProps {
-  Content: React.ComponentType
   sideMenuData: ISideMenuData[]
   topNavs: ITopNavData[]
   logo: React.ReactNode
@@ -18,12 +17,12 @@ interface IProps {
 }
 
 const Layout: React.FC<IProps> = ({
-  Content,
   sideMenuData,
   topNavs,
   logo,
   applyMdStyle,
   path,
+  children,
 }) => {
   return (
     <div className={s.layout}>
@@ -34,7 +33,7 @@ const Layout: React.FC<IProps> = ({
           className={s.content + (applyMdStyle ? ` markdown-body` : '')}
           key={path}
         >
-          <Content />
+          {children}
         </div>
       </div>
     </div>

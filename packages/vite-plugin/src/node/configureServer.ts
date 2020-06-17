@@ -4,7 +4,7 @@ import * as path from 'path'
 
 import { CLIENT_PATH } from './constants'
 import {
-  dynamicImportPagesData,
+  renderPagesDataDynamic,
   collectPagesData,
 } from './dynamic-modules/pages'
 import onePage from './dynamic-modules/onePage'
@@ -14,8 +14,10 @@ export const configureServer = (
 ): Plugin['configureServer'] => ({ app, resolver }) => {
   app.use(async (ctx, next) => {
     if (ctx.path === '/@generated/pages') {
-      ctx.body = await dynamicImportPagesData(
-        await collectPagesData(pagesDirPath)
+      ctx.body = await renderPagesDataDynamic(
+        await collectPagesData(pagesDirPath, (file) =>
+          resolver.fileToRequest(file)
+        )
       )
       ctx.type = 'js'
       ctx.status = 200

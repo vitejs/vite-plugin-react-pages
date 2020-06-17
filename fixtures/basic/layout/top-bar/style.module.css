@@ -1,6 +1,7 @@
 .topBar {
   border-bottom: 1px solid black;
   display: flex;
+  flex: 0 0 auto;
   height: 50px;
   align-items: center;
   justify-content: space-between;
@@ -8,6 +9,7 @@
 
 .logo {
   margin-left: 12px;
+  font-size: 24px;
 }
 
 .navs {

@@ -5,6 +5,18 @@
 }
 
 .body {
+  overflow: hidden;
   flex: 1 1 auto;
   display: flex;
+}
+
+.content {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 8px 12px;
+  padding: 24px;
+}
+
+.content.content {
+  font-size: 20px;
 }

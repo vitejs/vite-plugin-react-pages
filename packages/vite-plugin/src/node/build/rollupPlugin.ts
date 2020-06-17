@@ -2,8 +2,7 @@ import type { Plugin } from 'vite'
 
 import {
   collectPagesData,
-  dynamicImportPagesData,
-  staticImportPagesData,
+  renderPagesDataDynamic,
 } from '../dynamic-modules/pages'
 import type { IPagesData } from '../dynamic-modules/pages'
 import onePage from '../dynamic-modules/onePage'
@@ -33,8 +32,9 @@ export default (pagesDirPath: string): RollupPlugin => {
     },
     async load(id) {
       if (id === '/@generated/pages') {
-        if (!pagesData) pagesData = collectPagesData(pagesDirPath)
-        return dynamicImportPagesData(await pagesData)
+        if (!pagesData)
+          pagesData = collectPagesData(pagesDirPath, (file) => file)
+        return renderPagesDataDynamic(await pagesData)
       }
       if (id.startsWith('/@generated/pages/')) {
         const pagePublicPath = id.slice('/@generated/pages'.length)
@@ -45,9 +45,27 @@ export default (pagesDirPath: string): RollupPlugin => {
         return code
       }
       if (id === '/@generated/ssrData') {
-        if (!pagesData) pagesData = collectPagesData(pagesDirPath)
-        return staticImportPagesData(await pagesData)
+        if (!pagesData)
+          pagesData = collectPagesData(pagesDirPath, (file) => file)
+        return renderSSRPagesData(await pagesData)
       }
     },
   }
+}
+
+async function renderSSRPagesData(pagesData: IPagesData) {
+  const codeLines = Object.entries(pagesData).map(
+    ([pagePath, { staticData, themePublicPath, loadPath }], index) => {
+      // import page data and theme data statically
+      return `
+import * as page${index} from "${loadPath}";
+import theme${index} from "${themePublicPath}";
+pages["${pagePath}"] = page${index};`
+    }
+  )
+  return `
+export const ssrData = {};
+const pages = ssrData.pages = {};
+${codeLines.join('\n')}
+`
 }

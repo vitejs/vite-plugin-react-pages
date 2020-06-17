@@ -4,7 +4,7 @@ import { StaticRouter } from 'react-router-dom'
 
 import { ssrData } from '/@generated/ssrData'
 import App from '../App'
-import { ssrDataCtx } from './ctx'
+import { dataCacheCtx } from './ctx'
 
 export function renderToString(url: string) {
   return ReactDOM.renderToString(
@@ -13,9 +13,9 @@ export function renderToString(url: string) {
         basename={process.env.BASE_URL?.replace(/\/$/, '')}
         location={url}
       >
-        <ssrDataCtx.Provider value={ssrData}>
+        <dataCacheCtx.Provider value={ssrData}>
           <App />
-        </ssrDataCtx.Provider>
+        </dataCacheCtx.Provider>
       </StaticRouter>
     </React.StrictMode>
   )
