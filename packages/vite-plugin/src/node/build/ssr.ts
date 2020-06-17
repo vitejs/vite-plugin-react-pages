@@ -51,7 +51,9 @@ export async function ssrBuild(viteOptions: UserConfig) {
         if (match) {
           let pagePublicPath = '/' + match[1]
           if (pagePublicPath === '/__rootIndex__') pagePublicPath = '/'
-          acc[pagePublicPath] = path.join('/_assets', asset.fileName)
+          let basePath = viteOptions.base ?? ''
+          basePath = basePath.replace(/\/$/, '')
+          acc[pagePublicPath] = path.join(`${basePath}/_assets`, asset.fileName)
         }
       }
       return acc
