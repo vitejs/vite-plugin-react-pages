@@ -5,6 +5,10 @@ import { StaticRouter } from 'react-router-dom'
 import { ssrData } from '/@generated/ssrData'
 import App from '../App'
 import { dataCacheCtx } from './ctx'
+import type { IDataCache } from './ctx'
+
+// put all page data in cache, so that we don't need to load it in ssr
+const dataCache: IDataCache = { pages: ssrData }
 
 export function renderToString(url: string) {
   return ReactDOM.renderToString(
@@ -13,7 +17,7 @@ export function renderToString(url: string) {
         basename={process.env.BASE_URL?.replace(/\/$/, '')}
         location={url}
       >
-        <dataCacheCtx.Provider value={ssrData}>
+        <dataCacheCtx.Provider value={dataCache}>
           <App />
         </dataCacheCtx.Provider>
       </StaticRouter>

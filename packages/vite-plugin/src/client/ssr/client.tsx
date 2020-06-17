@@ -4,8 +4,14 @@ import App from '../App'
 import { dataCacheCtx, setDataCacheCtx } from './ctx'
 import type { IDataCache } from './ctx'
 
-const Client: React.FC = () => {
-  const [dataCache, setDataCache] = useState<IDataCache>({ pages: {} })
+interface IProps {
+  initCache?: IDataCache
+}
+
+const Client: React.FC<IProps> = ({ initCache }) => {
+  const [dataCache, setDataCache] = useState<IDataCache>(
+    initCache ?? { pages: {} }
+  )
   return (
     <React.StrictMode>
       <BrowserRouter basename={process.env.BASE_URL?.replace(/\/$/, '')}>
@@ -20,4 +26,3 @@ const Client: React.FC = () => {
 }
 
 export default Client
-

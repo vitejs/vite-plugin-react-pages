@@ -59,13 +59,11 @@ async function renderSSRPagesData(pagesData: IPagesData) {
       // import page data and theme data statically
       return `
 import * as page${index} from "${loadPath}";
-import theme${index} from "${themePublicPath}";
-pages["${pagePath}"] = page${index};`
+ssrData["${pagePath}"] = page${index}.pageData;`
     }
   )
   return `
 export const ssrData = {};
-const pages = ssrData.pages = {};
 ${codeLines.join('\n')}
 `
 }
