@@ -19,7 +19,7 @@
     "@pika/react": "^16.13.1",
     "@pika/react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "vite-pages-theme-basic": "workspace:^0.1.0"
+    "vite-pages-theme-basic": "workspace:^0.2.1"
   },
   "devDependencies": {
     "@types/react": "^16.9.35",
@@ -29,6 +29,6 @@
     "vite": "^0.20.7",
     "vite-plugin-mdx": "^0.1.2",
     "vite-plugin-react": "^2.0.3",
-    "vite-plugin-react-pages": "workspace:^0.1.0"
+    "vite-plugin-react-pages": "workspace:^0.2.1"
   }
 }
