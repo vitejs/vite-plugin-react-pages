@@ -19,7 +19,7 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "vite-plugin-react-pages": "workspace:^0.3.0"
+    "vite-plugin-react-pages": "^0.3.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.38",
