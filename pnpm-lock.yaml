@@ -12,9 +12,9 @@ importers:
       '@types/react-router-dom': 5.1.5
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
-      vite: 0.20.10
+      vite: 1.0.0-beta.4
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 2.0.4_vite@0.20.10
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.4
       vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages'
     specifiers:
       '@mdx-js/react': ^1.6.6
@@ -25,9 +25,9 @@ importers:
       react: ^16.13.1
       react-dom: ^16.13.1
       react-router-dom: ^5.2.0
-      vite: ^0.20.10
+      vite: ^1.0.0-beta.4
       vite-plugin-mdx: 'workspace:^0.1.2'
-      vite-plugin-react: ^2.0.4
+      vite-plugin-react: ^3.0.1
       vite-plugin-react-pages: 'workspace:^0.2.1'
   fixtures/basic:
     dependencies:
@@ -40,9 +40,9 @@ importers:
       '@types/react-router-dom': 5.1.5
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
-      vite: 0.20.10
+      vite: 1.0.0-beta.4
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 2.0.4_vite@0.20.10
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.4
       vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages'
     specifiers:
       '@mdx-js/react': ^1.6.6
@@ -53,9 +53,9 @@ importers:
       react: ^16.13.1
       react-dom: ^16.13.1
       react-router-dom: ^5.2.0
-      vite: ^0.20.10
+      vite: ^1.0.0-beta.4
       vite-plugin-mdx: 'workspace:^0.1.2'
-      vite-plugin-react: ^2.0.4
+      vite-plugin-react: ^3.0.1
       vite-plugin-react-pages: 'workspace:^0.2.1'
   fixtures/mdx-basic:
     dependencies:
@@ -63,16 +63,16 @@ importers:
       '@pika/react-dom': 16.13.1
       styled-components: 5.1.1_styled-components@5.1.1
     devDependencies:
-      vite: 0.20.10
+      vite: 1.0.0-beta.4
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 2.0.4_vite@0.20.10
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.4
     specifiers:
       '@pika/react': ^16.13.1
       '@pika/react-dom': ^16.13.1
       styled-components: ^5.1.1
-      vite: ^0.20.10
+      vite: ^1.0.0-beta.4
       vite-plugin-mdx: 'workspace:^0.1.2'
-      vite-plugin-react: ^2.0.4
+      vite-plugin-react: ^3.0.1
   fixtures/mdx-plugin:
     dependencies:
       '@pika/react': 16.13.1
@@ -80,17 +80,17 @@ importers:
     devDependencies:
       remark-slug: 6.0.0
       remark-toc: 7.0.0
-      vite: 0.20.10
+      vite: 1.0.0-beta.4
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 2.0.4_vite@0.20.10
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.4
     specifiers:
       '@pika/react': ^16.13.1
       '@pika/react-dom': ^16.13.1
       remark-slug: ^6.0.0
       remark-toc: ^7.0.0
-      vite: ^0.20.10
+      vite: ^1.0.0-beta.4
       vite-plugin-mdx: 'workspace:^0.1.2'
-      vite-plugin-react: ^2.0.4
+      vite-plugin-react: ^3.0.1
   fixtures/use-theme:
     dependencies:
       '@mdx-js/react': 1.6.6_react@16.13.1
@@ -103,9 +103,9 @@ importers:
       '@types/react-router-dom': 5.1.5
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
-      vite: 0.20.10
+      vite: 1.0.0-beta.4
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 2.0.4_vite@0.20.10
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.4
       vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages'
     specifiers:
       '@mdx-js/react': ^1.6.6
@@ -116,10 +116,10 @@ importers:
       react: ^16.13.1
       react-dom: ^16.13.1
       react-router-dom: ^5.2.0
-      vite: ^0.20.10
+      vite: ^1.0.0-beta.4
       vite-pages-theme-basic: 'workspace:^0.2.1'
       vite-plugin-mdx: 'workspace:^0.1.2'
-      vite-plugin-react: ^2.0.4
+      vite-plugin-react: ^3.0.1
       vite-plugin-react-pages: 'workspace:^0.2.1'
   packages/theme-basic:
     dependencies:
@@ -144,7 +144,7 @@ importers:
       globby: ^11.0.1
       react: ^16.13.1
       typescript: ^3.9.5
-      vite-plugin-react-pages: 'workspace:^0.2.1'
+      vite-plugin-react-pages: 'workspace:^*'
   packages/vite-plugin-mdx:
     dependencies:
       '@mdx-js/mdx': 1.6.6
@@ -152,15 +152,13 @@ importers:
       remark-frontmatter: 2.0.0
     devDependencies:
       typescript: 3.9.5
-      vite: 0.20.10
-      vite-plugin-react: 2.0.4_vite@0.20.10
+      vite: 1.0.0-beta.4
     specifiers:
       '@mdx-js/mdx': ^1.6.6
       '@mdx-js/react': ^1.6.6
       remark-frontmatter: ^2.0.0
       typescript: ^3.9.5
-      vite: ^0.20.10
-      vite-plugin-react: ^2.0.4
+      vite: ^1.0.0-beta.4
   packages/vite-plugin-react-pages:
     dependencies:
       '@babel/preset-react': 7.10.1
@@ -190,7 +188,7 @@ importers:
       concurrently: 5.2.0
       react: 16.13.1
       typescript: 3.9.5
-      vite: 0.20.10
+      vite: 1.0.0-beta.4
     specifiers:
       '@babel/preset-react': ^7.10.1
       '@babel/preset-typescript': ^7.10.1
@@ -218,7 +216,7 @@ importers:
       rollup-plugin-postcss: ^3.1.2
       tiny-invariant: ^1.1.0
       typescript: ^3.9.5
-      vite: ^0.20.10
+      vite: ^1.0.0-beta.4
 lockfileVersion: 5.1
 packages:
   /@babel/code-frame/7.10.3:
@@ -1810,6 +1808,10 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-uEUyaDKoSQ1M4Oq8l45hSE26SnTxL6snNnqvK/VWx5wJhmff5z0FUVJDKDanor/6w3kzE3i7XZOk+7wC0EXr1A==
+  /dotenv-expand/5.1.0:
+    dev: true
+    resolution:
+      integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==
   /dotenv/8.2.0:
     dev: true
     engines:
@@ -1911,12 +1913,12 @@ packages:
       node: '>= 0.4'
     resolution:
       integrity: sha512-QCOllgZJtaUo9miYBcLChTUaHNjJF3PYs1VidD7AwiEj1kYxKeQTctLAezAOH5ZKRH0g2IgPn6KwB4IT8iRpvA==
-  /esbuild/0.4.14:
+  /esbuild/0.5.11:
     dev: true
     hasBin: true
     requiresBuild: true
     resolution:
-      integrity: sha512-8lx+KpHMQM6t3JFutzCWLckcaVQyv5qvdCzWHQdXGGh16SXdv5nfo/+izWcF367PlMkCMfV7iWW7J5I8Skx7ZQ==
+      integrity: sha512-E/SBK3tHIcj3iCZh0bUf8/pmEAcM10W7SH2feuHZSzTpLZmtxlWl9j5tesY6OLkv2oDgfX0r9mbOeltXUbJe4Q==
   /escape-html/1.0.3:
     dev: true
     resolution:
@@ -4140,6 +4142,14 @@ packages:
       '@vue/compiler-sfc': '*'
     resolution:
       integrity: sha512-APbkp9EDk0Vj5PpZNaa11yyNhr/Uy8OkrzpkajxUvONU+S7+qqOSVlaNTcsxiT198dOC6TM0iJK5ChDgEVecTA==
+  /rollup-plugin-web-worker-loader/1.3.1_rollup@2.18.0:
+    dependencies:
+      rollup: 2.18.0
+    dev: true
+    peerDependencies:
+      rollup: ^1.9.2 || ^2.0.0
+    resolution:
+      integrity: sha512-Td36kmB4iz10xqI/gJFCv2xZZ21fY6E7AGVFOT3PWIDkM1BeBrfuzeNh1tFIkD6fHtjQhppnedkYFaIlGHuEvA==
   /rollup-pluginutils/2.8.2:
     dependencies:
       estree-walker: 0.6.1
@@ -4763,17 +4773,17 @@ packages:
     dev: false
     resolution:
       integrity: sha512-lRjkpyDGjVlBA7cDQhQ+gNcvB1BGaTHYuSOcY3S7OhDmBtnzX95FhtZZDecSTDm6aajFymyve6S5DN4ZHGezdQ==
-  /vite-plugin-react/2.0.4_vite@0.20.10:
+  /vite-plugin-react/3.0.1_vite@1.0.0-beta.4:
     dependencies:
       '@babel/core': 7.10.3
       react-refresh: 0.8.3
-      vite: 0.20.10
+      vite: 1.0.0-beta.4
     dev: true
     peerDependencies:
-      vite: '>=0.17.0'
+      vite: '>=1.0.0-beta.1'
     resolution:
-      integrity: sha512-k1trwmWkBau2lOV1Ys0gM2MMJfNomVUcHTMcLbxkoyKCEcBxF3/8P/eqobCjOwVk7XydR7YnQ652NYcyLwg7Uw==
-  /vite/0.20.10:
+      integrity: sha512-MMqMc/F8KR/Cgk/BKcyp85nPBGbnh1fO45LmKBRchu4QHhzIpXTBHJP6vns1Z7zKo22dB4T7wEkO/SWzGqWwZg==
+  /vite/1.0.0-beta.4:
     dependencies:
       '@babel/parser': 7.10.3
       '@rollup/plugin-commonjs': 13.0.0_rollup@2.18.0
@@ -4789,8 +4799,9 @@ packages:
       clean-css: 4.2.3
       debug: 4.1.1
       dotenv: 8.2.0
+      dotenv-expand: 5.1.0
       es-module-lexer: 0.3.24
-      esbuild: 0.4.14
+      esbuild: 0.5.11
       etag: 1.8.1
       execa: 4.0.2
       fs-extra: 9.0.1
@@ -4818,6 +4829,7 @@ packages:
       rollup-plugin-dynamic-import-variables: 1.0.2_rollup@2.18.0
       rollup-plugin-terser: 5.3.0_rollup@2.18.0
       rollup-plugin-vue: 6.0.0-beta.6_@vue+compiler-sfc@3.0.0-beta.15
+      rollup-plugin-web-worker-loader: 1.3.1_rollup@2.18.0
       selfsigned: 1.10.7
       slash: 3.0.0
       vue: 3.0.0-beta.15
@@ -4827,7 +4839,7 @@ packages:
       node: '>=10.0.0'
     hasBin: true
     resolution:
-      integrity: sha512-7CPeAbsaXUKf6fDVWBsZtEBHDgjEVCiBatj1b9kqfbwqc3jP0JeyVDrJjP52skNqX8w8/V65YVDrYTllOnssWA==
+      integrity: sha512-U/Tlxjf1FiJIHKAe14kOr0U5Q1z5UZXghESiisdJCTrFze3pRjlxr1R9nm/NmwyCH6J7E9XiHWlZMWZoogocOA==
   /vue/3.0.0-beta.15:
     dependencies:
       '@vue/compiler-dom': 3.0.0-beta.15

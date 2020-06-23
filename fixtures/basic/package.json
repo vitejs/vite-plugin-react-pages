@@ -23,9 +23,9 @@
     "@types/react-router-dom": "^5.1.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "vite": "^0.20.10",
+    "vite": "^1.0.0-beta.4",
     "vite-plugin-mdx": "workspace:^0.1.2",
-    "vite-plugin-react": "^2.0.4",
+    "vite-plugin-react": "^3.0.1",
     "vite-plugin-react-pages": "workspace:^0.2.1"
   }
 }
