@@ -8,6 +8,7 @@
     "ver": "pnpm recursive --filter {packages}[origin/master] exec -- npm version",
     "ver:p": "npm run ver -- patch",
     "ver:mi": "npm run ver -- minor",
-    "pub": "pnpm -r publish --filter {packages}"
+    "pub": "pnpm -r publish --filter {packages}",
+    "update-deps": "pnpm recursive update -i -L"
   }
 }
