@@ -1,0 +1,31 @@
+{
+  "name": "basic",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf node_modules/.vite_opt_cache",
+    "dev": "vite serve --force",
+    "debug": "node --inspect ./node_modules/vite/bin/vite serve",
+    "build": "rm -rf dist && vite build --outDir dist",
+    "debug:build": "node --inspect node_modules/vite/bin/vite.js build --outDir dist",
+    "ssr": "rm -rf dist && vite-pages ssr",
+    "debug:ssr": "rm -rf dist && node --inspect node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr"
+  },
+  "dependencies": {
+    "@mdx-js/react": "^1.6.5",
+    "@pika/react": "^16.13.1",
+    "@pika/react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.35",
+    "@types/react-router-dom": "^5.1.5",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "vite": "^0.20.7",
+    "vite-plugin-mdx": "^0.1.2",
+    "vite-plugin-react": "^2.0.3",
+    "vite-plugin-react-pages": "workspace:^0.2.1"
+  }
+}

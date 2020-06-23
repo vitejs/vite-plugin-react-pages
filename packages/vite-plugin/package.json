@@ -34,6 +34,7 @@
     "vite-plugin-react": "^2.0.3"
   },
   "devDependencies": {
+    "@types/enhanced-resolve": "^3.0.6",
     "@types/fs-extra": "^9.0.1",
     "@types/glob": "^7.1.2",
     "@types/loadable__component": "^5.10.0",
@@ -47,6 +48,10 @@
     "vite": "^0.20.7"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.10.1",
+    "@babel/preset-typescript": "^7.10.1",
+    "@rollup/plugin-babel": "^5.0.3",
+    "enhanced-resolve": "^4.2.0",
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.1",
     "glob": "^7.1.6",
@@ -54,6 +59,9 @@
     "gray-matter": "^4.0.2",
     "jest-docblock": "^26.0.0",
     "minimist": "^1.2.5",
+    "read-pkg-up": "^7.0.1",
+    "rollup": "^2.17.0",
+    "rollup-plugin-postcss": "^3.1.2",
     "tiny-invariant": "^1.1.0"
   }
 }

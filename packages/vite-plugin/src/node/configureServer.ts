@@ -8,6 +8,7 @@ import {
   collectPagesData,
 } from './dynamic-modules/pages'
 import onePage from './dynamic-modules/onePage'
+import { analyzeSourceCode } from './dynamic-modules/analyzeSourceCode'
 
 export const configureServer = (
   pagesDirPath: string
@@ -23,7 +24,7 @@ export const configureServer = (
       ctx.status = 200
       await next()
     } else if (ctx.path.startsWith('/@generated/pages/')) {
-      let page = ctx.path.slice('/@generated/pages'.length)
+      const page = ctx.path.slice('/@generated/pages'.length)
       const code = await onePage(page, pagesDirPath, (file) =>
         resolver.fileToRequest(file)
       )
@@ -32,6 +33,12 @@ export const configureServer = (
         return
       }
       ctx.body = code
+      ctx.type = 'js'
+      await next()
+    } else if ('analyzeSource' in ctx.query) {
+      const filePath = resolver.requestToFile(ctx.path)
+      const result = await analyzeSourceCode(filePath)
+      ctx.body = `export default ${JSON.stringify(result)}`
       ctx.type = 'js'
       await next()
     } else {

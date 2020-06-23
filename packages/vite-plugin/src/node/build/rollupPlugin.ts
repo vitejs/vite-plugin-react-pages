@@ -6,6 +6,7 @@ import {
 } from '../dynamic-modules/pages'
 import type { IPagesData } from '../dynamic-modules/pages'
 import onePage from '../dynamic-modules/onePage'
+import { analyzeSourceCode } from '../dynamic-modules/analyzeSourceCode'
 
 type RollupPlugin = ArrayItemType<
   NonNullable<NonNullable<Plugin['rollupInputOptions']>['plugins']>
@@ -19,7 +20,7 @@ export default (pagesDirPath: string): RollupPlugin => {
   let pagesData: Promise<IPagesData>
   return {
     name: 'vite-pages-dynamic-modules',
-    resolveId(importee) {
+    async resolveId(importee, importer) {
       if (importee === '/@generated/pages') {
         return importee
       }
@@ -28,6 +29,14 @@ export default (pagesDirPath: string): RollupPlugin => {
       }
       if (importee.startsWith('/@generated/ssrData')) {
         return importee
+      }
+      if (importee.endsWith('?analyzeSource')) {
+        const path = importee.replace(/\?analyzeSource$/, '')
+        const absPath = await this.resolve(path, importer)
+        if (!absPath?.id) {
+          throw new Error(`can not resolve importee: "${importee}"`)
+        }
+        return `${absPath.id}?analyzeSource`
       }
     },
     async load(id) {
@@ -48,6 +57,11 @@ export default (pagesDirPath: string): RollupPlugin => {
         if (!pagesData)
           pagesData = collectPagesData(pagesDirPath, (file) => file)
         return renderSSRPagesData(await pagesData)
+      }
+      if (id.endsWith('?analyzeSource')) {
+        const filePath = id.replace(/\?analyzeSource$/, '')
+        const result = await analyzeSourceCode(filePath)
+        return `export default ${JSON.stringify(result)}`
       }
     },
   }
