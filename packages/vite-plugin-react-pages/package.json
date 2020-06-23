@@ -30,7 +30,7 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "vite-plugin-mdx": "^0.1.0",
+    "vite-plugin-mdx": "workspace:^0.1.2",
     "vite-plugin-react": "^2.0.3"
   },
   "devDependencies": {

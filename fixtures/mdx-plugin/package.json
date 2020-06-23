@@ -20,6 +20,6 @@
     "remark-toc": "^7.0.0",
     "vite": "^0.20.3",
     "vite-plugin-react": "^2.0.3",
-    "vite-plugin-mdx": "^0.0.1"
+    "vite-plugin-mdx": "workspace:^0.1.2"
   }
 }
