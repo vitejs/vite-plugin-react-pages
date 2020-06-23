@@ -1,0 +1,44 @@
+{
+  "name": "vite-plugin-mdx",
+  "version": "0.1.2",
+  "description": "Vite plugin for MDX",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsc -w -p .",
+    "build": "rm -rf dist && tsc -p .",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "vite",
+    "react",
+    "mdx",
+    "hmr"
+  ],
+  "author": "csr632",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csr632/vite-plugin-react-pages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/csr632/vite-plugin-react-pages/issues"
+  },
+  "homepage": "https://github.com/csr632/vite-plugin-react-pages",
+  "peerDependencies": {
+    "vite": "^0.20.8",
+    "vite-plugin-react": "^2.0.3"
+  },
+  "dependencies": {
+    "@mdx-js/mdx": "^1.6.5",
+    "@mdx-js/react": "^1.6.5",
+    "remark-frontmatter": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.9.5",
+    "vite": "^0.20.8",
+    "vite-plugin-react": "^2.0.3"
+  }
+}
