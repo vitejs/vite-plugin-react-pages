@@ -17,8 +17,8 @@
     "styled-components": "^5.1.1"
   },
   "devDependencies": {
-    "vite": "^0.20.3",
-    "vite-plugin-react": "^2.0.3",
-    "vite-plugin-mdx": "workspace:^0.1.2"
+    "vite": "^0.20.10",
+    "vite-plugin-mdx": "workspace:^0.1.2",
+    "vite-plugin-react": "^2.0.4"
   }
 }

@@ -38,19 +38,19 @@
     "@types/fs-extra": "^9.0.1",
     "@types/glob": "^7.1.2",
     "@types/loadable__component": "^5.10.0",
-    "@types/react": "^16.9.35",
+    "@types/react": "^16.9.38",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
     "chokidar": "^3.4.0",
     "concurrently": "^5.2.0",
     "react": "^16.13.1",
     "typescript": "^3.9.5",
-    "vite": "^0.20.7"
+    "vite": "^0.20.10"
   },
   "dependencies": {
     "@babel/preset-react": "^7.10.1",
     "@babel/preset-typescript": "^7.10.1",
-    "@rollup/plugin-babel": "^5.0.3",
+    "@rollup/plugin-babel": "^5.0.4",
     "enhanced-resolve": "^4.2.0",
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.1",
@@ -60,7 +60,7 @@
     "jest-docblock": "^26.0.0",
     "minimist": "^1.2.5",
     "read-pkg-up": "^7.0.1",
-    "rollup": "^2.17.0",
+    "rollup": "^2.18.0",
     "rollup-plugin-postcss": "^3.1.2",
     "tiny-invariant": "^1.1.0"
   }

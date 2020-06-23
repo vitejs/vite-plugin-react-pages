@@ -22,7 +22,7 @@
     "vite-plugin-react-pages": "workspace:^0.0.2"
   },
   "devDependencies": {
-    "@types/react": "^16.9.35",
+    "@types/react": "^16.9.38",
     "@types/react-router-dom": "^5.1.5",
     "chokidar": "^3.4.0",
     "concurrently": "^5.2.0",
