@@ -14,7 +14,7 @@ export function renderToString(url: string) {
   return ReactDOM.renderToString(
     <React.StrictMode>
       <StaticRouter
-        basename={process.env.BASE_URL?.replace(/\/$/, '')}
+        basename={import.meta.env.BASE_URL?.replace(/\/$/, '')}
         location={url}
       >
         <dataCacheCtx.Provider value={dataCache}>

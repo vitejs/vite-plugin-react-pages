@@ -14,7 +14,7 @@ const Client: React.FC<IProps> = ({ initCache }) => {
   )
   return (
     <React.StrictMode>
-      <BrowserRouter basename={process.env.BASE_URL?.replace(/\/$/, '')}>
+      <BrowserRouter basename={import.meta.env.BASE_URL?.replace(/\/$/, '')}>
         <dataCacheCtx.Provider value={dataCache}>
           <setDataCacheCtx.Provider value={setDataCache}>
             <App />
