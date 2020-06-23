@@ -1,4 +1,4 @@
-/// <reference types="vite/hmr" />
+/// <reference types="vite/ImportMeta" />
 
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'

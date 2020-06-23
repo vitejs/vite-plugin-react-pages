@@ -1,5 +1,5 @@
 import { startService, Service } from 'esbuild'
-import { transformReactCode } from 'vite-plugin-react/dist/transform'
+import { reactRefreshTransform } from 'vite-plugin-react/dist/transform'
 import mdx from '@mdx-js/mdx'
 
 const DEFAULT_RENDERER = `
@@ -11,7 +11,7 @@ export async function transformMdx({
   code,
   mdxOpts,
   forHMR,
-  path
+  path,
 }: {
   code: string
   mdxOpts?: any
@@ -23,7 +23,7 @@ export async function transformMdx({
   const { js } = await esBuild.transform(jsx, {
     loader: 'jsx',
     target: 'es2019',
-    jsxFactory: 'mdx'
+    jsxFactory: 'mdx',
   })
   const withoutHMR = `${DEFAULT_RENDERER}\n${js}`
   if (!forHMR) {
@@ -34,7 +34,10 @@ export async function transformMdx({
     throw new Error(`path should be given when transforming for HMR.`)
   }
   // make mdx React component hmr-self-accepting
-  const withHMR = transformReactCode(withoutHMR, path)
+  const withHMR = reactRefreshTransform.transform({
+    code: withoutHMR,
+    path,
+  } as any)
   return withHMR
 }
 

@@ -1,5 +1,4 @@
 import type { Plugin } from 'vite'
-import { cachedRead } from 'vite'
 import * as path from 'path'
 
 import { CLIENT_PATH } from './constants'
@@ -50,7 +49,7 @@ export const configureServer = (
     await next()
     // serve our index.html after vite history fallback
     if (ctx.url.endsWith('.html')) {
-      await cachedRead(ctx, path.join(CLIENT_PATH, 'index.html'))
+      await ctx.read(path.join(CLIENT_PATH, 'index.html'))
       ctx.status = 200
     }
   })

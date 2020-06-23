@@ -6,22 +6,22 @@ export function cleanCreatePlugin(mdxOpts?: any) {
   return {
     transforms: [
       {
-        test(path, query) {
+        test({ path }) {
           if (/\.mdx?$/.test(path)) {
             return true
           }
           return false
         },
-        async transform(code, isImport, isBuild, path) {
+        async transform({ code, isBuild, path }) {
           const forHMR = !(
             isBuild ||
             path.startsWith(`/@modules/`) ||
             process.env.NODE_ENV === 'production'
           )
           return transformMdx({ code, mdxOpts, forHMR, path })
-        }
-      }
-    ]
+        },
+      },
+    ],
   } as Plugin
 }
 
