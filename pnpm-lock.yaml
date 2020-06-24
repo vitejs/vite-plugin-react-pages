@@ -12,9 +12,9 @@ importers:
       '@types/react-router-dom': 5.1.5
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
-      vite: 1.0.0-beta.4
+      vite: 1.0.0-beta.6
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 3.0.1_vite@1.0.0-beta.4
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.6
       vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages'
     specifiers:
       '@mdx-js/react': ^1.6.6
@@ -25,7 +25,7 @@ importers:
       react: ^16.13.1
       react-dom: ^16.13.1
       react-router-dom: ^5.2.0
-      vite: ^1.0.0-beta.4
+      vite: ^1.0.0-beta.6
       vite-plugin-mdx: 'workspace:^0.3.0'
       vite-plugin-react: ^3.0.1
       vite-plugin-react-pages: 'workspace:^0.3.0'
@@ -40,9 +40,9 @@ importers:
       '@types/react-router-dom': 5.1.5
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
-      vite: 1.0.0-beta.4
+      vite: 1.0.0-beta.6
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 3.0.1
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.6
       vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages'
     specifiers:
       '@mdx-js/react': ^1.6.6
@@ -53,7 +53,7 @@ importers:
       react: ^16.13.1
       react-dom: ^16.13.1
       react-router-dom: ^5.2.0
-      vite: ^1.0.0-beta.4
+      vite: ^1.0.0-beta.6
       vite-plugin-mdx: 'workspace:^0.3.0'
       vite-plugin-react: ^3.0.1
       vite-plugin-react-pages: 'workspace:^0.3.0'
@@ -63,14 +63,14 @@ importers:
       '@pika/react-dom': 16.13.1
       styled-components: 5.1.1_styled-components@5.1.1
     devDependencies:
-      vite: 1.0.0-beta.4
+      vite: 1.0.0-beta.6
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 3.0.1_vite@1.0.0-beta.4
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.6
     specifiers:
       '@pika/react': ^16.13.1
       '@pika/react-dom': ^16.13.1
       styled-components: ^5.1.1
-      vite: ^1.0.0-beta.4
+      vite: ^1.0.0-beta.6
       vite-plugin-mdx: 'workspace:^0.3.0'
       vite-plugin-react: ^3.0.1
   fixtures/mdx-plugin:
@@ -80,15 +80,15 @@ importers:
     devDependencies:
       remark-slug: 6.0.0
       remark-toc: 7.0.0
-      vite: 1.0.0-beta.4
+      vite: 1.0.0-beta.6
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 3.0.1_vite@1.0.0-beta.4
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.6
     specifiers:
       '@pika/react': ^16.13.1
       '@pika/react-dom': ^16.13.1
       remark-slug: ^6.0.0
       remark-toc: ^7.0.0
-      vite: ^1.0.0-beta.4
+      vite: ^1.0.0-beta.6
       vite-plugin-mdx: 'workspace:^0.3.0'
       vite-plugin-react: ^3.0.1
   fixtures/use-theme:
@@ -103,9 +103,9 @@ importers:
       '@types/react-router-dom': 5.1.5
       react: 16.13.1
       react-dom: 16.13.1_react@16.13.1
-      vite: 1.0.0-beta.4
+      vite: 1.0.0-beta.6
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 3.0.1
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.6
       vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages'
     specifiers:
       '@mdx-js/react': ^1.6.6
@@ -116,7 +116,7 @@ importers:
       react: ^16.13.1
       react-dom: ^16.13.1
       react-router-dom: ^5.2.0
-      vite: ^1.0.0-beta.4
+      vite: ^1.0.0-beta.6
       vite-pages-theme-basic: 'workspace:^0.3.0'
       vite-plugin-mdx: 'workspace:^0.3.0'
       vite-plugin-react: ^3.0.1
@@ -152,13 +152,13 @@ importers:
       remark-frontmatter: 2.0.0
     devDependencies:
       typescript: 3.9.5
-      vite: 1.0.0-beta.4
+      vite: 1.0.0-beta.6
     specifiers:
       '@mdx-js/mdx': ^1.6.6
       '@mdx-js/react': ^1.6.6
       remark-frontmatter: ^2.0.0
       typescript: ^3.9.5
-      vite: ^1.0.0-beta.4
+      vite: ^1.0.0-beta.6
   packages/vite-plugin-react-pages:
     dependencies:
       '@babel/preset-react': 7.10.1
@@ -188,7 +188,7 @@ importers:
       concurrently: 5.2.0
       react: 16.13.1
       typescript: 3.9.5
-      vite: 1.0.0-beta.4
+      vite: 1.0.0-beta.6
     specifiers:
       '@babel/preset-react': ^7.10.1
       '@babel/preset-typescript': ^7.10.1
@@ -216,7 +216,7 @@ importers:
       rollup-plugin-postcss: ^3.1.2
       tiny-invariant: ^1.1.0
       typescript: ^3.9.5
-      vite: ^1.0.0-beta.4
+      vite: ^1.0.0-beta.6
 lockfileVersion: 5.1
 packages:
   /@babel/code-frame/7.10.3:
@@ -3412,7 +3412,6 @@ packages:
   /postcss-discard-comments/4.0.2:
     dependencies:
       postcss: 7.0.32
-    dev: false
     engines:
       node: '>=6.9.0'
     resolution:
@@ -4773,26 +4772,17 @@ packages:
     dev: false
     resolution:
       integrity: sha512-lRjkpyDGjVlBA7cDQhQ+gNcvB1BGaTHYuSOcY3S7OhDmBtnzX95FhtZZDecSTDm6aajFymyve6S5DN4ZHGezdQ==
-  /vite-plugin-react/3.0.1:
+  /vite-plugin-react/3.0.1_vite@1.0.0-beta.6:
     dependencies:
       '@babel/core': 7.10.3
       react-refresh: 0.8.3
+      vite: 1.0.0-beta.6
     dev: true
     peerDependencies:
       vite: '>=1.0.0-beta.1'
     resolution:
       integrity: sha512-MMqMc/F8KR/Cgk/BKcyp85nPBGbnh1fO45LmKBRchu4QHhzIpXTBHJP6vns1Z7zKo22dB4T7wEkO/SWzGqWwZg==
-  /vite-plugin-react/3.0.1_vite@1.0.0-beta.4:
-    dependencies:
-      '@babel/core': 7.10.3
-      react-refresh: 0.8.3
-      vite: 1.0.0-beta.4
-    dev: true
-    peerDependencies:
-      vite: '>=1.0.0-beta.1'
-    resolution:
-      integrity: sha512-MMqMc/F8KR/Cgk/BKcyp85nPBGbnh1fO45LmKBRchu4QHhzIpXTBHJP6vns1Z7zKo22dB4T7wEkO/SWzGqWwZg==
-  /vite/1.0.0-beta.4:
+  /vite/1.0.0-beta.6:
     dependencies:
       '@babel/parser': 7.10.3
       '@rollup/plugin-commonjs': 13.0.0_rollup@2.18.0
@@ -4830,9 +4820,9 @@ packages:
       open: 7.0.4
       ora: 4.0.4
       postcss: 7.0.32
+      postcss-discard-comments: 4.0.2
       postcss-import: 12.0.1
       postcss-load-config: 2.1.0
-      postcss-modules: 2.0.0
       resolve: 1.17.0
       rollup: 2.18.0
       rollup-plugin-dynamic-import-variables: 1.0.2_rollup@2.18.0
@@ -4848,7 +4838,7 @@ packages:
       node: '>=10.0.0'
     hasBin: true
     resolution:
-      integrity: sha512-U/Tlxjf1FiJIHKAe14kOr0U5Q1z5UZXghESiisdJCTrFze3pRjlxr1R9nm/NmwyCH6J7E9XiHWlZMWZoogocOA==
+      integrity: sha512-efLs24HIXRmh8dLT9c2jMMvRlxduod0xP9bNnWBCdYe+4sM8FgpDQ412fHdE6UCnpo4alkHcE5bgVS0jswB7Ng==
   /vue/3.0.0-beta.15:
     dependencies:
       '@vue/compiler-dom': 3.0.0-beta.15
