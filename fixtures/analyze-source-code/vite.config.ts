@@ -10,5 +10,8 @@ module.exports = {
     '/@layout/': path.join(__dirname, 'layout'),
   },
   plugins: [vpr, mdx(), pages()],
+  optimizeDeps: {
+    include: ["react-select"]
+  },
   minify: false,
 } as UserConfig

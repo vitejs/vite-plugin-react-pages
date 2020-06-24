@@ -1,4 +1,10 @@
 .box {
-  border: 1px solid red;
+  border: 1px solid black;
+  padding: 16px;
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: 8px;
   color: blue;
 }
