@@ -105,9 +105,7 @@ export async function analyzeSourceCode(entryModule: string) {
         },
       },
       postcss({
-        inject(cssVariableName: string) {
-          return `__stylesθ["${cssVariableName}"] = ${cssVariableName}`
-        },
+        extract: true,
       }),
     ],
   })
