@@ -1,0 +1,35 @@
+{
+  "name": "doc-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "vite serve --force",
+    "debug": "node --inspect ./node_modules/vite/bin/vite serve",
+    "build": "rm -rf dist && vite build --outDir dist",
+    "ssr": "rm -rf dist && vite-pages ssr",
+    "ssr-for-deploy": "rm -rf dist && vite-pages ssr --base \"/vite-plugin-react-pages\"",
+    "deploy": "npm run ssr-for-deploy && touch ./dist/.nojekyll && gh-pages -d dist -t"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mdx-js/react": "^1.6.6",
+    "@pika/react": "^16.13.1",
+    "@pika/react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "vite-pages-theme-basic": "^0.3.2"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.38",
+    "@types/react-router-dom": "^5.1.5",
+    "gh-pages": "^3.1.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "vite": "^1.0.0-beta.4",
+    "vite-plugin-mdx": "^0.3.2",
+    "vite-plugin-react": "^3.0.1",
+    "vite-plugin-react-pages": "^0.3.3"
+  }
+}
