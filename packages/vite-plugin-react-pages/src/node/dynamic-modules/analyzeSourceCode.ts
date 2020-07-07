@@ -55,12 +55,12 @@ export async function analyzeSourceCode(entryModule: string) {
                       if (err) {
                         return rej(err)
                       }
-                      const pkgJson = (
+                      const importerPkgJson = (
                         await readPkgUp({
                           cwd: resolveFrom,
                         })
                       )?.packageJson
-                      if (!pkgJson) {
+                      if (!importerPkgJson) {
                         return rej(
                           new Error(
                             `can not resolve package.json from "${from}"`
@@ -73,9 +73,10 @@ export async function analyzeSourceCode(entryModule: string) {
                         .join('/')
 
                       const depVerMap: { [key: string]: string | undefined } = {
-                        [pkgJson.name]: pkgJson.version,
-                        ...pkgJson.devDependencies,
-                        ...pkgJson.dependencies,
+                        // can import itself
+                        [importerPkgJson.name]: importerPkgJson.version,
+                        ...importerPkgJson.devDependencies,
+                        ...importerPkgJson.dependencies,
                       }
                       const depVer = depVerMap[requestPkgName]
                       if (!depVer) {
