@@ -19,16 +19,16 @@
     "@pika/react": "^16.13.1",
     "@pika/react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "vite-pages-theme-basic": "workspace:^0.3.0"
+    "vite-pages-theme-basic": "workspace:^0.3.2"
   },
   "devDependencies": {
-    "@types/react": "^16.9.38",
+    "@types/react": "^16.9.41",
     "@types/react-router-dom": "^5.1.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "vite": "^1.0.0-beta.6",
-    "vite-plugin-mdx": "workspace:^0.3.0",
+    "vite": "^1.0.0-beta.11",
+    "vite-plugin-mdx": "workspace:^0.3.2",
     "vite-plugin-react": "^3.0.1",
-    "vite-plugin-react-pages": "workspace:^0.3.0"
+    "vite-plugin-react-pages": "workspace:^0.3.3"
   }
 }

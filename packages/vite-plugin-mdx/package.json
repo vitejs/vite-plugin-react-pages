@@ -37,7 +37,7 @@
     "remark-frontmatter": "^2.0.0"
   },
   "devDependencies": {
-    "typescript": "^3.9.5",
-    "vite": "^1.0.0-beta.6"
+    "typescript": "^3.9.6",
+    "vite": "^1.0.0-beta.11"
   }
 }
