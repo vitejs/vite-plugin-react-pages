@@ -1,13 +1,8 @@
-/**
- * @title 404 page
- */
-
 import React from 'react'
+import { Redirect } from 'react-router-dom'
 
-interface IProps {}
-
-const Page404: React.FC<IProps> = (props) => {
-  return <div>custom 404 page</div>
+const Page404: React.FC = (props) => {
+  return <Redirect to="/" />
 }
 
 export default Page404
