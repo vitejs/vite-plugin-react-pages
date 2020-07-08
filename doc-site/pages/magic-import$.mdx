@@ -1,0 +1,67 @@
+---
+sort: 4
+---
+
+# Magic import
+
+vite-pages support a special import format that can help you do powerful things.
+
+## Analyze source code
+
+When you are documenting for some JavaScript/Typescript library, you normally want to show some js/ts code to readers. This magic import help you load source code from a module. It is kind of like [raw-loader from webpack](https://webpack.js.org/loaders/raw-loader/). This is very useful for demo code displaying.
+
+You can get the module tree analysis by importing the module with query `?analyzeSource`.
+
+For example:
+
+```ts
+import demoSource from '../demos/demo1?analyzeSource'
+```
+
+will give you:
+
+```ts
+{
+  "entry": "demo1.tsx",
+  "modules": {
+    "dir/util.ts": {
+      "code": "export default (txt: string) => {\n  console.log('util:' + txt)\n}\n"
+    },
+    "demo1.module.css": {
+      "code": ".box {\n  border: 1px solid black;\n  padding: 16px;\n}\n\n.title {\n  margin-top: 0;\n  margin-bottom: 8px;\n  color: blue;\n}\n"
+    },
+    "demo1.tsx": {
+      "code": "import React, { useState, useEffect, useCallback } from 'react'\n// This is an external library used by demo\nimport Select from 'react-select'\n\nimport util from './dir/util'\nimport style from './demo1.module.css'\n\ninterface IProps {}\n\nconst Demo1: React.FC<IProps> = (props) => {\n  useEffect(() => {\n    util('demo1')\n  }, [])\n\n  const [selected, setSelected] = useState(null)\n  const handleChange = useCallback((newSelected) => {\n    setSelected(newSelected)\n  }, [])\n\n  return (\n    <div className={style.box}>\n      <h1 className={style.title}>Demo1</h1>\n      <Select value={selected} onChange={handleChange} options={options} />\n    </div>\n  )\n}\n\nconst options = [\n  { value: 'chocolate', label: 'Chocolate' },\n  { value: 'strawberry', label: 'Strawberry' },\n  { value: 'vanilla', label: 'Vanilla' },\n]\n\nexport default Demo1\n"
+    }
+  },
+  "externals": {
+    "react": "^16.13.1",
+    "react-select": "^3.1.0"
+  }
+}
+```
+
+Checkout the [analyze-source-code fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/analyze-source-code/pages/index$.tsx).
+
+### Relative module dependencies
+
+Relative module dependencies(.e.g `import util from './dir/util.ts'`) will also be collected into the analyze result, as shown by the previous example.
+
+Relative module import can be:
+
+- js, jsx, ts, tsx
+- css
+- Sass. You need to install `node-sass`
+- Stylus. You need to install `stylus`
+- Less. You need to install `less`
+
+### External module dependencies
+
+For those dependencies from `node_modules` (.e.g `import React from 'react'`), this magic import will not load source code for them. Instead, the dependencies' versions are recorded, as shown by the previous example.
+
+This magic import gets dependencies' versions by find `package.json` up from the importer, and find the package version from these `package.json` fields:
+
+- `peerDependencies`
+- `devDependencies`
+- `dependencies`
+- `demoDependencies`

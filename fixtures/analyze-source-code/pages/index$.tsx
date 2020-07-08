@@ -16,7 +16,7 @@ const IndexPage: React.FC<IProps> = (props) => {
       <p>Here is source code for "demos/demo1":</p>
       {Object.entries(demoSource.modules).map(([moduleName, module]: any) => {
         return (
-          <div>
+          <div key={moduleName}>
             <p className={s.moduleName}>{moduleName}</p>
             <LiveProvider code={module.code}>
               <LiveEditor />

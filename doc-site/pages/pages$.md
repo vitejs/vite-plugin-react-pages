@@ -20,3 +20,5 @@ If the filename is `index$.tsx`, the page url path will be the path of the direc
 | `page-two$.md`                            | `/page-two`            |
 | `dir-name/index$.jsx`                     | `/dir-name`            |
 | `dir-name/page-three$.mdx`                | `/dir-name/page-three` |
+
+`404$.tsx` (whatever extension) is a special fallback page. It will be displayed when no other page matches the url. Checkout the [basic fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/basic/pages/404%24.tsx).
