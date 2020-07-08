@@ -16,10 +16,6 @@ const strictResolve = enhancedResolve.create({
   extensions,
 })
 
-const resolveNodeModules = enhancedResolve.create({
-  extensions,
-})
-
 export async function analyzeSourceCode(entryModule: string) {
   const externals: Record<string, string> = {}
 
@@ -47,53 +43,41 @@ export async function analyzeSourceCode(entryModule: string) {
               const bareImportRE = /^[^\/\.]/
               if (err) {
                 if (bareImportRE.test(request)) {
-                  // resolve the actual file from node_modules
-                  resolveNodeModules(
-                    resolveFrom,
-                    request,
-                    async (err, result) => {
-                      // if (err) {
-                      //   return rej(err)
-                      // }
-                      const importerPkgJson = (
-                        await readPkgUp({
-                          cwd: resolveFrom,
-                        })
-                      )?.packageJson
-                      if (!importerPkgJson) {
-                        return rej(
-                          new Error(
-                            `can not resolve package.json from "${from}"`
-                          )
-                        )
-                      }
-                      const { scope, name } = parseNodeModuleRequest(request)
-                      const requestPkgName = [scope, name]
-                        .filter(Boolean)
-                        .join('/')
+                  const depVerMap: { [key: string]: string | undefined } = {}
 
-                      const depVerMap: { [key: string]: string | undefined } = {
-                        // can import itself
-                        [importerPkgJson.name]: importerPkgJson.version,
-                        ...importerPkgJson.devDependencies,
-                        ...importerPkgJson.dependencies,
-                      }
-                      const depVer = depVerMap[requestPkgName]
-                      if (!depVer) {
-                        return rej(
-                          new Error(
-                            `can not resolve package version for "${request}", requested by "${from}". You should list the package as in package.json.`
-                          )
-                        )
-                      }
-                      // record external package and its version
-                      externals[requestPkgName] = depVer
-                      return res({
-                        external: true,
-                        id: request,
-                      })
-                    }
-                  )
+                  const importerPkgJson = (
+                    await readPkgUp({
+                      cwd: resolveFrom,
+                    })
+                  )?.packageJson
+                  if (importerPkgJson) {
+                    Object.assign(depVerMap, {
+                      // can import itself
+                      [importerPkgJson.name]: importerPkgJson.version,
+                      ...importerPkgJson.peerDependencies,
+                      ...importerPkgJson.devDependencies,
+                      ...importerPkgJson.dependencies,
+                      // users can specify dependencies version in demoDependencies
+                      ...importerPkgJson.demoDependencies,
+                    })
+                  }
+
+                  const { scope, name } = parseNodeModuleRequest(request)
+                  const requestPkgName = [scope, name].filter(Boolean).join('/')
+                  const depVer = depVerMap[requestPkgName]
+                  if (!depVer) {
+                    return rej(
+                      new Error(
+                        `can not resolve package version for "${request}", imported by "${from}". You should list the dependency's version inside package.json#demoDependencies.`
+                      )
+                    )
+                  }
+                  // record external package and its version
+                  externals[requestPkgName] = depVer
+                  return res({
+                    external: true,
+                    id: request,
+                  })
                 } else {
                   rej(err)
                 }
