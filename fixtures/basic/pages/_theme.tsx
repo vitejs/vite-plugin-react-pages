@@ -54,6 +54,7 @@ export default theme
 
 function defaultMenu(pages: IPages): ISideMenuData[] {
   return Object.entries<any>(pages)
+    .filter(([path]) => path !== '/404')
     .sort((a, b) => {
       const [pathA, { staticData: staticDataA }] = a
       const [pathB, { staticData: staticDataB }] = b
