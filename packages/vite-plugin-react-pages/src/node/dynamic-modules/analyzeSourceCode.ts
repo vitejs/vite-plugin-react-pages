@@ -52,9 +52,9 @@ export async function analyzeSourceCode(entryModule: string) {
                     resolveFrom,
                     request,
                     async (err, result) => {
-                      if (err) {
-                        return rej(err)
-                      }
+                      // if (err) {
+                      //   return rej(err)
+                      // }
                       const importerPkgJson = (
                         await readPkgUp({
                           cwd: resolveFrom,

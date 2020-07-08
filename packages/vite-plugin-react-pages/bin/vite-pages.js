@@ -9,7 +9,11 @@ const argv = require('minimist')(process.argv.slice(2))
 
   switch (argv.command) {
     case 'ssr':
-      const viteOptions = await require('vite').resolveConfig('')
+      const envMode = argv.mode || argv.m || 'production'
+      const viteOptions = await require('vite').resolveConfig(
+        envMode,
+        argv.config || argv.c
+      )
       if (!viteOptions) {
         throw new Error(`can't resolve vite config. cwd: "${process.cwd()}"`)
       }
