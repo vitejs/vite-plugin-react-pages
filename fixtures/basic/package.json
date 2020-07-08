@@ -24,8 +24,8 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "vite": "^1.0.0-beta.11",
-    "vite-plugin-mdx": "workspace:^0.3.2",
+    "vite-plugin-mdx": "workspace:^0.3.4",
     "vite-plugin-react": "^3.0.1",
-    "vite-plugin-react-pages": "workspace:^0.3.3"
+    "vite-plugin-react-pages": "workspace:^0.3.7"
   }
 }
