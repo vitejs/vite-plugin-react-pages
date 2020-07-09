@@ -6,9 +6,10 @@ import { CLIENT_PATH } from '../constants'
 
 export async function ssrBuild(viteOptions: UserConfig) {
   const { outDir = path.join(process.cwd(), 'dist') } = viteOptions
-  const ssrOutDir = path.join(outDir, 'ssr-tmp')
-
   await fs.emptyDir(outDir)
+
+  const ssrOutDir = path.join(outDir, 'ssr-tmp')
+  const clientOutDir = path.join(outDir, 'client-tmp')
 
   console.log('\n\npreparing vite pages ssr bundle...')
   await viteSSRBuild({
@@ -18,7 +19,7 @@ export async function ssrBuild(viteOptions: UserConfig) {
       input: path.join(CLIENT_PATH, 'ssr', 'serverRender.js'),
       preserveEntrySignatures: 'strict',
       // TODO: don't hard code this
-      external: ['react', 'react-router-dom', 'react-dom/server'],
+      external: ['react', 'react-router-dom', 'react-dom', 'react-dom/server'],
     },
     outDir: ssrOutDir,
   })
@@ -41,7 +42,7 @@ export async function ssrBuild(viteOptions: UserConfig) {
       preserveEntrySignatures: 'strict',
     },
     assetsDir: '_assets',
-    outDir,
+    outDir: clientOutDir,
   })
 
   const mapPagePublicPathToDataPublicPath = clientResult.assets.reduce(
@@ -85,11 +86,15 @@ export async function ssrBuild(viteOptions: UserConfig) {
       )
       // preload data module for this page
       html = injectPreload(html, ssrInfo.pageData)
-      const writePath = path.join(outDir, pagePath.slice(1), 'index.html')
+      const writePath = path.join(clientOutDir, pagePath.slice(1), 'index.html')
       await fs.ensureDir(path.dirname(writePath))
       await fs.writeFile(writePath, html)
     })
   )
+
+  await fs.copy(clientOutDir, outDir)
+  await fs.remove(clientOutDir)
+  await fs.remove(ssrOutDir)
   console.log('vite pages ssr build finished successfully.')
 }
 

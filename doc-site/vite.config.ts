@@ -5,11 +5,7 @@ import mdx from 'vite-plugin-mdx'
 
 module.exports = {
   jsx: 'react',
-  plugins: [
-    vpr,
-    mdx(),
-    pages(),
-  ],
+  plugins: [vpr, mdx(), pages()],
   optimizeDeps: {
     exclude: ['vite-pages-theme-basic'],
   },

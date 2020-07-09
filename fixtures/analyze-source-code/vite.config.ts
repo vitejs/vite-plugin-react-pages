@@ -11,7 +11,7 @@ module.exports = {
   },
   plugins: [vpr, mdx(), pages()],
   optimizeDeps: {
-    include: ["react-select"]
+    include: ["antd"]
   },
   minify: false,
 } as UserConfig
