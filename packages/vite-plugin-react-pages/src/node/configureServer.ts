@@ -5,7 +5,7 @@ import { CLIENT_PATH } from './constants'
 import {
   renderPagesDataDynamic,
   collectPagesData,
-} from './dynamic-modules/pages'
+} from './dynamic-modules/routes'
 import onePage from './dynamic-modules/onePage'
 import { analyzeSourceCode } from './dynamic-modules/analyzeSourceCode'
 

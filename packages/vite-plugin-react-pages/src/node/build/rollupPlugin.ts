@@ -3,8 +3,9 @@ import type { Plugin } from 'vite'
 import {
   collectPagesData,
   renderPagesDataDynamic,
-} from '../dynamic-modules/pages'
-import type { IPagesData } from '../dynamic-modules/pages'
+  renderSSRPagesData
+} from '../dynamic-modules/routes'
+import type { IPagesData } from '../dynamic-modules/routes'
 import onePage from '../dynamic-modules/onePage'
 import { analyzeSourceCode } from '../dynamic-modules/analyzeSourceCode'
 
@@ -65,19 +66,4 @@ export default (pagesDirPath: string): RollupPlugin => {
       }
     },
   }
-}
-
-async function renderSSRPagesData(pagesData: IPagesData) {
-  const codeLines = Object.entries(pagesData).map(
-    ([pagePath, { staticData, themePublicPath, loadPath }], index) => {
-      // import page data and theme data statically
-      return `
-import * as page${index} from "${loadPath}";
-ssrData["${pagePath}"] = page${index}.pageData;`
-    }
-  )
-  return `
-export const ssrData = {};
-${codeLines.join('\n')}
-`
 }

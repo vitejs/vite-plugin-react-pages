@@ -28,19 +28,19 @@ export async function collectPagesData(
       > => {
         const pageFilePath = await resolvePageFile(pagePath, pagesDirPath)
 
-        const themeFilePath = await resolvePageTheme(
-          pageFilePath,
-          pagesDirPath
-        )
+        const themeFilePath = await resolvePageTheme(pageFilePath, pagesDirPath)
         const themePublicPath = fileToRequest(themeFilePath)
 
         // if this is the root index page: /$.tsx or /$/index.tsx
         // give it a different loadPath
         // otherwise it will have loadPath '/@generated/pages/'
         // which will make vite confused when rewriting import
-        const loadPath = `/@generated/pages${
-          pagePath === '/' ? '/__rootIndex__' : pagePath
-        }`
+        let loadPath: string
+        if (pagePath === '/') {
+          loadPath = `/@generated/pages/__rootIndex__`
+        } else {
+          loadPath = `/@generated/pages${pagePath}`
+        }
 
         const staticData = await (async () => {
           const pageCode = await fs.readFile(pageFilePath, 'utf-8')
@@ -74,6 +74,21 @@ pages["${pagePath}"] = {
   return `const pages = {};
 ${codeLines.join('\n')}
 export default pages;`
+}
+
+export async function renderSSRPagesData(pagesData: IPagesData) {
+  const codeLines = Object.entries(pagesData).map(
+    ([pagePath, { staticData, themePublicPath, loadPath }], index) => {
+      // import page data and theme data statically
+      return `
+import * as page${index} from "${loadPath}";
+ssrData["${pagePath}"] = page${index}.pageData;`
+    }
+  )
+  return `
+export const ssrData = {};
+${codeLines.join('\n')}
+`
 }
 
 async function findPages(root: string) {
