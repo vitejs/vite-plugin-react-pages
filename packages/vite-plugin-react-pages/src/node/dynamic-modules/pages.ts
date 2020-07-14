@@ -2,6 +2,7 @@ import * as fs from 'fs-extra'
 import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
 import globby from 'globby'
+import * as path from 'path'
 
 import { resolvePageTheme } from './utils/resolvePageTheme'
 
@@ -13,13 +14,12 @@ export type IPageFiles = {
   themeFilePath: string
 }[]
 
-export interface IPagesData {
-  [publicPath: string]: {
-    staticData: any
-    themePublicPath: string
-    loadPath: string
-  }
-}
+export type IPagesData = {
+  publicPath: string
+  staticData: any
+  themePublicPath: string
+  loadPath: string
+}[]
 
 export async function collectPagesData(
   findPageFiles: string | (() => Promise<IPageFiles>),
@@ -33,58 +33,50 @@ export async function collectPagesData(
   } else {
     throw new Error('invalid findPageFiles')
   }
-  const pageDataEntries = await Promise.all(
-    pageFiles.map(
-      async ({
-        publicPath,
-        filePath,
-        themeFilePath,
-      }): Promise<
-        [string, { staticData: any; themePublicPath: string; loadPath: string }]
-      > => {
-        const staticData = await getStaticDataFromPageFile(filePath)
-        const themePublicPath = fileToRequest(themeFilePath)
-        // if this is the root index page: /$.tsx or /$/index.tsx
-        // give it a different loadPath
-        // otherwise it will have loadPath '/@generated/pages/'
-        // which will make vite confused when rewriting import
-        let loadPath: string
-        if (publicPath === '/') {
-          loadPath = `/@generated/pages/__rootIndex__`
-        } else {
-          loadPath = `/@generated/pages${publicPath}`
-        }
-        return [publicPath, { staticData, themePublicPath, loadPath }]
-      }
-    )
+  return Promise.all(
+    pageFiles.map(async ({ publicPath, filePath, themeFilePath }) => {
+      const staticData = await extractStaticData(filePath)
+      const themePublicPath = fileToRequest(themeFilePath)
+      let loadPath = fileToRequest(filePath)
+      return { publicPath, staticData, themePublicPath, loadPath }
+    })
   )
-  return Object.fromEntries(pageDataEntries)
 }
 
 export async function renderPagesDataDynamic(pagesData: IPagesData) {
-  const codeLines = Object.entries(pagesData).map(
-    ([pagePath, { staticData, themePublicPath, loadPath }], index) => {
+  const addPagesData = pagesData.map(
+    (
+      { publicPath: pagePath, staticData, themePublicPath, loadPath },
+      index
+    ) => {
       return `
 import theme${index} from "${themePublicPath}";
 pages["${pagePath}"] = {
-    _importFn: () => import("${loadPath}"),
+    _importFn: () => wrap(import("${loadPath}?isPageEntry=${pagePath}")),
     staticData: ${JSON.stringify(staticData)},
     theme: theme${index},
 };`
     }
   )
-  return `const pages = {};
-${codeLines.join('\n')}
-export default pages;`
+
+  return `
+function wrap(promise) {
+  return promise.then((pageData) => ({pageData}));
+}
+
+const pages = {};
+${addPagesData.join('\n')}
+export default pages;
+`
 }
 
 export async function renderSSRPagesData(pagesData: IPagesData) {
-  const codeLines = Object.entries(pagesData).map(
-    ([pagePath, { staticData, themePublicPath, loadPath }], index) => {
+  const codeLines = pagesData.map(
+    ({ publicPath: pagePath, loadPath }, index) => {
       // import page data and theme data statically
       return `
-import * as page${index} from "${loadPath}";
-ssrData["${pagePath}"] = page${index}.pageData;`
+import * as page${index} from "${loadPath}?isPageEntry=${pagePath}";
+ssrData["${pagePath}"] = page${index};`
     }
   )
   return `
@@ -102,20 +94,24 @@ export async function defaultFindPageFiles(
     onlyFiles: true,
   })
   return Promise.all(
-    pageFiles.map(async (filePath) => {
-      const publicPath = getPagePublicPath(filePath)
-      const themeFilePath = await resolvePageTheme(filePath, pagesDirPath)
+    pageFiles.map(async (relativePageFilePath) => {
+      const pageFilePath = path.join(pagesDirPath, relativePageFilePath)
+      const publicPath = getPagePublicPath(relativePageFilePath)
+      const themeFilePath = await resolvePageTheme(pageFilePath, pagesDirPath)
       return {
         publicPath,
-        filePath,
+        filePath: pageFilePath,
         themeFilePath,
       }
     })
   )
 }
 
-function getPagePublicPath(pageFilePath: string) {
-  let pagePublicPath = pageFilePath.replace(/\$\.(md|mdx|js|jsx|ts|tsx)$/, '')
+function getPagePublicPath(relativePageFilePath: string) {
+  let pagePublicPath = relativePageFilePath.replace(
+    /\$\.(md|mdx|js|jsx|ts|tsx)$/,
+    ''
+  )
   pagePublicPath = pagePublicPath.replace(/index$/, '')
   // ensure starting slash
   pagePublicPath = pagePublicPath.replace(/\/$/, '')
@@ -123,7 +119,7 @@ function getPagePublicPath(pageFilePath: string) {
   return pagePublicPath
 }
 
-async function getStaticDataFromPageFile(pageFilePath: string) {
+async function extractStaticData(pageFilePath: string) {
   const pageCode = await fs.readFile(pageFilePath, 'utf-8')
   if (/\.mdx?/.test(pageFilePath)) {
     const { data: frontmatter } = grayMatter(pageCode)

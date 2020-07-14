@@ -4,20 +4,18 @@ import * as path from 'path'
 import { configureServer } from './configureServer'
 import rollupPlugin from './build/rollupPlugin'
 import { CLIENT_PATH } from './constants'
-import type { IPageFiles } from './dynamic-modules/routes'
+import type { IPageFiles } from './dynamic-modules/pages'
 
 function createPlugin(
-  pagesDirPath: string = path.join(process.cwd(), 'pages'),
-  customGetPageFiles: () => IPageFiles,
-  customGetDynamicRoutes: () => string
+  findPageFiles: string | (() => Promise<IPageFiles>) = path.join(process.cwd(), 'pages')
 ): Plugin {
   return {
-    configureServer: configureServer(pagesDirPath, customGetPageFiles),
+    configureServer: configureServer(findPageFiles),
     alias: {
       '/@pages-infra/': CLIENT_PATH,
     },
     rollupInputOptions: {
-      plugins: [rollupPlugin(pagesDirPath)],
+      plugins: [rollupPlugin(findPageFiles)],
     },
   }
 }

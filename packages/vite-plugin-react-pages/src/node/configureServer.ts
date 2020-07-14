@@ -6,9 +6,7 @@ import {
   renderPagesDataDynamic,
   collectPagesData,
   IPageFiles,
-  defaultFindPageFiles,
-} from './dynamic-modules/routes'
-import onePage from './dynamic-modules/onePage'
+} from './dynamic-modules/pages'
 import { analyzeSourceCode } from './dynamic-modules/analyzeSourceCode'
 
 export const configureServer = (
@@ -23,18 +21,6 @@ export const configureServer = (
       )
       ctx.type = 'js'
       ctx.status = 200
-      await next()
-    } else if (ctx.path.startsWith('/@generated/pages/')) {
-      const page = ctx.path.slice('/@generated/pages'.length)
-      const code = await onePage(page, pagesDirPath, (file) =>
-        resolver.fileToRequest(file)
-      )
-      if (!code) {
-        ctx.status = 404
-        return
-      }
-      ctx.body = code
-      ctx.type = 'js'
       await next()
     } else if ('analyzeSource' in ctx.query) {
       const filePath = resolver.requestToFile(ctx.path)

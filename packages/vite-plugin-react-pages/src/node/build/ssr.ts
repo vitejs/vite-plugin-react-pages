@@ -49,10 +49,9 @@ export async function ssrBuild(viteOptions: UserConfig) {
   const mapPagePublicPathToDataPublicPath = clientResult.assets.reduce(
     (acc, asset, index) => {
       if (asset.type === 'chunk') {
-        const match = asset.facadeModuleId?.match(/^\/@generated\/pages\/(.*)$/)
+        const match = asset.facadeModuleId?.match(/^@pageEntryStart(.*)@pageEntryEnd/);
         if (match) {
-          let pagePublicPath = '/' + match[1]
-          if (pagePublicPath === '/__rootIndex__') pagePublicPath = '/'
+          let pagePublicPath = match[1]
           let basePath = viteOptions.base ?? ''
           basePath = basePath.replace(/\/$/, '')
           acc[pagePublicPath] = path.join(`${basePath}/_assets`, asset.fileName)

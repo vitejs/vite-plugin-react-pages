@@ -15,7 +15,7 @@ if (!window._vitePagesSSR) {
   throw new Error(`window._vitePagesSSRPath should be defined`)
 }
 
-import(window._vitePagesSSR.pageData).then(({ pageData }) => {
+import(window._vitePagesSSR.pageData).then((pageData) => {
   const initCache = {
     pages: {
       [window._vitePagesSSR.pagePublicPath]: { ...pageData },
