@@ -5,7 +5,8 @@ import * as fs from 'fs-extra'
 import { CLIENT_PATH } from '../constants'
 
 export async function ssrBuild(viteOptions: UserConfig) {
-  const { outDir = path.join(process.cwd(), 'dist') } = viteOptions
+  let { outDir = 'dist' } = viteOptions
+  outDir = path.resolve(process.cwd(), outDir)
   await fs.emptyDir(outDir)
 
   const ssrOutDir = path.join(outDir, 'ssr-tmp')
