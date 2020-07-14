@@ -5,17 +5,19 @@ import { CLIENT_PATH } from './constants'
 import {
   renderPagesDataDynamic,
   collectPagesData,
+  IPageFiles,
+  defaultFindPageFiles,
 } from './dynamic-modules/routes'
 import onePage from './dynamic-modules/onePage'
 import { analyzeSourceCode } from './dynamic-modules/analyzeSourceCode'
 
 export const configureServer = (
-  pagesDirPath: string
+  findPageFiles: string | (() => Promise<IPageFiles>)
 ): Plugin['configureServer'] => ({ app, resolver }) => {
   app.use(async (ctx, next) => {
     if (ctx.path === '/@generated/pages') {
       ctx.body = await renderPagesDataDynamic(
-        await collectPagesData(pagesDirPath, (file) =>
+        await collectPagesData(findPageFiles, (file) =>
           resolver.fileToRequest(file)
         )
       )

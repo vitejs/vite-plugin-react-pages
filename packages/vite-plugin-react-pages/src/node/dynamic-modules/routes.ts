@@ -3,11 +3,18 @@ import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
 import globby from 'globby'
 
-import { resolvePageFile } from './utils/resolvePageFile'
 import { resolvePageTheme } from './utils/resolvePageTheme'
 
+export interface IDynamicRoutes {}
+
+export type IPageFiles = {
+  publicPath: string
+  filePath: string
+  themeFilePath: string
+}[]
+
 export interface IPagesData {
-  [path: string]: {
+  [publicPath: string]: {
     staticData: any
     themePublicPath: string
     loadPath: string
@@ -15,44 +22,39 @@ export interface IPagesData {
 }
 
 export async function collectPagesData(
-  pagesDirPath: string,
+  findPageFiles: string | (() => Promise<IPageFiles>),
   fileToRequest: (file: string) => string
 ): Promise<IPagesData> {
-  const pagePaths = await findPages(pagesDirPath)
+  let pageFiles: IPageFiles
+  if (typeof findPageFiles === 'function') {
+    pageFiles = await findPageFiles()
+  } else if (typeof findPageFiles === 'string') {
+    pageFiles = await defaultFindPageFiles(findPageFiles)
+  } else {
+    throw new Error('invalid findPageFiles')
+  }
   const pageDataEntries = await Promise.all(
-    pagePaths.map(
-      async (
-        pagePath
-      ): Promise<
+    pageFiles.map(
+      async ({
+        publicPath,
+        filePath,
+        themeFilePath,
+      }): Promise<
         [string, { staticData: any; themePublicPath: string; loadPath: string }]
       > => {
-        const pageFilePath = await resolvePageFile(pagePath, pagesDirPath)
-
-        const themeFilePath = await resolvePageTheme(pageFilePath, pagesDirPath)
+        const staticData = await getStaticDataFromPageFile(filePath)
         const themePublicPath = fileToRequest(themeFilePath)
-
         // if this is the root index page: /$.tsx or /$/index.tsx
         // give it a different loadPath
         // otherwise it will have loadPath '/@generated/pages/'
         // which will make vite confused when rewriting import
         let loadPath: string
-        if (pagePath === '/') {
+        if (publicPath === '/') {
           loadPath = `/@generated/pages/__rootIndex__`
         } else {
-          loadPath = `/@generated/pages${pagePath}`
+          loadPath = `/@generated/pages${publicPath}`
         }
-
-        const staticData = await (async () => {
-          const pageCode = await fs.readFile(pageFilePath, 'utf-8')
-          if (/\.mdx?/.test(pageFilePath)) {
-            const { data: frontmatter } = grayMatter(pageCode)
-            return { ...frontmatter, sourceType: 'md' }
-          } else {
-            return { ...parse(extract(pageCode)), sourceType: 'js' }
-          }
-        })()
-
-        return [pagePath, { staticData, themePublicPath, loadPath }]
+        return [publicPath, { staticData, themePublicPath, loadPath }]
       }
     )
   )
@@ -91,18 +93,42 @@ ${codeLines.join('\n')}
 `
 }
 
-async function findPages(root: string) {
+export async function defaultFindPageFiles(
+  pagesDirPath: string
+): Promise<IPageFiles> {
   const pageFiles: string[] = await globby('**/*$.{md,mdx,js,jsx,ts,tsx}', {
-    cwd: root,
+    cwd: pagesDirPath,
     ignore: ['**/node_modules/**/*'],
     onlyFiles: true,
   })
-  const pages = pageFiles.map((pageFile) => {
-    let pagePath = pageFile.replace(/\$\.(md|mdx|js|jsx|ts|tsx)$/, '')
-    pagePath = pagePath.replace(/index$/, '')
-    pagePath = pagePath.replace(/\/$/, '')
-    // ensure starting slash
-    return `/${pagePath}`
-  })
-  return pages
+  return Promise.all(
+    pageFiles.map(async (filePath) => {
+      const publicPath = getPagePublicPath(filePath)
+      const themeFilePath = await resolvePageTheme(filePath, pagesDirPath)
+      return {
+        publicPath,
+        filePath,
+        themeFilePath,
+      }
+    })
+  )
+}
+
+function getPagePublicPath(pageFilePath: string) {
+  let pagePublicPath = pageFilePath.replace(/\$\.(md|mdx|js|jsx|ts|tsx)$/, '')
+  pagePublicPath = pagePublicPath.replace(/index$/, '')
+  // ensure starting slash
+  pagePublicPath = pagePublicPath.replace(/\/$/, '')
+  pagePublicPath = `/${pagePublicPath}`
+  return pagePublicPath
+}
+
+async function getStaticDataFromPageFile(pageFilePath: string) {
+  const pageCode = await fs.readFile(pageFilePath, 'utf-8')
+  if (/\.mdx?/.test(pageFilePath)) {
+    const { data: frontmatter } = grayMatter(pageCode)
+    return { ...frontmatter, sourceType: 'md' }
+  } else {
+    return { ...parse(extract(pageCode)), sourceType: 'js' }
+  }
 }
