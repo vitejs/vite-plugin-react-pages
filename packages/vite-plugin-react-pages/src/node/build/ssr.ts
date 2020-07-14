@@ -63,6 +63,8 @@ export async function ssrBuild(viteOptions: UserConfig) {
     {} as Record<string, string>
   )
 
+  // remove the default html emitted by vite
+  await fs.remove(path.join(clientOutDir, 'index.html'))
   await Promise.all(
     pagePaths.map(async (pagePath) => {
       const ssrContent = renderToString(pagePath)
@@ -92,6 +94,12 @@ export async function ssrBuild(viteOptions: UserConfig) {
       await fs.writeFile(writePath, html)
     })
   )
+
+  // move 404 page to `/` if `/` doesn't exists
+  const html404 = path.join(clientOutDir, '404', 'index.html')
+  if (!pagePaths.includes('/') && (await fs.pathExists(html404))) {
+    await fs.copy(html404, path.join(clientOutDir, 'index.html'))
+  }
 
   await fs.copy(clientOutDir, outDir)
   await fs.remove(clientOutDir)
