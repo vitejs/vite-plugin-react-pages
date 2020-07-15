@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Client from './Client'
+import Client from './client'
 
 declare global {
   interface Window {
