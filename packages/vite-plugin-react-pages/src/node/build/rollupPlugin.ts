@@ -8,6 +8,7 @@ import {
 } from '../dynamic-modules/pages'
 import type { IPagesData, IPageFiles } from '../dynamic-modules/pages'
 import { analyzeSourceCode } from '../dynamic-modules/analyzeSourceCode'
+import { resolveTheme } from '../dynamic-modules/resolveTheme'
 
 type RollupPlugin = ArrayItemType<
   NonNullable<NonNullable<Plugin['rollupInputOptions']>['plugins']>
@@ -18,13 +19,17 @@ type ArrayItemType<Arr extends Array<any>> = Arr extends Array<infer R>
   : never
 
 export default (
-  findPageFiles: string | (() => Promise<IPageFiles>)
+  pagesDir: string,
+  findPageFiles?: () => Promise<IPageFiles>
 ): RollupPlugin => {
   let pagesData: Promise<IPagesData>
   return {
     name: 'vite-pages-dynamic-modules',
     async resolveId(importee, importer) {
       if (importee === '/@generated/pages') {
+        return importee
+      }
+      if (importee === '/@generated/theme') {
         return importee
       }
       if (importee.startsWith('/@generated/ssrData')) {
@@ -51,12 +56,15 @@ export default (
     async load(id) {
       if (id === '/@generated/pages') {
         if (!pagesData)
-          pagesData = collectPagesData(findPageFiles, (file) => file)
+          pagesData = collectPagesData(pagesDir, (file) => file, findPageFiles)
         return renderPagesDataDynamic(await pagesData)
+      }
+      if (id === '/@generated/theme') {
+        return `export { default } from "${await resolveTheme(pagesDir)}";`
       }
       if (id === '/@generated/ssrData') {
         if (!pagesData)
-          pagesData = collectPagesData(findPageFiles, (file) => file)
+          pagesData = collectPagesData(pagesDir, (file) => file, findPageFiles)
         return renderSSRPagesData(await pagesData)
       }
       const matchPageEntry = id.match(/^@pageEntryStart(.*)@pageEntryEnd/)

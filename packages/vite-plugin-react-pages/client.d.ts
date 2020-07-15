@@ -1,1 +1,1 @@
-export type { IPages, ITheme } from './dist/client'
+export type { IPages, ICreateTheme, ITheme } from './dist/client'

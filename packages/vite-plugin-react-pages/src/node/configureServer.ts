@@ -8,19 +8,30 @@ import {
   IPageFiles,
 } from './dynamic-modules/pages'
 import { analyzeSourceCode } from './dynamic-modules/analyzeSourceCode'
+import { resolveTheme } from './dynamic-modules/resolveTheme'
 
 export const configureServer = (
-  findPageFiles: string | (() => Promise<IPageFiles>)
+  pagesDir: string,
+  findPageFiles?: () => Promise<IPageFiles>
 ): Plugin['configureServer'] => ({ app, resolver }) => {
   app.use(async (ctx, next) => {
     if (ctx.path === '/@generated/pages') {
       ctx.body = await renderPagesDataDynamic(
-        await collectPagesData(findPageFiles, (file) =>
-          resolver.fileToRequest(file)
+        await collectPagesData(
+          pagesDir,
+          (file) => resolver.fileToRequest(file),
+          findPageFiles
         )
       )
       ctx.type = 'js'
       ctx.status = 200
+      await next()
+    } else if (ctx.path === '/@generated/theme') {
+      const themePublicPath = resolver.fileToRequest(
+        await resolveTheme(pagesDir)
+      )
+      ctx.body = `export { default } from "${themePublicPath}";`
+      ctx.type = 'js'
       await next()
     } else if ('analyzeSource' in ctx.query) {
       const filePath = resolver.requestToFile(ctx.path)

@@ -1,1 +1,1 @@
-export type { IPages, ITheme } from './types'
+export type { IPages, ICreateTheme, ITheme } from './types'

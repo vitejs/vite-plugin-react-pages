@@ -4,57 +4,54 @@ import grayMatter from 'gray-matter'
 import globby from 'globby'
 import * as path from 'path'
 
-import { resolvePageTheme } from './utils/resolvePageTheme'
-
-export interface IDynamicRoutes {}
-
 export type IPageFiles = {
   publicPath: string
   filePath: string
-  themeFilePath: string
+  staticData?: any
 }[]
 
 export type IPagesData = {
   publicPath: string
-  staticData: any
-  themePublicPath: string
   loadPath: string
+  staticData: any
 }[]
 
 export async function collectPagesData(
-  findPageFiles: string | (() => Promise<IPageFiles>),
-  fileToRequest: (file: string) => string
+  pagesDir: string,
+  fileToRequest: (file: string) => string,
+  findPageFiles?: () => Promise<IPageFiles>
 ): Promise<IPagesData> {
   let pageFiles: IPageFiles
   if (typeof findPageFiles === 'function') {
     pageFiles = await findPageFiles()
-  } else if (typeof findPageFiles === 'string') {
-    pageFiles = await defaultFindPageFiles(findPageFiles)
   } else {
-    throw new Error('invalid findPageFiles')
+    pageFiles = await defaultFindPageFiles(pagesDir)
   }
   return Promise.all(
-    pageFiles.map(async ({ publicPath, filePath, themeFilePath }) => {
-      const staticData = await extractStaticData(filePath)
-      const themePublicPath = fileToRequest(themeFilePath)
+    pageFiles.map(async ({ publicPath, filePath, staticData }) => {
+      const finalStaticData = {
+        // findPageFiles can give staticData to the pages it found
+        ...staticData,
+        ...(await extractStaticData(filePath)),
+        _path: publicPath,
+      }
       let loadPath = fileToRequest(filePath)
-      return { publicPath, staticData, themePublicPath, loadPath }
+      return {
+        publicPath,
+        staticData: finalStaticData,
+        loadPath,
+      }
     })
   )
 }
 
 export async function renderPagesDataDynamic(pagesData: IPagesData) {
   const addPagesData = pagesData.map(
-    (
-      { publicPath: pagePath, staticData, themePublicPath, loadPath },
-      index
-    ) => {
+    ({ publicPath: pagePath, staticData, loadPath }) => {
       return `
-import theme${index} from "${themePublicPath}";
 pages["${pagePath}"] = {
     _importFn: () => wrap(import("${loadPath}?isPageEntry=${pagePath}")),
-    staticData: ${JSON.stringify(staticData)},
-    theme: theme${index},
+    staticData: ${JSON.stringify(staticData)}
 };`
     }
   )
@@ -97,11 +94,9 @@ export async function defaultFindPageFiles(
     pageFiles.map(async (relativePageFilePath) => {
       const pageFilePath = path.join(pagesDirPath, relativePageFilePath)
       const publicPath = getPagePublicPath(relativePageFilePath)
-      const themeFilePath = await resolvePageTheme(pageFilePath, pagesDirPath)
       return {
         publicPath,
         filePath: pageFilePath,
-        themeFilePath,
       }
     })
   )

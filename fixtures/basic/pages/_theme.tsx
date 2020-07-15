@@ -2,7 +2,7 @@ import React from 'react'
 import Layout from '/@layout/index'
 import type { ISideMenuData } from '/@layout/side-menu'
 import type { ITopNavData } from '/@layout/top-bar'
-import type { ITheme, IPages } from 'vite-plugin-react-pages/client'
+import type { ICreateTheme, IPages } from 'vite-plugin-react-pages/client'
 
 const topNavs: ITopNavData[] = [
   { text: 'index', path: '/' },
@@ -10,44 +10,59 @@ const topNavs: ITopNavData[] = [
   { text: 'Vite', href: 'https://github.com/vitejs/vite' },
 ]
 
-const theme: ITheme = {
-  initialLoading(pageStaticData, pages) {
-    console.log('#loading', pageStaticData, pages)
-    return (
-      <Layout
-        sideMenuData={defaultMenu(pages)}
-        topNavs={topNavs}
-        logo="Vite Pages Basic Demo"
-      >
-        <p>Loading....</p>
-      </Layout>
-    )
-  },
-  loaded(pageData, pages) {
-    const Component = pageData.default
-    console.log('#loaded', pageData, pages)
-    return (
-      <Layout
-        sideMenuData={defaultMenu(pages)}
-        topNavs={topNavs}
-        logo="Vite Pages Basic Demo"
-      >
-        <Component />
-      </Layout>
-    )
-  },
-  loadError(error, pageStaticData, pages) {
-    console.error('load error!', { error, pageStaticData, pages })
-    return (
-      <Layout
-        sideMenuData={defaultMenu(pages)}
-        topNavs={topNavs}
-        logo="Vite Pages Basic Demo"
-      >
-        <p>Load error, see console.error</p>
-      </Layout>
-    )
-  },
+const theme: ICreateTheme = (pages) => {
+  const sideMenuData = defaultMenu(pages)
+  return {
+    initialLoading(pageStaticData) {
+      console.log('#loading', pageStaticData, pages)
+      return (
+        <Layout
+          sideMenuData={sideMenuData}
+          topNavs={topNavs}
+          logo="Vite Pages Basic Demo"
+        >
+          <p>Loading....</p>
+        </Layout>
+      )
+    },
+    loaded(pageData) {
+      const Component = pageData.default
+      console.log('#loaded', pageData, pages)
+      return (
+        <Layout
+          sideMenuData={sideMenuData}
+          topNavs={topNavs}
+          logo="Vite Pages Basic Demo"
+        >
+          <Component />
+        </Layout>
+      )
+    },
+    loadError(error, pageStaticData) {
+      console.error('load error!', { error, pageStaticData, pages })
+      return (
+        <Layout
+          sideMenuData={sideMenuData}
+          topNavs={topNavs}
+          logo="Vite Pages Basic Demo"
+        >
+          <p>Load error, see console.error</p>
+        </Layout>
+      )
+    },
+    noPageMatch() {
+      console.error('noPageMatch!', { pages })
+      return (
+        <Layout
+          sideMenuData={sideMenuData}
+          topNavs={topNavs}
+          logo="Vite Pages Basic Demo"
+        >
+          <p>404 Not Found</p>
+        </Layout>
+      )
+    },
+  }
 }
 
 export default theme

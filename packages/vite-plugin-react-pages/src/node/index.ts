@@ -7,15 +7,16 @@ import { CLIENT_PATH } from './constants'
 import type { IPageFiles } from './dynamic-modules/pages'
 
 function createPlugin(
-  findPageFiles: string | (() => Promise<IPageFiles>) = path.join(process.cwd(), 'pages')
+  pagesDir: string = path.join(process.cwd(), 'pages'),
+  findPageFiles?: () => Promise<IPageFiles>
 ): Plugin {
   return {
-    configureServer: configureServer(findPageFiles),
+    configureServer: configureServer(pagesDir, findPageFiles),
     alias: {
       '/@pages-infra/': CLIENT_PATH,
     },
     rollupInputOptions: {
-      plugins: [rollupPlugin(findPageFiles)],
+      plugins: [rollupPlugin(pagesDir, findPageFiles)],
     },
   }
 }

@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react'
-import type { IPageLoaded, IPagesInternal } from './types'
+import type { IPageLoaded, IPagesInternal, ITheme } from './types'
 import { dataCacheCtx, setDataCacheCtx } from './ssr/ctx'
 
 interface IProps {
+  theme: ITheme
   pages: IPagesInternal
   path: string
 }
 
-const PageLoader: React.FC<IProps> = ({ pages, path }) => {
-  const { _importFn, theme } = pages[path]
-  const _pageStaticData = { ...pages[path].staticData, _path: path }
+const PageLoader: React.FC<IProps> = ({ pages, path, theme }) => {
+  const { _importFn, staticData } = pages[path]
 
   const dataCache = useContext(dataCacheCtx)
   const setDataCache = useContext(setDataCacheCtx)
@@ -19,12 +19,12 @@ const PageLoader: React.FC<IProps> = ({ pages, path }) => {
       // don't need to dynamic load it
       return {
         type: 'loaded',
-        pageData: { ..._pageStaticData, ...dataCache.pages[path] },
+        pageData: { ...staticData, ...dataCache.pages[path] },
       }
     }
     return {
       type: 'initial-loading',
-      pageStaticData: _pageStaticData,
+      pageStaticData: staticData,
     }
   })
 
@@ -34,7 +34,7 @@ const PageLoader: React.FC<IProps> = ({ pages, path }) => {
       // don't need to dynamic load it
       setLoadState({
         type: 'loaded',
-        pageData: { ..._pageStaticData, ...dataCache.pages[path] },
+        pageData: { ...staticData, ...dataCache.pages[path] },
       })
       return
     }
@@ -44,27 +44,27 @@ const PageLoader: React.FC<IProps> = ({ pages, path }) => {
       case 'initial-loading':
         setLoadState({
           type: 'initial-loading',
-          pageStaticData: _pageStaticData,
+          pageStaticData: staticData,
         })
         break
       case 'loaded':
         setLoadState({
           type: 'transition-loading',
-          pageStaticData: _pageStaticData,
           prevPageData: loadState.pageData,
+          pageStaticData: staticData,
         })
         break
       case 'transition-loading':
         setLoadState({
           type: 'transition-loading',
           prevPageData: loadState.prevPageData,
-          pageStaticData: _pageStaticData,
+          pageStaticData: staticData,
         })
         break
       case 'load-error':
         setLoadState({
           type: 'initial-loading',
-          pageStaticData: _pageStaticData,
+          pageStaticData: staticData,
         })
         break
       default:
@@ -83,13 +83,13 @@ const PageLoader: React.FC<IProps> = ({ pages, path }) => {
         }))
         setLoadState({
           type: 'loaded',
-          pageData: { ..._pageStaticData, ...pageLoaded.pageData },
+          pageData: { ...staticData, ...pageLoaded.pageData },
         })
       })
       .catch((error) => {
         setLoadState({
           type: 'load-error',
-          pageStaticData: _pageStaticData,
+          pageStaticData: staticData,
           error,
         })
         throw error
@@ -98,19 +98,18 @@ const PageLoader: React.FC<IProps> = ({ pages, path }) => {
 
   switch (loadState.type) {
     case 'initial-loading':
-      return theme.initialLoading(loadState.pageStaticData, pages)
+      return theme.initialLoading(loadState.pageStaticData)
     case 'loaded':
-      return theme.loaded(loadState.pageData, pages)
+      return theme.loaded(loadState.pageData)
     case 'transition-loading':
       if (theme.transitionLoading)
         return theme.transitionLoading(
           loadState.pageStaticData,
-          pages,
           loadState.prevPageData
         )
-      return theme.initialLoading(loadState.pageStaticData, pages)
+      return theme.initialLoading(loadState.pageStaticData)
     case 'load-error':
-      return theme.loadError(loadState.error, loadState.pageStaticData, pages)
+      return theme.loadError(loadState.error, loadState.pageStaticData)
     default:
       throw new Error(`unknown loadState.type`)
   }

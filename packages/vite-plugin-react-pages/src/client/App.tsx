@@ -1,9 +1,14 @@
+/// <reference types="vite/dist/importMeta" />
+
 import React, { useMemo } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import PageLoader from './PageLoader'
-import type { IPagesInternal } from './types'
+import type { IPagesInternal, ITheme } from './types'
 
 import pages from '/@generated/pages'
+import createTheme from '/@generated/theme'
+
+let theme: ITheme = createTheme(pages)
 
 const App: React.FC = () => {
   const renderRoutes = useMemo(() => {
@@ -13,7 +18,7 @@ const App: React.FC = () => {
     return (
       <Switch>
         {pageRoutes}
-        {getFallbackRoute(pages)}
+        <Route path="*" render={() => theme.noPageMatch()} />
       </Switch>
     )
   }, [pages])
@@ -31,17 +36,17 @@ function getPageRoute(path: string, pages: IPagesInternal) {
       exact
       path={path}
     >
-      <PageLoader pages={pages} path={path} />
+      <PageLoader theme={theme} pages={pages} path={path} />
     </Route>
   )
 }
 
-function getFallbackRoute(pages: IPagesInternal) {
-  let content
-  if ('/404' in pages) {
-    content = <PageLoader pages={pages} path="/404" />
-  } else {
-    content = <p>Route Not Found</p>
-  }
-  return <Route path="*">{content}</Route>
+if (import.meta.hot) {
+  // @ts-ignore
+  import.meta.hot.acceptDeps(
+    ['/@generated/pages', '/@generated/theme'],
+    ([newPages, newCreateTheme]) => {
+      theme = newCreateTheme(newPages)
+    }
+  )
 }
