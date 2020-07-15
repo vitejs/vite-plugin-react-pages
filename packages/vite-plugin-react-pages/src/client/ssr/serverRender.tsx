@@ -12,16 +12,14 @@ const dataCache: IDataCache = { pages: ssrData }
 
 export function renderToString(url: string) {
   return ReactDOM.renderToString(
-    <React.StrictMode>
-      <StaticRouter
-        basename={import.meta.env.BASE_URL?.replace(/\/$/, '')}
-        location={url}
-      >
-        <dataCacheCtx.Provider value={dataCache}>
-          <App />
-        </dataCacheCtx.Provider>
-      </StaticRouter>
-    </React.StrictMode>
+    <StaticRouter
+      basename={import.meta.env.BASE_URL?.replace(/\/$/, '')}
+      location={url}
+    >
+      <dataCacheCtx.Provider value={dataCache}>
+        <App />
+      </dataCacheCtx.Provider>
+    </StaticRouter>
   )
 }
 

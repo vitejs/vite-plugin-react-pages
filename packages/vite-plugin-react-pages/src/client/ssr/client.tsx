@@ -13,15 +13,13 @@ const Client: React.FC<IProps> = ({ initCache }) => {
     initCache ?? { pages: {} }
   )
   return (
-    <React.StrictMode>
-      <BrowserRouter basename={import.meta.env.BASE_URL?.replace(/\/$/, '')}>
-        <dataCacheCtx.Provider value={dataCache}>
-          <setDataCacheCtx.Provider value={setDataCache}>
-            <App />
-          </setDataCacheCtx.Provider>
-        </dataCacheCtx.Provider>
-      </BrowserRouter>
-    </React.StrictMode>
+    <BrowserRouter basename={import.meta.env.BASE_URL?.replace(/\/$/, '')}>
+      <dataCacheCtx.Provider value={dataCache}>
+        <setDataCacheCtx.Provider value={setDataCache}>
+          <App />
+        </setDataCacheCtx.Provider>
+      </dataCacheCtx.Provider>
+    </BrowserRouter>
   )
 }
 
