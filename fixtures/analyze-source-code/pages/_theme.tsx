@@ -1,5 +1,5 @@
 import React from 'react'
-import type { ICreateTheme } from 'vite-plugin-react-pages/client'
+import type { ICreateTheme } from 'vite-plugin-react-pages'
 
 const theme: ICreateTheme = (pages) => {
   return {

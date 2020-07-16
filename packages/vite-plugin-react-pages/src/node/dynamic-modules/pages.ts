@@ -4,11 +4,12 @@ import grayMatter from 'gray-matter'
 import globby from 'globby'
 import * as path from 'path'
 
-export type IPageFiles = {
+export type IPageFile = {
   publicPath: string
   filePath: string
   staticData?: any
-}[]
+}
+export type IPageFiles = IPageFile[]
 
 export type IPagesData = {
   publicPath: string

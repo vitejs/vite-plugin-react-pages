@@ -98,6 +98,38 @@ importers:
       vite-plugin-mdx: 'workspace:^0.3.4'
       vite-plugin-react: ^3.0.1
       vite-plugin-react-pages: 'workspace:^0.3.7'
+  fixtures/custom-find-page-files:
+    dependencies:
+      '@mdx-js/react': 1.6.6_react@16.13.1
+      '@pika/react': 16.13.1
+      '@pika/react-dom': 16.13.1_react@16.13.1
+      react-router-dom: 5.2.0_react@16.13.1
+      vite-pages-theme-basic: 'link:../../packages/theme-basic'
+    devDependencies:
+      '@types/react': 16.9.41
+      '@types/react-router-dom': 5.1.5
+      globby: 11.0.1
+      react: 16.13.1
+      react-dom: 16.13.1_react@16.13.1
+      vite: 1.0.0-beta.11
+      vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
+      vite-plugin-react: 3.0.1_vite@1.0.0-beta.11
+      vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages'
+    specifiers:
+      '@mdx-js/react': ^1.6.6
+      '@pika/react': ^16.13.1
+      '@pika/react-dom': ^16.13.1
+      '@types/react': ^16.9.41
+      '@types/react-router-dom': ^5.1.5
+      globby: ^11.0.1
+      react: ^16.13.1
+      react-dom: ^16.13.1
+      react-router-dom: ^5.2.0
+      vite: ^1.0.0-beta.11
+      vite-pages-theme-basic: 'workspace:^0.3.5'
+      vite-plugin-mdx: 'workspace:^0.3.4'
+      vite-plugin-react: ^3.0.1
+      vite-plugin-react-pages: 'workspace:^0.3.7'
   fixtures/mdx-basic:
     dependencies:
       '@pika/react': 16.13.1

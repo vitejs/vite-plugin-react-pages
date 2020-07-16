@@ -3,7 +3,7 @@ import type {
   ITheme,
   ICreateTheme,
   IPages,
-} from 'vite-plugin-react-pages/client'
+} from 'vite-plugin-react-pages'
 import Layout from './layout'
 import type { ISideMenuData } from './layout/side-menu'
 import type { ITopNavData } from './layout/top-bar'

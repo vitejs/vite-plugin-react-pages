@@ -2,7 +2,7 @@ import React from 'react'
 import Layout from '/@layout/index'
 import type { ISideMenuData } from '/@layout/side-menu'
 import type { ITopNavData } from '/@layout/top-bar'
-import type { ICreateTheme, IPages } from 'vite-plugin-react-pages/client'
+import type { ICreateTheme, IPages } from 'vite-plugin-react-pages'
 
 const topNavs: ITopNavData[] = [
   { text: 'index', path: '/' },

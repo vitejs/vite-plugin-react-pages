@@ -1,0 +1,35 @@
+{
+  "name": "custom-find",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf node_modules/.vite_opt_cache",
+    "dev": "vite serve -c ./vite.demos.ts",
+    "debug": "node --inspect ./node_modules/vite/bin/vite serve -c ./vite.demos.ts",
+    "build": "rm -rf dist && vite build -c ./vite.demos.ts --outDir dist",
+    "debug:build": "node --inspect node_modules/vite/bin/vite.js build -c ./vite.demos.ts --outDir dist",
+    "ssr": "rm -rf dist && vite-pages ssr -c ./vite.demos.ts",
+    "debug:ssr": "rm -rf dist && node --inspect node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr -c ./vite.demos.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mdx-js/react": "^1.6.6",
+    "@pika/react": "^16.13.1",
+    "@pika/react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "vite-pages-theme-basic": "workspace:^0.3.5"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.41",
+    "@types/react-router-dom": "^5.1.5",
+    "globby": "^11.0.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "vite": "^1.0.0-beta.11",
+    "vite-plugin-mdx": "workspace:^0.3.4",
+    "vite-plugin-react": "^3.0.1",
+    "vite-plugin-react-pages": "workspace:^0.3.7"
+  }
+}
