@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import PageLoader from './PageLoader'
-import type { IPagesInternal, ITheme } from './types'
+import type { IRenderPage, ITheme } from './types'
 
 import pages from '/@generated/pages'
 import createTheme from '/@generated/theme'
@@ -11,23 +11,30 @@ import createTheme from '/@generated/theme'
 let theme: ITheme = createTheme(pages)
 
 const App: React.FC = () => {
-  const renderRoutes = useMemo(() => {
+  return useMemo(() => {
+    const renderPage: IRenderPage = (path: string) => {
+      if (!pages[path]) {
+        throw new Error(`page not exist. path: ${path}`)
+      }
+      return <PageLoader theme={theme} pages={pages} path={path} />
+    }
+
     const pageRoutes = Object.keys(pages)
       .filter((path) => path !== '/404')
-      .map((path) => getPageRoute(path, pages))
+      .map((path) => getPageRoute(path, renderPage))
+
     return (
       <Switch>
         {pageRoutes}
-        <Route path="*" render={() => theme.noPageMatch()} />
+        <Route path="*" render={() => theme.noPageMatch(renderPage)} />
       </Switch>
     )
   }, [pages])
-  return renderRoutes
 }
 
 export default App
 
-function getPageRoute(path: string, pages: IPagesInternal) {
+function getPageRoute(path: string, renderPage: IRenderPage) {
   return (
     <Route
       // avoid re-mount layout component
@@ -36,7 +43,7 @@ function getPageRoute(path: string, pages: IPagesInternal) {
       exact
       path={path}
     >
-      <PageLoader theme={theme} pages={pages} path={path} />
+      {renderPage(path)}
     </Route>
   )
 }

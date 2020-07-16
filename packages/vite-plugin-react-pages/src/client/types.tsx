@@ -1,26 +1,24 @@
 import React from 'react'
 
+/**
+ * all pages' static data.
+ */
 export interface IPages {
   [path: string]: {
     staticData: any
-    /** The nearest _theme.tsx from the page module */
-    theme: ITheme
   }
 }
 export interface IPagesInternal {
   [path: string]: {
     _importFn: () => Promise<IPageLoaded>
     staticData: any
-    /** The nearest _theme.tsx from the page module */
-    theme: ITheme
   }
 }
 export type IPageLoaded = any
-export type IRenderPage = (
-  pageData: any,
-  pages: IPages
-) => React.ReactElement | null
 
+/**
+ * @param pages all pages' static data.
+ */
 export type ICreateTheme = (pages: IPages) => ITheme
 
 export interface ITheme {
@@ -30,14 +28,12 @@ export interface ITheme {
    * vite-pages will not use it to render the initial loading state.
    *
    * @param pageStaticData current page's static data.
-   * @param pages all pages' static data.
    */
   initialLoading: (pageStaticData: any) => React.ReactElement | null
   /**
    * current page's data is ready, render the page content.
    *
    * @param pageData current page's data. including static data and runtime data.
-   * @param pages all pages' static data.
    */
   loaded: (pageData: IPageLoaded) => React.ReactElement | null
   /**
@@ -45,7 +41,6 @@ export interface ITheme {
    * if transitionLoading is not provided, vite-pages will fallback to initialLoading.
    *
    * @param pageStaticData current page's static data.
-   * @param pages all pages' static data.
    * @param prevPageData previous page's data.
    */
   transitionLoading?: (
@@ -58,7 +53,6 @@ export interface ITheme {
    *
    * @param error the error.
    * @param pageStaticData current page's static data.
-   * @param pages all pages' static data.
    */
   loadError: (error: any, pageStaticData: any) => React.ReactElement | null
   /**
@@ -67,7 +61,9 @@ export interface ITheme {
    * You can render 404 state with it,
    * or render more routes (define more pages).
    *
-   * @param pages all pages' static data.
+   * @param renderPage theme can use it to render a page.
    */
-  noPageMatch: () => React.ReactElement | null
+  noPageMatch: (renderPage: IRenderPage) => React.ReactElement | null
 }
+
+export type IRenderPage = (path: string) => React.ReactElement

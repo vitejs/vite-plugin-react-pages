@@ -1,5 +1,9 @@
 import React from 'react'
-import type { ITheme, IPages } from 'vite-plugin-react-pages/client'
+import type {
+  ITheme,
+  ICreateTheme,
+  IPages,
+} from 'vite-plugin-react-pages/client'
 import Layout from './layout'
 import type { ISideMenuData } from './layout/side-menu'
 import type { ITopNavData } from './layout/top-bar'
@@ -14,61 +18,77 @@ export function createTheme({
   topNavs,
   logo,
   sideMenuData,
-}: IOption = {}): ITheme {
-  return {
-    initialLoading(pageStaticData, pages) {
-      return (
-        <Layout
-          sideMenuData={sideMenuData ?? defaultMenu(pages)}
-          topNavs={topNavs ?? []}
-          logo={logo}
-          applyMdStyle={pageStaticData.sourceType === 'md'}
-          path={pageStaticData._path}
-        >
-          <p>initial Loading...</p>
-        </Layout>
-      )
-    },
-    loaded(pageData, pages) {
-      const ContentComp = pageData.default
-      return (
-        <Layout
-          sideMenuData={sideMenuData ?? defaultMenu(pages)}
-          topNavs={topNavs ?? []}
-          logo={logo}
-          applyMdStyle={pageData.sourceType === 'md'}
-          path={pageData._path}
-        >
-          <ContentComp />
-        </Layout>
-      )
-    },
-    transitionLoading(pageStaticData, pages, prevPageData) {
-      return (
-        <Layout
-          sideMenuData={sideMenuData ?? defaultMenu(pages)}
-          topNavs={topNavs ?? []}
-          logo={logo}
-          applyMdStyle={pageStaticData.sourceType === 'md'}
-          path={pageStaticData._path}
-        >
-          <p>transition Loading...</p>
-        </Layout>
-      )
-    },
-    loadError(error, pageStaticData, pages) {
-      return (
-        <Layout
-          sideMenuData={sideMenuData ?? defaultMenu(pages)}
-          topNavs={topNavs ?? []}
-          logo={logo}
-          applyMdStyle={pageStaticData.sourceType === 'md'}
-          path={pageStaticData._path}
-        >
-          <p>Load error</p>
-        </Layout>
-      )
-    },
+}: IOption = {}): ICreateTheme {
+  return (pages) => {
+    return {
+      initialLoading(pageStaticData) {
+        return (
+          <Layout
+            sideMenuData={sideMenuData ?? defaultMenu(pages)}
+            topNavs={topNavs ?? []}
+            logo={logo}
+            applyMdStyle={pageStaticData.sourceType === 'md'}
+            path={pageStaticData._path}
+          >
+            <p>initial Loading...</p>
+          </Layout>
+        )
+      },
+      loaded(pageData) {
+        const ContentComp = pageData.default
+        return (
+          <Layout
+            sideMenuData={sideMenuData ?? defaultMenu(pages)}
+            topNavs={topNavs ?? []}
+            logo={logo}
+            applyMdStyle={pageData.sourceType === 'md'}
+            path={pageData._path}
+          >
+            <ContentComp />
+          </Layout>
+        )
+      },
+      transitionLoading(pageStaticData, prevPageData) {
+        return (
+          <Layout
+            sideMenuData={sideMenuData ?? defaultMenu(pages)}
+            topNavs={topNavs ?? []}
+            logo={logo}
+            applyMdStyle={pageStaticData.sourceType === 'md'}
+            path={pageStaticData._path}
+          >
+            <p>transition Loading...</p>
+          </Layout>
+        )
+      },
+      loadError(error, pageStaticData) {
+        return (
+          <Layout
+            sideMenuData={sideMenuData ?? defaultMenu(pages)}
+            topNavs={topNavs ?? []}
+            logo={logo}
+            applyMdStyle={pageStaticData.sourceType === 'md'}
+            path={pageStaticData._path}
+          >
+            <p>Load error</p>
+          </Layout>
+        )
+      },
+      noPageMatch(renderPage) {
+        if (pages['/404']) {
+          return renderPage('/404')
+        }
+        return (
+          <Layout
+            sideMenuData={sideMenuData ?? defaultMenu(pages)}
+            topNavs={topNavs ?? []}
+            logo={logo}
+          >
+            <p>Page Not Found.</p>
+          </Layout>
+        )
+      },
+    }
   }
 }
 
