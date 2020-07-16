@@ -3,6 +3,7 @@ import * as path from 'path'
 import * as fs from 'fs-extra'
 
 import { CLIENT_PATH } from '../constants'
+import { stringify } from 'gray-matter'
 
 export async function ssrBuild(viteOptions: UserConfig) {
   let { outDir = 'dist' } = viteOptions
@@ -46,21 +47,27 @@ export async function ssrBuild(viteOptions: UserConfig) {
     outDir: clientOutDir,
   })
 
-  const mapPagePublicPathToDataPublicPath = clientResult.assets.reduce(
-    (acc, asset, index) => {
-      if (asset.type === 'chunk') {
-        const match = asset.facadeModuleId?.match(/^@pageEntryStart(.*)@pageEntryEnd/);
-        if (match) {
-          let pagePublicPath = match[1]
-          let basePath = viteOptions.base ?? ''
-          basePath = basePath.replace(/\/$/, '')
-          acc[pagePublicPath] = path.join(`${basePath}/_assets`, asset.fileName)
-        }
-      }
-      return acc
-    },
-    {} as Record<string, string>
+  const pagesMetaAsset = clientResult.assets.find(
+    (output) => output.fileName === 'pages-meta.json'
   )
+  if (pagesMetaAsset?.type !== 'asset') {
+    throw new Error('can not find pages-meta.json in output')
+  }
+  const pageToFile = JSON.parse(pagesMetaAsset.source as string)
+  const fileToPage = Object.fromEntries(
+    Object.entries(pageToFile).map(([page, file]) => [file, page])
+  )
+  const mapPagePathToPageDataPath = clientResult.assets.reduce((acc, asset) => {
+    if (asset.type === 'chunk') {
+      const pagePath = asset.facadeModuleId && fileToPage[asset.facadeModuleId]
+      if (pagePath) {
+        let basePath = viteOptions.base ?? ''
+        basePath = basePath.replace(/\/$/, '')
+        acc[pagePath] = path.join(`${basePath}/_assets`, asset.fileName)
+      }
+    }
+    return acc
+  }, {} as Record<string, string>)
 
   // remove the default html emitted by vite
   await fs.remove(path.join(clientOutDir, 'index.html'))
@@ -72,7 +79,7 @@ export async function ssrBuild(viteOptions: UserConfig) {
           `Your index.html should contain "<div id="root"></div>"`
         )
       }
-      const pageDataPublicPath = mapPagePublicPathToDataPublicPath[pagePath]
+      const pageDataPublicPath = mapPagePathToPageDataPath[pagePath]
       if (!pageDataPublicPath) {
         throw new Error(`can not find pageDataPublicPath for "${pagePath}"`)
       }

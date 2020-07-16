@@ -23,6 +23,7 @@ export default (
   findPageFiles?: () => Promise<IPageFiles>
 ): RollupPlugin => {
   let pagesData: Promise<IPagesData>
+  const pageFiles: { [pagePublicPath: string]: string } = {}
   return {
     name: 'vite-pages-dynamic-modules',
     async resolveId(importee, importer) {
@@ -42,7 +43,10 @@ export default (
         if (!absPath?.id) {
           throw new Error(`can not resolve importee: "${importee}"`)
         }
-        return `@pageEntryStart${matchPageEntry[1]}@pageEntryEnd${absPath.id}`
+        // record page entry file
+        const pagePath = matchPageEntry[1]
+        pageFiles[pagePath] = absPath.id
+        return absPath.id
       }
       if (importee.endsWith('?analyzeSource')) {
         const path = importee.replace(/\?analyzeSource$/, '')
@@ -67,16 +71,18 @@ export default (
           pagesData = collectPagesData(pagesDir, (file) => file, findPageFiles)
         return renderSSRPagesData(await pagesData)
       }
-      const matchPageEntry = id.match(/^@pageEntryStart(.*)@pageEntryEnd/)
-      if (matchPageEntry) {
-        const filePath = id.replace(/^@pageEntryStart(.*)@pageEntryEnd/, '')
-        return fs.readFile(filePath, 'utf-8')
-      }
       if (id.endsWith('?analyzeSource')) {
         const filePath = id.replace(/\?analyzeSource$/, '')
         const result = await analyzeSourceCode(filePath)
         return `export default ${JSON.stringify(result)}`
       }
+    },
+    async generateBundle(options, bundle) {
+      this.emitFile({
+        type: 'asset',
+        source: JSON.stringify(pageFiles),
+        fileName: 'pages-meta.json',
+      })
     },
   }
 }
