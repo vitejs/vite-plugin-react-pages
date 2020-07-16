@@ -100,16 +100,29 @@ export async function analyzeSourceCode(entryModule: string) {
     }
   } = {}
 
+  // compute the base dir for all modules
+  const pathBase = bundle.watchFiles
+    .map(path.dirname)
+    .reduce((currentPathBase, fileDir) => {
+      let relativePath = path.relative(currentPathBase, fileDir)
+      while (relativePath.startsWith('..')) {
+        currentPathBase = path.resolve(currentPathBase, '../')
+        relativePath = path.relative(currentPathBase, fileDir)
+      }
+      return currentPathBase
+    })
+
   await Promise.all(
     bundle.watchFiles.map(async (filePath) => {
       invariant(await fs.pathExists(filePath))
-      const relativePath = path.relative(path.dirname(entryModule), filePath)
+      const relativePath = path.relative(pathBase, filePath)
       modules[relativePath] = {
         code: await fs.readFile(filePath, 'utf-8'),
       }
     })
   )
-  const entry = path.basename(entryModule)
+
+  const entry = path.relative(pathBase, entryModule)
   invariant(modules[entry])
   return {
     entry,
