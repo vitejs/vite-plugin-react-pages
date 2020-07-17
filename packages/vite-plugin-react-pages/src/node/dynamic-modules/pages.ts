@@ -16,6 +16,8 @@ export type IPagesData = {
   staticData: any
 }[]
 
+// TODO: support theme to merge multi file data into one page
+
 export async function collectPagesData(
   pagesDir: string,
   fileToRequest: (file: string) => string,

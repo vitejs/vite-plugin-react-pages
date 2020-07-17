@@ -1,10 +1,11 @@
 import type { UserConfig } from 'vite'
 import * as vpr from 'vite-plugin-react'
-import pages, { defaultFindPageFiles } from 'vite-plugin-react-pages'
-import type { IPageFile } from 'vite-plugin-react-pages'
+import pages, {
+  defaultFindPageFiles,
+  findPagesFromGlob,
+} from 'vite-plugin-react-pages'
 import mdx from 'vite-plugin-mdx'
 import * as path from 'path'
-import globby from 'globby'
 
 const pagesDir = path.join(__dirname, 'demos')
 
@@ -14,20 +15,23 @@ module.exports = {
     vpr,
     mdx(),
     pages(pagesDir, async () => {
-      const cwd = path.join(__dirname, 'src')
-      const files = await globby('*/demos/**/*.[tj]s?(x)', {
-        cwd,
-      })
-      const pages = files.map<IPageFile>((file) => {
-        const match = file.match(/(.*)\/demos\/(.*)\.[tj]sx?$/)
-        if (!match) throw new Error('unexpected file: ' + file)
-        const [_, componentName, demoPath] = match
-        const filePath = path.join(cwd, file)
-        return {
-          publicPath: `/${componentName}/${demoPath}`,
-          filePath,
+      const baseDir = path.join(__dirname, 'src')
+      const pages = await findPagesFromGlob(
+        baseDir,
+        '*/demos/**/*.{[tj]sx,md?(x)}',
+        async (file) => {
+          const match = file.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
+          if (!match) throw new Error('unexpected file: ' + file)
+          const [_, componentName, demoPath] = match
+          return {
+            publicPath: `/${componentName}/${demoPath}`,
+            staticData: {
+              componentName,
+              demoPath,
+            },
+          }
         }
-      })
+      )
       const defaultPages = await defaultFindPageFiles(pagesDir)
       return [...defaultPages, ...pages]
     }),
