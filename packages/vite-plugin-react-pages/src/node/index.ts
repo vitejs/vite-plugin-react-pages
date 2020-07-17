@@ -26,5 +26,7 @@ export default createPlugin
 export { ssrBuild } from './build/ssr'
 export { defaultFindPageFiles } from './dynamic-modules/find-pages-strategy/default'
 export { findPagesFromGlob } from './dynamic-modules/find-pages-strategy/fromGlob'
+export { extractStaticData } from './dynamic-modules/pages'
+
 export type { IPages, ICreateTheme, ITheme } from '../client/types'
 export type { IPageFile, IPageFiles } from './dynamic-modules/pages'

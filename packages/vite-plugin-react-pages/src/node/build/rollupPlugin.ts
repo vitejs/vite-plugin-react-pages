@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite'
-import * as fs from 'fs-extra'
+import { parseUrl, stringifyUrl } from 'query-string'
 
 import {
   collectPagesData,
@@ -9,6 +9,7 @@ import {
 import type { IPagesData, IPageFiles } from '../dynamic-modules/pages'
 import { analyzeSourceCode } from '../dynamic-modules/analyzeSourceCode'
 import { resolveTheme } from '../dynamic-modules/resolveTheme'
+import { mergeModules } from '../dynamic-modules/mergeModules'
 
 type RollupPlugin = ArrayItemType<
   NonNullable<NonNullable<Plugin['rollupInputOptions']>['plugins']>
@@ -24,6 +25,7 @@ export default (
 ): RollupPlugin => {
   let pagesData: Promise<IPagesData>
   const pageFiles: { [pagePublicPath: string]: string } = {}
+  const composedPages: { [pagePublicPath: string]: string[] } = {}
   return {
     name: 'vite-pages-dynamic-modules',
     async resolveId(importee, importer) {
@@ -36,25 +38,34 @@ export default (
       if (importee.startsWith('/@generated/ssrData')) {
         return importee
       }
-      const matchPageEntry = importee.match(/\?isPageEntry=(.*)$/)
-      if (matchPageEntry) {
-        const path = importee.replace(/\?isPageEntry=(.*)$/, '')
+      const parsed = parseUrl(importee)
+      if (parsed.query.isPageEntry) {
+        const path = parsed.url
+        const pagePath = parsed.query.isPageEntry as string
+        // this page is composed by multiple files
+        if (path === '/@generated/mergeModules') {
+          // generate a module id for this composed page entry
+          const moduleId = `/@composedPage${pagePath}`
+          // record page entry file
+          pageFiles[pagePath] = moduleId
+          composedPages[pagePath] = parsed.query.modules as string[]
+          return moduleId
+        }
         const absPath = await this.resolve(path, importer)
         if (!absPath?.id) {
           throw new Error(`can not resolve importee: "${importee}"`)
         }
         // record page entry file
-        const pagePath = matchPageEntry[1]
         pageFiles[pagePath] = absPath.id
         return absPath.id
       }
-      if (importee.endsWith('?analyzeSource')) {
-        const path = importee.replace(/\?analyzeSource$/, '')
+      if ('analyzeSource' in parsed.query) {
+        const path = parsed.url
         const absPath = await this.resolve(path, importer)
         if (!absPath?.id) {
           throw new Error(`can not resolve importee: "${importee}"`)
         }
-        return `${absPath.id}?analyzeSource`
+        return stringifyUrl({ url: absPath.id, query: { analyzeSource: null } })
       }
     },
     async load(id) {
@@ -71,10 +82,16 @@ export default (
           pagesData = collectPagesData(pagesDir, (file) => file, findPageFiles)
         return renderSSRPagesData(await pagesData)
       }
-      if (id.endsWith('?analyzeSource')) {
-        const filePath = id.replace(/\?analyzeSource$/, '')
+      const parsed = parseUrl(id)
+      if ('analyzeSource' in parsed.query) {
+        const filePath = parsed.url
         const result = await analyzeSourceCode(filePath)
         return `export default ${JSON.stringify(result)}`
+      }
+      if (id.startsWith('/@composedPage')) {
+        const pagePath = id.slice('/@composedPage'.length)
+        const modules = composedPages[pagePath]
+        return mergeModules(modules)
       }
     },
     async generateBundle(options, bundle) {

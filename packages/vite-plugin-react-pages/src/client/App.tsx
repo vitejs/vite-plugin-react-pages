@@ -52,7 +52,7 @@ if (import.meta.hot) {
   // @ts-ignore
   import.meta.hot.acceptDeps(
     ['/@generated/pages', '/@generated/theme'],
-    ([newPages, newCreateTheme]) => {
+    ([{ default: newPages }, { default: newCreateTheme }]) => {
       theme = newCreateTheme(newPages)
     }
   )

@@ -60,6 +60,7 @@
     "gray-matter": "^4.0.2",
     "jest-docblock": "^26.0.0",
     "minimist": "^1.2.5",
+    "query-string": "^6.13.1",
     "read-pkg-up": "^7.0.1",
     "rollup": "^2.21.0",
     "rollup-plugin-postcss": "^3.1.2",

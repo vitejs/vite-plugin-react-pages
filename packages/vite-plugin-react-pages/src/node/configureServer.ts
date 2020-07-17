@@ -9,6 +9,7 @@ import {
 } from './dynamic-modules/pages'
 import { analyzeSourceCode } from './dynamic-modules/analyzeSourceCode'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
+import { mergeModules } from './dynamic-modules/mergeModules'
 
 export const configureServer = (
   pagesDir: string,
@@ -37,6 +38,11 @@ export const configureServer = (
       const filePath = resolver.requestToFile(ctx.path)
       const result = await analyzeSourceCode(filePath)
       ctx.body = `export default ${JSON.stringify(result)}`
+      ctx.type = 'js'
+      await next()
+    } else if (ctx.path === '/@generated/mergeModules') {
+      const modulePaths: string[] = ctx.query.modules
+      ctx.body = mergeModules(modulePaths)
       ctx.type = 'js'
       await next()
     } else {

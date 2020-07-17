@@ -1,9 +1,5 @@
 import React from 'react'
-import type {
-  ITheme,
-  ICreateTheme,
-  IPages,
-} from 'vite-plugin-react-pages'
+import type { ITheme, ICreateTheme, IPages } from 'vite-plugin-react-pages'
 import Layout from './layout'
 import type { ISideMenuData } from './layout/side-menu'
 import type { ITopNavData } from './layout/top-bar'
@@ -92,7 +88,9 @@ export function createTheme({
   }
 }
 
-function defaultMenu(pages: IPages): ISideMenuData[] {
+export { Layout }
+
+export function defaultMenu(pages: IPages): ISideMenuData[] {
   return Object.entries<any>(pages)
     .filter(([path]) => path !== '/404')
     .sort((a, b) => {
