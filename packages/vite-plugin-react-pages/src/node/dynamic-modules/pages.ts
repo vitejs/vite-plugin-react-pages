@@ -53,13 +53,14 @@ export async function collectPagesData(
           loadPath,
         }
       } else {
+        const staticDataFromFile = await extractStaticData(
+          await fs.readFile(filePath, 'utf-8'),
+          /\.mdx?/.test(filePath) ? 'md' : 'js'
+        )
         const finalStaticData = {
           // findPageFiles can give staticData to the pages it found
           ...staticData,
-          ...extractStaticData(
-            await fs.readFile(filePath, 'utf-8'),
-            /\.mdx?/.test(filePath) ? 'md' : 'js'
-          ),
+          ...staticDataFromFile,
           _path: publicPath,
         }
         const loadPath = fileToRequest(filePath)
