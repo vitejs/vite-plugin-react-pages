@@ -1,25 +1,26 @@
 import globby from 'globby'
 import * as path from 'path'
-import { IPageFiles } from '../pages'
+import { IPageData, IFindPagesHelpers } from '../pages'
+import { findPagesFromGlob } from './fromGlob'
 
-export async function defaultFindPageFiles(
-  pagesDirPath: string
-): Promise<IPageFiles> {
-  const pageFiles: string[] = await globby('**/*$.{md,mdx,js,jsx,ts,tsx}', {
-    cwd: pagesDirPath,
-    ignore: ['**/node_modules/**/*'],
-    onlyFiles: true,
-  })
-  return Promise.all(
-    pageFiles.map(async (relativePageFilePath) => {
-      const pageFilePath = path.join(pagesDirPath, relativePageFilePath)
+export async function defaultFindPages(
+  pagesDirPath: string,
+  findPagesHelpers: IFindPagesHelpers
+): Promise<IPageData[]> {
+  const pages = findPagesFromGlob(
+    pagesDirPath,
+    '**/*$.{md,mdx,js,jsx,ts,tsx}',
+    async (pageFilePath) => {
+      const relativePageFilePath = path.relative(pagesDirPath, pageFilePath)
       const publicPath = getPagePublicPath(relativePageFilePath)
       return {
         publicPath,
         filePath: pageFilePath,
+        staticData: await findPagesHelpers.extractStaticData(pageFilePath),
       }
-    })
+    }
   )
+  return pages
 }
 
 function getPagePublicPath(relativePageFilePath: string) {

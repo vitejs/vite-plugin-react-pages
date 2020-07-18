@@ -1,46 +1,53 @@
 import * as fs from 'fs-extra'
+import * as path from 'path'
 import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
-import { defaultFindPageFiles } from './find-pages-strategy/default'
+import { defaultFindPages } from './find-pages-strategy/default'
 import { parseUrl, stringifyUrl } from 'query-string'
 
-export type IPageFile = {
+export type IPageData = {
   publicPath: string
+  /**
+   * If filePath is an array, then this is a composed page.
+   * The page data is composed by these files.
+   */
   filePath: string | string[]
   staticData?: any
 }
 
-export type IPageFiles = IPageFile[]
-
-export type IPagesData = {
+export type IPageDataFinal = {
   publicPath: string
   loadPath: string
   staticData: any
-}[]
+}
 
-// TODO: support theme to merge multi file data into one page
+export interface IFindPagesHelpers {
+  readFile: (filePath: string) => Promise<string>
+  extractStaticData: (
+    filePath: string
+  ) => Promise<{
+    [key: string]: any
+    sourceType: string
+  }>
+}
 
 export async function collectPagesData(
   pagesDir: string,
   fileToRequest: (file: string) => string,
-  findPageFiles?: () => Promise<IPageFiles>
-): Promise<IPagesData> {
-  let pageFiles: IPageFiles
+  findPageFiles?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
+): Promise<IPageDataFinal[]> {
+  let pageFiles: IPageData[]
+  const findPagesHelpers = createFindPagesHelpers()
   if (typeof findPageFiles === 'function') {
-    pageFiles = await findPageFiles()
+    pageFiles = await findPageFiles(findPagesHelpers)
   } else {
-    pageFiles = await defaultFindPageFiles(pagesDir)
+    pageFiles = await defaultFindPages(pagesDir, findPagesHelpers)
   }
   return Promise.all(
     pageFiles.map(async (pageFile) => {
       const { publicPath, staticData, filePath } = pageFile
       if (Array.isArray(filePath)) {
         // composed page
-        const finalStaticData = {
-          // findPageFiles can give staticData to the pages it found
-          ...staticData,
-          _path: publicPath,
-        }
         const loadPath = stringifyUrl({
           url: '/@generated/mergeModules',
           query: {
@@ -49,24 +56,14 @@ export async function collectPagesData(
         })
         return {
           publicPath,
-          staticData: finalStaticData,
+          staticData,
           loadPath,
         }
       } else {
-        const staticDataFromFile = await extractStaticData(
-          await fs.readFile(filePath, 'utf-8'),
-          /\.mdx?/.test(filePath) ? 'md' : 'js'
-        )
-        const finalStaticData = {
-          // findPageFiles can give staticData to the pages it found
-          ...staticData,
-          ...staticDataFromFile,
-          _path: publicPath,
-        }
         const loadPath = fileToRequest(filePath)
         return {
           publicPath,
-          staticData: finalStaticData,
+          staticData,
           loadPath,
         }
       }
@@ -74,7 +71,7 @@ export async function collectPagesData(
   )
 }
 
-export async function renderPagesDataDynamic(pagesData: IPagesData) {
+export async function renderPagesDataDynamic(pagesData: IPageDataFinal[]) {
   const addPagesData = pagesData.map(
     ({ publicPath: pagePath, staticData, loadPath }) => {
       const parsed = parseUrl(loadPath)
@@ -99,7 +96,7 @@ export default pages;
 `
 }
 
-export async function renderSSRPagesData(pagesData: IPagesData) {
+export async function renderSSRPagesData(pagesData: IPageDataFinal[]) {
   const codeLines = pagesData.map(
     ({ publicPath: pagePath, loadPath }, index) => {
       const parsed = parseUrl(loadPath)
@@ -118,15 +115,38 @@ ${codeLines.join('\n')}
 }
 
 export async function extractStaticData(
-  pageCode: string,
-  type: 'md' | 'js'
+  fileContent: string,
+  extname: string
 ): Promise<{ sourceType: string; [key: string]: any }> {
-  if (type === 'md') {
-    const { data: frontmatter } = grayMatter(pageCode)
-    return { ...frontmatter, sourceType: 'md' }
-  } else if (type === 'js') {
-    return { ...parse(extract(pageCode)), sourceType: 'js' }
-  } else {
-    throw new Error(`unexpected type "${type}"`)
+  switch (extname) {
+    case 'md':
+    case 'mdx':
+      const { data: frontmatter } = grayMatter(fileContent)
+      return { ...frontmatter, sourceType: 'md' }
+    case 'js':
+    case 'jsx':
+    case 'ts':
+    case 'tsx':
+      return { ...parse(extract(fileContent)), sourceType: 'js' }
+    default:
+      throw new Error(`unexpected type "${extname}"`)
+  }
+}
+
+function createFindPagesHelpers(): IFindPagesHelpers {
+  const readFileCache: { [filePath: string]: Promise<string> } = {}
+  const readFileWithCache = async (filePath: string) => {
+    if (readFileCache[filePath]) return readFileCache[filePath]
+    readFileCache[filePath] = fs.readFile(filePath, 'utf-8')
+    return readFileCache[filePath]
+  }
+  const extractStaticDataWithCache = async (filePath: string) =>
+    extractStaticData(
+      await readFileWithCache(filePath),
+      path.extname(filePath).slice(1)
+    )
+  return {
+    readFile: readFileWithCache,
+    extractStaticData: extractStaticDataWithCache,
   }
 }

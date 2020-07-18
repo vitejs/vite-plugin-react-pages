@@ -5,8 +5,9 @@ import {
   collectPagesData,
   renderPagesDataDynamic,
   renderSSRPagesData,
+  IFindPagesHelpers,
 } from '../dynamic-modules/pages'
-import type { IPagesData, IPageFiles } from '../dynamic-modules/pages'
+import type { IPageDataFinal, IPageData } from '../dynamic-modules/pages'
 import { analyzeSourceCode } from '../dynamic-modules/analyzeSourceCode'
 import { resolveTheme } from '../dynamic-modules/resolveTheme'
 import { mergeModules } from '../dynamic-modules/mergeModules'
@@ -21,9 +22,9 @@ type ArrayItemType<Arr extends Array<any>> = Arr extends Array<infer R>
 
 export default (
   pagesDir: string,
-  findPageFiles?: () => Promise<IPageFiles>
+  findPageFiles?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
 ): RollupPlugin => {
-  let pagesData: Promise<IPagesData>
+  let pagesData: Promise<IPageDataFinal[]>
   const pageFiles: { [pagePublicPath: string]: string } = {}
   const composedPages: { [pagePublicPath: string]: string[] } = {}
   return {

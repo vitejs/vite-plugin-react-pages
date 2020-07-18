@@ -1,14 +1,14 @@
 import globby from 'globby'
 import * as path from 'path'
-import { IPageFile } from '../pages'
+import { IPageData } from '../pages'
 
-type IPageInfo = Pick<IPageFile, 'publicPath' | 'staticData'> | false
+type IPageInfo = Pick<IPageData, 'publicPath' | 'staticData'> | false
 
 export async function findPagesFromGlob(
   baseDir: string,
   glob: string,
-  pageInfo: (file: string) => IPageInfo | Promise<IPageInfo>
-): Promise<IPageFile[]> {
+  pageInfo: (relativePath: string) => IPageInfo | Promise<IPageInfo>
+): Promise<IPageData[]> {
   const pageFiles: string[] = await globby(glob, {
     cwd: baseDir,
     ignore: ['**/node_modules/**/*'],
@@ -18,15 +18,42 @@ export async function findPagesFromGlob(
   const pages = (
     await Promise.all(
       pageFiles.map(async (file) => {
-        const info = await pageInfo(file)
+        const filePath = path.join(baseDir, file)
+        const info = await pageInfo(filePath)
         if (!info) return false
         return {
           ...info,
-          filePath: path.join(baseDir, file),
-        } as IPageFile
+          filePath,
+        } as IPageData
       })
     )
-  ).filter<IPageFile>(Boolean as any)
+  ).filter<IPageData>(Boolean as any)
 
-  return pages
+  // merge pages with same publicPath
+  const buckets: {
+    [publicPath: string]: IPageData[]
+  } = {}
+  pages.forEach((page) => {
+    const bucket = buckets[page.publicPath]
+    if (bucket) {
+      bucket.push(page)
+    } else {
+      buckets[page.publicPath] = [page]
+    }
+  })
+  const mergedPages = Object.entries(buckets).map(([publicPath, bucket]) => {
+    if (bucket.length == 1) {
+      return bucket[0]
+    }
+    return {
+      publicPath: publicPath,
+      filePath: bucket.map(({ filePath }) => filePath as string),
+      staticData: {
+        isComposedPage: true,
+        parts: bucket.map(({ staticData }) => staticData),
+      },
+    }
+  })
+
+  return mergedPages
 }

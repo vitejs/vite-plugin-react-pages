@@ -5,7 +5,8 @@ import { CLIENT_PATH } from './constants'
 import {
   renderPagesDataDynamic,
   collectPagesData,
-  IPageFiles,
+  IPageData,
+  IFindPagesHelpers,
 } from './dynamic-modules/pages'
 import { analyzeSourceCode } from './dynamic-modules/analyzeSourceCode'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
@@ -13,7 +14,7 @@ import { mergeModules } from './dynamic-modules/mergeModules'
 
 export const configureServer = (
   pagesDir: string,
-  findPageFiles?: () => Promise<IPageFiles>
+  findPageFiles?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
 ): Plugin['configureServer'] => ({ app, resolver }) => {
   app.use(async (ctx, next) => {
     if (ctx.path === '/@generated/pages') {

@@ -10,6 +10,7 @@ interface IProps {
 
 const PageLoader: React.FC<IProps> = ({ pages, path, theme }) => {
   const { _importFn, staticData } = pages[path]
+  staticData._path = path
 
   const dataCache = useContext(dataCacheCtx)
   const setDataCache = useContext(setDataCacheCtx)
