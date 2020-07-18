@@ -11,8 +11,5 @@
     "pub": "pnpm -r publish --filter {packages}",
     "update-deps": "pnpm --recursive update -i -L",
     "update-local-deps": "pnpm update -r vite-plugin-mdx vite-plugin-react-pages vite-pages-theme-basic --workspace"
-  },
-  "devDependencies": {
-    "@types/source-map": "^0.5.7"
   }
 }

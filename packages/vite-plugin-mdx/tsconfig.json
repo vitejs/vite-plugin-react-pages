@@ -1,15 +1,9 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES2015",
-    "moduleResolution": "node",
-    "strict": true,
-    "declaration": true,
-    "noUnusedLocals": true,
-    "esModuleInterop": true,
+    "rootDir": "./src",
     "outDir": "dist",
-    "module": "commonjs",
-    "lib": ["ESNext"],
-    "sourceMap": true
-  },
-  "include": ["./src"]
+    "target": "ES2015",
+    "module": "commonjs"
+  }
 }

@@ -37,7 +37,9 @@
     "remark-frontmatter": "^2.0.0"
   },
   "devDependencies": {
+    "esbuild": "^0.6.3",
     "typescript": "^3.9.7",
-    "vite": "^1.0.0-rc.1"
+    "vite": "^1.0.0-rc.1",
+    "vite-plugin-react": "^3.0.2"
   }
 }
