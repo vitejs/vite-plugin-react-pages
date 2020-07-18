@@ -23,6 +23,7 @@
     "@types/react-router-dom": "^5.1.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "sass": "^1.26.10",
     "vite": "^1.0.0-rc.1",
     "vite-plugin-mdx": "workspace:^0.3.5",
     "vite-plugin-react": "^3.0.2",
