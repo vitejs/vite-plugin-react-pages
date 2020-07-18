@@ -1,3 +1,7 @@
+/**
+ * @title Index Page Title
+ */
+
 import React from 'react'
 
 interface IProps {}

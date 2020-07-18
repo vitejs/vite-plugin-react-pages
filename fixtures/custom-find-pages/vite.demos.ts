@@ -1,8 +1,8 @@
 import type { UserConfig } from 'vite'
 import * as vpr from 'vite-plugin-react'
 import pages, {
-  defaultFindPageFiles,
   findPagesFromGlob,
+  defaultFindPages,
 } from 'vite-plugin-react-pages'
 import mdx from 'vite-plugin-mdx'
 import * as path from 'path'
@@ -14,25 +14,39 @@ module.exports = {
   plugins: [
     vpr,
     mdx(),
-    pages(pagesDir, async () => {
-      const baseDir = path.join(__dirname, 'src')
-      const pages = await findPagesFromGlob(
-        baseDir,
+    pages(pagesDir, async (helpers) => {
+      const demos = path.join(__dirname, 'src')
+      const title: { [publicPath: string]: string } = {}
+      let pages = await findPagesFromGlob(
+        demos,
         '*/demos/**/*.{[tj]sx,md?(x)}',
-        async (file) => {
-          const match = file.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
-          if (!match) throw new Error('unexpected file: ' + file)
+        async (filePath) => {
+          const relative = path.relative(demos, filePath)
+          const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
+          if (!match) throw new Error('unexpected file: ' + filePath)
           const [_, componentName, demoPath] = match
+          const publicPath = `/${componentName}`
+          title[publicPath] = componentName + ' Title'
           return {
-            publicPath: `/${componentName}/${demoPath}`,
+            publicPath,
             staticData: {
-              componentName,
+              ...(await helpers.extractStaticData(filePath)),
               demoPath,
             },
           }
         }
       )
-      const defaultPages = await defaultFindPageFiles(pagesDir)
+      pages = pages.map((pageData) => {
+        if (!pageData.staticData.isComposedPage) return pageData
+        return {
+          ...pageData,
+          staticData: {
+            ...pageData.staticData,
+            title: title[pageData.publicPath],
+          },
+        }
+      })
+      const defaultPages = await defaultFindPages(pagesDir, helpers)
       return [...defaultPages, ...pages]
     }),
   ],

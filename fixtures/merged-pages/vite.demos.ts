@@ -2,7 +2,7 @@ import type { UserConfig } from 'vite'
 import * as vpr from 'vite-plugin-react'
 import pages, {
   findPagesFromGlob,
-  IPageFile,
+  IPageData,
   extractStaticData,
 } from 'vite-plugin-react-pages'
 import mdx from 'vite-plugin-mdx'
@@ -42,7 +42,7 @@ module.exports = {
 
       // clusters according to componentName
       const clusters: {
-        [componentName: string]: IPageFile[]
+        [componentName: string]: IPageData[]
       } = {}
 
       pages.forEach((page) => {

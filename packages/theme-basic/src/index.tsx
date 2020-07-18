@@ -16,11 +16,12 @@ export function createTheme({
   sideMenuData,
 }: IOption = {}): ICreateTheme {
   return (pages) => {
+    const menu = sideMenuData ?? defaultMenu(pages)
     return {
       initialLoading(pageStaticData) {
         return (
           <Layout
-            sideMenuData={sideMenuData ?? defaultMenu(pages)}
+            sideMenuData={menu}
             topNavs={topNavs ?? []}
             logo={logo}
             applyMdStyle={pageStaticData.sourceType === 'md'}
@@ -31,10 +32,32 @@ export function createTheme({
         )
       },
       loaded(pageData) {
+        if (pageData.isComposedPage) {
+          const composeModules = pageData.default
+          return (
+            <Layout
+              sideMenuData={menu}
+              topNavs={topNavs ?? []}
+              logo={logo}
+              path={pageData._path}
+            >
+              {composeModules.map((module: any, idx: number) => {
+                const part = pageData.parts[idx]
+                const ContentComp = module.default
+                return (
+                  <section style={{ marginBottom: '40px' }} key={idx}>
+                    <h2>{part.title}</h2>
+                    <ContentComp />
+                  </section>
+                )
+              })}
+            </Layout>
+          )
+        }
         const ContentComp = pageData.default
         return (
           <Layout
-            sideMenuData={sideMenuData ?? defaultMenu(pages)}
+            sideMenuData={menu}
             topNavs={topNavs ?? []}
             logo={logo}
             applyMdStyle={pageData.sourceType === 'md'}
@@ -47,7 +70,7 @@ export function createTheme({
       transitionLoading(pageStaticData, prevPageData) {
         return (
           <Layout
-            sideMenuData={sideMenuData ?? defaultMenu(pages)}
+            sideMenuData={menu}
             topNavs={topNavs ?? []}
             logo={logo}
             applyMdStyle={pageStaticData.sourceType === 'md'}
@@ -60,7 +83,7 @@ export function createTheme({
       loadError(error, pageStaticData) {
         return (
           <Layout
-            sideMenuData={sideMenuData ?? defaultMenu(pages)}
+            sideMenuData={menu}
             topNavs={topNavs ?? []}
             logo={logo}
             applyMdStyle={pageStaticData.sourceType === 'md'}
@@ -75,11 +98,7 @@ export function createTheme({
           return renderPage('/404')
         }
         return (
-          <Layout
-            sideMenuData={sideMenuData ?? defaultMenu(pages)}
-            topNavs={topNavs ?? []}
-            logo={logo}
-          >
+          <Layout sideMenuData={menu} topNavs={topNavs ?? []} logo={logo}>
             <p>Page Not Found.</p>
           </Layout>
         )
@@ -108,7 +127,7 @@ export function defaultMenu(pages: IPages): ISideMenuData[] {
     .map(([path, { staticData }]) => {
       return {
         path,
-        text: path,
+        text: staticData.title || path,
       }
     })
 }
