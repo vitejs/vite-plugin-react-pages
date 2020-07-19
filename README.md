@@ -1,32 +1,28 @@
 # 📘 vite-plugin-react-page
 
-[Document site](https://vitejs.github.io/vite-plugin-react-pages/).
+[vite-plugin-react-page](https://vitejs.github.io/vite-plugin-react-pages) (vite-pages) is a React app framework powered by [vite](https://github.com/vitejs/vite). It is very suitable for:
 
-[vite-plugin-react-page](https://github.com/csr632/vite-plugin-react-pages) is a [vite](https://github.com/vitejs/vite) plugin for React. **It is very suitable for document site. It also serves as a great React UI development environment** (like [storybook](https://storybook.js.org/)).
+- blog site
+- documentation site for your library
+- stories(demos) development for your React components(like [storybook](https://storybook.js.org/))
 
-## Highlights
+It has many features that help developers **build an React App quickly**:
 
-- **Fantastic development experience**. Start the local development server in a blink, even when you have many pages. Hot module replacement works with React and Mdx, so you can get instant feedback when you edit the files. Big thanks to vite.
-- **Filesystem based routing**. It is easy to create, locate and develop pages. You don't need to worry about routing configuration.
-- **Support [Mdx](https://mdxjs.com/)**. You can write content with both "normal React" or [Mdx](https://mdxjs.com/). Normal Reactjs is flexible and composable. While Mdx is readable and easy to edit. You can choose the proper format for your task. These formats can import each other like normal esModules.
-- **Simple but powerful theme customization**. With **only one theme API**, you can customize anything on the page. It is easy to write a theme that is sharable and configurable. If you use typescript, your theme configuration code will get type-check and intelliSense.
-- **Automatic code splitting based on pages**. Readers don't need to download the whole app, they only load page data as needed.
-- **Support SSR out of the box**. Get even better user experience.
+- **Fantastic development experience**. Start the local development server in a blink, even when you have many pages. Hot module replacement works with React and Mdx, so you can get instant feedback when you edit your code.
+- **Filesystem based routing**. By following a [simple filesystem routing convention](https://vitejs.github.io/vite-plugin-react-pages/fs-routing), It is easy to create, locate and develop pages. You don't need to worry about routing configuration. For [advanced users](https://vitejs.github.io/vite-plugin-react-pages/advanced-fs-routing), you can tell vite-pages how to find page files, so that vite-pages can work with any project file structure.
+- **Support Mdx**. You can write content with both "normal React" or [Mdx](https://mdxjs.com/). Normal Reactjs is more flexible and composable. While Mdx is more readable and easy to edit. You can choose the proper format for your task. These formats can import each other like normal esModules.
+- **Powerful [theme customization](https://vitejs.github.io/vite-plugin-react-pages/theme)**. Vite-pages itself doesn't render any concrete DOM node. You can customize **anything** on the page with theme. It is easy to write a theme that is sharable and configurable. If you use typescript, the users of your theme will get type-check and intelliSense.
+- **Automatic code splitting based on pages**. Visitors don't need to download the whole app, they only load page data as needed.
+- **Support SSR out of the box**. By pre-rendering your app into HTML at buildtime, users can see the content before any JS is loaded.
 
-## Getting started
+In a nutshell, vite-pages is a React app framework that collects your pages data and passes them to your theme.
 
-1. Clone [the example repo](https://github.com/csr632/vite-pages-example)
+## Getting stated
+
+1. initialize a vite-pages project:
+   - use `npm init @csr632/vite-app my-app --template react-pages-app` to initialize an app starter, or
+   - use `npm init @csr632/vite-app my-lib --template react-pages-lib` to initialize a library starter.
 2. `npm install`
 3. `npm run dev` and play with the local dev envirenment.
-4. `npm run build` and serve the `dist`.
-5. `npm run ssr` and serve the `dist`. You can disable javascript in your browser, to verify if it can still render.
-
-## TODOs
-
-- 🔧 Polish basic theme
-- ✅ Let theme to decide how to render loading or loadError view
-  - vite-pages core should not render any dom node. It should be done by theme
-- 🔧 Support [static generation with external data](https://nextjs.org/learn/basics/data-fetching/with-data) (getStaticProps)
-- 🔧 Support [static generation with dynamic routes](https://nextjs.org/learn/basics/data-fetching/with-data) (getStaticPaths)
-  - In development, `getStaticProps`/`getStaticPaths` runs on every request
-  - In production, `getStaticProps`/`getStaticPaths` runs at build time
+4. `npm run build`.
+5. `npm run ssr`. You can [disable javascript in your browser](https://developers.google.com/web/tools/chrome-devtools/javascript/disable), to verify if it can still render.
