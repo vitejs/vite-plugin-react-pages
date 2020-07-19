@@ -6,8 +6,11 @@ import type { ICreateTheme, IPages } from 'vite-plugin-react-pages'
 
 const topNavs: ITopNavData[] = [
   { text: 'index', path: '/' },
-  { text: 'React', href: 'https://reactjs.org/' },
   { text: 'Vite', href: 'https://github.com/vitejs/vite' },
+  {
+    text: 'Vite Pages',
+    href: 'https://github.com/vitejs/vite-plugin-react-pages',
+  },
 ]
 
 const theme: ICreateTheme = (pages) => {
