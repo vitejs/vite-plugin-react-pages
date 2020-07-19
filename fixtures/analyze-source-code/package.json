@@ -27,8 +27,8 @@
     "react-dom": "^16.13.1",
     "sass": "^1.26.10",
     "vite": "^1.0.0-rc.1",
-    "vite-plugin-mdx": "workspace:^0.3.5",
+    "vite-plugin-mdx": "workspace:^0.3.6",
     "vite-plugin-react": "^3.0.2",
-    "vite-plugin-react-pages": "workspace:^0.6.0"
+    "vite-plugin-react-pages": "workspace:^0.7.0"
   }
 }
