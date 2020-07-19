@@ -1,9 +1,11 @@
 import React from 'react'
+
 import Topbar from './top-bar'
 import type { ITopNavData } from './top-bar'
 import SideMenu from './side-menu'
 import type { ISideMenuData } from './side-menu'
 import s from './style.module.css'
+import MDX from './MDX'
 
 import './global.css'
 import 'github-markdown-css/github-markdown.css'
@@ -33,7 +35,7 @@ const Layout: React.FC<IProps> = ({
           className={s.content + (applyMdStyle ? ` markdown-body` : '')}
           key={path}
         >
-          {children}
+          {applyMdStyle ? <MDX>{children}</MDX> : children}
         </div>
       </div>
     </div>

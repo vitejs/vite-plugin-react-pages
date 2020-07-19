@@ -1,4 +1,5 @@
 ---
+title: Theme
 sort: 2
 ---
 
@@ -10,63 +11,15 @@ Vite-pages itself doesn't render any concrete DOM node. You can customize **anyt
 
 Users should export their theme from `_theme.tsx`. It should export a theme-init-function:
 
-```ts
-/**
- * @param pages all pages' static data.
- */
-type ICreateTheme = (pages: IPages) => ITheme
+import ThemeInterface from './theme-interface.mdx'
 
-interface ITheme {
-  /**
-   * loading the first page's data, render the initial loading state.
-   * if the app is build with ssr,
-   * vite-pages will not use it to render the initial loading state.
-   *
-   * @param pageStaticData current page's static data.
-   */
-  initialLoading?: (pageStaticData: any) => React.ReactElement | null
-  /**
-   * current page's data is ready, render the page content.
-   *
-   * @param pageData current page's data. including static data and runtime data. It may contain data from multiple files if this is a composed page.
-   */
-  loaded: (pageData: IPageLoaded) => React.ReactElement | null
-  /**
-   * app is loading another page, render the transition loading state.
-   * if transitionLoading is not provided, vite-pages will fallback to initialLoading.
-   *
-   * @param pageStaticData current page's static data.
-   * @param prevPageData previous page's data.
-   */
-  transitionLoading?: (
-    pageStaticData: any,
-    prevPageData: IPageLoaded
-  ) => React.ReactElement | null
-  /**
-   * If error happens while loading,
-   * vite-pages will use it to render the error state.
-   *
-   * @param error the error.
-   * @param pageStaticData current page's static data.
-   */
-  loadError?: (error: any, pageStaticData: any) => React.ReactElement | null
-  /**
-   * If no page match the current url,
-   * vite-pages will use it to render the view.
-   * You can render 404 page with it,
-   * or render more routes (define more pages).
-   *
-   * @param renderPage theme can use it to render a page.
-   */
-  noPageMatch?: (renderPage: IRenderPage) => React.ReactElement | null
-}
-```
+<ThemeInterface />
 
 Vite-pages collects data from your project and call the `ICreateTheme` function to init your theme. Then, it will call the render functions from the theme. These render functions should be pure.
 
 You can learn about the "data" received by the render functions in <Link to="/page-data">page-data doc</Link>.
 
-For example, the most simple theme looks like this:
+For example, a simple theme looks like this:
 
 ```tsx
 import React from 'react'

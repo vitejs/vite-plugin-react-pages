@@ -1,6 +1,6 @@
 ---
 title: Advanced FS Routing
-sort: 1.5
+sort: 5
 ---
 
 ## Advanced Filesystem Routing: findPages API

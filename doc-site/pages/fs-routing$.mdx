@@ -3,9 +3,11 @@ title: FS Routing
 sort: 1
 ---
 
+import { Link } from 'react-router-dom'
+
 # Filesystem Routing
 
-Vite-pages generates page routes based on your project file structure(filesystem routing).
+Vite-pages generates page routes based on your project file structure (filesystem routing).
 
 ## Basic Filesystem Routing Convention
 
@@ -28,7 +30,6 @@ If the filename is `index$.tsx`, the page route path will be the path of the dir
 | `dir-name/index$.jsx`                     | `/dir-name`            |
 | `dir-name/page-three$.mdx`                | `/dir-name/page-three` |
 
-Theme can decide what to render when no page matches the url. Checkout the theme doc.
+Theme can decide what to render when no page matches the url. Checkout <Link to="/theme">the theme doc</Link>.
 
-<!--
-`404$.tsx` (whatever extension) is a special fallback page. It will be displayed when no other page matches the url. Checkout the [basic fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/basic/pages/404%24.tsx). -->
+Checkout [the basic fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/basic/pages) for an example.

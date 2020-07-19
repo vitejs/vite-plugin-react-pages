@@ -228,6 +228,7 @@ importers:
   packages/theme-basic:
     dependencies:
       github-markdown-css: 4.0.0
+      prism-react-renderer: 1.1.1_react@16.13.1
     devDependencies:
       '@types/react': 16.9.43
       '@types/react-router-dom': 5.1.5
@@ -246,6 +247,7 @@ importers:
       fs-extra: ^9.0.1
       github-markdown-css: ^4.0.0
       globby: ^11.0.1
+      prism-react-renderer: ^1.1.1
       react: ^16.13.1
       typescript: ^3.9.7
       vite-plugin-react-pages: 'workspace:^0.6.0'

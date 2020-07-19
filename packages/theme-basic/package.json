@@ -33,6 +33,7 @@
     "vite-plugin-react-pages": "workspace:^0.6.0"
   },
   "dependencies": {
-    "github-markdown-css": "^4.0.0"
+    "github-markdown-css": "^4.0.0",
+    "prism-react-renderer": "^1.1.1"
   }
 }

@@ -7,7 +7,7 @@ module.exports = {
   jsx: 'react',
   plugins: [vpr, mdx(), pages()],
   optimizeDeps: {
-    exclude: ['vite-pages-theme-basic'],
+    link: ['vite-pages-theme-basic']
   },
   // minify: 'esbuild',
   minify: false,

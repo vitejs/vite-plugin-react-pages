@@ -1,27 +1,16 @@
-import React from 'react'
-
-/**
- * all pages' static data.
- */
-export interface IPages {
-  [path: string]: {
-    staticData: any
-  }
-}
-export interface IPagesInternal {
-  [path: string]: {
-    _importFn: () => Promise<IPageLoaded>
-    staticData: any
-  }
-}
-export type IPageLoaded = any
-
+```ts
 /**
  * @param pages all pages' static data.
  */
-export type ICreateTheme = (pages: IPages) => ITheme
+type ICreateTheme = (pages: IPages) => ITheme
 
-export interface ITheme {
+interface IPages {
+  [path: string]: {
+    staticData: any
+  }
+}
+
+interface ITheme {
   /**
    * loading the first page's data, render the initial loading state.
    * if the app is build with ssr,
@@ -66,5 +55,4 @@ export interface ITheme {
    */
   noPageMatch?: (renderPage: IRenderPage) => React.ReactElement | null
 }
-
-export type IRenderPage = (path: string) => React.ReactElement
+```
