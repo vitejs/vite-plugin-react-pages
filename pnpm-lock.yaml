@@ -163,38 +163,6 @@ importers:
       vite: ^1.0.0-rc.1
       vite-plugin-mdx: 'workspace:^0.3.6'
       vite-plugin-react: ^3.0.2
-  fixtures/merged-pages:
-    dependencies:
-      '@mdx-js/react': 1.6.11_react@16.13.1
-      '@pika/react': 16.13.1
-      '@pika/react-dom': 16.13.1_react@16.13.1
-      react-router-dom: 5.2.0_react@16.13.1
-      vite-pages-theme-basic: 'link:../../packages/theme-basic'
-    devDependencies:
-      '@types/react': 16.9.43
-      '@types/react-router-dom': 5.1.5
-      globby: 11.0.1
-      react: 16.13.1
-      react-dom: 16.13.1_react@16.13.1
-      vite: 1.0.0-rc.1
-      vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react: 3.0.2_vite@1.0.0-rc.1
-      vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages'
-    specifiers:
-      '@mdx-js/react': ^1.6.11
-      '@pika/react': ^16.13.1
-      '@pika/react-dom': ^16.13.1
-      '@types/react': ^16.9.43
-      '@types/react-router-dom': ^5.1.5
-      globby: ^11.0.1
-      react: ^16.13.1
-      react-dom: ^16.13.1
-      react-router-dom: ^5.2.0
-      vite: ^1.0.0-rc.1
-      vite-pages-theme-basic: 'workspace:^0.7.0'
-      vite-plugin-mdx: 'workspace:^0.3.6'
-      vite-plugin-react: ^3.0.2
-      vite-plugin-react-pages: 'workspace:^0.7.0'
   fixtures/use-theme:
     dependencies:
       '@mdx-js/react': 1.6.11_react@16.13.1
