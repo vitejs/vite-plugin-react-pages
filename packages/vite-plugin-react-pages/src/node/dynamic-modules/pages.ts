@@ -2,8 +2,9 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
-import { defaultFindPages } from './find-pages-strategy/default'
+import { defaultFindPages as _defaultFindPages } from './find-pages-strategy/default'
 import { parseUrl, stringifyUrl } from 'query-string'
+import { IPageInfo, findPagesFromGlob } from './find-pages-strategy/fromGlob'
 
 export type IPageData = {
   publicPath: string
@@ -29,19 +30,25 @@ export interface IFindPagesHelpers {
     [key: string]: any
     sourceType: string
   }>
+  findPagesFromGlob: (
+    baseDir: string,
+    glob: string,
+    pageInfo: (relativePath: string) => IPageInfo | Promise<IPageInfo>
+  ) => Promise<IPageData[]>
+  defaultFindPages: (baseDir: string) => Promise<IPageData[]>
 }
 
 export async function collectPagesData(
   pagesDir: string,
   fileToRequest: (file: string) => string,
-  findPageFiles?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
+  findPages?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
 ): Promise<IPageDataFinal[]> {
   let pageFiles: IPageData[]
   const findPagesHelpers = createFindPagesHelpers()
-  if (typeof findPageFiles === 'function') {
-    pageFiles = await findPageFiles(findPagesHelpers)
+  if (typeof findPages === 'function') {
+    pageFiles = await findPages(findPagesHelpers)
   } else {
-    pageFiles = await defaultFindPages(pagesDir, findPagesHelpers)
+    pageFiles = await findPagesHelpers.defaultFindPages(pagesDir)
   }
   return Promise.all(
     pageFiles.map(async (pageFile) => {
@@ -145,8 +152,14 @@ function createFindPagesHelpers(): IFindPagesHelpers {
       await readFileWithCache(filePath),
       path.extname(filePath).slice(1)
     )
-  return {
+  const defaultFindPages = (baseDir: string) =>
+    _defaultFindPages(baseDir, helpers)
+
+  const helpers: IFindPagesHelpers = {
     readFile: readFileWithCache,
     extractStaticData: extractStaticDataWithCache,
+    findPagesFromGlob,
+    defaultFindPages,
   }
+  return helpers
 }

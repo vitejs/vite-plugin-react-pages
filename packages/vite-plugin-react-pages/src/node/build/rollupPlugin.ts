@@ -22,7 +22,7 @@ type ArrayItemType<Arr extends Array<any>> = Arr extends Array<infer R>
 
 export default (
   pagesDir: string,
-  findPageFiles?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
+  findPages?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
 ): RollupPlugin => {
   let pagesData: Promise<IPageDataFinal[]>
   const pageFiles: { [pagePublicPath: string]: string } = {}
@@ -72,7 +72,7 @@ export default (
     async load(id) {
       if (id === '/@generated/pages') {
         if (!pagesData)
-          pagesData = collectPagesData(pagesDir, (file) => file, findPageFiles)
+          pagesData = collectPagesData(pagesDir, (file) => file, findPages)
         return renderPagesDataDynamic(await pagesData)
       }
       if (id === '/@generated/theme') {
@@ -80,7 +80,7 @@ export default (
       }
       if (id === '/@generated/ssrData') {
         if (!pagesData)
-          pagesData = collectPagesData(pagesDir, (file) => file, findPageFiles)
+          pagesData = collectPagesData(pagesDir, (file) => file, findPages)
         return renderSSRPagesData(await pagesData)
       }
       const parsed = parseUrl(id)

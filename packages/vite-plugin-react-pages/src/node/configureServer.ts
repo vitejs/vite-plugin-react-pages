@@ -14,7 +14,7 @@ import { mergeModules } from './dynamic-modules/mergeModules'
 
 export const configureServer = (
   pagesDir: string,
-  findPageFiles?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
+  findPages?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
 ): Plugin['configureServer'] => ({ app, resolver }) => {
   app.use(async (ctx, next) => {
     if (ctx.path === '/@generated/pages') {
@@ -22,7 +22,7 @@ export const configureServer = (
         await collectPagesData(
           pagesDir,
           (file) => resolver.fileToRequest(file),
-          findPageFiles
+          findPages
         )
       )
       ctx.type = 'js'

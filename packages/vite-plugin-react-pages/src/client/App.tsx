@@ -26,7 +26,15 @@ const App: React.FC = () => {
     return (
       <Switch>
         {pageRoutes}
-        <Route path="*" render={() => theme.noPageMatch(renderPage)} />
+        <Route
+          path="*"
+          render={() => {
+            if (theme.noPageMatch) {
+              return theme.noPageMatch(renderPage)
+            }
+            return <p>Page Not Found</p>
+          }}
+        />
       </Switch>
     )
   }, [pages])

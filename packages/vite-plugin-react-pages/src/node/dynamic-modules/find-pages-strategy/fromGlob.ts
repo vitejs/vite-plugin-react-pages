@@ -2,7 +2,12 @@ import globby from 'globby'
 import * as path from 'path'
 import { IPageData } from '../pages'
 
-type IPageInfo = Pick<IPageData, 'publicPath' | 'staticData'> | false
+export type IPageInfo =
+  | {
+      publicPath: string
+      staticData?: any
+    }
+  | false
 
 export async function findPagesFromGlob(
   baseDir: string,

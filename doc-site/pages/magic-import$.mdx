@@ -1,10 +1,13 @@
 ---
+title: Magic Import
 sort: 4
 ---
 
 # Magic import
 
-vite-pages support a special import format that can help you do powerful things.
+Vite-pages support "magic import". Magic import is **normal esModule import sytax** with **tailored path convention**. It enable users to import things with special behavior. Users can use it to do powerful things.
+
+> If you are familiar with webpack loader mechanism, you can easily understand how magic import works.
 
 ## Analyze source code
 
@@ -65,3 +68,7 @@ This magic import gets dependencies' versions by find `package.json` up from the
 - `devDependencies`
 - `dependencies`
 - `demoDependencies`
+
+## More magic imports?
+
+If you come up with more useful magic imports, [feel free to open an issue or PR](https://github.com/vitejs/vite-plugin-react-pages/issues). Contributions are always welcomed!

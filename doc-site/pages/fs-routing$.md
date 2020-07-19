@@ -1,0 +1,34 @@
+---
+title: FS Routing
+sort: 1
+---
+
+# Filesystem Routing
+
+Vite-pages generates page routes based on your project file structure(filesystem routing).
+
+## Basic Filesystem Routing Convention
+
+The basic filesystem routing convention is very intuitive. It works out of the box and doesn't need any config. It should satisfy most users' needs.
+
+**You can create a page by simply creating a file**: `page-name$.tsx`. Notice the `$` **at the end of the filename**. Vite-pages recognizes it and know it is a page entry.
+
+If the filename is `index$.tsx`, the page route path will be the path of the directory. See examples below.
+
+> All file extensions `.ts|.tsx|.js|.jsx|.md|.mdx` works, as long as `$` is the last character before the extension.
+
+## Examples
+
+| file path                                 | page url path          |
+| ----------------------------------------- | ---------------------- |
+| `index$.tsx`                              | `/`                    |
+| `$.tsx` (has same effect as `index$.tsx`) | `/`                    |
+| `page-one$.tsx`                           | `/page-one`            |
+| `page-two$.md`                            | `/page-two`            |
+| `dir-name/index$.jsx`                     | `/dir-name`            |
+| `dir-name/page-three$.mdx`                | `/dir-name/page-three` |
+
+Theme can decide what to render when no page matches the url. Checkout the theme doc.
+
+<!--
+`404$.tsx` (whatever extension) is a special fallback page. It will be displayed when no other page matches the url. Checkout the [basic fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/basic/pages/404%24.tsx). -->

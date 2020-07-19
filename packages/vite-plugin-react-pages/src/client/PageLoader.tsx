@@ -99,7 +99,9 @@ const PageLoader: React.FC<IProps> = ({ pages, path, theme }) => {
 
   switch (loadState.type) {
     case 'initial-loading':
-      return theme.initialLoading(loadState.pageStaticData)
+      if (theme.initialLoading)
+        return theme.initialLoading(loadState.pageStaticData)
+      return <p>Loading...</p>
     case 'loaded':
       return theme.loaded(loadState.pageData)
     case 'transition-loading':
@@ -108,9 +110,13 @@ const PageLoader: React.FC<IProps> = ({ pages, path, theme }) => {
           loadState.pageStaticData,
           loadState.prevPageData
         )
-      return theme.initialLoading(loadState.pageStaticData)
+      if (theme.initialLoading)
+        return theme.initialLoading(loadState.pageStaticData)
+      return <p>Loading...</p>
     case 'load-error':
-      return theme.loadError(loadState.error, loadState.pageStaticData)
+      if (theme.loadError)
+        return theme.loadError(loadState.error, loadState.pageStaticData)
+      return <p>Load Page Error</p>
     default:
       throw new Error(`unknown loadState.type`)
   }

@@ -1,4 +1,3 @@
-import globby from 'globby'
 import * as path from 'path'
 import { IPageData, IFindPagesHelpers } from '../pages'
 import { findPagesFromGlob } from './fromGlob'

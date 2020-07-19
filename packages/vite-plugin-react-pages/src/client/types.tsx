@@ -29,11 +29,11 @@ export interface ITheme {
    *
    * @param pageStaticData current page's static data.
    */
-  initialLoading: (pageStaticData: any) => React.ReactElement | null
+  initialLoading?: (pageStaticData: any) => React.ReactElement | null
   /**
    * current page's data is ready, render the page content.
    *
-   * @param pageData current page's data. including static data and runtime data.
+   * @param pageData current page's data. including static data and runtime data. It may contain data from multiple files if this is a composed page.
    */
   loaded: (pageData: IPageLoaded) => React.ReactElement | null
   /**
@@ -54,16 +54,16 @@ export interface ITheme {
    * @param error the error.
    * @param pageStaticData current page's static data.
    */
-  loadError: (error: any, pageStaticData: any) => React.ReactElement | null
+  loadError?: (error: any, pageStaticData: any) => React.ReactElement | null
   /**
    * If no page match the current url,
    * vite-pages will use it to render the view.
-   * You can render 404 state with it,
+   * You can render 404 page with it,
    * or render more routes (define more pages).
    *
    * @param renderPage theme can use it to render a page.
    */
-  noPageMatch: (renderPage: IRenderPage) => React.ReactElement | null
+  noPageMatch?: (renderPage: IRenderPage) => React.ReactElement | null
 }
 
 export type IRenderPage = (path: string) => React.ReactElement
