@@ -1,3 +1,4 @@
+import * as path from 'path'
 import typescript from '@rollup/plugin-typescript'
 import postcss from 'rollup-plugin-postcss'
 import commonjs from '@rollup/plugin-commonjs'
@@ -17,7 +18,7 @@ export default {
       resolveOnly: ['prism-react-renderer'],
     }),
     postcss({
-      extract: false,
+      extract: path.resolve(__dirname, 'dist', 'index.css'),
       modules: true,
     }),
   ],
