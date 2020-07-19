@@ -3,7 +3,7 @@ title: Introduction
 sort: 0
 ---
 
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
 # 📘 vite-plugin-react-page
 
@@ -26,8 +26,12 @@ In a nutshell, vite-pages is a React app framework that collects your pages data
 
 ## Getting stated
 
-1. clone [this repo](https://github.com/csr632/vite-pages-example)
+1. initialize a vite-pages project:
+
+- use `npm init @csr632/vite-app my-app --template react-pages-app` to initialize an app starter, or
+- use `npm init @csr632/vite-app my-lib --template react-pages-lib` to initialize a library starter.
+
 2. `npm install`
 3. `npm run dev` and play with the local dev envirenment.
-4. `npm run build` and serve the `dist`.
-5. `npm run ssr` and serve the `dist`. You can [disable javascript in your browser](https://developers.google.com/web/tools/chrome-devtools/javascript/disable), to verify if it can still render.
+4. `npm run build`.
+5. `npm run ssr`. You can [disable javascript in your browser](https://developers.google.com/web/tools/chrome-devtools/javascript/disable), to verify if it can still render.
