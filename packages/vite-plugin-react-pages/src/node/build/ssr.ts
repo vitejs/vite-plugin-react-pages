@@ -47,27 +47,14 @@ export async function ssrBuild(viteOptions: UserConfig) {
     outDir: clientOutDir,
   })
 
-  const pagesMetaAsset = clientResult.assets.find(
-    (output) => output.fileName === 'pages-meta.json'
+  const pagesMapAsset = clientResult.assets.find(
+    (output) => output.fileName === 'mapPagePathToEmittedFile.json'
   )
-  if (pagesMetaAsset?.type !== 'asset') {
-    throw new Error('can not find pages-meta.json in output')
+  if (pagesMapAsset?.type !== 'asset') {
+    throw new Error('can not find mapPagePathToEmittedFile.json in output')
   }
-  const pageToFile = JSON.parse(pagesMetaAsset.source as string)
-  const fileToPage = Object.fromEntries(
-    Object.entries(pageToFile).map(([page, file]) => [file, page])
-  )
-  const mapPagePathToPageDataPath = clientResult.assets.reduce((acc, asset) => {
-    if (asset.type === 'chunk') {
-      const pagePath = asset.facadeModuleId && fileToPage[asset.facadeModuleId]
-      if (pagePath) {
-        let basePath = viteOptions.base ?? ''
-        basePath = basePath.replace(/\/$/, '')
-        acc[pagePath] = path.join(`${basePath}/_assets`, asset.fileName)
-      }
-    }
-    return acc
-  }, {} as Record<string, string>)
+  const mapPagePathToEmittedFile = JSON.parse(pagesMapAsset.source as string)
+  const basePath = (viteOptions.base ?? '').replace(/\/$/, '')
 
   // remove the default html emitted by vite
   await fs.remove(path.join(clientOutDir, 'index.html'))
@@ -79,10 +66,13 @@ export async function ssrBuild(viteOptions: UserConfig) {
           `Your index.html should contain "<div id="root"></div>"`
         )
       }
-      const pageDataPublicPath = mapPagePathToPageDataPath[pagePath]
-      if (!pageDataPublicPath) {
-        throw new Error(`can not find pageDataPublicPath for "${pagePath}"`)
+      if (!mapPagePathToEmittedFile[pagePath]) {
+        throw new Error(`can not find emmitted file for page: "${pagePath}"`)
       }
+      const pageDataPublicPath = path.join(
+        `${basePath}/_assets`,
+        mapPagePathToEmittedFile[pagePath]
+      )
       const ssrInfo = {
         pagePublicPath: pagePath,
         pageData: pageDataPublicPath,

@@ -12,8 +12,7 @@ module.exports = {
     pages(path.join(__dirname, 'pages'), async (helpers) => {
       const demos = path.join(__dirname, 'src')
       const title: { [publicPath: string]: string } = {}
-
-      let pages = await helpers.findPagesFromGlob(
+      let pagesByComponent = await helpers.findPagesFromGlob(
         demos,
         '*/demos/**/*.{[tj]sx,md?(x)}',
         // for each matched file, we generate page data with it
@@ -37,7 +36,7 @@ module.exports = {
         }
       )
       // augment the staticData of composed pages
-      pages = pages.map((pageData) => {
+      pagesByComponent = pagesByComponent.map((pageData) => {
         if (!pageData.staticData.isComposedPage) return pageData
         return {
           ...pageData,
@@ -48,11 +47,30 @@ module.exports = {
           },
         }
       })
+      // we also generate one page for each demo
+      let pagesByDemo = await helpers.findPagesFromGlob(
+        demos,
+        '*/demos/**/*.{[tj]sx,md?(x)}',
+        async (filePath) => {
+          const relative = path.relative(demos, filePath)
+          const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
+          if (!match) throw new Error('unexpected file: ' + filePath)
+          const [_, componentName, demoPath] = match
+          const publicPath = `/${componentName}/${demoPath}`
+          return {
+            publicPath,
+            staticData: {
+              ...(await helpers.extractStaticData(filePath)),
+              demoPath,
+            },
+          }
+        }
+      )
       // we also want to collect pages from `/pages` with basic filesystem routing convention
       const defaultPages = await helpers.defaultFindPages(
         path.join(__dirname, 'pages')
       )
-      return [...defaultPages, ...pages]
+      return [...defaultPages, ...pagesByComponent, ...pagesByDemo]
     }),
   ],
   alias: {

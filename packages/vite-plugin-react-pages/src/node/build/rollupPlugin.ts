@@ -25,7 +25,9 @@ export default (
   findPages?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
 ): RollupPlugin => {
   let pagesData: Promise<IPageDataFinal[]>
-  const pageFiles: { [pagePublicPath: string]: string } = {}
+  // for each page, record its page data entry module reference
+  const pageEntryRefId: { [pagePublicPath: string]: string } = {}
+  // For each composed page, record its data source files
   const composedPages: { [pagePublicPath: string]: string[] } = {}
   return {
     name: 'vite-pages-dynamic-modules',
@@ -39,26 +41,30 @@ export default (
       if (importee.startsWith('/@generated/ssrData')) {
         return importee
       }
+      if (importee.startsWith('/@composedPage')) return importee
       const parsed = parseUrl(importee)
       if (parsed.query.isPageEntry) {
         const path = parsed.url
         const pagePath = parsed.query.isPageEntry as string
-        // this page is composed by multiple files
         if (path === '/@generated/mergeModules') {
-          // generate a module id for this composed page entry
+          // this page is composed by multiple files
           const moduleId = `/@composedPage${pagePath}`
-          // record page entry file
-          pageFiles[pagePath] = moduleId
           composedPages[pagePath] = parsed.query.modules as string[]
+          pageEntryRefId[pagePath] = this.emitFile({
+            type: 'chunk',
+            id: moduleId,
+          })
           return moduleId
         }
-        const absPath = await this.resolve(path, importer)
-        if (!absPath?.id) {
-          throw new Error(`can not resolve importee: "${importee}"`)
+        const resolved = await this.resolve(path, importer)
+        if (!resolved?.id) {
+          throw new Error(`can not resolve page entry: "${importee}"`)
         }
-        // record page entry file
-        pageFiles[pagePath] = absPath.id
-        return absPath.id
+        pageEntryRefId[pagePath] = this.emitFile({
+          type: 'chunk',
+          id: resolved.id,
+        })
+        return resolved.id
       }
       if ('analyzeSource' in parsed.query) {
         const path = parsed.url
@@ -96,10 +102,15 @@ export default (
       }
     },
     async generateBundle(options, bundle) {
+      const mapPagePathToEmittedFile = Object.fromEntries(
+        Object.entries(pageEntryRefId).map(([pagePublicPath, refId]) => {
+          return [pagePublicPath, this.getFileName(refId)]
+        })
+      )
       this.emitFile({
         type: 'asset',
-        source: JSON.stringify(pageFiles),
-        fileName: 'pages-meta.json',
+        source: JSON.stringify(mapPagePathToEmittedFile),
+        fileName: 'mapPagePathToEmittedFile.json',
       })
     },
   }
