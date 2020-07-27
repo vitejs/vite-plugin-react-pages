@@ -112,6 +112,7 @@ export { Layout }
 export function defaultMenu(pages: IPages): ISideMenuData[] {
   return Object.entries<any>(pages)
     .filter(([path]) => path !== '/404')
+    .filter(([path, { staticData }]) => !staticData.hideInMenu)
     .sort((a, b) => {
       const [pathA, { staticData: staticDataA }] = a
       const [pathB, { staticData: staticDataB }] = b
