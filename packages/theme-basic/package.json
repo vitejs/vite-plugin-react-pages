@@ -21,6 +21,7 @@
     "vite-plugin-react-pages": "^0.3.0"
   },
   "devDependencies": {
+    "@alifd/next": "^1.20.23",
     "@mdx-js/react": "^1.6.16",
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-node-resolve": "^8.4.0",

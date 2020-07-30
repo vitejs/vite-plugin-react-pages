@@ -8,6 +8,7 @@ module.exports = {
   plugins: [vpr, mdx(), pages()],
   optimizeDeps: {
     link: ['vite-pages-theme-basic'],
+    include: ['@alifd/next', 'prism-react-renderer'],
   },
   minify: false,
 } as UserConfig

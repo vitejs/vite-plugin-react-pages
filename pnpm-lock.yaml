@@ -197,6 +197,7 @@ importers:
     dependencies:
       github-markdown-css: 4.0.0
     devDependencies:
+      '@alifd/next': 1.20.23_react@16.13.1
       '@mdx-js/react': 1.6.16_react@16.13.1
       '@rollup/plugin-commonjs': 14.0.0_rollup@2.23.0
       '@rollup/plugin-node-resolve': 8.4.0_rollup@2.23.0
@@ -215,6 +216,7 @@ importers:
       typescript: 3.9.7
       vite-plugin-react-pages: 'link:../vite-plugin-react-pages'
     specifiers:
+      '@alifd/next': ^1.20.23
       '@mdx-js/react': ^1.6.16
       '@rollup/plugin-commonjs': ^14.0.0
       '@rollup/plugin-node-resolve': ^8.4.0
@@ -311,6 +313,36 @@ importers:
       vite: ^1.0.0-rc.3
 lockfileVersion: 5.1
 packages:
+  /@alifd/field/1.4.4:
+    dependencies:
+      '@alifd/validate': 1.2.0
+      prop-types: 15.7.2
+    dev: true
+    resolution:
+      integrity: sha512-jv4iK2M1hM4v+SukT9ZgyVZEIL7grsl98tOQ9uF3p9RYP2LpBaAr34D9yY9k37C4z8sXs0kom/nJrXE5FZQgug==
+  /@alifd/next/1.20.23_react@16.13.1:
+    dependencies:
+      '@alifd/field': 1.4.4
+      '@alifd/validate': 1.2.0
+      babel-runtime: 6.26.0
+      classnames: 2.2.6
+      hoist-non-react-statics: 2.5.5
+      prop-types: 15.7.2
+      react: 16.13.1
+      react-lifecycles-compat: 3.0.4
+      react-transition-group: 2.9.0_react@16.13.1
+      shallow-element-equals: 1.0.1
+    dev: true
+    peerDependencies:
+      moment: ^2.22.1
+      react: ^16.0.0
+      react-dom: ^16.0.0
+    resolution:
+      integrity: sha512-8xWD0PckuO4FgUphDMaKj8F2JjzU+AVb2y1EAIn/wmOyY7Wmt51dT/gh6kaicumV78styuhNi2v9FdWAMfGbWw==
+  /@alifd/validate/1.2.0:
+    dev: true
+    resolution:
+      integrity: sha512-ZXzC9/2HnRAteeB6c0P9/DL8/lS69hhUiAAxS6GpFWKaQurtDUDiCQYNUWGv7zxaPGBaMxgPcfBBcFpgpaHF5w==
   /@ant-design/colors/3.2.2:
     dependencies:
       tinycolor2: 1.4.1
@@ -654,7 +686,7 @@ packages:
       integrity: sha512-SdYnvGPv+bLlwkF2VkJnaX/ni1sMNetcGI1+nThF1gyv6Ph8Qucc4ZZAjM5yZcE/AKRXIOTZz7eSRDWOEjPyRQ==
   /@babel/runtime/7.10.5:
     dependencies:
-      regenerator-runtime: 0.13.5
+      regenerator-runtime: 0.13.7
     resolution:
       integrity: sha512-otddXKhdNn7d0ptoFRHtMLa8LqDxLYwTjB4nYgM1yy5N6gU/MUf8zqyyLltCH3yAVitBzmwK4us+DD0l/MauAg==
   /@babel/template/7.10.4:
@@ -1370,6 +1402,13 @@ packages:
     dev: false
     resolution:
       integrity: sha1-CvMqmm4Tyno/1QaeYtew9Y0NiUY=
+  /babel-runtime/6.26.0:
+    dependencies:
+      core-js: 2.6.11
+      regenerator-runtime: 0.11.1
+    dev: true
+    resolution:
+      integrity: sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
   /bail/1.0.5:
     dev: false
     resolution:
@@ -1765,7 +1804,6 @@ packages:
       integrity: sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
   /core-js/2.6.11:
     deprecated: 'core-js@<3 is no longer maintained and not recommended for usage due to the number of issues. Please, upgrade your dependencies to the actual version of core-js@3.'
-    dev: false
     requiresBuild: true
     resolution:
       integrity: sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
@@ -2077,6 +2115,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-YkoezQuhp3SLFGdOlr5xkqZ640iXrnHAwVYcDg8ZKRUtO7mSzSC2BA5V0VuyAwPSJA4CLIc6EDDJh4bEsD2+zA==
+  /dom-helpers/3.4.0:
+    dependencies:
+      '@babel/runtime': 7.10.5
+    dev: true
+    resolution:
+      integrity: sha512-LnuPJ+dwqKDIyotW1VzmOZ5TONUN7CwkCR5hrgawTUbkBGYdeoNLZo6nNfGkCrjtE1nXXaj7iMMpDa8/d9WoIA==
   /dom-iterator/1.0.0:
     dependencies:
       component-props: 1.1.1
@@ -2666,6 +2710,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==
+  /hoist-non-react-statics/2.5.5:
+    dev: true
+    resolution:
+      integrity: sha512-rqcy4pJo55FTTLWt+bU8ukscqHeE/e9KWvsOW2b/a3afxQZhwkQdT1rPPCJ0rYXdj4vNcasY8zHTH+jF/qStxw==
   /hoist-non-react-statics/3.3.2:
     dependencies:
       react-is: 16.13.1
@@ -4738,6 +4786,10 @@ packages:
   /react-is/16.13.1:
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+  /react-lifecycles-compat/3.0.4:
+    dev: true
+    resolution:
+      integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
   /react-live/2.2.2_react-dom@16.13.1+react@16.13.1:
     dependencies:
       buble: 0.19.6
@@ -4806,6 +4858,19 @@ packages:
       react-dom: ^16.0.0
     resolution:
       integrity: sha512-bL5W5mAxSW6+cLwqqVWY47Silqgy2DKDTR4hDBrLrUqC5BXc29YVx17l2IZk5v36VcDEq1Bszu2oHm1qBwKqBA==
+  /react-transition-group/2.9.0_react@16.13.1:
+    dependencies:
+      dom-helpers: 3.4.0
+      loose-envify: 1.4.0
+      prop-types: 15.7.2
+      react: 16.13.1
+      react-lifecycles-compat: 3.0.4
+    dev: true
+    peerDependencies:
+      react: '>=15.0.0'
+      react-dom: '>=15.0.0'
+    resolution:
+      integrity: sha512-+HzNTCHpeQyl4MJ/bdE0u6XRMe9+XG/+aL4mCxVN4DnPBQ0/5bfHWPDuOZUzYdMj94daZaZdCCc1Dzt9R/xSSg==
   /react/16.13.1:
     dependencies:
       loose-envify: 1.4.0
@@ -4883,9 +4948,13 @@ packages:
   /regenerate/1.4.1:
     resolution:
       integrity: sha512-j2+C8+NtXQgEKWk49MMP5P/u2GhnahTtVkRIHr5R5lVRlbKvmQ+oS+A5aLKWp2ma5VkT8sh6v+v4hbH0YHR66A==
-  /regenerator-runtime/0.13.5:
+  /regenerator-runtime/0.11.1:
+    dev: true
     resolution:
-      integrity: sha512-ZS5w8CpKFinUzOwW3c83oPeVXoNsrLsaCoLtJvAClH135j/R77RuymhiSErhm2lKcwSCIpmvIWSbDkIfAqKQlA==
+      integrity: sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==
+  /regenerator-runtime/0.13.7:
+    resolution:
+      integrity: sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
   /regexpu-core/4.7.0:
     dependencies:
       regenerate: 1.4.1
@@ -5221,6 +5290,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
+  /shallow-element-equals/1.0.1:
+    dependencies:
+      style-equal: 1.0.0
+    dev: true
+    resolution:
+      integrity: sha1-UHObfZStdWehNBc9P0QiOH7VfOY=
   /shallowequal/1.1.0:
     resolution:
       integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
@@ -5424,6 +5499,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-IrD6OkE4WzO+PzMVUbu4N/oM164=
+  /style-equal/1.0.0:
+    dev: true
+    resolution:
+      integrity: sha1-mKHFkiImv+E8GW5z8ZQOkbjmZZU=
   /style-inject/0.3.0:
     resolution:
       integrity: sha512-IezA2qp+vcdlhJaVm5SOdPPTUu0FCEqfNSli2vRuSIBbu5Nq5UvygTk/VzeCqfLz2Atj3dVII5QBKGZRZ0edzw==

@@ -1,19 +1,22 @@
 import React from 'react'
 import type { ITheme, ICreateTheme, IPages } from 'vite-plugin-react-pages'
 import Layout from './layout'
-import type { ISideMenuData } from './layout/side-menu'
-import type { ITopNavData } from './layout/top-bar'
+import type { ISideMenuData, ITopNavData } from './layout'
+
+import '@alifd/next/dist/next-noreset.css'
 
 interface IOption {
   sideMenuData?: ISideMenuData[]
   topNavs?: ITopNavData[]
   logo?: React.ReactNode
+  footer?: React.ReactNode
 }
 
 export function createTheme({
   topNavs,
   logo,
   sideMenuData,
+  footer,
 }: IOption = {}): ICreateTheme {
   return (pages) => {
     const menu = sideMenuData ?? defaultMenu(pages)
@@ -26,6 +29,7 @@ export function createTheme({
             logo={logo}
             applyMdStyle={pageStaticData.sourceType === 'md'}
             path={pageStaticData._path}
+            footer={footer}
           >
             <p>initial Loading...</p>
           </Layout>
@@ -40,6 +44,7 @@ export function createTheme({
               topNavs={topNavs ?? []}
               logo={logo}
               path={pageData._path}
+              footer={footer}
             >
               {composeModules.map((module: any, idx: number) => {
                 const part = pageData.parts[idx]
@@ -62,6 +67,7 @@ export function createTheme({
             logo={logo}
             applyMdStyle={pageData.sourceType === 'md'}
             path={pageData._path}
+            footer={footer}
           >
             <ContentComp />
           </Layout>
@@ -75,6 +81,7 @@ export function createTheme({
             logo={logo}
             applyMdStyle={pageStaticData.sourceType === 'md'}
             path={pageStaticData._path}
+            footer={footer}
           >
             <p>transition Loading...</p>
           </Layout>
@@ -88,6 +95,7 @@ export function createTheme({
             logo={logo}
             applyMdStyle={pageStaticData.sourceType === 'md'}
             path={pageStaticData._path}
+            footer={footer}
           >
             <p>Load error</p>
           </Layout>
@@ -98,7 +106,12 @@ export function createTheme({
           return renderPage('/404')
         }
         return (
-          <Layout sideMenuData={menu} topNavs={topNavs ?? []} logo={logo}>
+          <Layout
+            sideMenuData={menu}
+            topNavs={topNavs ?? []}
+            logo={logo}
+            footer={footer}
+          >
             <p>Page Not Found.</p>
           </Layout>
         )
