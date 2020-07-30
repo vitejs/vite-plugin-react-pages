@@ -13,7 +13,7 @@
     "debug:ssr": "rm -rf dist && node --inspect node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr"
   },
   "dependencies": {
-    "@mdx-js/react": "^1.6.11",
+    "@mdx-js/react": "^1.6.16",
     "@pika/react": "^16.13.1",
     "@pika/react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0"
@@ -24,7 +24,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "sass": "^1.26.10",
-    "vite": "^1.0.0-rc.1",
+    "vite": "^1.0.0-rc.3",
     "vite-plugin-mdx": "workspace:^0.3.6",
     "vite-plugin-react": "^3.0.2",
     "vite-plugin-react-pages": "workspace:^0.7.0"

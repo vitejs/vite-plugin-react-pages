@@ -32,14 +32,14 @@
     "vite-plugin-react": "^3.0.1"
   },
   "dependencies": {
-    "@mdx-js/mdx": "^1.6.11",
-    "@mdx-js/react": "^1.6.11",
+    "@mdx-js/mdx": "^1.6.16",
+    "@mdx-js/react": "^1.6.16",
     "remark-frontmatter": "^2.0.0"
   },
   "devDependencies": {
-    "esbuild": "^0.6.3",
+    "esbuild": "^0.6.11",
     "typescript": "^3.9.7",
-    "vite": "^1.0.0-rc.1",
+    "vite": "^1.0.0-rc.3",
     "vite-plugin-react": "^3.0.2"
   }
 }
