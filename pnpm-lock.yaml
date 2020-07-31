@@ -198,13 +198,17 @@ importers:
       github-markdown-css: 4.0.0
     devDependencies:
       '@alifd/next': 1.20.23_react@16.13.1
+      '@babel/preset-react': 7.10.4
+      '@babel/preset-typescript': 7.10.4
       '@mdx-js/react': 1.6.16_react@16.13.1
+      '@rollup/plugin-babel': 5.1.0_rollup@2.23.0
       '@rollup/plugin-commonjs': 14.0.0_rollup@2.23.0
       '@rollup/plugin-node-resolve': 8.4.0_rollup@2.23.0
       '@rollup/plugin-typescript': 5.0.2_rollup@2.23.0+typescript@3.9.7
       '@types/mdx-js__react': 1.5.2
       '@types/react': 16.9.43
       '@types/react-router-dom': 5.1.5
+      babel-plugin-import: 1.13.0
       chokidar: 3.4.1
       concurrently: 5.2.0
       fs-extra: 9.0.1
@@ -217,13 +221,17 @@ importers:
       vite-plugin-react-pages: 'link:../vite-plugin-react-pages'
     specifiers:
       '@alifd/next': ^1.20.23
+      '@babel/preset-react': ^7.10.4
+      '@babel/preset-typescript': ^7.10.4
       '@mdx-js/react': ^1.6.16
+      '@rollup/plugin-babel': ^5.1.0
       '@rollup/plugin-commonjs': ^14.0.0
       '@rollup/plugin-node-resolve': ^8.4.0
       '@rollup/plugin-typescript': ^5.0.2
       '@types/mdx-js__react': ^1.5.2
       '@types/react': ^16.9.43
       '@types/react-router-dom': ^5.1.5
+      babel-plugin-import: ^1.13.0
       chokidar: ^3.4.1
       concurrently: ^5.2.0
       fs-extra: ^9.0.1
@@ -425,7 +433,6 @@ packages:
   /@babel/helper-annotate-as-pure/7.10.4:
     dependencies:
       '@babel/types': 7.10.5
-    dev: false
     resolution:
       integrity: sha512-XQlqKQP4vXFB7BN8fEEerrmYvHp3fK/rBkRFz9jaJbzK0B1DSfej9Kc7ZzE8Z/OnId1jpJdNAZ3BFQjWG68rcA==
   /@babel/helper-builder-react-jsx-experimental/7.10.5:
@@ -433,14 +440,12 @@ packages:
       '@babel/helper-annotate-as-pure': 7.10.4
       '@babel/helper-module-imports': 7.10.4
       '@babel/types': 7.10.5
-    dev: false
     resolution:
       integrity: sha512-Buewnx6M4ttG+NLkKyt7baQn7ScC/Td+e99G914fRU8fGIUivDDgVIQeDHFa5e4CRSJQt58WpNHhsAZgtzVhsg==
   /@babel/helper-builder-react-jsx/7.10.4:
     dependencies:
       '@babel/helper-annotate-as-pure': 7.10.4
       '@babel/types': 7.10.5
-    dev: false
     resolution:
       integrity: sha512-5nPcIZ7+KKDxT1427oBivl9V9YTal7qk0diccnh7RrcgrT/pGFOjgGw1dgryyx1GvHEpXVfoDF6Ak3rTiWh8Rg==
   /@babel/helper-create-class-features-plugin/7.10.5:
@@ -451,7 +456,6 @@ packages:
       '@babel/helper-plugin-utils': 7.10.4
       '@babel/helper-replace-supers': 7.10.4
       '@babel/helper-split-export-declaration': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0
     resolution:
@@ -495,7 +499,6 @@ packages:
     resolution:
       integrity: sha512-n3UGKY4VXwXThEiKrgRAoVPBMqeoPgHVqiHZOanAJCG9nQUL2pLRQirUzl0ioKclHGpGqRgIOkgcIJaIWLpygg==
   /@babel/helper-plugin-utils/7.10.4:
-    dev: false
     resolution:
       integrity: sha512-O4KCvQA6lLiMU9l2eawBPMf1xPP8xPfB3iEQw150hOVTqj/rfXz0ThTb4HEzqQfs2Bmo5Ay8BzxfzVtBrr9dVg==
   /@babel/helper-replace-supers/7.10.4:
@@ -554,7 +557,6 @@ packages:
   /@babel/plugin-syntax-jsx/7.10.4:
     dependencies:
       '@babel/helper-plugin-utils': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -580,7 +582,6 @@ packages:
   /@babel/plugin-syntax-typescript/7.10.4:
     dependencies:
       '@babel/helper-plugin-utils': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -598,7 +599,6 @@ packages:
   /@babel/plugin-transform-react-display-name/7.10.4:
     dependencies:
       '@babel/helper-plugin-utils': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -608,7 +608,6 @@ packages:
       '@babel/helper-builder-react-jsx-experimental': 7.10.5
       '@babel/helper-plugin-utils': 7.10.4
       '@babel/plugin-syntax-jsx': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -617,7 +616,6 @@ packages:
     dependencies:
       '@babel/helper-plugin-utils': 7.10.4
       '@babel/plugin-syntax-jsx': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -626,7 +624,6 @@ packages:
     dependencies:
       '@babel/helper-plugin-utils': 7.10.4
       '@babel/plugin-syntax-jsx': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -637,7 +634,6 @@ packages:
       '@babel/helper-builder-react-jsx-experimental': 7.10.5
       '@babel/helper-plugin-utils': 7.10.4
       '@babel/plugin-syntax-jsx': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -646,7 +642,6 @@ packages:
     dependencies:
       '@babel/helper-annotate-as-pure': 7.10.4
       '@babel/helper-plugin-utils': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -656,7 +651,6 @@ packages:
       '@babel/helper-create-class-features-plugin': 7.10.5
       '@babel/helper-plugin-utils': 7.10.4
       '@babel/plugin-syntax-typescript': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -670,7 +664,6 @@ packages:
       '@babel/plugin-transform-react-jsx-self': 7.10.4
       '@babel/plugin-transform-react-jsx-source': 7.10.5
       '@babel/plugin-transform-react-pure-annotations': 7.10.4
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -679,7 +672,6 @@ packages:
     dependencies:
       '@babel/helper-plugin-utils': 7.10.4
       '@babel/plugin-transform-typescript': 7.10.5
-    dev: false
     peerDependencies:
       '@babel/core': ^7.0.0-0
     resolution:
@@ -819,7 +811,6 @@ packages:
       '@babel/helper-module-imports': 7.10.4
       '@rollup/pluginutils': 3.1.0_rollup@2.23.0
       rollup: 2.23.0
-    dev: false
     engines:
       node: '>= 10.0.0'
     peerDependencies:
@@ -1386,6 +1377,13 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Da6Ra0sbA/1Iavli8LdMbTjyrsOPaxMm4lrKl8VJN4sJI5F64qy2EpLj3+5INLvNPfW4ddwpStbfP3Rf3jIgcw==
+  /babel-plugin-import/1.13.0:
+    dependencies:
+      '@babel/helper-module-imports': 7.10.4
+      '@babel/runtime': 7.10.5
+    dev: true
+    resolution:
+      integrity: sha512-bHU8m0SrY89ub2hBBuYjbennOeH0YUYkVpH6jxKFk0uD8rhN+0jNHIPtXnac+Vn7N/hgkLGGDcIoYK7je3Hhew==
   /babel-plugin-styled-components/1.10.7_styled-components@5.1.1:
     dependencies:
       '@babel/helper-annotate-as-pure': 7.10.4

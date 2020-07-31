@@ -1,11 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Nav, Shell, Search } from '@alifd/next'
+import { Nav, Shell } from '@alifd/next'
 import 'github-markdown-css/github-markdown.css'
+import type { IPages } from 'vite-plugin-react-pages'
 
 import s from './style.module.css'
 import MDX from './MDX'
 import './global.css'
+// import SiteSearch from './search'
 
 interface IProps {
   sideMenuData: ISideMenuData[]
@@ -14,6 +16,7 @@ interface IProps {
   applyMdStyle?: boolean
   path?: string
   footer?: React.ReactNode
+  pages: IPages
 }
 
 const Layout: React.FC<IProps> = ({
@@ -24,19 +27,14 @@ const Layout: React.FC<IProps> = ({
   path,
   children,
   footer,
+  pages,
 }) => {
   return (
     <Shell className={s.layout}>
       <Shell.Branding>{logo} </Shell.Branding>
-      <Shell.Navigation direction="hoz">
-        <Search
-          shape="simple"
-          type="dark"
-          // @ts-ignore
-          palceholder="Search"
-          style={{ width: '200px' }}
-        />
-      </Shell.Navigation>
+      {/* <Shell.Navigation direction="hoz">
+        <SiteSearch pages={pages} />
+      </Shell.Navigation> */}
       <Shell.Action>
         <Nav direction="hoz" embeddable>
           {renderNav(topNavs)}

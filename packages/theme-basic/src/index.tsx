@@ -1,5 +1,5 @@
 import React from 'react'
-import type { ITheme, ICreateTheme, IPages } from 'vite-plugin-react-pages'
+import type { ICreateTheme, IPages } from 'vite-plugin-react-pages'
 import Layout from './layout'
 import type { ISideMenuData, ITopNavData } from './layout'
 
@@ -30,6 +30,7 @@ export function createTheme({
             applyMdStyle={pageStaticData.sourceType === 'md'}
             path={pageStaticData._path}
             footer={footer}
+            pages={pages}
           >
             <p>initial Loading...</p>
           </Layout>
@@ -45,6 +46,7 @@ export function createTheme({
               logo={logo}
               path={pageData._path}
               footer={footer}
+              pages={pages}
             >
               {composeModules.map((module: any, idx: number) => {
                 const part = pageData.parts[idx]
@@ -68,6 +70,7 @@ export function createTheme({
             applyMdStyle={pageData.sourceType === 'md'}
             path={pageData._path}
             footer={footer}
+            pages={pages}
           >
             <ContentComp />
           </Layout>
@@ -82,6 +85,7 @@ export function createTheme({
             applyMdStyle={pageStaticData.sourceType === 'md'}
             path={pageStaticData._path}
             footer={footer}
+            pages={pages}
           >
             <p>transition Loading...</p>
           </Layout>
@@ -96,6 +100,7 @@ export function createTheme({
             applyMdStyle={pageStaticData.sourceType === 'md'}
             path={pageStaticData._path}
             footer={footer}
+            pages={pages}
           >
             <p>Load error</p>
           </Layout>
@@ -111,6 +116,7 @@ export function createTheme({
             topNavs={topNavs ?? []}
             logo={logo}
             footer={footer}
+            pages={pages}
           >
             <p>Page Not Found.</p>
           </Layout>
