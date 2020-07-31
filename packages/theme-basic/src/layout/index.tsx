@@ -51,7 +51,10 @@ const Layout: React.FC<IProps> = ({
 
         <Shell.Content className={s.content}>
           <div className={applyMdStyle ? ` markdown-body` : ''} key={path}>
-            {applyMdStyle ? <MDX>{children}</MDX> : children}
+            {/* reset prefix setting for user content */}
+            <ConfigProvider prefix="next-">
+              <>{applyMdStyle ? <MDX>{children}</MDX> : children}</>
+            </ConfigProvider>
           </div>
         </Shell.Content>
 
