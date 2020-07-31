@@ -3,7 +3,7 @@ import type { ICreateTheme, IPages } from 'vite-plugin-react-pages'
 import Layout from './layout'
 import type { ISideMenuData, ITopNavData } from './layout'
 
-import '@alifd/next/dist/next-noreset.css'
+// import '@alifd/next/dist/next-noreset.css'
 
 interface IOption {
   sideMenuData?: ISideMenuData[]
@@ -54,6 +54,7 @@ export function createTheme({
                 return (
                   <section style={{ marginBottom: '40px' }} key={idx}>
                     <h2>{part.title}</h2>
+                    {part.description && <p>{part.description}</p>}
                     <ContentComp />
                   </section>
                 )

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Nav, Shell } from '@alifd/next'
+import { Nav, Shell, ConfigProvider } from '@alifd/next'
 import 'github-markdown-css/github-markdown.css'
 import type { IPages } from 'vite-plugin-react-pages'
 
@@ -30,32 +30,34 @@ const Layout: React.FC<IProps> = ({
   pages,
 }) => {
   return (
-    <Shell className={s.layout}>
-      <Shell.Branding>{logo} </Shell.Branding>
-      {/* <Shell.Navigation direction="hoz">
+    <ConfigProvider prefix="vp-theme-">
+      <Shell className={s.layout}>
+        <Shell.Branding>{logo} </Shell.Branding>
+        {/* <Shell.Navigation direction="hoz">
         <SiteSearch pages={pages} />
       </Shell.Navigation> */}
-      <Shell.Action>
-        <Nav direction="hoz" embeddable>
-          {renderNav(topNavs)}
-        </Nav>
-      </Shell.Action>
+        <Shell.Action>
+          <Nav direction="hoz" embeddable>
+            {renderNav(topNavs)}
+          </Nav>
+        </Shell.Action>
 
-      <Shell.Navigation
-        // @ts-ignore
-        trigger={null}
-      >
-        <Nav embeddable>{renderNav(sideMenuData)}</Nav>
-      </Shell.Navigation>
+        <Shell.Navigation
+          // @ts-ignore
+          trigger={null}
+        >
+          <Nav embeddable>{renderNav(sideMenuData)}</Nav>
+        </Shell.Navigation>
 
-      <Shell.Content className={s.content}>
-        <div className={applyMdStyle ? ` markdown-body` : ''} key={path}>
-          {applyMdStyle ? <MDX>{children}</MDX> : children}
-        </div>
-      </Shell.Content>
+        <Shell.Content className={s.content}>
+          <div className={applyMdStyle ? ` markdown-body` : ''} key={path}>
+            {applyMdStyle ? <MDX>{children}</MDX> : children}
+          </div>
+        </Shell.Content>
 
-      {footer && <Shell.Footer>{footer}</Shell.Footer>}
-    </Shell>
+        {footer && <Shell.Footer>{footer}</Shell.Footer>}
+      </Shell>
+    </ConfigProvider>
   )
 }
 
