@@ -4,11 +4,11 @@ import * as path from 'path'
 import { configureServer } from './configureServer'
 import rollupPlugin from './build/rollupPlugin'
 import { CLIENT_PATH } from './constants'
-import type { IPageData, IFindPagesHelpers } from './dynamic-modules/pages'
+import type { IFindPagesHelpers } from './dynamic-modules/pages'
 
 function createPlugin(
   pagesDir: string = path.join(process.cwd(), 'pages'),
-  findPages?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
+  findPages?: (helpers: IFindPagesHelpers) => Promise<void>
 ): Plugin {
   return {
     configureServer: configureServer(pagesDir, findPages),
@@ -26,5 +26,5 @@ export default createPlugin
 export { ssrBuild } from './build/ssr'
 export { extractStaticData } from './dynamic-modules/pages'
 
-export type { IPages, ICreateTheme, ITheme } from '../client/types'
+export type { ITheme, IPagesStaticData, IPagesLoaded } from '../client/types'
 export type { IPageData } from './dynamic-modules/pages'

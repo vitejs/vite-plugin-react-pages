@@ -1,24 +1,26 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Client from './client'
+import pages from '/@generated/pages'
 
 declare global {
   interface Window {
     _vitePagesSSR: {
-      pagePublicPath: string
-      pageData: string
+      routePath: string
     }
   }
 }
 
-if (!window._vitePagesSSR) {
+if (!window._vitePagesSSR?.routePath) {
   throw new Error(`window._vitePagesSSRPath should be defined`)
 }
 
-import(window._vitePagesSSR.pageData).then((pageData) => {
+const routePath = window._vitePagesSSR.routePath
+const pageDataImporter = pages[routePath].data
+pageDataImporter().then(({ default: pageLoaded }: any) => {
   const initCache = {
     pages: {
-      [window._vitePagesSSR.pagePublicPath]: { ...pageData },
+      [routePath]: { ...pageLoaded },
     },
   }
   ReactDOM.hydrate(

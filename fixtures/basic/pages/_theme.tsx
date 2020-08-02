@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import Layout from '/@layout/index'
 import type { ISideMenuData } from '/@layout/side-menu'
 import type { ITopNavData } from '/@layout/top-bar'
-import type { ICreateTheme, IPages } from 'vite-plugin-react-pages'
+import type { ITheme, IPagesStaticData } from 'vite-plugin-react-pages'
 
 const topNavs: ITopNavData[] = [
   { text: 'index', path: '/' },
@@ -13,33 +13,41 @@ const topNavs: ITopNavData[] = [
   },
 ]
 
-const theme: ICreateTheme = (pages) => {
-  const sideMenuData = defaultMenu(pages)
-  return {
-    loaded(pageData) {
-      const Component = pageData.default
-      console.log('#loaded', pageData, pages)
-      return (
-        <Layout
-          sideMenuData={sideMenuData}
-          topNavs={topNavs}
-          logo="Vite Pages Basic Demo"
-        >
-          <Component />
-        </Layout>
-      )
-    },
-  }
+const Theme: ITheme = ({ staticData, loadedData, loadState }) => {
+  console.log('#Theme', staticData, loadedData, loadState)
+  const sideMenuData = useMemo(() => defaultMenu(staticData), [staticData])
+  if (loadState.type !== 'loaded')
+    return (
+      <Layout
+        sideMenuData={sideMenuData}
+        topNavs={topNavs}
+        logo="Vite Pages Basic Demo"
+      >
+        <p>{loadState.type}</p>
+      </Layout>
+    )
+
+  const pageData = loadedData[loadState.routePath]
+  const Component = pageData.main.default
+  return (
+    <Layout
+      sideMenuData={sideMenuData}
+      topNavs={topNavs}
+      logo="Vite Pages Basic Demo"
+    >
+      <Component />
+    </Layout>
+  )
 }
 
-export default theme
+export default Theme
 
-function defaultMenu(pages: IPages): ISideMenuData[] {
+function defaultMenu(pages: IPagesStaticData): ISideMenuData[] {
   return Object.entries<any>(pages)
     .filter(([path]) => path !== '/404')
     .sort((a, b) => {
-      const [pathA, { staticData: staticDataA }] = a
-      const [pathB, { staticData: staticDataB }] = b
+      const [pathA, { main: staticDataA }] = a
+      const [pathB, { main: staticDataB }] = b
       let ASort: number
       let BSort: number
       if (staticDataA.sort) ASort = Number(staticDataA.sort)
@@ -49,7 +57,7 @@ function defaultMenu(pages: IPages): ISideMenuData[] {
       if (ASort !== BSort) return ASort - BSort
       return pathA.localeCompare(pathB)
     })
-    .map(([path, { staticData }]) => {
+    .map(([path, { main: staticData }]) => {
       return {
         path,
         text: staticData.title,

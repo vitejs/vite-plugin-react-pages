@@ -1,5 +1,5 @@
 import React from 'react'
-import type { ICreateTheme, IPages } from 'vite-plugin-react-pages'
+import type { ITheme } from 'vite-plugin-react-pages'
 import Layout from './layout'
 import type { ISideMenuData, ITopNavData } from './layout'
 
@@ -19,7 +19,7 @@ export function createTheme({
   sideMenuData,
   footer,
   topbarOperations,
-}: IOption = {}): ICreateTheme {
+}: IOption = {}): ITheme {
   return (pages) => {
     const menu = sideMenuData ?? defaultMenu(pages)
     return {

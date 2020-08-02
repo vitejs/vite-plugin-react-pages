@@ -1,11 +1,11 @@
-export function mergeModules(modulePaths: string[]) {
-  const importModule = modulePaths.map(
-    (m, idx) => `
-  import * as m${idx} from "${m}";
-  modules.push(m${idx});`
+export function mergeModules(modules: { [key: string]: string }) {
+  const importModule = Object.entries(modules).map(
+    ([key, path], idx) => `
+  import * as m${idx} from "${path}";
+  modules["${key}"] = m${idx};`
   )
   return `
-  const modules = [];
+  const modules = {};
   ${importModule.join('\n')}
   export default modules;`
 }

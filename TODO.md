@@ -10,3 +10,20 @@
 - 🔧 Support [static generation with dynamic routes](https://nextjs.org/learn/basics/data-fetching/with-data) (getStaticPaths)
   - In development, `getStaticProps`/`getStaticPaths` runs on every request
   - In production, `getStaticProps`/`getStaticPaths` runs at build time
+
+
+DATA node, graph, lazy/eager node
+
+
+core
+  - theme
+  - pages
+    - page1
+      - file1.1
+    - page2
+      - file2.1
+      - file2.2 (lazy)
+      - fetched data
+      - virtul module (lazy)
+        - file 2.3
+        - file 2.4 (lazy)

@@ -3,38 +3,37 @@
 import React, { useMemo } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import PageLoader from './PageLoader'
-import type { IRenderPage, ITheme } from './types'
+import type { IRenderPage } from './types'
 
 import pages from '/@generated/pages'
-import createTheme from '/@generated/theme'
-
-let theme: ITheme = createTheme(pages)
+import Theme from '/@generated/theme'
 
 const App: React.FC = () => {
   return useMemo(() => {
-    const renderPage: IRenderPage = (path: string) => {
-      if (!pages[path]) {
-        throw new Error(`page not exist. path: ${path}`)
+    const renderPage: IRenderPage = (routePath: string) => {
+      if (!pages[routePath]) {
+        throw new Error(`page not exist. routePath: ${routePath}`)
       }
-      return <PageLoader theme={theme} pages={pages} path={path} />
+      return <PageLoader Theme={Theme} pages={pages} routePath={routePath} />
     }
 
     const pageRoutes = Object.keys(pages)
       .filter((path) => path !== '/404')
-      .map((path) => getPageRoute(path, renderPage))
+      .map((path) => getPageRoute(path, pages[path].staticData, renderPage))
 
     return (
       <Switch>
         {pageRoutes}
-        <Route
+        {/* <Route
+          key="same"
           path="*"
           render={() => {
-            if (theme.noPageMatch) {
-              return theme.noPageMatch(renderPage)
+            if (Theme.noPageMatch) {
+              return Theme.noPageMatch(renderPage)
             }
             return <p>Page Not Found</p>
           }}
-        />
+        /> */}
       </Switch>
     )
   }, [pages])
@@ -42,7 +41,7 @@ const App: React.FC = () => {
 
 export default App
 
-function getPageRoute(path: string, renderPage: IRenderPage) {
+function getPageRoute(path: string, staticData: any, renderPage: IRenderPage) {
   return (
     <Route
       // avoid re-mount layout component
@@ -50,18 +49,9 @@ function getPageRoute(path: string, renderPage: IRenderPage) {
       key="same"
       exact
       path={path}
+      {...staticData._routeConfig}
     >
       {renderPage(path)}
     </Route>
-  )
-}
-
-if (import.meta.hot) {
-  // @ts-ignore
-  import.meta.hot.acceptDeps(
-    ['/@generated/pages', '/@generated/theme'],
-    ([{ default: newPages }, { default: newCreateTheme }]) => {
-      theme = newCreateTheme(newPages)
-    }
   )
 }

@@ -7,7 +7,7 @@ import {
   renderSSRPagesData,
   IFindPagesHelpers,
 } from '../dynamic-modules/pages'
-import type { IPageDataFinal, IPageData } from '../dynamic-modules/pages'
+import type { IFindPagesResult } from '../dynamic-modules/pages'
 import { analyzeSourceCode } from '../dynamic-modules/analyzeSourceCode'
 import { resolveTheme } from '../dynamic-modules/resolveTheme'
 import { mergeModules } from '../dynamic-modules/mergeModules'
@@ -22,15 +22,19 @@ type ArrayItemType<Arr extends Array<any>> = Arr extends Array<infer R>
 
 export default (
   pagesDir: string,
-  findPages?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
+  findPages?: (helpers: IFindPagesHelpers) => Promise<void>
 ): RollupPlugin => {
-  let pagesData: Promise<IPageDataFinal[]>
+  let pagesData: Promise<IFindPagesResult>
   // for each page, record its page data entry module reference
-  const pageEntryRefId: { [pagePublicPath: string]: string } = {}
+  // const pageEntryRefId: { [pagePublicPath: string]: string } = {}
   // For each composed page, record its data source files
-  const composedPages: { [pagePublicPath: string]: string[] } = {}
+  // const composedPages: { [pagePublicPath: string]: string[] } = {}
   return {
     name: 'vite-pages-dynamic-modules',
+    outputOptions(opts) {
+      opts.chunkFileNames = '[hash].js'
+      return opts
+    },
     async resolveId(importee, importer) {
       if (importee === '/@generated/pages') {
         return importee
@@ -41,31 +45,32 @@ export default (
       if (importee.startsWith('/@generated/ssrData')) {
         return importee
       }
-      if (importee.startsWith('/@composedPage')) return importee
+      // if (importee.startsWith('/@composedPage')) return importee
       const parsed = parseUrl(importee)
-      if (parsed.query.isPageEntry) {
-        const path = parsed.url
-        const pagePath = parsed.query.isPageEntry as string
-        if (path === '/@generated/mergeModules') {
-          // this page is composed by multiple files
-          const moduleId = `/@composedPage${pagePath}`
-          composedPages[pagePath] = parsed.query.modules as string[]
-          pageEntryRefId[pagePath] = this.emitFile({
-            type: 'chunk',
-            id: moduleId,
-          })
-          return moduleId
-        }
-        const resolved = await this.resolve(path, importer)
-        if (!resolved?.id) {
-          throw new Error(`can not resolve page entry: "${importee}"`)
-        }
-        pageEntryRefId[pagePath] = this.emitFile({
-          type: 'chunk',
-          id: resolved.id,
-        })
-        return resolved.id
-      }
+      if (parsed.url === '/@generated/mergeModules') return importee
+      // if (parsed.query.isPageEntry) {
+      //   const path = parsed.url
+      //   const pagePath = parsed.query.isPageEntry as string
+      //   if (path === '/@generated/mergeModules') {
+      //     // this page is composed by multiple files
+      //     const moduleId = `/@composedPage${pagePath}`
+      //     composedPages[pagePath] = parsed.query.modules as string[]
+      //     pageEntryRefId[pagePath] = this.emitFile({
+      //       type: 'chunk',
+      //       id: moduleId,
+      //     })
+      //     return moduleId
+      //   }
+      //   const resolved = await this.resolve(path, importer)
+      //   if (!resolved?.id) {
+      //     throw new Error(`can not resolve page entry: "${importee}"`)
+      //   }
+      //   pageEntryRefId[pagePath] = this.emitFile({
+      //     type: 'chunk',
+      //     id: resolved.id,
+      //   })
+      //   return resolved.id
+      // }
       if ('analyzeSource' in parsed.query) {
         const path = parsed.url
         const absPath = await this.resolve(path, importer)
@@ -95,23 +100,24 @@ export default (
         const result = await analyzeSourceCode(filePath)
         return `export default ${JSON.stringify(result)}`
       }
-      if (id.startsWith('/@composedPage')) {
-        const pagePath = id.slice('/@composedPage'.length)
-        const modules = composedPages[pagePath]
+      if (parsed.url === '/@generated/mergeModules') {
+        // const pagePath = id.slice('/@composedPage'.length)
+        // const modules = composedPages[pagePath]
+        const modules = parsed.query as { [key: string]: string }
         return mergeModules(modules)
       }
     },
-    async generateBundle(options, bundle) {
-      const mapPagePathToEmittedFile = Object.fromEntries(
-        Object.entries(pageEntryRefId).map(([pagePublicPath, refId]) => {
-          return [pagePublicPath, this.getFileName(refId)]
-        })
-      )
-      this.emitFile({
-        type: 'asset',
-        source: JSON.stringify(mapPagePathToEmittedFile),
-        fileName: 'mapPagePathToEmittedFile.json',
-      })
-    },
+    // async generateBundle(options, bundle) {
+    //   const mapPagePathToEmittedFile = Object.fromEntries(
+    //     Object.entries(pageEntryRefId).map(([pagePublicPath, refId]) => {
+    //       return [pagePublicPath, this.getFileName(refId)]
+    //     })
+    //   )
+    //   this.emitFile({
+    //     type: 'asset',
+    //     source: JSON.stringify(mapPagePathToEmittedFile),
+    //     fileName: 'mapPagePathToEmittedFile.json',
+    //   })
+    // },
   }
 }

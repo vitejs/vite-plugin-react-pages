@@ -47,13 +47,13 @@ export async function ssrBuild(viteOptions: UserConfig) {
     outDir: clientOutDir,
   })
 
-  const pagesMapAsset = clientResult.assets.find(
-    (output) => output.fileName === 'mapPagePathToEmittedFile.json'
-  )
-  if (pagesMapAsset?.type !== 'asset') {
-    throw new Error('can not find mapPagePathToEmittedFile.json in output')
-  }
-  const mapPagePathToEmittedFile = JSON.parse(pagesMapAsset.source as string)
+  // const pagesMapAsset = clientResult.assets.find(
+  //   (output) => output.fileName === 'mapPagePathToEmittedFile.json'
+  // )
+  // if (pagesMapAsset?.type !== 'asset') {
+  //   throw new Error('can not find mapPagePathToEmittedFile.json in output')
+  // }
+  // const mapPagePathToEmittedFile = JSON.parse(pagesMapAsset.source as string)
   const basePath = (viteOptions.base ?? '').replace(/\/$/, '')
 
   // remove the default html emitted by vite
@@ -66,16 +66,9 @@ export async function ssrBuild(viteOptions: UserConfig) {
           `Your index.html should contain "<div id="root"></div>"`
         )
       }
-      if (!mapPagePathToEmittedFile[pagePath]) {
-        throw new Error(`can not find emmitted file for page: "${pagePath}"`)
-      }
-      const pageDataPublicPath = path.join(
-        `${basePath}/_assets`,
-        mapPagePathToEmittedFile[pagePath]
-      )
+      
       const ssrInfo = {
-        pagePublicPath: pagePath,
-        pageData: pageDataPublicPath,
+        routePath: pagePath,
       }
       let html = clientResult.html.replace(
         '<div id="root"></div>',
@@ -83,8 +76,9 @@ export async function ssrBuild(viteOptions: UserConfig) {
         `<script>window._vitePagesSSR=${JSON.stringify(ssrInfo)};</script>
 <div id="root">${ssrContent}</div>`
       )
+      // TODO: injectPreload
       // preload data module for this page
-      html = injectPreload(html, ssrInfo.pageData)
+      // html = injectPreload(html, "path/to/page/data")
       const writePath = path.join(clientOutDir, pagePath.slice(1), 'index.html')
       await fs.ensureDir(path.dirname(writePath))
       await fs.writeFile(writePath, html)

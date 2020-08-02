@@ -4,23 +4,35 @@ import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
 import { defaultFindPages as _defaultFindPages } from './find-pages-strategy/default'
 import { parseUrl, stringifyUrl } from 'query-string'
-import { IPageInfo, findPagesFromGlob } from './find-pages-strategy/fromGlob'
+import { globFind } from './find-pages-strategy/utils'
 
-export type IPageData = {
-  publicPath: string
+export interface IPageData {
+  pageId: string
   /**
-   * If filePath is an array, then this is a composed page.
-   * The page data is composed by these files.
+   * @default 'main'
    */
-  filePath: string | string[]
+  key?: string
+  dataPath?: string
   staticData?: any
+  // lazyDataPath?: string
 }
 
-export type IPageDataFinal = {
-  publicPath: string
-  loadPath: string
-  staticData: any
+export interface IFindPagesResult {
+  [pageId: string]: {
+    data: {
+      [key: string]: string
+    }
+    staticData: {
+      [key: string]: any
+    }
+  }
 }
+
+// export type IPageDataFinal = {
+//   publicPath: string
+//   loadPath: string
+//   staticData: any
+// }
 
 export interface IFindPagesHelpers {
   readFile: (filePath: string) => Promise<string>
@@ -30,94 +42,102 @@ export interface IFindPagesHelpers {
     [key: string]: any
     sourceType: string
   }>
-  findPagesFromGlob: (
+  globFind: (
     baseDir: string,
-    glob: string,
-    pageInfo: (relativePath: string) => IPageInfo | Promise<IPageInfo>
-  ) => Promise<IPageData[]>
+    glob: string
+  ) => Promise<
+    {
+      relative: string
+      absolute: string
+    }[]
+  >
   defaultFindPages: (baseDir: string) => Promise<IPageData[]>
+  addPageData: (pageData: IPageData) => void
 }
 
 export async function collectPagesData(
   pagesDir: string,
   fileToRequest: (file: string) => string,
-  findPages?: (helpers: IFindPagesHelpers) => Promise<IPageData[]>
-): Promise<IPageDataFinal[]> {
-  let pageFiles: IPageData[]
-  const findPagesHelpers = createFindPagesHelpers()
+  findPages?: (helpers: IFindPagesHelpers) => Promise<void>
+): Promise<IFindPagesResult> {
+  const [pages, findPagesHelpers] = createFindPagesContext()
   if (typeof findPages === 'function') {
-    pageFiles = await findPages(findPagesHelpers)
+    await findPages(findPagesHelpers)
   } else {
-    pageFiles = await findPagesHelpers.defaultFindPages(pagesDir)
+    const found = await findPagesHelpers.defaultFindPages(pagesDir)
+    found.forEach(findPagesHelpers.addPageData)
   }
-  return Promise.all(
-    pageFiles.map(async (pageFile) => {
-      const { publicPath, staticData, filePath } = pageFile
-      if (Array.isArray(filePath)) {
-        // composed page
-        const loadPath = stringifyUrl({
-          url: '/@generated/mergeModules',
-          query: {
-            modules: filePath.map(fileToRequest),
-          },
-        })
-        return {
-          publicPath,
-          staticData,
-          loadPath,
-        }
-      } else {
-        const loadPath = fileToRequest(filePath)
-        return {
-          publicPath,
-          staticData,
-          loadPath,
-        }
-      }
-    })
-  )
+  return pages
+
+  // return Promise.all(
+  //   pageFiles.map(async (pageFile) => {
+  //     const { publicPath, staticData, filePath } = pageFile
+  //     if (Array.isArray(filePath)) {
+  //       // composed page
+  //       const loadPath = stringifyUrl({
+  //         url: '/@generated/mergeModules',
+  //         query: {
+  //           modules: filePath.map(fileToRequest),
+  //         },
+  //       })
+  //       return {
+  //         publicPath,
+  //         staticData,
+  //         loadPath,
+  //       }
+  //     } else {
+  //       const loadPath = fileToRequest(filePath)
+  //       return {
+  //         publicPath,
+  //         staticData,
+  //         loadPath,
+  //       }
+  //     }
+  //   })
+  // )
 }
 
-export async function renderPagesDataDynamic(pagesData: IPageDataFinal[]) {
-  const addPagesData = pagesData.map(
-    ({ publicPath: pagePath, staticData, loadPath }) => {
-      const parsed = parseUrl(loadPath)
-      parsed.query.isPageEntry = pagePath
-      const actualLoadPath = stringifyUrl(parsed)
-      return `
-pages["${pagePath}"] = {
-    _importFn: () => wrap(import("${actualLoadPath}")),
-    staticData: ${JSON.stringify(staticData)}
-};`
+export async function renderPagesDataDynamic(pagesData: IFindPagesResult) {
+  const addPagesData = Object.entries(pagesData).map(
+    ([pageId, { data, staticData }]) => {
+      let code = [`pages["${pageId}"] = {};`]
+      const mergedModulePath = stringifyUrl({
+        url: '/@generated/mergeModules',
+        query: data,
+      })
+      code.push(
+        `pages["${pageId}"].data = () => import("${mergedModulePath}");`
+      )
+      code.push(
+        `pages["${pageId}"].staticData = ${JSON.stringify(staticData)};`
+      )
+      return code.join('\n')
     }
   )
-
   return `
-function wrap(promise) {
-  return promise.then((pageData) => ({pageData}));
-}
-
 const pages = {};
 ${addPagesData.join('\n')}
 export default pages;
 `
 }
 
-export async function renderSSRPagesData(pagesData: IPageDataFinal[]) {
-  const codeLines = pagesData.map(
-    ({ publicPath: pagePath, loadPath }, index) => {
-      const parsed = parseUrl(loadPath)
-      parsed.query.isPageEntry = pagePath
-      const actualLoadPath = stringifyUrl(parsed)
-      // import page data and theme data statically
-      return `
-import * as page${index} from "${actualLoadPath}";
-ssrData["${pagePath}"] = page${index};`
+export async function renderSSRPagesData(pagesData: IFindPagesResult) {
+  const addPagesData = Object.entries(pagesData).map(
+    ([pageId, { data, staticData }], index) => {
+      let code = [`pages["${pageId}"] = {};`]
+      const mergedModulePath = stringifyUrl({
+        url: '/@generated/mergeModules',
+        query: data,
+      })
+      code.push(`import page${index} from "${mergedModulePath}";`)
+      code.push(`pages["${pageId}"] = page${index};`)
+      return code.join('\n')
     }
   )
   return `
-export const ssrData = {};
-${codeLines.join('\n')}
+const pages = {};
+${addPagesData.join('\n')}
+export default pages;
 `
 }
 
@@ -140,7 +160,9 @@ export async function extractStaticData(
   }
 }
 
-function createFindPagesHelpers(): IFindPagesHelpers {
+function createFindPagesContext(): [IFindPagesResult, IFindPagesHelpers] {
+  const result: IFindPagesResult = {}
+
   const readFileCache: { [filePath: string]: Promise<string> } = {}
   const readFileWithCache = async (filePath: string) => {
     if (readFileCache[filePath]) return readFileCache[filePath]
@@ -155,11 +177,39 @@ function createFindPagesHelpers(): IFindPagesHelpers {
   const defaultFindPages = (baseDir: string) =>
     _defaultFindPages(baseDir, helpers)
 
+  const addPageData = (pageData: IPageData) => {
+    let exist = result[pageData.pageId]
+    if (!exist) {
+      exist = result[pageData.pageId] = {
+        data: {},
+        staticData: {},
+      }
+    }
+    const key = pageData.key ?? 'main'
+    if (pageData.dataPath) {
+      if (exist.data[key]) {
+        throw new Error(
+          `addPageData conflict: data with key "${key}" already exist. Please give this data another key.`
+        )
+      }
+      exist.data[key] = pageData.dataPath
+    }
+    if (pageData.staticData) {
+      if (exist.staticData[key]) {
+        throw new Error(
+          `addPageData conflict: staticData with key "${key}" already exist. Please give this staticData another key.`
+        )
+      }
+      exist.staticData[key] = pageData.staticData
+    }
+  }
+
   const helpers: IFindPagesHelpers = {
     readFile: readFileWithCache,
     extractStaticData: extractStaticDataWithCache,
-    findPagesFromGlob,
+    globFind,
     defaultFindPages,
+    addPageData,
   }
-  return helpers
+  return [result, helpers]
 }

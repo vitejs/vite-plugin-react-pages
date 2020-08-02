@@ -1,145 +1,41 @@
-import React, { useState, useEffect, useContext } from 'react'
-import type { IPageLoaded, IPagesInternal, ITheme } from './types'
-import { dataCacheCtx, setDataCacheCtx } from './ssr/ctx'
+import React, { useContext, useMemo } from 'react'
+import type { IPagesStaticData, IPagesInternal, ITheme } from './types'
+import { dataCacheCtx } from './ssr/ctx'
+import useAppState from './useAppState'
 
 interface IProps {
-  theme: ITheme
+  Theme: ITheme
   pages: IPagesInternal
-  path: string
+  routePath: string
 }
 
-const PageLoader: React.FC<IProps> = ({ pages, path, theme }) => {
-  const { _importFn, staticData } = pages[path]
-  staticData._path = path
-
+const PageLoader: React.FC<IProps> = ({
+  pages,
+  routePath: routePathFromProps,
+  Theme,
+}) => {
   const dataCache = useContext(dataCacheCtx)
-  const setDataCache = useContext(setDataCacheCtx)
-  const [loadState, setLoadState] = useState<ILoadState>(() => {
-    if (dataCache.pages[path]) {
-      // we already have the data in ssr
-      // don't need to dynamic load it
-      return {
-        type: 'loaded',
-        pageData: { ...staticData, ...dataCache.pages[path] },
-      }
-    }
-    return {
-      type: 'initial-loading',
-      pageStaticData: staticData,
-    }
-  })
+  const loadState = useAppState(pages, routePathFromProps)
 
-  useEffect(() => {
-    if (dataCache.pages[path]) {
-      // we already have the data in ssr
-      // don't need to dynamic load it
-      setLoadState({
-        type: 'loaded',
-        pageData: { ...staticData, ...dataCache.pages[path] },
-      })
-      return
-    }
+  const pagesStaticData = useMemo(() => getPublicPages(pages), [pages])
 
-    // state machine transition
-    switch (loadState.type) {
-      case 'initial-loading':
-        setLoadState({
-          type: 'initial-loading',
-          pageStaticData: staticData,
-        })
-        break
-      case 'loaded':
-        setLoadState({
-          type: 'transition-loading',
-          prevPageData: loadState.pageData,
-          pageStaticData: staticData,
-        })
-        break
-      case 'transition-loading':
-        setLoadState({
-          type: 'transition-loading',
-          prevPageData: loadState.prevPageData,
-          pageStaticData: staticData,
-        })
-        break
-      case 'load-error':
-        setLoadState({
-          type: 'initial-loading',
-          pageStaticData: staticData,
-        })
-        break
-      default:
-        throw new Error(`unknown loadState.type`)
-    }
-
-    // FIXME handle race condition of this async setState
-    _importFn()
-      .then((pageLoaded) => {
-        setDataCache((prev) => ({
-          ...prev,
-          pages: {
-            ...prev.pages,
-            [path]: pageLoaded.pageData,
-          },
-        }))
-        setLoadState({
-          type: 'loaded',
-          pageData: { ...staticData, ...pageLoaded.pageData },
-        })
-      })
-      .catch((error) => {
-        setLoadState({
-          type: 'load-error',
-          pageStaticData: staticData,
-          error,
-        })
-        throw error
-      })
-  }, [path])
-
-  switch (loadState.type) {
-    case 'initial-loading':
-      if (theme.initialLoading)
-        return theme.initialLoading(loadState.pageStaticData)
-      return <p>Loading...</p>
-    case 'loaded':
-      return theme.loaded(loadState.pageData)
-    case 'transition-loading':
-      if (theme.transitionLoading)
-        return theme.transitionLoading(
-          loadState.pageStaticData,
-          loadState.prevPageData
-        )
-      if (theme.initialLoading)
-        return theme.initialLoading(loadState.pageStaticData)
-      return <p>Loading...</p>
-    case 'load-error':
-      if (theme.loadError)
-        return theme.loadError(loadState.error, loadState.pageStaticData)
-      return <p>Load Page Error</p>
-    default:
-      throw new Error(`unknown loadState.type`)
-  }
+  return (
+    <Theme
+      loadState={loadState}
+      loadedData={dataCache}
+      staticData={pagesStaticData}
+    />
+  )
 }
 
 export default PageLoader
 
-type ILoadState =
-  | {
-      type: 'initial-loading'
-      pageStaticData: any
-    }
-  | {
-      type: 'loaded'
-      pageData: IPageLoaded
-    }
-  | {
-      type: 'transition-loading'
-      pageStaticData: any
-      prevPageData: IPageLoaded
-    }
-  | {
-      type: 'load-error'
-      pageStaticData: any
-      error?: any
-    }
+// filter out internal fields inside pages
+function getPublicPages(pages: IPagesInternal): IPagesStaticData {
+  return Object.fromEntries(
+    Object.entries(pages).map(([path, { staticData }]) => [
+      path,
+      staticData,
+    ])
+  )
+}

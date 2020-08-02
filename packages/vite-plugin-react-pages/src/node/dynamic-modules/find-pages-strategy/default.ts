@@ -1,25 +1,22 @@
-import * as path from 'path'
-import { IPageData, IFindPagesHelpers } from '../pages'
-import { findPagesFromGlob } from './fromGlob'
+import { globFind } from './utils'
+import type { IFindPagesHelpers, IPageData } from '../pages'
 
 export async function defaultFindPages(
   pagesDirPath: string,
   findPagesHelpers: IFindPagesHelpers
 ): Promise<IPageData[]> {
-  const pages = findPagesFromGlob(
-    pagesDirPath,
-    '**/*$.{md,mdx,js,jsx,ts,tsx}',
-    async (pageFilePath) => {
-      const relativePageFilePath = path.relative(pagesDirPath, pageFilePath)
-      const publicPath = getPagePublicPath(relativePageFilePath)
+  const pages = await globFind(pagesDirPath, '**/*$.{md,mdx,js,jsx,ts,tsx}')
+
+  return Promise.all(
+    pages.map(async ({ relative, absolute }) => {
+      const pagePublicPath = getPagePublicPath(relative)
       return {
-        publicPath,
-        filePath: pageFilePath,
-        staticData: await findPagesHelpers.extractStaticData(pageFilePath),
+        pageId: pagePublicPath,
+        dataPath: absolute,
+        staticData: await findPagesHelpers.extractStaticData(absolute),
       }
-    }
+    })
   )
-  return pages
 }
 
 function getPagePublicPath(relativePageFilePath: string) {
