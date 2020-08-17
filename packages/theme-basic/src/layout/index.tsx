@@ -17,6 +17,7 @@ interface IProps {
   path?: string
   footer?: React.ReactNode
   pages: IPages
+  topbarOperations?: React.ReactNode
 }
 
 const Layout: React.FC<IProps> = ({
@@ -28,6 +29,7 @@ const Layout: React.FC<IProps> = ({
   children,
   footer,
   pages,
+  topbarOperations,
 }) => {
   return (
     <ConfigProvider prefix="vp-theme-">
@@ -37,9 +39,12 @@ const Layout: React.FC<IProps> = ({
         <SiteSearch pages={pages} />
       </Shell.Navigation> */}
         <Shell.Action>
-          <Nav direction="hoz" embeddable>
-            {renderNav(topNavs)}
-          </Nav>
+          {topbarOperations}
+          {topNavs && (
+            <Nav direction="hoz" embeddable>
+              {renderNav(topNavs)}
+            </Nav>
+          )}
         </Shell.Action>
 
         <Shell.Navigation

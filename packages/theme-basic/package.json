@@ -10,7 +10,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf ./dist && rollup -c && node script/after-build.js",
+    "build": "rm -rf ./dist && tsc && rollup -c && node script/after-build.js",
     "dev": "rm -rf ./dist && concurrently \"npm:dev-*\"",
     "dev-tsc": "tsc -w",
     "dev-copy": "node scripts/watchAndCopy",

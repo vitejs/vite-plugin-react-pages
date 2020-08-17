@@ -10,6 +10,7 @@ interface IOption {
   topNavs?: ITopNavData[]
   logo?: React.ReactNode
   footer?: React.ReactNode
+  topbarOperations?: React.ReactNode
 }
 
 export function createTheme({
@@ -17,6 +18,7 @@ export function createTheme({
   logo,
   sideMenuData,
   footer,
+  topbarOperations,
 }: IOption = {}): ICreateTheme {
   return (pages) => {
     const menu = sideMenuData ?? defaultMenu(pages)
@@ -31,6 +33,7 @@ export function createTheme({
             path={pageStaticData._path}
             footer={footer}
             pages={pages}
+            topbarOperations={topbarOperations}
           >
             <p>initial Loading...</p>
           </Layout>
@@ -47,6 +50,7 @@ export function createTheme({
               path={pageData._path}
               footer={footer}
               pages={pages}
+              topbarOperations={topbarOperations}
             >
               {composeModules.map((module: any, idx: number) => {
                 const part = pageData.parts[idx]
@@ -72,6 +76,7 @@ export function createTheme({
             path={pageData._path}
             footer={footer}
             pages={pages}
+            topbarOperations={topbarOperations}
           >
             <ContentComp />
           </Layout>
@@ -87,6 +92,7 @@ export function createTheme({
             path={pageStaticData._path}
             footer={footer}
             pages={pages}
+            topbarOperations={topbarOperations}
           >
             <p>transition Loading...</p>
           </Layout>
@@ -102,6 +108,7 @@ export function createTheme({
             path={pageStaticData._path}
             footer={footer}
             pages={pages}
+            topbarOperations={topbarOperations}
           >
             <p>Load error</p>
           </Layout>
@@ -118,6 +125,7 @@ export function createTheme({
             logo={logo}
             footer={footer}
             pages={pages}
+            topbarOperations={topbarOperations}
           >
             <p>Page Not Found.</p>
           </Layout>

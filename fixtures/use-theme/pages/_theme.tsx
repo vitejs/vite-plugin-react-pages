@@ -1,3 +1,4 @@
+import React from "react";
 import { createTheme } from 'vite-pages-theme-basic'
 
 export default createTheme({
@@ -10,4 +11,5 @@ export default createTheme({
     },
   ],
   logo: 'Vite Pages',
+  topbarOperations: <button>operation</button>
 })
