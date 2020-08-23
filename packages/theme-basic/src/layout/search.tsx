@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { Search, Select } from '@alifd/next'
 import s from './style.module.css'
 import type { IPagesStaticData } from 'vite-plugin-react-pages'
@@ -18,6 +18,10 @@ const SiteSearch: React.FC<IProps> = ({ pagesStaticData }) => {
 
   const [filteredData, setFilteredData] = useState<IFilteredData[]>([])
   const history = useHistory()
+
+  useEffect(() => {
+    setFilteredData(search(pagesStaticData, ''))
+  }, [])
 
   const onChange = useCallback((value, type, _) => {
     if (type === 'itemClick' || type === 'enter') {
@@ -59,16 +63,11 @@ function search(
   pagesStaticData: IPagesStaticData,
   value: string
 ): IFilteredData[] {
-  if (!value) {
-    return Object.entries(pagesStaticData).map(([path, staticData]) => {
-      const label = staticData.title ?? staticData.main.title ?? path
-      return { label, path }
-    })
-  }
   return Object.entries(pagesStaticData)
     .map(([path, staticData]) => {
+      if (path === '/404') return null
       const label = staticData.title ?? staticData.main.title ?? path
-      if (containString(label, value)) {
+      if (containString(label, value?.trim() ?? '')) {
         return { label, path }
       }
       return null

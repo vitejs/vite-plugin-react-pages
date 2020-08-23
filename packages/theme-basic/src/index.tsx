@@ -113,18 +113,18 @@ export function defaultMenu(pages: IPagesStaticData): ISideMenuData[] {
       let ASort: number
       let BSort: number
       if (staticDataA.sort) ASort = Number(staticDataA.sort)
-      else if (staticDataA.main.sort) ASort = Number(staticDataA.main.sort)
+      else if (staticDataA.main?.sort) ASort = Number(staticDataA.main.sort)
       else ASort = 1
       if (staticDataB.sort) BSort = Number(staticDataB.sort)
-      else if (staticDataB.main.sort) BSort = Number(staticDataB.main.sort)
+      else if (staticDataB.main?.sort) BSort = Number(staticDataB.main.sort)
       else BSort = 1
       if (ASort !== BSort) return ASort - BSort
       return pathA.localeCompare(pathB)
     })
-    .map(([path, { main: staticData }]) => {
+    .map(([path, staticData]) => {
       return {
         path,
-        text: staticData.title || path,
+        text: staticData.title ?? staticData.main?.title ?? path,
       }
     })
 }
