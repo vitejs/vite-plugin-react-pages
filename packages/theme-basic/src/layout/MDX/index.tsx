@@ -12,7 +12,11 @@ const components = {
 interface IProps {}
 
 const MDX: React.FC<IProps> = ({ children }) => {
-  return <MDXProvider components={components}>{children}</MDXProvider>
+  return (
+    <MDXProvider components={components}>
+      <div className="markdown-body">{children}</div>
+    </MDXProvider>
+  )
 }
 
 export default MDX

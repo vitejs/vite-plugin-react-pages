@@ -4,9 +4,7 @@ import React from 'react'
  * all pages' static data.
  */
 export interface IPagesStaticData {
-  [routePath: string]: {
-    staticData: any
-  }
+  [routePath: string]: Record<string, any>
 }
 export interface IPagesInternal {
   [routePath: string]: {

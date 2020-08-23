@@ -8,6 +8,7 @@
   background-color: #fff;
 }
 
-.search {
-  width: 200px;
+.search.search {
+  width: 240px;
+  margin-right: 24px;
 }

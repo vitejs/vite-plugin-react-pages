@@ -19,9 +19,7 @@ const routePath = window._vitePagesSSR.routePath
 const pageDataImporter = pages[routePath].data
 pageDataImporter().then(({ default: pageLoaded }: any) => {
   const initCache = {
-    pages: {
-      [routePath]: { ...pageLoaded },
-    },
+    [routePath]: { ...pageLoaded },
   }
   ReactDOM.hydrate(
     <Client initCache={initCache} />,

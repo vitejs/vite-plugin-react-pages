@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 import { createTheme } from 'vite-pages-theme-basic'
 
 export default createTheme({
@@ -11,5 +11,7 @@ export default createTheme({
     },
   ],
   logo: 'Vite Pages',
-  topbarOperations: <button>operation</button>
+  topbarOperations: (
+    <button style={{ marginRight: 12 }}>custom operation</button>
+  ),
 })

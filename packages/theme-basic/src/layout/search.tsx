@@ -1,22 +1,32 @@
 import React, { useCallback, useState } from 'react'
-import { Search } from '@alifd/next'
+import { Search, Select } from '@alifd/next'
 import s from './style.module.css'
-import type { IPages } from 'vite-plugin-react-pages'
+import type { IPagesStaticData } from 'vite-plugin-react-pages'
+import { useHistory } from 'react-router-dom'
 
 interface IProps {
-  pages: IPages
+  pagesStaticData: IPagesStaticData
 }
 
-const SiteSearch: React.FC<IProps> = ({ pages }) => {
-  const [result, setResult] = useState([])
+interface IFilteredData {
+  label: string
+  path: string
+}
 
-  const onSearch = useCallback(() => {
-    console.log('onSearch', pages)
-  }, [])
+const SiteSearch: React.FC<IProps> = ({ pagesStaticData }) => {
+  const [searchVal, setSearchVal] = useState('')
+
+  const [filteredData, setFilteredData] = useState<IFilteredData[]>([])
+  const history = useHistory()
+
   const onChange = useCallback((value, type, _) => {
-    console.log('onChange', value, type, _)
-    if (type === 'change') {
-      Object.entries(pages).map(([path, { staticData }]) => {})
+    if (type === 'itemClick' || type === 'enter') {
+      // user confirm search result
+      history.push(value)
+    } else if (type === 'change') {
+      // user input search text
+      setFilteredData(search(pagesStaticData, value))
+      setSearchVal(value)
     }
   }, [])
 
@@ -24,12 +34,44 @@ const SiteSearch: React.FC<IProps> = ({ pages }) => {
     <Search
       shape="simple"
       placeholder="Search"
+      filterLocal={false}
       className={s.search}
-      onSearch={onSearch}
+      value={searchVal}
       // @ts-ignore
       onChange={onChange}
-    />
+    >
+      {filteredData.map(({ label, path }) => (
+        <Select.Option value={path} key={path}>
+          {label}
+        </Select.Option>
+      ))}
+    </Search>
   )
 }
 
 export default SiteSearch
+
+function containString(whole: string, part: string) {
+  return whole.toLowerCase().indexOf(part.toLowerCase()) !== -1
+}
+
+function search(
+  pagesStaticData: IPagesStaticData,
+  value: string
+): IFilteredData[] {
+  if (!value) {
+    return Object.entries(pagesStaticData).map(([path, staticData]) => {
+      const label = staticData.title ?? staticData.main.title ?? path
+      return { label, path }
+    })
+  }
+  return Object.entries(pagesStaticData)
+    .map(([path, staticData]) => {
+      const label = staticData.title ?? staticData.main.title ?? path
+      if (containString(label, value)) {
+        return { label, path }
+      }
+      return null
+    })
+    .filter(Boolean) as IFilteredData[]
+}
