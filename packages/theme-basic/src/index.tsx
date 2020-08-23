@@ -57,6 +57,27 @@ export function createTheme({
       )
     }
 
+    if (loadState.type === '404') {
+      const Comp404 = loadedData['/404']?.main?.default
+      return (
+        <Layout
+          sideMenuData={menu}
+          topNavs={topNavs ?? []}
+          logo={logo}
+          path={loadState.routePath}
+          footer={footer}
+          topbarOperations={topbarOperations}
+          pagesStaticData={staticData}
+        >
+          {Comp404 ? <Comp404 /> : <p>Page not found.</p>}
+        </Layout>
+      )
+    }
+
+    if (loadState.type !== 'loaded') {
+      return <p>Unknown load loadState: {loadState.type}</p>
+    }
+
     const pageData = loadedData[loadState.routePath]
     const pageStaticData = staticData[loadState.routePath]
     const isComposedPage = Object.keys(pageData).length > 1

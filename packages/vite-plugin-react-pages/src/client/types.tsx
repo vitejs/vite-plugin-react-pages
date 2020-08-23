@@ -22,7 +22,7 @@ export interface IPagesLoaded {
 
 export type ILoadState =
   | {
-      type: 'loading' | 'loaded'
+      type: 'loading' | 'loaded' | '404'
       routePath: string
     }
   | {
