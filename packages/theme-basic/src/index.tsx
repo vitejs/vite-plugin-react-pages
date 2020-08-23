@@ -5,11 +5,31 @@ import type { ISideMenuData, ITopNavData } from './layout'
 import MD from './layout/MDX'
 
 interface IOption {
+  /**
+   * Take fully control of side nav menu.
+   */
   sideMenuData?: ISideMenuData[]
+  /**
+   * Navigation menu at top bar.
+   */
   topNavs?: ITopNavData[]
+  /**
+   * Logo area at top bar.
+   */
   logo?: React.ReactNode
-  footer?: React.ReactNode
+  /**
+   * Operation area at top bar.
+   */
   topbarOperations?: React.ReactNode
+  /**
+   * Footer area.
+   */
+  footer?: React.ReactNode
+  /**
+   * Enable search.
+   * @default true
+   */
+  search?: boolean
 }
 
 export function createTheme({
@@ -18,6 +38,7 @@ export function createTheme({
   sideMenuData,
   footer,
   topbarOperations,
+  search = true,
 }: IOption = {}): ITheme {
   const Theme: ITheme = ({ staticData, loadedData, loadState }) => {
     console.log('#Theme', staticData, loadedData, loadState)
@@ -36,6 +57,7 @@ export function createTheme({
           footer={footer}
           topbarOperations={topbarOperations}
           pagesStaticData={staticData}
+          search={search}
         >
           <p>initial Loading...</p>
         </Layout>
@@ -51,6 +73,7 @@ export function createTheme({
           footer={footer}
           topbarOperations={topbarOperations}
           pagesStaticData={staticData}
+          search={search}
         >
           <p>Load error</p>
         </Layout>
@@ -68,6 +91,7 @@ export function createTheme({
           footer={footer}
           topbarOperations={topbarOperations}
           pagesStaticData={staticData}
+          search={search}
         >
           {Comp404 ? <Comp404 /> : <p>Page not found.</p>}
         </Layout>
@@ -90,6 +114,7 @@ export function createTheme({
         footer={footer}
         topbarOperations={topbarOperations}
         pagesStaticData={staticData}
+        search={search}
       >
         {Object.entries(pageData).map(([key, dataPart], idx) => {
           const ContentComp = (dataPart as any).default

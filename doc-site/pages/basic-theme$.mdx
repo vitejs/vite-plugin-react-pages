@@ -1,0 +1,100 @@
+---
+title: Basic Theme
+sort: 0.5
+---
+
+import { Link } from 'react-router-dom'
+
+# Basic theme
+
+`vite-pages-theme-basic` provides a nice theme. It should satisfy most users' needs.
+
+## How to use
+
+You should config the theme in `_theme.tsx`:
+
+```tsx
+// _theme.tsx
+import React from 'react'
+import { createTheme } from 'vite-pages-theme-basic'
+
+export default createTheme({
+  topNavs: [
+    { text: 'index', path: '/' },
+    { text: 'Vite', href: 'https://github.com/vitejs/vite' },
+  ],
+  logo: 'Vite Pages',
+  // Other configs...
+})
+```
+
+[Here is a complete example](https://github.com/vitejs/vite-plugin-react-pages/tree/master/fixtures/use-theme).
+
+## Auto menu generation
+
+Basic theme can generation a side navigation menu automatically, based on the pages information.
+
+You can control the label and sorting of the nav menu, by notating these page static data:
+
+- title
+- sort (default value is 1)
+
+For **markdown pages**, notate the static data like this:
+
+```text
+---
+title: Basic Theme
+sort: 0.5
+---
+
+markdown content...
+```
+
+For **jsx/tsx pages**, notate the static data like this:
+
+```js
+/**
+ * @title page1 title
+ * @sort 1
+ */
+
+// js code....
+```
+
+## Configs
+
+The `createTheme` exported by `vite-pages-theme-basic` accepts these options:
+
+```ts
+interface IOption {
+  /**
+   * Take fully control of side nav menu.
+   */
+  sideMenuData?: ISideMenuData[]
+  /**
+   * Navigation menu at top bar.
+   */
+  topNavs?: ITopNavData[]
+  /**
+   * Logo area at top bar.
+   */
+  logo?: React.ReactNode
+  /**
+   * Operation area at top bar.
+   */
+  topbarOperations?: React.ReactNode
+  /**
+   * Footer area.
+   */
+  footer?: React.ReactNode
+  /**
+   * Enable search.
+   * @default true
+   */
+  search?: boolean
+}
+```
+
+## Fully theme customization
+
+For fully theme customization, read <Link to="/theme">theme customization</Link>.

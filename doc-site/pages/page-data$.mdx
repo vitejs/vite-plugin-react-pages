@@ -9,12 +9,12 @@ import { Link } from 'react-router-dom'
 
 Vite-pages is a React app framework that collect your pages data and pass them to your theme. So what kinds of data does it collect?
 
-There are two kinds of data:
+Each page consists of two kinds of data:
 
-- Static page metadata
-- Runtime page data
+- Static data
+- Runtime data
 
-## Static page metadata
+## Static data
 
 For `.tsx|.jsx` pages, you can define static data with **comment at the top of the file**.
 
@@ -48,7 +48,7 @@ This will be collected as:
 { "title": "my page", "tags": ["tag1", "tag2"] }
 ```
 
-## Runtime page data
+## Runtime data
 
 Runtime page data is just anything you export from a page file.
 
