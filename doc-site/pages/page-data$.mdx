@@ -1,6 +1,6 @@
 ---
 title: Page data
-sort: 3
+sort: 2
 ---
 
 import { Link } from 'react-router-dom'
@@ -16,7 +16,7 @@ Each page consists of two kinds of data:
 
 ## Static data
 
-For `.tsx|.jsx` pages, you can define static data with **comment at the top of the file**.
+For `.tsx|.jsx` pages, you can define static data with **a docblock(comment) at the top of the file**.
 
 ```tsx
 /**
@@ -48,6 +48,8 @@ This will be collected as:
 { "title": "my page", "tags": ["tag1", "tag2"] }
 ```
 
+> As you can see, YAML front matter can express some simple data structure(.e.g array), while a docblock's properties can only express strings. A qualified theme should understand both of these static data.
+
 ## Runtime data
 
 Runtime page data is just anything you export from a page file.
@@ -58,46 +60,30 @@ Both static data and runtime data will be passed to the theme, so the theme can 
 
 Difference:
 
-- Static data of **all pages** is loaded eagerly when the app bootstrap. So you should try to keep the static data small.
+- Static data of **all pages** is loaded **eagerly** when the app bootstrap. So you should try to keep the static data small.
 - Runtime data is only loaded when user navigate to that page.
 - The value type of static data is limited (string or simple object/array), while the value of runtime data can be any javascript value (.e.g a React component).
 
 ## How theme consume these data
 
-As stated in <Link to="/theme">the theme doc</Link>, a theme contains these **render functions**:
+As stated in <Link to="/theme-customization">the theme customization doc</Link>, a theme is a React compoent. It will be rendered by vite-pages core, and get useful info from props:
+
+- All pages' static data
+- All runtime data that is already loaded
+- The current loading state of the app
+
+Here is the type of a theme:
 
 import ThemeInterface from './theme-interface.mdx'
 
 <ThemeInterface />
 
-When the init function is called, the `IPages` provides the **static data of all pages**:
+> Here is an example vite-pages theme implementation: [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/use-theme/pages/_theme.tsx) demonstrate how to use it.
 
-```ts
-interface IPages {
-  [path: string]: {
-    staticData: any
-  }
-}
-```
+## Vite-pages core doesn't care what your page data looks like
 
-When the page is loading, only static data is available.
+Vite-pages itself doesn't care what the page data looks like. How to interpret the page data and render the view, is totally decided by <Link to="/theme-customization">the theme</Link>. Vite-pages just collect your pages data and pass them to the theme. This design make the vite-pages core more "simple" and make themes more powerful.
 
-When the page is loaded, the `IPageLoaded` contains both static data and runtime data:
-
-```ts
-{
-  ...pageStaticData, // static data of current page
-  ...pageRuntimeData, // runtime data of current page
-  _path: '/page/path',
-}
-```
-
-## Vite-pages core doesn't care about your page data
-
-Vite-pages itself doesn't care what the page data looks like. How to interpret the page data, is totally decided by <Link to="/theme">your theme</Link>. This design make the vite-pages core more "simple" and make themes more powerful.
-
-Most themes ask users to `export default` a React component from page files. But that is not a requirement from vite-pages core.
+Most themes ask users to `export default` a React component from page files(.e.g <Link to="/basic-theme">the basic theme</Link>). But that is not a requirement from vite-pages core.
 
 If you are a theme user, you should read the doc of your theme to learn what data should be exported from your pages.
-
-> Here is an example vite-pages theme implementation: [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/use-theme/pages/_theme.tsx) demonstrate how to use it.

@@ -1,115 +1,114 @@
 ---
 title: Theme Customization
-sort: 2
+sort: 3
 ---
 
 import { Link } from 'react-router-dom'
 
 # Theme customization
 
-Vite-pages itself doesn't render any concrete DOM node. You can customize **anything** on the page with theme. That's why theme is so powerful.
+> This is an advance guide about how to make a theme by yourself. If there is already themes that meet your needs, you don't need to read this guide now!
 
-Users should export their theme from `_theme.tsx`. It should export a theme-init-function:
+Vite-pages itself doesn't render any concrete DOM node. Users can customize **anything** on the page with theme. That's why theme is so powerful.
+
+To use a theme, users should export their theme from `_theme.tsx`. It should export a React compoent. It will be rendered by vite-pages core, and get useful info from props:
+
+- All pages' static data
+- All runtime data that is already loaded
+- The current loading state of the app
+
+Here is the type of a theme:
 
 import ThemeInterface from './theme-interface.mdx'
 
 <ThemeInterface />
 
-Vite-pages collects data from your project and call the `ICreateTheme` function to init your theme. Then, it will call the render functions from the theme. These render functions should be pure.
+You can learn more about the "data" received by the render functions in <Link to="/page-data">the page data doc</Link>.
 
-You can learn about the "data" received by the render functions in <Link to="/page-data">page-data doc</Link>.
-
-For example, a simple theme looks like this:
+This is probably [the simplest theme](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/basic/pages/_theme.tsx):
 
 ```tsx
-import React from 'react'
-import Layout from '../Layout'
-import type { ICreateTheme, IPages } from 'vite-plugin-react-pages'
+import React, { useMemo } from 'react'
+import type { ITheme } from 'vite-plugin-react-pages'
 
-const topNavs = [
-  { text: 'index', path: '/' },
-  { text: 'React', href: 'https://reactjs.org/' },
-  { text: 'Vite', href: 'https://github.com/vitejs/vite' },
-]
+const Theme: ITheme = ({ staticData, loadedData, loadState }) => {
+  console.log('#Theme', staticData, loadedData, loadState)
 
-const theme: ICreateTheme = (pages) => {
-  // You can create side menu based on pages data
-  // const sideMenuData = defaultMenu(pages)
-  return {
-    loaded(pageData) {
-      const Component = pageData.default
-      return (
-        <Layout topNavs={topNavs} logo="Vite Pages Basic Demo">
-          <Component />
-        </Layout>
-      )
-    },
-  }
+  // You can generate side nav menu from staticData
+  // const sideMenuData = useMemo(() => generateSideMenu(staticData), [staticData])
+
+  if (loadState.type === '404') return <p>Page not found.</p>
+  if (loadState.type === 'load-error') return <p>Load error!</p>
+  if (loadState.type === 'loading') return <p>Loading...</p>
+
+  // loadState.type === 'loaded'
+  // Runtime page data for current page
+  const pageData = loadedData[loadState.routePath]
+  // the default export of the main module
+  const Component = pageData.main.default
+  return <Component />
 }
 
-export default theme
+export default Theme
 ```
 
-> Here is an example vite-pages theme implementation: [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/use-theme/pages/_theme.tsx) demonstrate how to use it.
+> Here is a more useful theme: [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/use-theme/pages/_theme.tsx) demonstrate how to use it.
 
-You can customize every bit of UI with theme. Welcome to share your theme with a npm package!
+You can customize every bits of UI with theme. Welcome to share your theme with a npm package!
 
 ## Suggestions
 
 ### To theme providers: make your theme easier to use
 
-We encourage theme providers to export your theme as **a config function** that receive user config and return `ICreateTheme`.
+We encourage theme providers to export your theme as **a config function** that receive user config and return a `ITheme`.
 
-For example, the theme provider can export theme as this function:
+For example, the theme provider can export theme like this:
 
 ```tsx
-export function createTheme({ sideMenuData }: IOption = {}): ICreateTheme {
-  return (pages) => {
-    // theme can create menu from pages data
-    const actualMenuData = sideMenuData || defaultMenu(pages)
-    return {
-      loaded(pageData) {
-        const Component = pageData.default
-        return (
-          <Layout sideMenuData={actualMenuData}>
-            <Component />
-          </Layout>
-        )
-      },
-    }
+export default function createTheme({ navs }: IOption = {}): ITheme {
+  return ({ loadedData, loadState }) => {
+    if (loadState.type !== 'loaded')
+      return (
+        <Layout navs={navs}>
+          <p>Loading...</p>
+        </Layout>
+      )
+    // Runtime page data for current page
+    const pageData = loadedData[loadState.routePath]
+    // the default export of the main module
+    const Component = pageData.main.default
+    return (
+      <Layout navs={navs}>
+        <Component />
+      </Layout>
+    )
   }
 }
 ```
 
-Theme consumers can use it to config their sideMenu:
+Theme consumers can use it to config their navs menu:
 
 ```tsx
 // Theme users can configure sideMenu in `/_theme.tsx`:
 import createTheme from 'theme-pkg'
 export default createTheme({
-  sideMenuData: [
+  navs: [
     { path: '/guides/guide1', label: 'guide1' },
     { path: '/guides/guide2', label: 'guide1' },
   ],
 })
 ```
 
-As you can see, the theme is easier to use because **theme consumers don't need to know about the `_theme.tsx` API and `ITheme` from vite-pages**. They only need to know about `createTheme` API from the theme. Users should be talking to the theme, instead of talking directly to vite-pages framework.
+As you can see, the theme is easier to use because **theme consumers don't need to know about the `ITheme` API from vite-pages**. They only need to know about `createTheme` API from the theme. Users should be talking to the theme, instead of talking directly to vite-pages framework.
 
 For this reason, we encourage theme providers to export config function like the `createTheme` above.
 
 #### Releases the power of Typescript
 
-The above example show another benefit for users: theme users can get Typescript type-check and intelliSense when they are writing theme config. This is because users are talking to the theme, instead of talking directly to the vite-pages framework.
-
-## Caveat
-
-React will re-mount the component if the vdom tree hierarchy changes (.e.g `<Layout />` -> `<div><Layout /></div>`). If you want to retain the Layout component (.e.g so that the SideMenu scroll state won't get reset), the theme render functions should put the Layout component at the "same position".
-
-The props of the component can change as you like and React will not re-mount it (.e.g `<Layout prop="foo" />` -> `<Layout prop="bar" />`). Themes should take advantage of this to make Layout behave differently across different pages.
+The above example show another benefit for users: theme users can get Typescript type-check and intelliSense when they are writing theme config. This is because users are calling the theme config function, instead of "export some configs".
 
 ## Share your theme!
 
-It is easy to write a theme that is sharable and configurable. If you use typescript, the users of your theme will get type-check and intelliSense.
+It is easy to write a theme that is sharable and configurable.
 
-If you have design and implement a theme(.e.g blog theme, document site theme), welcome to share your theme with a npm package, or contribute to [the vite-pages repo](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages)!
+If you have design and implement a theme(.e.g a blog theme, a document site theme), welcome to share your theme with a npm package, or contribute it to [the vite-pages repo](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages)!

@@ -6,42 +6,23 @@ import { defaultFindPages as _defaultFindPages } from './find-pages-strategy/def
 import { parseUrl, stringifyUrl } from 'query-string'
 import { globFind } from './find-pages-strategy/utils'
 
-export interface IPageData {
-  pageId: string
-  /**
-   * @default 'main'
-   */
-  key?: string
-  dataPath?: string
-  staticData?: any
-  // lazyDataPath?: string
-}
-
-export interface IFindPagesResult {
-  [pageId: string]: {
-    data: {
-      [key: string]: string
-    }
-    staticData: {
-      [key: string]: any
-    }
-  }
-}
-
-// export type IPageDataFinal = {
-//   publicPath: string
-//   loadPath: string
-//   staticData: any
-// }
-
 export interface IFindPagesHelpers {
+  /**
+   * readFile util with cache
+   */
   readFile: (filePath: string) => Promise<string>
+  /**
+   * Read the static data from a file.
+   */
   extractStaticData: (
     filePath: string
   ) => Promise<{
     [key: string]: any
     sourceType: string
   }>
+  /**
+   * Glob utils. Return matched file paths.
+   */
   globFind: (
     baseDir: string,
     glob: string
@@ -51,8 +32,41 @@ export interface IFindPagesHelpers {
       absolute: string
     }[]
   >
+  /**
+   * Use the basic filesystem routing convention to find pages.
+   */
   defaultFindPages: (baseDir: string) => Promise<IPageData[]>
+  /**
+   * Register page data.
+   * User who custom findPages should use it to register the data he/she finds.
+   */
   addPageData: (pageData: IPageData) => void
+}
+
+export interface IPageData {
+  /**
+   * The page route path.
+   * User can register multiple page data with same pageId,
+   * as long as they have different keys.
+   * Page data with same pageId will be merged.
+   *
+   * @example '/posts/hello-world'
+   */
+  pageId: string
+  /**
+   * The data key.
+   * If it conflicts with an already-registered data,
+   * error will be thrown.
+   *
+   * @default 'main'
+   */
+  key?: string
+  /**
+   * The path to the runtime data module
+   */
+  dataPath?: string
+
+  staticData?: any
 }
 
 export async function collectPagesData(
@@ -156,7 +170,7 @@ export async function extractStaticData(
     case 'tsx':
       return { ...parse(extract(fileContent)), sourceType: 'js' }
     default:
-      throw new Error(`unexpected type "${extname}"`)
+      throw new Error(`unexpected extension name "${extname}"`)
   }
 }
 
@@ -212,4 +226,15 @@ function createFindPagesContext(): [IFindPagesResult, IFindPagesHelpers] {
     addPageData,
   }
   return [result, helpers]
+}
+
+export interface IFindPagesResult {
+  [pageId: string]: {
+    data: {
+      [key: string]: string
+    }
+    staticData: {
+      [key: string]: any
+    }
+  }
 }
