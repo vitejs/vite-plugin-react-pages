@@ -1,6 +1,6 @@
 {
   "name": "vite-pages-theme-basic",
-  "version": "0.8.8",
+  "version": "0.9.0",
   "main": "dist/index.js",
   "keywords": [
     "vite",
@@ -19,7 +19,7 @@
   },
   "peerDependencies": {
     "@mdx-js/react": "^1.6.11",
-    "vite-plugin-react-pages": "^0.3.0"
+    "vite-plugin-react-pages": "^0.8.0"
   },
   "devDependencies": {
     "@alifd/next": "^1.20.28",
@@ -44,7 +44,7 @@
     "rollup": "^2.26.3",
     "rollup-plugin-postcss": "^3.1.5",
     "typescript": "^3.9.7",
-    "vite-plugin-react-pages": "workspace:^0.7.2"
+    "vite-plugin-react-pages": "workspace:^0.8.0"
   },
   "dependencies": {
     "github-markdown-css": "^4.0.0"
