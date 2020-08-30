@@ -7,7 +7,7 @@ sort: 4
 
 Vite-pages support "magic import". Magic import is **normal esModule import sytax** with **tailored path convention**. It enable users to import things with special behavior. Users can use it to do powerful things.
 
-> If you are familiar with webpack loader mechanism, you can easily understand how magic import works.
+> If you are familiar with the webpack loader mechanism, you can easily guess how magic import works.
 
 ## Analyze source code
 
@@ -28,13 +28,13 @@ will give you:
   "entry": "demo1.tsx",
   "modules": {
     "dir/util.ts": {
-      "code": "export default (txt: string) => {\n  console.log('util:' + txt)\n}\n"
+      "code": "the source code of dir/util.ts..."
     },
     "demo1.module.css": {
-      "code": ".box {\n  border: 1px solid black;\n  padding: 16px;\n}\n\n.title {\n  margin-top: 0;\n  margin-bottom: 8px;\n  color: blue;\n}\n"
+      "code": "the source code of demo1.module.css..."
     },
     "demo1.tsx": {
-      "code": "import React, { useState, useEffect, useCallback } from 'react'\n// This is an external library used by demo\nimport { Button } from 'antd'\nimport 'antd/dist/antd.css'\n\nimport util from './dir/util'\nimport style from './demo1.module.css'\n\ninterface IProps {}\n\nconst Demo1: React.FC<IProps> = (props) => {\n  useEffect(() => {\n    util('demo1')\n  }, [])\n\n  return (\n    <div className={style.box}>\n      <h1 className={style.title}>This demo use a library</h1>\n      <Button type=\"primary\">Primary Button</Button>\n    </div>\n  )\n}\n\nexport default Demo1\n"
+      "code": "the source code of demo1.tsx..."
     }
   },
   "externals": {
@@ -48,19 +48,13 @@ Checkout the [analyze-source-code fixture](https://github.com/vitejs/vite-plugin
 
 ### Relative module dependencies
 
-Relative module dependencies(.e.g `import util from './dir/util.ts'`) will also be collected into the analyze result, as shown by the previous example.
+For relative module dependencies(.e.g `import util from './dir/util.ts'`), their source code will be collected into the analyze result, as shown by the previous example.
 
-Relative module import can be:
-
-- js, jsx, ts, tsx
-- css
-- Sass. You need to install `node-sass`
-- Stylus. You need to install `stylus`
-- Less. You need to install `less`
+Relative module import can be js, jsx, ts, tsx, css, sass, etc.
 
 ### External module dependencies
 
-For those dependencies from `node_modules` (.e.g `import React from 'react'`), this magic import will not load source code for them. Instead, the dependencies' versions are recorded, as shown by the previous example.
+For those dependencies from `node_modules` (.e.g `import React from 'react'`), this magic import will **not** load source code for them. Instead, the dependencies' versions are recorded, as shown by the previous example.
 
 This magic import gets dependencies' versions by find `package.json` up from the importer, and find the package version from these `package.json` fields:
 

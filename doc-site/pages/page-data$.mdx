@@ -7,12 +7,14 @@ import { Link } from 'react-router-dom'
 
 # Page data
 
-Vite-pages is a React app framework that collect your pages data and pass them to your theme. So what kinds of data does it collect?
+Essentially, vite-pages is a React app framework that collect your pages data and pass them to your theme. So what kinds of data does it collect?
 
 Each page consists of two kinds of data:
 
 - Static data
 - Runtime data
+
+Both of these page data are passed to the theme so that it can render the app.
 
 ## Static data
 
@@ -72,18 +74,16 @@ As stated in <Link to="/theme-customization">the theme customization doc</Link>,
 - All runtime data that is already loaded
 - The current loading state of the app
 
-Here is the type of a theme:
+Here is the interface of a theme:
 
 import ThemeInterface from './theme-interface.mdx'
 
 <ThemeInterface />
 
-> Here is an example vite-pages theme implementation: [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/use-theme/pages/_theme.tsx) demonstrate how to use it.
+> Here is an example implementation of vite-pages theme: [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/use-theme/pages/_theme.tsx) demonstrate how to use it.
 
 ## Vite-pages core doesn't care what your page data looks like
 
 Vite-pages itself doesn't care what the page data looks like. How to interpret the page data and render the view, is totally decided by <Link to="/theme-customization">the theme</Link>. Vite-pages just collect your pages data and pass them to the theme. This design make the vite-pages core more "simple" and make themes more powerful.
 
 Most themes ask users to `export default` a React component from page files(.e.g <Link to="/basic-theme">the basic theme</Link>). But that is not a requirement from vite-pages core.
-
-If you are a theme user, you should read the doc of your theme to learn what data should be exported from your pages.

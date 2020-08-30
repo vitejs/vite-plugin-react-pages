@@ -10,13 +10,14 @@ module.exports = {
     vpr,
     mdx(),
     pages(path.join(__dirname, 'pages'), async (helpers) => {
+      const pagesByComponent: { [comp: string]: any } = {}
       const demosBasePath = path.join(__dirname, 'src')
+      // find all demo modules
       let demoPaths = await helpers.globFind(
         demosBasePath,
         '*/demos/**/*.{[tj]sx,md?(x)}'
       )
 
-      const pagesByComponent: { [comp: string]: any } = {}
       await Promise.all(
         demoPaths.map(async ({ relative, absolute }) => {
           const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
@@ -24,6 +25,7 @@ module.exports = {
           const [_, componentName, demoPath] = match
           const publicPath = `/${componentName}`
 
+          // register the demo module as page daga
           helpers.addPageData({
             pageId: publicPath,
             key: demoPath,
@@ -39,6 +41,7 @@ module.exports = {
         })
       )
 
+      // add static data(title) for each component page
       Object.entries(pagesByComponent).forEach(
         ([componentName, { publicPath }]) => {
           helpers.addPageData({
@@ -48,6 +51,7 @@ module.exports = {
           })
         }
       )
+
       // we also want to collect pages from `/pages` with basic filesystem routing convention
       const defaultPages = await helpers.defaultFindPages(
         path.join(__dirname, 'pages')

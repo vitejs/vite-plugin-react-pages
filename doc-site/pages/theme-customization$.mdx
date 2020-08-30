@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 # Theme customization
 
-> This is an advance guide about how to make a theme by yourself. If there is already themes that meet your needs, you don't need to read this guide now!
+> This is an advance guide about how to make a theme by yourself. If there is already themes that meet your needs(.e.g <Link to="/basic-theme">the basic theme</Link>), you don't need to read this guide now!
 
 Vite-pages itself doesn't render any concrete DOM node. Users can customize **anything** on the page with theme. That's why theme is so powerful.
 
@@ -17,7 +17,7 @@ To use a theme, users should export their theme from `_theme.tsx`. It should exp
 - All runtime data that is already loaded
 - The current loading state of the app
 
-Here is the type of a theme:
+Here is the interface of a theme:
 
 import ThemeInterface from './theme-interface.mdx'
 
@@ -65,6 +65,7 @@ We encourage theme providers to export your theme as **a config function** that 
 For example, the theme provider can export theme like this:
 
 ```tsx
+// The theme config function accepts navs config
 export default function createTheme({ navs }: IOption = {}): ITheme {
   return ({ loadedData, loadState }) => {
     if (loadState.type !== 'loaded')
@@ -105,7 +106,7 @@ For this reason, we encourage theme providers to export config function like the
 
 #### Releases the power of Typescript
 
-The above example show another benefit for users: theme users can get Typescript type-check and intelliSense when they are writing theme config. This is because users are calling the theme config function, instead of "export some configs".
+The above example show another benefit for users: theme users can get Typescript type-check and intelliSense when they are writing theme config. This is because users are calling the theme config function, instead of "exporting some configs".
 
 ## Share your theme!
 

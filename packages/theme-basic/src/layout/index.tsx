@@ -73,17 +73,31 @@ export type ISideMenuData = { text: string; path: string }
 export type ITopNavData =
   | {
       text: string
+      /**
+       * The url.
+       * @example 'https://www.google.com/'
+       */
       href: string
     }
   | {
       text: string
+      /**
+       * The path in the current webapp.
+       * @example '/posts/hello-world'
+       */
       path: string
     }
   | {
+      /**
+       * The label of the subnav
+       */
       subNav: string
       children: ITopNavData[]
     }
   | {
+      /**
+       * The label of the nav group
+       */
       group: string
       children: ITopNavData[]
     }

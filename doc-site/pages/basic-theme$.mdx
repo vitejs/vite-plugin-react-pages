@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 # Basic theme
 
-`vite-pages-theme-basic` provides a nice theme. It should satisfy most users' needs.
+`vite-pages-theme-basic` provides a nice theme. It should satisfy most users' needs. As an example, this document site is powered by this theme.
 
 ## How to use
 
@@ -61,7 +61,13 @@ For **jsx/tsx pages**, notate the static data like this:
 // js code....
 ```
 
-## Configs
+## Page search
+
+Basic theme also generate a search box automatically. It help readers to filter pages by their titles. As an example, you can find the search box at the topbar of this document site.
+
+> You can turn of the auto-generated search box in the theme configs. You can also customize the topbar options area.
+
+## Theme configs
 
 The `createTheme` exported by `vite-pages-theme-basic` accepts these options:
 
@@ -93,10 +99,30 @@ interface IOption {
    */
   search?: boolean
 }
+
+export type ISideMenuData = { text: string; path: string }
+
+export type ITopNavData =
+  | {
+      text: string
+      /**
+       * The url.
+       * @example 'https://www.google.com/'
+       */
+      href: string
+    }
+  | {
+      text: string
+      /**
+       * The path in the current webapp.
+       * @example '/posts/hello-world'
+       */
+      path: string
+    }
 ```
 
 ## Fully theme customization
 
-If the basic theme doesn't satisfy your need, you can <Link to="/theme-customization">create a custom theme</Link>.
+If the basic theme doesn't satisfy your need, you can <Link to="/theme-customization">create your own theme</Link>.
 
 > Contributions to [the basic theme](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages/theme-basic) are always welcomed.
