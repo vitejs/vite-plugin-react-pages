@@ -3,7 +3,6 @@ import postcss from 'rollup-plugin-postcss'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
-import { postcssSelectorReplace } from './pcssPlugin'
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
@@ -50,13 +49,11 @@ export default {
     }),
     postcss({
       config: false,
-      plugins: [
-        postcssSelectorReplace((old) => {
-          if (old.includes('.next-')) {
-            return old.replace(/\.next-/g, '.vp-theme-')
-          }
-        }),
-      ],
+      use: {
+        sass: {
+          data: `$css-prefix: "vp-theme-";`,
+        },
+      },
       extract: path.resolve(__dirname, 'dist', 'index.css'),
     }),
   ],
