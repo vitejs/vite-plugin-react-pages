@@ -6,6 +6,9 @@ import { CLIENT_PATH } from '../constants'
 import { stringify } from 'gray-matter'
 
 export async function ssrBuild(viteOptions: UserConfig) {
+  // ssr build should not use hash router
+  if (viteOptions?.define?.['__HASH_ROUTER__'])
+    viteOptions!.define!['__HASH_ROUTER__'] = false
   let { outDir = 'dist' } = viteOptions
   outDir = path.resolve(process.cwd(), outDir)
   await fs.emptyDir(outDir)
@@ -66,7 +69,7 @@ export async function ssrBuild(viteOptions: UserConfig) {
           `Your index.html should contain "<div id="root"></div>"`
         )
       }
-      
+
       const ssrInfo = {
         routePath: pagePath,
       }
