@@ -40,6 +40,7 @@ async function init() {
   }
 
   const pkg = require(path.join(templateDir, `package.json`))
+  removeWorkspace(pkg)
   pkg.name = path.basename(root)
   await write('package.json', JSON.stringify(pkg, null, 2))
 
@@ -55,3 +56,15 @@ async function init() {
 init().catch((e) => {
   console.error(e)
 })
+
+function removeWorkspace(pkg) {
+  rm(pkg.dependencies)
+  rm(pkg.devDependencies)
+  function rm(deps) {
+    Object.keys(deps).forEach((k) => {
+      if (deps[k].startsWith('workspace:')) {
+        deps[k] = deps[k].slice('workspace:'.length)
+      }
+    })
+  }
+}
