@@ -133,6 +133,51 @@ importers:
       vite-plugin-mdx: 'workspace:^0.4.0'
       vite-plugin-react: ^3.0.2
       vite-plugin-react-pages: 'workspace:^0.8.2'
+  fixtures/library:
+    devDependencies:
+      '@types/react': 17.0.0
+      react: 17.0.1
+      typescript: 4.1.2
+    specifiers:
+      '@types/react': ^17.0.0
+      react: ^17.0.1
+      typescript: ^4.1.2
+  fixtures/library-demos:
+    dependencies:
+      '@mdx-js/react': 1.6.21_react@17.0.1
+      '@pika/react': 16.13.1
+      '@pika/react-dom': 16.13.1_react@17.0.1
+      my-lib: 'link:../library'
+      react-router-dom: 5.2.0_react@17.0.1
+      vite-pages-theme-basic: 'link:../../packages/theme-basic'
+    devDependencies:
+      '@types/react': 17.0.0
+      '@types/react-router-dom': 5.1.6
+      globby: 11.0.1
+      react: 17.0.1
+      react-dom: 17.0.1_react@17.0.1
+      serve: 11.3.2
+      vite: /@csr632/vite/1.0.0-rc.4
+      vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
+      vite-plugin-react: 3.0.2_vite@1.0.0-rc.4
+      vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages'
+    specifiers:
+      '@mdx-js/react': ^1.6.21
+      '@pika/react': ^16.13.1
+      '@pika/react-dom': ^16.13.1
+      '@types/react': ^17.0.0
+      '@types/react-router-dom': ^5.1.6
+      globby: ^11.0.1
+      my-lib: 'workspace:*'
+      react: ^17.0.1
+      react-dom: ^17.0.1
+      react-router-dom: ^5.2.0
+      serve: ^11.3.2
+      vite: 'npm:@csr632/vite@^1.0.0-rc.4'
+      vite-pages-theme-basic: 'workspace:^0.9.1'
+      vite-plugin-mdx: 'workspace:^0.4.0'
+      vite-plugin-react: ^3.0.2
+      vite-plugin-react-pages: 'workspace:^0.8.2'
   fixtures/mdx-basic:
     dependencies:
       '@pika/react': 16.13.1
