@@ -1,4 +1,4 @@
-/// <reference types="vite/dist/importMeta" />
+/// <reference types="vite" />
 
 import React from 'react'
 import ReactDOM from 'react-dom/server'

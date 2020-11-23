@@ -20,12 +20,12 @@ export async function transformMdx({
 }) {
   const jsx = await mdx(code, mdxOpts)
   const esBuild = await ensureEsbuildService()
-  const { js } = await esBuild.transform(jsx, {
+  const { code: trans } = await esBuild.transform(jsx, {
     loader: 'jsx',
     target: 'es2019',
     jsxFactory: 'mdx',
   })
-  const withoutHMR = `${DEFAULT_RENDERER}\n${js}`
+  const withoutHMR = `${DEFAULT_RENDERER}\n${trans}`
   if (!forHMR) {
     // don't need HMR ability
     return withoutHMR
