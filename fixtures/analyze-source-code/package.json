@@ -13,23 +13,23 @@
     "debug:ssr": "rm -rf dist && node --inspect node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr"
   },
   "dependencies": {
-    "@mdx-js/react": "^1.6.16",
+    "@mdx-js/react": "^1.6.21",
     "@pika/react": "^16.13.1",
     "@pika/react-dom": "^16.13.1",
-    "react-live": "^2.2.2",
+    "react-live": "^2.2.3",
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
-    "@types/react": "^16.9.46",
-    "@types/react-router-dom": "^5.1.5",
-    "antd": "^4.5.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "sass": "^1.26.10",
+    "@types/react": "^17.0.0",
+    "@types/react-router-dom": "^5.1.6",
+    "antd": "^4.8.5",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "sass": "^1.29.0",
     "serve": "^11.3.2",
     "vite": "npm:@csr632/vite@^1.0.0-rc.4",
     "vite-plugin-mdx": "workspace:^0.4.0",
     "vite-plugin-react": "^3.0.2",
-    "vite-plugin-react-pages": "workspace:^0.8.0"
+    "vite-plugin-react-pages": "workspace:^0.8.2"
   }
 }
