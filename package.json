@@ -11,5 +11,11 @@
     "pub": "pnpm -r publish --filter {packages}",
     "update-deps": "pnpm -r update -i -L",
     "update-local-deps": "pnpm update -r vite-plugin-mdx vite-plugin-react-pages vite-pages-theme-basic --workspace"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "^17.0.1",
+      "react-dom": "^17.0.1"
+    }
   }
 }
