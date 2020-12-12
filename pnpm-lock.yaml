@@ -147,13 +147,13 @@ importers:
       '@mdx-js/react': 1.6.21_react@17.0.1
       '@pika/react': 16.13.1
       '@pika/react-dom': 16.13.1_react@17.0.1
-      my-lib: 'link:../library'
       react-router-dom: 5.2.0_react@17.0.1
       vite-pages-theme-basic: 'link:../../packages/theme-basic'
     devDependencies:
       '@types/react': 17.0.0
       '@types/react-router-dom': 5.1.6
       globby: 11.0.1
+      my-lib: 'link:../library'
       react: 17.0.1
       react-dom: 17.0.1_react@17.0.1
       serve: 11.3.2
