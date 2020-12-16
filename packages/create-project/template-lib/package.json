@@ -1,6 +1,7 @@
 {
   "name": "my-lib",
   "description": "suppose this npm package name is 'my-lib'",
+  "private": "true",
   "version": "0.0.1",
   "scripts": {
     "dev": "vite serve --config ./vite.config.ts",
