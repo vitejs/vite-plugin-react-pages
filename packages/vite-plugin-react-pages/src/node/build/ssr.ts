@@ -1,4 +1,9 @@
-import { ssrBuild as viteSSRBuild, build as viteBuild, UserConfig } from 'vite'
+import {
+  ssrBuild as viteSSRBuild,
+  build as viteBuild,
+  UserConfig,
+  BuildResult,
+} from 'vite'
 import * as path from 'path'
 import * as fs from 'fs-extra'
 
@@ -39,7 +44,7 @@ export async function ssrBuild(viteOptions: UserConfig) {
   const pagePaths = Object.keys(ssrData)
 
   console.log('\n\npreparing vite pages client bundle...')
-  const clientResult = await viteBuild({
+  const _clientResult = await viteBuild({
     ...viteOptions,
     rollupInputOptions: {
       ...viteOptions.rollupInputOptions,
@@ -49,6 +54,14 @@ export async function ssrBuild(viteOptions: UserConfig) {
     assetsDir: '_assets',
     outDir: clientOutDir,
   })
+  let clientResult: BuildResult
+  if (Array.isArray(_clientResult)) {
+    if (_clientResult.length !== 1)
+      throw new Error(`expect viteBuild to have only one BuildResult`)
+    clientResult = _clientResult[0]
+  } else {
+    clientResult = _clientResult
+  }
 
   // const pagesMapAsset = clientResult.assets.find(
   //   (output) => output.fileName === 'mapPagePathToEmittedFile.json'
