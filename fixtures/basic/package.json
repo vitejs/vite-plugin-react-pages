@@ -24,7 +24,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "sass": "^1.29.0",
-    "vite": "npm:@csr632/vite@^1.0.0-rc.4",
+    "vite": "^1.0.0-rc.13",
     "vite-plugin-mdx": "workspace:^0.4.0",
     "vite-plugin-react": "^3.0.2",
     "vite-plugin-react-pages": "workspace:^0.8.2"
