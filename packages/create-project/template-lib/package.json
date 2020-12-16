@@ -3,8 +3,8 @@
   "description": "suppose this npm package name is 'my-lib'",
   "version": "0.0.1",
   "scripts": {
-    "dev": "vite serve -c ./vite.config.ts",
-    "build-docs": "rm -rf docs-dist && vite build -c ./vite.config.ts && serve -s dist",
+    "dev": "vite serve --config ./vite.config.ts",
+    "build-docs": "rm -rf docs-dist && vite build --config ./vite.config.ts && serve -s dist",
     "build-docs-ssr": "rm -rf docs-dist && vite-pages ssr -c ./vite.config.ts && serve dist"
   },
   "dependencies": {
