@@ -96,7 +96,7 @@ export async function analyzeSourceCode(entryModule: string) {
       },
       postcss({
         extract: true,
-      }),
+      }) as any,
     ],
   })
 
