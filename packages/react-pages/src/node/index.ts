@@ -66,3 +66,5 @@ export default function pluginFactory(opts: {
     },
   }
 }
+
+export type { ITheme, IPagesStaticData, IPagesLoaded } from './types/client'

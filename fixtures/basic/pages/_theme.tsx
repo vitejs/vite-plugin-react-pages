@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import type { ITheme } from 'vite-plugin-react-pages'
+import type { ITheme } from 'vite-plugin-react-pages-2'
 
 const Theme: ITheme = ({ staticData, loadedData, loadState }) => {
   console.log('#Theme', staticData, loadedData, loadState)
