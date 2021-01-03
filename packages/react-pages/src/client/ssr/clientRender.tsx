@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Client from './client'
+import App from '../App'
+import SSRContextProvider from '../SSRContextProvider'
 import pages from '/@generated/pages'
 
 declare global {
@@ -22,7 +23,9 @@ pageDataImporter().then(({ default: pageLoaded }: any) => {
     [routePath]: { ...pageLoaded },
   }
   ReactDOM.hydrate(
-    <Client initCache={initCache} />,
+    <SSRContextProvider initCache={initCache}>
+      <App />
+    </SSRContextProvider>,
     document.getElementById('root')
   )
 })
