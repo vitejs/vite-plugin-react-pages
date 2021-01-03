@@ -28,7 +28,7 @@
     "react-dom": "^17.0.1",
     "serve": "^11.3.2",
     "vite": "^1.0.0-rc.13",
-    "vite-plugin-mdx": "workspace:^0.4.0",
+    "vite-plugin-mdx": "^0.4.0",
     "vite-plugin-react": "^3.0.2",
     "vite-plugin-react-pages": "workspace:^0.8.2"
   }
