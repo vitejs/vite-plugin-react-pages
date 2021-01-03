@@ -1,14 +1,12 @@
 import type { UserConfig } from 'vite'
-import * as vpr from 'vite-plugin-react'
-import pages from 'vite-plugin-react-pages'
+import pages from 'vite-plugin-react-pages-2'
 import * as path from 'path'
-import mdx from 'vite-plugin-mdx'
 
 module.exports = {
-  jsx: 'react',
-  alias: {
-    '/@layout/': path.join(__dirname, 'layout'),
-  },
-  plugins: [vpr, mdx(), pages()],
+  plugins: [
+    pages({
+      pagesDir: path.join(__dirname, 'pages'),
+    }),
+  ],
   minify: false,
 } as UserConfig

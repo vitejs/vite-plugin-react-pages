@@ -14,19 +14,17 @@
   },
   "dependencies": {
     "@mdx-js/react": "^1.6.21",
-    "@pika/react": "^16.13.1",
-    "@pika/react-dom": "^16.13.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
     "@types/react-router-dom": "^5.1.6",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
     "sass": "^1.29.0",
-    "vite": "^1.0.0-rc.13",
+    "vite": "^2.0.0-beta.3",
     "vite-plugin-mdx": "workspace:^0.4.0",
     "vite-plugin-react": "^3.0.2",
-    "vite-plugin-react-pages": "workspace:^0.8.2"
+    "vite-plugin-react-pages-2": "workspace:*"
   }
 }

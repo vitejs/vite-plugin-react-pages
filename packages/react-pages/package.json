@@ -1,0 +1,61 @@
+{
+  "name": "vite-plugin-react-pages-2",
+  "version": "2.0.0-alpha.0",
+  "main": "dist/node/index.js",
+  "keywords": [
+    "vite",
+    "react"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csr632/vite-plugin-react-pages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/csr632/vite-plugin-react-pages/issues"
+  },
+  "homepage": "https://github.com/csr632/vite-plugin-react-pages",
+  "scripts": {
+    "build": "rm -rf ./dist && concurrently \"npm:build-*\"",
+    "build-node": "tsc -p src/node",
+    "build-client": "tsc -p src/client",
+    "dev": "rm -rf ./dist && concurrently \"npm:dev-*\"",
+    "dev-node": "tsc -w -p src/node",
+    "dev-client": "tsc -w -p src/client",
+    "prepare": "npm run build"
+  },
+  "peerDependencies": {
+    "vite": "^2.0.0-beta.3"
+  },
+  "devDependencies": {
+    "@types/enhanced-resolve": "^3.0.6",
+    "@types/fs-extra": "^9.0.4",
+    "@types/glob": "^7.1.3",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-router-dom": "^5.1.6",
+    "chokidar": "^3.4.3",
+    "concurrently": "^5.3.0",
+    "react": "^17.0.1",
+    "typescript": "^4.1.2",
+    "vite": "^2.0.0-beta.3"
+  },
+  "dependencies": {
+    "@babel/preset-react": "^7.12.7",
+    "@babel/preset-typescript": "^7.12.7",
+    "@rollup/plugin-babel": "^5.2.1",
+    "enhanced-resolve": "^5.3.2",
+    "find-up": "^5.0.0",
+    "fs-extra": "^9.0.1",
+    "glob": "^7.1.6",
+    "globby": "^11.0.1",
+    "gray-matter": "^4.0.2",
+    "jest-docblock": "^26.0.0",
+    "minimist": "^1.2.5",
+    "query-string": "^6.13.7",
+    "read-pkg-up": "^7.0.1",
+    "rollup": "^2.33.3",
+    "rollup-plugin-postcss": "^3.1.8",
+    "tiny-invariant": "^1.1.0"
+  }
+}
