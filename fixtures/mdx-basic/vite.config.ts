@@ -1,8 +1,8 @@
 import type { UserConfig } from 'vite'
 import mdx from 'vite-plugin-mdx'
-import react from 'vite-plugin-react'
+import reactRefresh from '@vitejs/plugin-react-refresh'
 
 module.exports = {
   jsx: 'react',
-  plugins: [react, mdx()]
+  plugins: [reactRefresh(), mdx()]
 } as UserConfig
