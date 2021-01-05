@@ -1,69 +1,69 @@
 import type { UserConfig } from 'vite'
-import * as vpr from 'vite-plugin-react'
-import pages from 'vite-plugin-react-pages'
-import mdx from 'vite-plugin-mdx'
 import * as path from 'path'
+
+import reactRefresh from '@vitejs/plugin-react-refresh'
+import mdx from 'vite-plugin-mdx'
+import pages from 'vite-plugin-react-pages'
 
 module.exports = {
   jsx: 'react',
   plugins: [
-    vpr,
+    reactRefresh(),
     mdx(),
-    pages(path.join(__dirname, 'pages'), async (helpers) => {
-      const pagesByComponent: { [comp: string]: any } = {}
-      const demosBasePath = path.join(__dirname, 'demos')
-      // find all demo modules
-      let demoPaths = await helpers.globFind(
-        demosBasePath,
-        '**/*.{[tj]sx,md?(x)}'
-      )
+    pages({
+      findPages: async (helpers) => {
+        const pagesByComponent: { [comp: string]: any } = {}
+        const demosBasePath = path.join(__dirname, 'demos')
+        // find all demo modules
+        let demoPaths = await helpers.globFind(
+          demosBasePath,
+          '**/*.{[tj]sx,md?(x)}'
+        )
 
-      await Promise.all(
-        demoPaths.map(async ({ relative, absolute }) => {
-          const match = relative.match(/(.*)\/(.*)\.([tj]sx|mdx?)$/)
-          if (!match) throw new Error('unexpected file: ' + absolute)
-          const [_, componentName, demoPath] = match
-          const publicPath = `/${componentName}`
+        await Promise.all(
+          demoPaths.map(async ({ relative, absolute }) => {
+            const match = relative.match(/(.*)\/(.*)\.([tj]sx|mdx?)$/)
+            if (!match) throw new Error('unexpected file: ' + absolute)
+            const [_, componentName, demoPath] = match
+            const publicPath = `/${componentName}`
 
-          // register the demo module as page daga
-          helpers.addPageData({
-            pageId: publicPath,
-            key: demoPath,
-            dataPath: absolute,
-            staticData: await helpers.extractStaticData(absolute),
-          })
+            // register the demo module as page daga
+            helpers.addPageData({
+              pageId: publicPath,
+              key: demoPath,
+              dataPath: absolute,
+              staticData: await helpers.extractStaticData(absolute),
+            })
 
-          if (!pagesByComponent[componentName]) {
-            pagesByComponent[componentName] = {
-              publicPath,
+            if (!pagesByComponent[componentName]) {
+              pagesByComponent[componentName] = {
+                publicPath,
+              }
             }
-          }
-        })
-      )
-
-      // add static data(title) for each component page
-      Object.entries(pagesByComponent).forEach(
-        ([componentName, { publicPath }]) => {
-          helpers.addPageData({
-            pageId: publicPath,
-            key: 'title',
-            staticData: componentName + ' Title',
           })
-        }
-      )
+        )
 
-      // we also want to collect pages from `/pages` with basic filesystem routing convention
-      const defaultPages = await helpers.defaultFindPages(
-        path.join(__dirname, 'pages')
-      )
-      defaultPages.forEach(helpers.addPageData)
+        // add static data(title) for each component page
+        Object.entries(pagesByComponent).forEach(
+          ([componentName, { publicPath }]) => {
+            helpers.addPageData({
+              pageId: publicPath,
+              key: 'title',
+              staticData: componentName + ' Title',
+            })
+          }
+        )
+
+        // we also want to collect pages from `/pages` with basic filesystem routing convention
+        const defaultPages = await helpers.defaultFindPages(
+          path.join(__dirname, 'pages')
+        )
+        defaultPages.forEach(helpers.addPageData)
+      },
     }),
   ],
   alias: {
     'my-lib': 'my-lib/src',
-  },
-  optimizeDeps: {
-    link: ['vite-pages-theme-basic'],
   },
   minify: false,
 } as UserConfig

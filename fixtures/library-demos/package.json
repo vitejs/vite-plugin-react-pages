@@ -15,9 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mdx-js/react": "^1.6.22",
-    "@pika/react": "^16.13.1",
-    "@pika/react-dom": "^16.13.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "vite-pages-theme-basic": "workspace:*"
   },
@@ -26,12 +25,10 @@
     "@types/react-router-dom": "^5.1.7",
     "globby": "^11.0.1",
     "my-lib": "workspace:*",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
     "serve": "^11.3.2",
     "vite": "^2.0.0-beta.5",
-    "vite-plugin-mdx": "^0.4.0",
-    "vite-plugin-react": "^4.0.1",
+    "@vitejs/plugin-react-refresh": "^1.1.0",
+    "vite-plugin-mdx": "workspace:*",
     "vite-plugin-react-pages": "workspace:*"
   }
 }
