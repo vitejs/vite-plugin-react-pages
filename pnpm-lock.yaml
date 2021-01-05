@@ -71,29 +71,27 @@ importers:
       vite-plugin-react-pages: 'workspace:^0.8.2'
   fixtures/basic:
     dependencies:
-      '@mdx-js/react': 1.6.22_react@17.0.1
       react: 17.0.1
       react-dom: 17.0.1_react@17.0.1
       react-router-dom: 5.2.0_react@17.0.1
     devDependencies:
       '@types/react': 17.0.0
       '@types/react-router-dom': 5.1.7
+      '@vitejs/plugin-react-refresh': 1.1.0
       sass: 1.32.0
       vite: 2.0.0-beta.5
-      vite-plugin-mdx: 0.4.1_dfe8bd8444992a12abbc90d1531537f0
-      vite-plugin-react: 4.0.1_vite@2.0.0-beta.5
+      vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
       vite-plugin-react-pages-2: 'link:../../packages/react-pages'
     specifiers:
-      '@mdx-js/react': ^1.6.22
       '@types/react': ^17.0.0
       '@types/react-router-dom': ^5.1.7
+      '@vitejs/plugin-react-refresh': ^1.1.0
       react: ^17.0.1
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       sass: ^1.32.0
       vite: ^2.0.0-beta.5
-      vite-plugin-mdx: ^0.4.0
-      vite-plugin-react: ^4.0.1
+      vite-plugin-mdx: 'workspace:*'
       vite-plugin-react-pages-2: 'workspace:*'
   fixtures/custom-find-pages:
     dependencies:
