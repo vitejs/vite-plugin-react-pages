@@ -1,25 +1,25 @@
 {
-  "name": "plugin",
+  "name": "mdx-plugin",
   "private": true,
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "vite serve src --force",
-    "debug": "npx --node-arg=--inspect vite serve src --force",
+    "dev": "node ./node_modules/vite/bin/vite.js serve --force",
+    "debug": "node --inspect ./node_modules/vite/bin/vite.js serve --force",
     "debug:build": "npx --node-arg=--inspect vite build src --outDir dist",
     "clean": "rm -rf node_modules/.vite_opt_cache",
     "build": "vite build src --outDir dist"
   },
   "dependencies": {
-    "@pika/react": "^16.13.1",
-    "@pika/react-dom": "^16.13.1"
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
   },
   "devDependencies": {
+    "@vitejs/plugin-react-refresh": "^1.1.0",
     "remark-slug": "^6.0.0",
     "remark-toc": "^7.0.0",
     "vite": "^2.0.0-beta.5",
-    "vite-plugin-mdx": "^0.4.0",
-    "vite-plugin-react": "^4.0.1"
+    "vite-plugin-mdx": "workspace:^2.0.0-alpha.1"
   }
 }

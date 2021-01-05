@@ -192,22 +192,22 @@ importers:
       vite-plugin-mdx: 'workspace:^2.0.0-alpha.1'
   fixtures/mdx-plugin:
     dependencies:
-      '@pika/react': 16.13.1
-      '@pika/react-dom': 16.13.1
+      react: 17.0.1
+      react-dom: 17.0.1_react@17.0.1
     devDependencies:
+      '@vitejs/plugin-react-refresh': 1.1.0
       remark-slug: 6.0.0
       remark-toc: 7.0.0
       vite: 2.0.0-beta.5
-      vite-plugin-mdx: 0.4.1_ca24ff859965a78862f972177120f4df
-      vite-plugin-react: 4.0.1_vite@2.0.0-beta.5
+      vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
     specifiers:
-      '@pika/react': ^16.13.1
-      '@pika/react-dom': ^16.13.1
+      '@vitejs/plugin-react-refresh': ^1.1.0
+      react: ^17.0.1
+      react-dom: ^17.0.1
       remark-slug: ^6.0.0
       remark-toc: ^7.0.0
       vite: ^2.0.0-beta.5
-      vite-plugin-mdx: ^0.4.0
-      vite-plugin-react: ^4.0.1
+      vite-plugin-mdx: 'workspace:^2.0.0-alpha.1'
   fixtures/use-theme:
     dependencies:
       '@mdx-js/react': 1.6.22_react@17.0.1
@@ -1016,6 +1016,7 @@ packages:
     resolution:
       integrity: sha512-AMxuLxPz2j5/6TpF/XSdKpQP1NlG0z11dFOlq+2IP/lSgl11GY8ji6S/rgsViN/L0BDvHvUMruRb7ub+24LUYA==
   /@mdx-js/react/1.6.22:
+    dev: false
     peerDependencies:
       react: ^16.13.1 || ^17.0.0
     resolution:
@@ -1051,12 +1052,6 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-1V9XOY4rDW0rehzbrcqAmHnz8e7SKvX27gh8Gt2WgB0+pdzdiLV83p72kZPU+jvMbS1qU5mauP2iOvO8rhmurQ==
-  /@pika/react-dom/16.13.1:
-    dev: false
-    peerDependencies:
-      react: ^16.0.0
-    resolution:
-      integrity: sha512-tCROpA6uP7caCNodaOUcqmauQmpVOmFXsaaKUJgLOMiZdlW+L02ItK3WAqGSOw25rM0bbwDXNC/x9PpfiQ9ESg==
   /@pika/react-dom/16.13.1_react@17.0.1:
     dependencies:
       react: 17.0.1
@@ -5507,19 +5502,6 @@ packages:
       vfile-message: 2.0.4
     resolution:
       integrity: sha512-O6AE4OskCG5S1emQ/4gl8zK586RqA3srz3nfK/Viy0UPToBc5Trp9BVFb1u0CjsKrAWwnpr4ifM/KBXPWwJbCA==
-  /vite-plugin-mdx/0.4.1_ca24ff859965a78862f972177120f4df:
-    dependencies:
-      '@mdx-js/mdx': 1.6.22
-      '@mdx-js/react': 1.6.22
-      remark-frontmatter: 3.0.0
-      vite: 2.0.0-beta.5
-      vite-plugin-react: 4.0.1_vite@2.0.0-beta.5
-    dev: true
-    peerDependencies:
-      vite: ^1.0.0-beta.4
-      vite-plugin-react: ^3.0.1
-    resolution:
-      integrity: sha512-bT7YAgXOsPdecEbx3411PcSdcR9gX9W5NNAhGiaGkRrSqku9x0zBpZnhVUMC2d2f4fBnf+7hqIji0DS4ePTLRA==
   /vite-plugin-mdx/0.4.1_dfe8bd8444992a12abbc90d1531537f0:
     dependencies:
       '@mdx-js/mdx': 1.6.22
