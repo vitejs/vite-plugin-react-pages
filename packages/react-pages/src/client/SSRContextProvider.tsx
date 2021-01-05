@@ -1,3 +1,5 @@
+/// <reference types="vite/env" />
+
 import React, { useState } from 'react'
 import { HashRouter, BrowserRouter } from 'react-router-dom'
 import { dataCacheCtx, setDataCacheCtx } from './ssr/ctx'

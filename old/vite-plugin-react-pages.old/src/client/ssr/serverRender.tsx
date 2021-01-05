@@ -1,4 +1,4 @@
-/// <reference types="vite" />
+/// <reference types="vite/env" />
 
 import React from 'react'
 import ReactDOM from 'react-dom/server'
