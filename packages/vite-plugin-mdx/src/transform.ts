@@ -52,6 +52,9 @@ function applyHMR(code: string, id: string): string {
   // make mdx React component hmr-self-accepting
   // forked from @vitejs/plugin-react-refresh
   // https://github.com/vitejs/vite/blob/eedd4353a07580fb3118a76f6ed0aa783d1c4bff/packages%2Fplugin-react-refresh%2Findex.js#L67
+  // TODO: let @vitejs/plugin-react-refresh handle the transform
+  // implement `include` option in @vitejs/plugin-react-refresh like this:
+  // https://github.com/rollup/plugins/tree/master/packages/babel#include
   const result = transformSync(code, {
     plugins: [
       require('@babel/plugin-syntax-import-meta'),

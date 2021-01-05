@@ -8,6 +8,11 @@ export function cleanCreatePlugin(mdxOpts?: any): Plugin {
   return {
     name: 'vite-plugin-mdx',
     // enforce: 'pre',
+    config() {
+      return {
+        transformInclude: /\.mdx?$/,
+      }
+    },
     configResolved(config) {
       if (config.command === 'build' || config.isProduction) {
         shouldApplyHMR = false
@@ -19,15 +24,6 @@ export function cleanCreatePlugin(mdxOpts?: any): Plugin {
       }
 
       return transformMdx({ code, mdxOpts, forHMR: shouldApplyHMR, id })
-    },
-    handleHotUpdate(ctx) {
-      // TODO: there are two modules for same mdx file in ctx.modules:
-      // xxx.mdx?import and xxx.mdx .
-      // It may be a bug of vite
-      debugger;
-      // return ctx.modules.filter((mod) => {
-      //   return mod.importers.size > 0
-      // })
     },
   }
 }
