@@ -1,5 +1,5 @@
 import * as path from 'path'
-import type { Plugin, ViteDevServer } from 'vite'
+import type { Plugin } from 'vite'
 import type {
   IFindPagesHelpers,
   IFindPagesResult,
@@ -12,11 +12,12 @@ import {
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 
 export default function pluginFactory(opts: {
-  pagesDir: string
+  pagesDir?: string
   findPages?: (helpers: IFindPagesHelpers) => Promise<void>
-  hashRouter?: boolean
+  useHashRouter?: boolean
 }): Plugin {
-  const { pagesDir, findPages, hashRouter = false } = opts
+  const { findPages, useHashRouter = false } = opts
+  let pagesDir: string = opts.pagesDir ?? ''
 
   let pagesData: Promise<IFindPagesResult>
   return {
@@ -26,9 +27,14 @@ export default function pluginFactory(opts: {
         '/@pages-infra': path.join(__dirname, '../client/'),
       },
       define: {
-        __HASH_ROUTER__: !!hashRouter,
+        __HASH_ROUTER__: !!useHashRouter,
       },
     }),
+    configResolved: (config) => {
+      if (!pagesDir) {
+        pagesDir = path.resolve(config.root, 'pages')
+      }
+    },
     resolveId(importee, importer) {
       if (importee === '/@generated/pages') {
         // page list
@@ -46,7 +52,6 @@ export default function pluginFactory(opts: {
       if (id === '/@generated/pages') {
         // page list
         pagesData = collectPagesData(pagesDir, findPages)
-        // console.log('await pagesData', await pagesData)
         return renderPageList(await pagesData)
       }
       if (id.startsWith('/@generated/pages/')) {

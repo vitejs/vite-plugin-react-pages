@@ -36,7 +36,7 @@
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
     "react-refresh": "^0.9.0",
-    "remark-frontmatter": "^3.0.0"
+    "remark-frontmatter": "^2.0.0"
   },
   "devDependencies": {
     "esbuild": "^0.8.29",
