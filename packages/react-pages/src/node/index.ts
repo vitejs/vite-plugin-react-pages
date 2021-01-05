@@ -11,11 +11,13 @@ import {
 } from './dynamic-modules/pages'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 
-export default function pluginFactory(opts: {
-  pagesDir?: string
-  findPages?: (helpers: IFindPagesHelpers) => Promise<void>
-  useHashRouter?: boolean
-}): Plugin {
+export default function pluginFactory(
+  opts: {
+    pagesDir?: string
+    findPages?: (helpers: IFindPagesHelpers) => Promise<void>
+    useHashRouter?: boolean
+  } = {}
+): Plugin {
   const { findPages, useHashRouter = false } = opts
   let pagesDir: string = opts.pagesDir ?? ''
 

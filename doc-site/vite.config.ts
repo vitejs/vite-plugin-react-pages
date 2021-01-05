@@ -1,14 +1,10 @@
 import type { UserConfig } from 'vite'
-import * as vpr from 'vite-plugin-react'
-import pages from 'vite-plugin-react-pages'
+
+import reactRefresh from '@vitejs/plugin-react-refresh'
 import mdx from 'vite-plugin-mdx'
+import pages from 'vite-plugin-react-pages'
 
 module.exports = {
   jsx: 'react',
-  plugins: [vpr, mdx(), pages()],
-  optimizeDeps: {
-    link: ['vite-pages-theme-basic']
-  },
-  // minify: 'esbuild',
-  minify: false,
+  plugins: [reactRefresh(), mdx(), pages()],
 } as UserConfig
