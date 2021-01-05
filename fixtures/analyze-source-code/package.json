@@ -30,6 +30,6 @@
     "vite": "^2.0.0-beta.5",
     "vite-plugin-mdx": "^0.4.0",
     "vite-plugin-react": "^4.0.1",
-    "vite-plugin-react-pages": "workspace:^0.8.2"
+    "vite-plugin-react-pages": "workspace:*"
   }
 }

@@ -17,7 +17,7 @@ importers:
       vite: 2.0.0-beta.5
       vite-plugin-mdx: 0.4.1_dfe8bd8444992a12abbc90d1531537f0
       vite-plugin-react: 4.0.1_vite@2.0.0-beta.5
-      vite-plugin-react-pages: 'link:../packages/vite-plugin-react-pages.old'
+      vite-plugin-react-pages: 'link:../packages/react-pages'
     specifiers:
       '@mdx-js/react': ^1.6.22
       '@pika/react': ^16.13.1
@@ -32,7 +32,7 @@ importers:
       vite-pages-theme-basic: 'workspace:^0.9.1'
       vite-plugin-mdx: ^0.4.0
       vite-plugin-react: ^4.0.1
-      vite-plugin-react-pages: 'workspace:^0.8.2'
+      vite-plugin-react-pages: 'workspace:*'
   fixtures/analyze-source-code:
     dependencies:
       '@mdx-js/react': 1.6.22_react@17.0.1
@@ -51,7 +51,7 @@ importers:
       vite: 2.0.0-beta.5
       vite-plugin-mdx: 0.4.1_dfe8bd8444992a12abbc90d1531537f0
       vite-plugin-react: 4.0.1_vite@2.0.0-beta.5
-      vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages.old'
+      vite-plugin-react-pages: 'link:../../packages/react-pages'
     specifiers:
       '@mdx-js/react': ^1.6.22
       '@pika/react': ^16.13.1
@@ -68,7 +68,7 @@ importers:
       vite: ^2.0.0-beta.5
       vite-plugin-mdx: ^0.4.0
       vite-plugin-react: ^4.0.1
-      vite-plugin-react-pages: 'workspace:^0.8.2'
+      vite-plugin-react-pages: 'workspace:*'
   fixtures/basic:
     dependencies:
       react: 17.0.1
@@ -81,7 +81,7 @@ importers:
       sass: 1.32.0
       vite: 2.0.0-beta.5
       vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
-      vite-plugin-react-pages-2: 'link:../../packages/react-pages'
+      vite-plugin-react-pages: 'link:../../packages/react-pages'
     specifiers:
       '@types/react': ^17.0.0
       '@types/react-router-dom': ^5.1.7
@@ -92,31 +92,26 @@ importers:
       sass: ^1.32.0
       vite: ^2.0.0-beta.5
       vite-plugin-mdx: 'workspace:*'
-      vite-plugin-react-pages-2: 'workspace:*'
+      vite-plugin-react-pages: 'workspace:*'
   fixtures/custom-find-pages:
     dependencies:
-      '@mdx-js/react': 1.6.22_react@17.0.1
-      '@pika/react': 16.13.1
-      '@pika/react-dom': 16.13.1_react@17.0.1
+      react: 17.0.1
+      react-dom: 17.0.1_react@17.0.1
       react-router-dom: 5.2.0_react@17.0.1
       vite-pages-theme-basic: 'link:../../packages/theme-basic'
     devDependencies:
       '@types/react': 17.0.0
       '@types/react-router-dom': 5.1.7
+      '@vitejs/plugin-react-refresh': 1.1.0
       globby: 11.0.1
-      react: 17.0.1
-      react-dom: 17.0.1_react@17.0.1
       serve: 11.3.2
       vite: 2.0.0-beta.5
-      vite-plugin-mdx: 0.4.1_dfe8bd8444992a12abbc90d1531537f0
-      vite-plugin-react: 4.0.1_vite@2.0.0-beta.5
-      vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages.old'
+      vite-plugin-mdx: 'link:../../packages/vite-plugin-mdx'
+      vite-plugin-react-pages: 'link:../../packages/react-pages'
     specifiers:
-      '@mdx-js/react': ^1.6.22
-      '@pika/react': ^16.13.1
-      '@pika/react-dom': ^16.13.1
       '@types/react': ^17.0.0
       '@types/react-router-dom': ^5.1.7
+      '@vitejs/plugin-react-refresh': ^1.1.0
       globby: ^11.0.1
       react: ^17.0.1
       react-dom: ^17.0.1
@@ -124,9 +119,8 @@ importers:
       serve: ^11.3.2
       vite: ^2.0.0-beta.5
       vite-pages-theme-basic: 'workspace:^0.9.1'
-      vite-plugin-mdx: ^0.4.0
-      vite-plugin-react: ^4.0.1
-      vite-plugin-react-pages: 'workspace:^0.8.2'
+      vite-plugin-mdx: 'workspace:*'
+      vite-plugin-react-pages: 'workspace:*'
   fixtures/library:
     devDependencies:
       '@types/react': 17.0.0
@@ -154,7 +148,7 @@ importers:
       vite: 2.0.0-beta.5
       vite-plugin-mdx: 0.4.1_dfe8bd8444992a12abbc90d1531537f0
       vite-plugin-react: 4.0.1_vite@2.0.0-beta.5
-      vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages.old'
+      vite-plugin-react-pages: 'link:../../packages/react-pages'
     specifiers:
       '@mdx-js/react': ^1.6.22
       '@pika/react': ^16.13.1
@@ -171,7 +165,7 @@ importers:
       vite-pages-theme-basic: 'workspace:^0.9.1'
       vite-plugin-mdx: ^0.4.0
       vite-plugin-react: ^4.0.1
-      vite-plugin-react-pages: 'workspace:^0.8.2'
+      vite-plugin-react-pages: 'workspace:*'
   fixtures/mdx-basic:
     dependencies:
       react: 17.0.1
@@ -222,7 +216,7 @@ importers:
       vite: 2.0.0-beta.5
       vite-plugin-mdx: 0.4.1_dfe8bd8444992a12abbc90d1531537f0
       vite-plugin-react: 4.0.1_vite@2.0.0-beta.5
-      vite-plugin-react-pages: 'link:../../packages/vite-plugin-react-pages.old'
+      vite-plugin-react-pages: 'link:../../packages/react-pages'
     specifiers:
       '@mdx-js/react': ^1.6.22
       '@pika/react': ^16.13.1
@@ -237,7 +231,7 @@ importers:
       vite-pages-theme-basic: 'workspace:^0.9.1'
       vite-plugin-mdx: ^0.4.0
       vite-plugin-react: ^4.0.1
-      vite-plugin-react-pages: 'workspace:^0.8.2'
+      vite-plugin-react-pages: 'workspace:*'
   packages/create-project:
     dependencies:
       fs-extra: 9.0.1
@@ -260,7 +254,7 @@ importers:
       vite-pages-theme-basic: 'link:../../theme-basic'
       vite-plugin-mdx: 0.4.1_dfe8bd8444992a12abbc90d1531537f0
       vite-plugin-react: 4.0.1_vite@2.0.0-beta.5
-      vite-plugin-react-pages: 'link:../../vite-plugin-react-pages.old'
+      vite-plugin-react-pages: 'link:../../react-pages'
     specifiers:
       '@pika/react': ^16.13.1
       '@pika/react-dom': ^16.13.1
@@ -274,7 +268,7 @@ importers:
       vite-pages-theme-basic: 'workspace:^0.9.1'
       vite-plugin-mdx: ^0.4.0
       vite-plugin-react: ^4.0.1
-      vite-plugin-react-pages: 'workspace:^0.8.2'
+      vite-plugin-react-pages: 'workspace:*'
   packages/create-project/template-lib:
     dependencies:
       '@pika/react': 16.13.1
@@ -289,7 +283,7 @@ importers:
       vite-pages-theme-basic: 'link:../../theme-basic'
       vite-plugin-mdx: 0.4.1_dfe8bd8444992a12abbc90d1531537f0
       vite-plugin-react: 4.0.1_vite@2.0.0-beta.5
-      vite-plugin-react-pages: 'link:../../vite-plugin-react-pages.old'
+      vite-plugin-react-pages: 'link:../../react-pages'
     specifiers:
       '@pika/react': ^16.13.1
       '@pika/react-dom': ^16.13.1
@@ -302,7 +296,7 @@ importers:
       vite-pages-theme-basic: 'workspace:^0.9.1'
       vite-plugin-mdx: ^0.4.0
       vite-plugin-react: ^4.0.1
-      vite-plugin-react-pages: 'workspace:^0.8.2'
+      vite-plugin-react-pages: 'workspace:*'
   packages/react-pages:
     dependencies:
       '@babel/preset-react': 7.12.10
@@ -387,7 +381,7 @@ importers:
       rollup: 2.36.0
       rollup-plugin-postcss: 4.0.0
       typescript: 4.1.3
-      vite-plugin-react-pages: 'link:../vite-plugin-react-pages.old'
+      vite-plugin-react-pages: 'link:../react-pages'
     specifiers:
       '@alifd/next': ^1.21.16
       '@babel/preset-react': ^7.12.10
@@ -412,7 +406,7 @@ importers:
       rollup: ^2.36.0
       rollup-plugin-postcss: ^4.0.0
       typescript: ^4.1.3
-      vite-plugin-react-pages: 'workspace:^0.8.2'
+      vite-plugin-react-pages: 'workspace:*'
   packages/vite-plugin-mdx:
     dependencies:
       '@babel/core': 7.12.10

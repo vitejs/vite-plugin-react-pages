@@ -23,7 +23,7 @@ export default function pluginFactory(opts: {
     name: 'vite-plugin-react-pages',
     config: () => ({
       alias: {
-        '/react-pages-runtime': path.join(__dirname, '../client/'),
+        '/@pages-infra': path.join(__dirname, '../client/'),
       },
       define: {
         __HASH_ROUTER__: !!hashRouter,

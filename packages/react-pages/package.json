@@ -1,5 +1,5 @@
 {
-  "name": "vite-plugin-react-pages-2",
+  "name": "vite-plugin-react-pages",
   "version": "2.0.0-alpha.0",
   "main": "dist/node/index.js",
   "keywords": [

@@ -24,6 +24,6 @@
     "vite": "^2.0.0-beta.5",
     "@vitejs/plugin-react-refresh": "^1.1.0",
     "vite-plugin-mdx": "workspace:*",
-    "vite-plugin-react-pages-2": "workspace:*"
+    "vite-plugin-react-pages": "workspace:*"
   }
 }
