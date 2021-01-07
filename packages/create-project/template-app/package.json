@@ -15,6 +15,7 @@
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
+    "@types/node": "^14.14.20",
     "@types/react": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
     "serve": "^11.3.2",

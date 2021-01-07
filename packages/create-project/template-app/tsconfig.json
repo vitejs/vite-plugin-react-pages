@@ -3,6 +3,7 @@
     "target": "ES5",
     "baseUrl": ".",
     "jsx": "react",
+    "lib": ["ES2015"],
     "moduleResolution": "Node",
     "esModuleInterop": true
   }
