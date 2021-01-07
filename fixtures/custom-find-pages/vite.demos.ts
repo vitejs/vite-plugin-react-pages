@@ -65,8 +65,5 @@ module.exports = {
   alias: {
     'my-lib': '/src',
   },
-  optimizeDeps: {
-    link: ['vite-pages-theme-basic'],
-  },
   minify: false,
 } as UserConfig
