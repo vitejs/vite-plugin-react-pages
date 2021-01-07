@@ -1,0 +1,7 @@
+{
+  "name": "my-library-root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}
