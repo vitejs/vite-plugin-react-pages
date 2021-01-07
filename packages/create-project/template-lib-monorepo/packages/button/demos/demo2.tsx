@@ -4,7 +4,7 @@
  */
 
 import React from 'react'
-import { Button } from 'my-library'
+import Button from 'my-button'
 
 const Demo2: React.FC = () => {
   return <Button>demo2</Button>

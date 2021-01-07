@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "my-library": ["../library/src"]
+      "my-button": ["../button/src"],
+      "my-card": ["../card/src"],
     }
   }
 }

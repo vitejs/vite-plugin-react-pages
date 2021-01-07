@@ -13,16 +13,16 @@ module.exports = {
     pages({
       findPages: async (helpers) => {
         const pagesByComponent: { [comp: string]: any } = {}
-        const demosBasePath = path.join(__dirname, 'demos')
+        const demosBasePath = path.join(__dirname, '../')
         // find all demo modules
         let demoPaths = await helpers.globFind(
           demosBasePath,
-          '**/*.{[tj]sx,md?(x)}'
+          '*/demos/**/*.{[tj]sx,md?(x)}'
         )
 
         await Promise.all(
           demoPaths.map(async ({ relative, absolute }) => {
-            const match = relative.match(/(.*)\/(.*)\.([tj]sx|mdx?)$/)
+            const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
             if (!match) throw new Error('unexpected file: ' + absolute)
             const [_, componentName, demoPath] = match
             const publicPath = `/${componentName}`
@@ -63,7 +63,8 @@ module.exports = {
     }),
   ],
   alias: {
-    'my-library': 'my-library/src',
+    'my-button': 'my-button/src',
+    'my-card': 'my-card/src',
   },
   minify: false,
 } as UserConfig
