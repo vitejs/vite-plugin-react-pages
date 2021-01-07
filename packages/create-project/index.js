@@ -61,6 +61,7 @@ function removeWorkspace(pkg) {
   rm(pkg.dependencies)
   rm(pkg.devDependencies)
   function rm(deps) {
+    if (!deps) return
     Object.keys(deps).forEach((k) => {
       if (deps[k].startsWith('workspace:')) {
         deps[k] = deps[k].slice('workspace:'.length)

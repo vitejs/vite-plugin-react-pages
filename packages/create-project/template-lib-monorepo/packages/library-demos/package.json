@@ -18,12 +18,12 @@
     "@types/react": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
     "globby": "^11.0.1",
-    "my-library": "workspace:*",
+    "my-library": "*",
     "serve": "^11.3.2",
     "vite": "^2.0.0-beta.5",
     "@vitejs/plugin-react-refresh": "^1.1.0",
-    "vite-pages-theme-basic": "workspace:^2.0.0",
-    "vite-plugin-mdx": "workspace:^2.0.0",
-    "vite-plugin-react-pages": "workspace:^2.0.0"
+    "vite-pages-theme-basic": "^2.0.0",
+    "vite-plugin-mdx": "^2.0.0",
+    "vite-plugin-react-pages": "^2.0.0"
   }
 }
