@@ -10,7 +10,7 @@
 - 🔧 Support [static generation with dynamic routes](https://nextjs.org/learn/basics/data-fetching/with-data) (getStaticPaths)
   - In development, `getStaticProps`/`getStaticPaths` runs on every request
   - In production, `getStaticProps`/`getStaticPaths` runs at build time
-
+- 🔧 Project cleanup: don't bump version of templates when `npm run ver:p`
 
 DATA node, graph, lazy/eager node
 
