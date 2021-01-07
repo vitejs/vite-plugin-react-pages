@@ -38,12 +38,19 @@ export async function transformMdx({
   return applyHMR(withoutHMR, id)
 }
 
-let _service: Service | undefined
+let _service: Promise<Service> | undefined
 async function ensureEsbuildService() {
   if (!_service) {
-    _service = await startService()
+    _service = startService()
   }
   return _service
+}
+export async function stopService() {
+  if (_service) {
+    const service = await _service
+    service.stop()
+    _service = undefined
+  }
 }
 
 function applyHMR(code: string, id: string): string {
