@@ -1,5 +1,6 @@
 {
   "name": "my-library-root",
+  "version": "0.0.2",
   "private": true,
   "workspaces": [
     "packages/*"
