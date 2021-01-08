@@ -5,8 +5,8 @@ import { Switch, Route } from 'react-router-dom'
 import PageLoader from './PageLoader'
 import type { IRenderPage } from './types'
 
-import pages from '/@generated/pages'
-import Theme from '/@generated/theme'
+import pages from '@!virtual-modules/pages'
+import Theme from '@!virtual-modules/theme'
 
 const App: React.FC = () => {
   const renderPage: IRenderPage = (routePath: string) => {

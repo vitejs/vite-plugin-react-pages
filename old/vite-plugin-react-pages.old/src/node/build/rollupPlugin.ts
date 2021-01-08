@@ -36,22 +36,22 @@ export default (
       return opts
     },
     async resolveId(importee, importer) {
-      if (importee === '/@generated/pages') {
+      if (importee === '@!virtual-modules/pages') {
         return importee
       }
-      if (importee === '/@generated/theme') {
+      if (importee === '@!virtual-modules/theme') {
         return importee
       }
-      if (importee.startsWith('/@generated/ssrData')) {
+      if (importee.startsWith('@!virtual-modules/ssrData')) {
         return importee
       }
       // if (importee.startsWith('/@composedPage')) return importee
       const parsed = parseUrl(importee)
-      if (parsed.url === '/@generated/mergeModules') return importee
+      if (parsed.url === '@!virtual-modules/mergeModules') return importee
       // if (parsed.query.isPageEntry) {
       //   const path = parsed.url
       //   const pagePath = parsed.query.isPageEntry as string
-      //   if (path === '/@generated/mergeModules') {
+      //   if (path === '@!virtual-modules/mergeModules') {
       //     // this page is composed by multiple files
       //     const moduleId = `/@composedPage${pagePath}`
       //     composedPages[pagePath] = parsed.query.modules as string[]
@@ -81,15 +81,15 @@ export default (
       }
     },
     async load(id) {
-      if (id === '/@generated/pages') {
+      if (id === '@!virtual-modules/pages') {
         if (!pagesData)
           pagesData = collectPagesData(pagesDir, (file) => file, findPages)
         return renderPagesDataDynamic(await pagesData)
       }
-      if (id === '/@generated/theme') {
+      if (id === '@!virtual-modules/theme') {
         return `export { default } from "${await resolveTheme(pagesDir)}";`
       }
-      if (id === '/@generated/ssrData') {
+      if (id === '@!virtual-modules/ssrData') {
         if (!pagesData)
           pagesData = collectPagesData(pagesDir, (file) => file, findPages)
         return renderSSRPagesData(await pagesData)
@@ -100,7 +100,7 @@ export default (
         const result = await analyzeSourceCode(filePath)
         return `export default ${JSON.stringify(result)}`
       }
-      if (parsed.url === '/@generated/mergeModules') {
+      if (parsed.url === '@!virtual-modules/mergeModules') {
         // const pagePath = id.slice('/@composedPage'.length)
         // const modules = composedPages[pagePath]
         const modules = parsed.query as { [key: string]: string }

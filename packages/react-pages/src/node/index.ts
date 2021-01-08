@@ -38,27 +38,27 @@ export default function pluginFactory(
       }
     },
     resolveId(importee, importer) {
-      if (importee === '/@generated/pages') {
+      if (importee === '@!virtual-modules/pages') {
         // page list
         return importee
       }
-      if (importee.startsWith('/@generated/pages/')) {
+      if (importee.startsWith('@!virtual-modules/pages/')) {
         // one page data
         return importee
       }
-      if (importee === '/@generated/theme') {
+      if (importee === '@!virtual-modules/theme') {
         return importee
       }
     },
     async load(id) {
-      if (id === '/@generated/pages') {
+      if (id === '@!virtual-modules/pages') {
         // page list
         pagesData = collectPagesData(pagesDir, findPages)
         return renderPageList(await pagesData)
       }
-      if (id.startsWith('/@generated/pages/')) {
+      if (id.startsWith('@!virtual-modules/pages/')) {
         // one page data
-        let pageId = id.slice('/@generated/pages'.length)
+        let pageId = id.slice('@!virtual-modules/pages'.length)
         if (pageId === '/__index') pageId = '/'
         const pagesDataAwaited = await pagesData
         const page = pagesDataAwaited?.[pageId]
@@ -67,7 +67,7 @@ export default function pluginFactory(
         }
         return renderOnePageData(page.data)
       }
-      if (id === '/@generated/theme') {
+      if (id === '@!virtual-modules/theme') {
         return `export { default } from "${await resolveTheme(pagesDir)}";`
       }
     },

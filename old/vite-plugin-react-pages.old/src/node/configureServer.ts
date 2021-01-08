@@ -17,7 +17,7 @@ export const configureServer = (
   findPages?: (helpers: IFindPagesHelpers) => Promise<void>
 ): Plugin['configureServer'] => ({ app, resolver }) => {
   app.use(async (ctx, next) => {
-    if (ctx.path === '/@generated/pages') {
+    if (ctx.path === '@!virtual-modules/pages') {
       ctx.body = await renderPagesDataDynamic(
         await collectPagesData(
           pagesDir,
@@ -28,7 +28,7 @@ export const configureServer = (
       ctx.type = 'js'
       ctx.status = 200
       await next()
-    } else if (ctx.path === '/@generated/theme') {
+    } else if (ctx.path === '@!virtual-modules/theme') {
       const themePublicPath = resolver.fileToRequest(
         await resolveTheme(pagesDir)
       )
@@ -41,7 +41,7 @@ export const configureServer = (
       ctx.body = `export default ${JSON.stringify(result)}`
       ctx.type = 'js'
       await next()
-    } else if (ctx.path === '/@generated/mergeModules') {
+    } else if (ctx.path === '@!virtual-modules/mergeModules') {
       const filePaths: { [key: string]: string } = ctx.query
       const publicPaths = Object.fromEntries(
         Object.entries(filePaths).map(([key, filePath]) => [

@@ -89,7 +89,7 @@ export async function collectPagesData(
   //     if (Array.isArray(filePath)) {
   //       // composed page
   //       const loadPath = stringifyUrl({
-  //         url: '/@generated/mergeModules',
+  //         url: '@!virtual-modules/mergeModules',
   //         query: {
   //           modules: filePath.map(fileToRequest),
   //         },
@@ -116,7 +116,7 @@ export async function renderPagesDataDynamic(pagesData: IFindPagesResult) {
     ([pageId, { data, staticData }]) => {
       let code = [`pages["${pageId}"] = {};`]
       const mergedModulePath = stringifyUrl({
-        url: '/@generated/mergeModules',
+        url: '@!virtual-modules/mergeModules',
         query: data,
       })
       code.push(
@@ -140,7 +140,7 @@ export async function renderSSRPagesData(pagesData: IFindPagesResult) {
     ([pageId, { data, staticData }], index) => {
       let code = [`pages["${pageId}"] = {};`]
       const mergedModulePath = stringifyUrl({
-        url: '/@generated/mergeModules',
+        url: '@!virtual-modules/mergeModules',
         query: data,
       })
       code.push(`import page${index} from "${mergedModulePath}";`)

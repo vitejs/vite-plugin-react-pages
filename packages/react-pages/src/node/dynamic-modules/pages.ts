@@ -87,13 +87,13 @@ export async function renderPageList(pagesData: IFindPagesResult) {
     ([pageId, { staticData }]) => {
       let subPath = pageId
       if (subPath === '/') {
-        // import("/@generated/pages/") would make vite confused
+        // import("@!virtual-modules/pages/") would make vite confused
         // so we change the sub path
         subPath = '/__index'
       }
       const code = `
 pages["${pageId}"] = {};
-pages["${pageId}"].data = () => import("/@generated/pages${subPath}");
+pages["${pageId}"].data = () => import("@!virtual-modules/pages${subPath}");
 pages["${pageId}"].staticData = ${JSON.stringify(staticData)};`
       return code
     }

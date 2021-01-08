@@ -1,1 +1,1 @@
-declare module '/@generated/*'
+declare module '@!virtual-modules/*'
