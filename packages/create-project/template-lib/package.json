@@ -2,7 +2,7 @@
   "name": "my-lib",
   "description": "suppose this npm package name is 'my-lib'",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "scripts": {
     "dev": "vite serve --config ./vite.config.ts",
     "build-docs": "rm -rf docs-dist && vite build --config ./vite.config.ts && serve -s dist"
