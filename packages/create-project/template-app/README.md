@@ -1,12 +1,18 @@
-# vite-plugin-react-pages app starter
+## vite-pages app starter
 
-This is a starter project for [vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages).
-
+This is a demo project for [vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages).
 This project demonstrate how to develop a React app using [vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages) as framework.
 
-## How to use
+# How to use
 
-1. `yarn install`
-2. `npm run dev` and play with the local dev envirenment.
-3. `npm run build`.
-4. `npm run ssr`. You can [disable javascript in your browser](https://developers.google.com/web/tools/chrome-devtools/javascript/disable), to verify if it can still render.
+`npm install` or `yarn`
+
+`npm run dev` You can now play with the local develop envirenment.
+
+Edit `pages/page1$.tsx` or other souce files, the playground will inflect your change instantly.
+
+`npm run build` The app are built and served.
+
+---
+
+Checkout [vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages) for more info.
