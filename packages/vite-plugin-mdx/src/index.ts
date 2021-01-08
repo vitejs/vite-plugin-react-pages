@@ -7,12 +7,6 @@ export function cleanCreatePlugin(mdxOpts?: any): Plugin {
 
   return {
     name: 'vite-plugin-mdx',
-    // enforce: 'pre',
-    config() {
-      return {
-        transformInclude: /\.mdx?$/,
-      }
-    },
     configResolved(config) {
       if (config.command === 'build' || config.isProduction) {
         shouldApplyHMR = false

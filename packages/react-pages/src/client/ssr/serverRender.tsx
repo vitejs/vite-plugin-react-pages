@@ -1,5 +1,3 @@
-/// <reference types="vite" />
-
 import React from 'react'
 import ReactDOM from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'

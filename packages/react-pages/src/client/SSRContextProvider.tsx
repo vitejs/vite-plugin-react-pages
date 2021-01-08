@@ -1,4 +1,4 @@
-/// <reference types="vite/env" />
+/// <reference types="vite/client" />
 
 import React, { useState } from 'react'
 import { HashRouter, BrowserRouter } from 'react-router-dom'
