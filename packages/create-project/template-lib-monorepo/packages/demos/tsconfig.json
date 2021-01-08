@@ -1,10 +1,6 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "my-button": ["../button/src"],
-      "my-card": ["../card/src"],
-    }
+    "baseUrl": "."
   }
 }
