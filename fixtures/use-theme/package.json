@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "clean": "rm -rf node_modules/.vite_opt_cache",
     "dev": "vite serve --force",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
     "build": "rm -rf dist && vite build --outDir dist && serve -s dist",

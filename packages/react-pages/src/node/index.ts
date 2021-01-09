@@ -1,8 +1,9 @@
 import * as path from 'path'
 import type { Plugin } from 'vite'
-import type {
+import {
   IFindPagesHelpers,
   IFindPagesResult,
+  renderPageListInSSR,
 } from './dynamic-modules/pages'
 import {
   collectPagesData,
@@ -16,9 +17,10 @@ export default function pluginFactory(
     pagesDir?: string
     findPages?: (helpers: IFindPagesHelpers) => Promise<void>
     useHashRouter?: boolean
+    staticSiteGeneration?: {}
   } = {}
 ): Plugin {
-  const { findPages, useHashRouter = false } = opts
+  const { findPages, useHashRouter = false, staticSiteGeneration } = opts
   let pagesDir: string = opts.pagesDir ?? ''
 
   let pagesData: Promise<IFindPagesResult>
@@ -49,17 +51,21 @@ export default function pluginFactory(
       if (importee === '@!virtual-modules/theme') {
         return importee
       }
+      if (importee.startsWith('@!virtual-modules/ssrData')) {
+        return importee
+      }
     },
     async load(id) {
       if (id === '@!virtual-modules/pages') {
         // page list
-        pagesData = collectPagesData(pagesDir, findPages)
+        if (!pagesData) pagesData = collectPagesData(pagesDir, findPages)
         return renderPageList(await pagesData)
       }
       if (id.startsWith('@!virtual-modules/pages/')) {
         // one page data
         let pageId = id.slice('@!virtual-modules/pages'.length)
         if (pageId === '/__index') pageId = '/'
+        if (!pagesData) pagesData = collectPagesData(pagesDir, findPages)
         const pagesDataAwaited = await pagesData
         const page = pagesDataAwaited?.[pageId]
         if (!page) {
@@ -70,7 +76,13 @@ export default function pluginFactory(
       if (id === '@!virtual-modules/theme') {
         return `export { default } from "${await resolveTheme(pagesDir)}";`
       }
+      if (id === '@!virtual-modules/ssrData') {
+        if (!pagesData) pagesData = collectPagesData(pagesDir, findPages)
+        return renderPageListInSSR(await pagesData)
+      }
     },
+    // @ts-ignore
+    vitePagesStaticSiteGeneration: staticSiteGeneration,
   }
 }
 

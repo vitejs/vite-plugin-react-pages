@@ -2,6 +2,9 @@
   "name": "vite-plugin-react-pages",
   "version": "2.0.1",
   "main": "dist/node/index.js",
+  "bin": {
+    "vite-pages": "bin/vite-pages.js"
+  },
   "keywords": [
     "vite",
     "react"
@@ -34,6 +37,7 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
+    "@types/minimist": "^1.2.0",
     "chokidar": "^3.4.3",
     "concurrently": "^5.3.0",
     "react": "^17.0.1",
@@ -51,6 +55,8 @@
     "globby": "^11.0.2",
     "gray-matter": "^4.0.2",
     "jest-docblock": "^26.0.0",
+    "ora": "^5.1.0",
+    "chalk": "^4.1.0",
     "minimist": "^1.2.5",
     "query-string": "^6.13.8",
     "read-pkg-up": "^7.0.1",

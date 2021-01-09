@@ -105,6 +105,29 @@ export default pages;
 `
 }
 
+export async function renderPageListInSSR(pagesData: IFindPagesResult) {
+  const addPagesData = Object.entries(pagesData).map(
+    ([pageId, { staticData }], index) => {
+      let subPath = pageId
+      if (subPath === '/') {
+        // import("@!virtual-modules/pages/") would make vite confused
+        // so we change the sub path
+        subPath = '/__index'
+      }
+      const code = `
+pages["${pageId}"] = {};
+import page${index} from "@!virtual-modules/pages${subPath}";
+pages["${pageId}"] = page${index};`
+      return code
+    }
+  )
+  return `
+const pages = {};
+${addPagesData.join('\n')}
+export default pages;
+`
+}
+
 export function renderOnePageData(onePageData: { [dataKey: string]: string }) {
   const importModule = Object.entries(onePageData).map(
     ([dataKey, path], idx) => `
