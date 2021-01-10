@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 # Page data
 
-Essentially, vite-pages is a React app framework that collect your pages data and pass them to your theme. So what kinds of data does it collect?
+**Essentially, vite-pages is a React app framework that collect your pages data and pass them to your theme.** So what kinds of data does it collect?
 
 Each page consists of two kinds of data:
 
@@ -17,6 +17,10 @@ Each page consists of two kinds of data:
 Both of these page data are passed to the theme so that it can render the app.
 
 ## Static data
+
+Static data usually contains the matadata of a page. Static data of **all pages** is loaded **eagerly** when the app bootstrap, so that the theme can render a nav menu or a search box with this infomation.
+
+> You should try to keep the static data small.
 
 For `.tsx|.jsx` pages, you can define static data with **a docblock(comment) at the top of the file**.
 
@@ -50,15 +54,17 @@ This will be collected as:
 { "title": "my page", "tags": ["tag1", "tag2"] }
 ```
 
-> As you can see, YAML front matter can express some simple data structure(.e.g array), while a docblock's properties can only express strings. A qualified theme should understand both of these static data.
+> As you can see, YAML front matter can express some simple data structure(.e.g array), while a docblock's properties can only express strings. A qualified theme should understand both of these.
 
 ## Runtime data
 
-Runtime page data is just anything you export from a page file.
+Runtime page data is whatever value you export from a page file. It contains the actual content of the page.
+
+Most themes(.e.g <Link to="/basic-theme">the basic theme</Link>) ask users to `export default` a React component from each page file. But that is not a requirement from vite-pages core. We will talk about this later.
 
 ## Difference
 
-Both static data and runtime data will be passed to the theme, so the theme can use them to render the view.
+Both static data and runtime data are passed to the theme, so the theme can use them to render the app.
 
 Difference:
 
@@ -86,4 +92,4 @@ import ThemeInterface from './theme-interface.mdx'
 
 Vite-pages itself doesn't care what the page data looks like. How to interpret the page data and render the view, is totally decided by <Link to="/theme-customization">the theme</Link>. Vite-pages just collect your pages data and pass them to the theme. This design make the vite-pages core more "simple" and make themes more powerful.
 
-Most themes ask users to `export default` a React component from page files(.e.g <Link to="/basic-theme">the basic theme</Link>). But that is not a requirement from vite-pages core.
+Most themes(.e.g <Link to="/basic-theme">the basic theme</Link>) ask users to `export default` a React component from each page file. But that is not a requirement from vite-pages core.

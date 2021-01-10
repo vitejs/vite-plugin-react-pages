@@ -9,17 +9,21 @@ sort: 5
 
 For advanced users, vite-pages let you implement your own filesystem routing convention: you can **teach vite-pages how to collect pages from your project**.
 
-When [configuring vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/custom-find-pages/vite.demos.ts), you can pass a second argument, `findPages`.
+When [configuring vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/custom-find-pages/vite.demos.ts), you can pass the `findPages` option.
 
 Here is the definition of the vite-plugin-react-pages config function:
 
 ```ts
-function createPlugin(
-  pagesDir: string = path.join(process.cwd(), 'pages'),
-  findPages?: (helpers: IFindPagesHelpers) => Promise<void>
+function pluginFactory(
+  opts: {
+    pagesDir?: string
+    findPages?: (helpers: IFindPagesHelpers) => Promise<void>
+    useHashRouter?: boolean
+    staticSiteGeneration?: {}
+  } = {}
 ): VitePlugin
 
-export interface IFindPagesHelpers {
+interface IFindPagesHelpers {
   /**
    * readFile util with cache
    */
@@ -56,7 +60,7 @@ export interface IFindPagesHelpers {
   addPageData: (pageData: IPageData) => void
 }
 
-export interface IPageData {
+interface IPageData {
   /**
    * The page route path.
    * User can register multiple page data with same pageId,
@@ -89,9 +93,9 @@ You can implement your own filesystem routing convention with the `findPages` AP
 
 Normal filesystem routing mechanism assumes that one page must have a single entry file. But vite-pages doesn't force that rule! **Vite-pages let you create a page with runtime data that is composed of multiple files.** This is a very powerful feature of vite-pages's filesystem routing mechanism.
 
-With the `findPages` API, you can register multiple data with same `pageId`. Page data with same `pageId` will be merged. Checkout the type definition of `addPageData` above.
+While collecting pages data with `addPageData`, you can register multiple data with same `pageId`. Page data with same `pageId` will be merged.
 
-### Example
+#### Example
 
 For example, suppose you are developing a React component library. Your project have file structure like this:
 
@@ -117,55 +121,58 @@ You want to use Vite as your local demo development environment. How to collect 
 Answer: use `findPages` API to implement your own filesystem routing convention! Here is an example of the vite-plugin-react-pages config function:
 
 ```ts
-pages(path.join(__dirname, 'pages'), async (helpers) => {
-      const pagesByComponent: { [comp: string]: any } = {}
-      const demosBasePath = path.join(__dirname, 'src')
-      // find all demo modules
-      let demoPaths = await helpers.globFind(
-        demosBasePath,
-        '*/demos/**/*.{[tj]sx,md?(x)}'
-      )
+pages({
+  pagesDir: path.join(__dirname, 'pages'),
+  findPages: async (helpers) => {
+    const pagesByComponent: { [comp: string]: any } = {}
+    const demosBasePath = path.join(__dirname, 'src')
+    // find all demo modules
+    let demoPaths = await helpers.globFind(
+      demosBasePath,
+      '*/demos/**/*.{[tj]sx,md?(x)}'
+    )
 
-      await Promise.all(
-        demoPaths.map(async ({ relative, absolute }) => {
-          const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
-          if (!match) throw new Error('unexpected file: ' + absolute)
-          const [_, componentName, demoPath] = match
-          const publicPath = `/${componentName}`
+    await Promise.all(
+      demoPaths.map(async ({ relative, absolute }) => {
+        const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
+        if (!match) throw new Error('unexpected file: ' + absolute)
+        const [_, componentName, demoPath] = match
+        const publicPath = `/${componentName}`
 
-          // register the demo module as page daga
-          helpers.addPageData({
-            pageId: publicPath,
-            key: demoPath,
-            dataPath: absolute,
-            staticData: await helpers.extractStaticData(absolute),
-          })
-
-          if (!pagesByComponent[componentName]) {
-            pagesByComponent[componentName] = {
-              publicPath,
-            }
-          }
+        // register the demo module as page daga
+        helpers.addPageData({
+          pageId: publicPath,
+          key: demoPath,
+          dataPath: absolute,
+          staticData: await helpers.extractStaticData(absolute),
         })
-      )
 
-      // add static data(title) for each component page
-      Object.entries(pagesByComponent).forEach(
-        ([componentName, { publicPath }]) => {
-          helpers.addPageData({
-            pageId: publicPath,
-            key: 'title',
-            staticData: componentName + ' Title',
-          })
+        if (!pagesByComponent[componentName]) {
+          pagesByComponent[componentName] = {
+            publicPath,
+          }
         }
-      )
+      })
+    )
 
-      // we also want to collect pages from `/pages` with basic filesystem routing convention
-      const defaultPages = await helpers.defaultFindPages(
-        path.join(__dirname, 'pages')
-      )
-      defaultPages.forEach(helpers.addPageData)
-    }),
+    // add static data(title) for each component page
+    Object.entries(pagesByComponent).forEach(
+      ([componentName, { publicPath }]) => {
+        helpers.addPageData({
+          pageId: publicPath,
+          key: 'title',
+          staticData: componentName + ' Title',
+        })
+      }
+    )
+
+    // we also want to collect pages from `/pages` with basic filesystem routing convention
+    const defaultPages = await helpers.defaultFindPages(
+      path.join(__dirname, 'pages')
+    )
+    defaultPages.forEach(helpers.addPageData)
+  },
+}),
 ```
 
 Checkout the complete example in [the custom-find-pages fixture](https://github.com/vitejs/vite-plugin-react-pages/tree/master/fixtures/custom-find-pages).

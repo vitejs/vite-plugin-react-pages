@@ -11,22 +11,23 @@ import { Link } from 'react-router-dom'
 
 - blog site
 - documentation site for your library or product
-- stories(demos) development for your React components(like [storybook](https://storybook.js.org/))
+- stories/demos/playgrounds for your React components or libs(like [storybook](https://storybook.js.org/))
 
 It provides many features that help developers **build a React App quickly**:
 
 - **Fantastic development experience**. Start the local development server in a blink, even when you have many pages. Hot module replacement works with React and Mdx, so you can get instant feedback when you edit your code.
 - **Filesystem based routing**. By following a <Link to="/fs-routing">simple filesystem routing convention</Link>, It is easy to create, locate and develop pages. You don't need to worry about routing configuration. For advanced users, you can <Link to="/advanced-fs-routing">tell vite-pages how to find page files</Link>, so that vite-pages can work with any project file structure.
-- **Support Mdx**. You can write content with either "normal React" or [Mdx](https://mdxjs.com/). Normal Reactjs is more flexible and composable. While Mdx is more readable and easy to edit. You can choose the proper format for your task. These formats can import each other like normal esModules.
+- **Support Mdx**. You can write content with either "normal React" or [Mdx](https://mdxjs.com/). Normal Reactjs is more flexible and composable. While Mdx is more readable and easier to edit. You can choose the proper format for your task. These formats can import each other like normal esModules.
 - **Powerful <Link to="/theme">theme customization</Link>**. Vite-pages itself doesn't render any concrete DOM node. You can customize **anything** on the page with theme. It is easy to write a theme that is sharable and configurable. If you use typescript, the users of your theme will get type-check and intelliSense.
 - **Automatic code splitting based on pages**. Visitors don't need to download the whole app, they only load page data as needed.
-- **Support SSR out of the box**. By pre-rendering your app into HTML at buildtime, users can see the content before any JS is loaded.
+- **Support static site generation out of the box**. By pre-rendering your app into HTML at buildtime, users can see the content before any JS is loaded. With this feature, you can deploy your single page apps on GitHub Pages(which [doesn't natively support single page apps](https://www.google.com/search?q=github+pages+single+page+apps&oq=github+pages+single+page+apps)).
 
 ## Getting stated
 
-1. initialize a vite-pages project:
-    - use `npm init @csr632/vite-app my-app --template react-pages-app` to initialize an app starter, or
-    - use `npm init @csr632/vite-app my-lib --template react-pages-lib` to initialize a library starter.
+1. Initialize a vite-pages project:
+   - execute `npm init vite-pages app-demo --template app` to initialize an app project, or
+   - execute `npm init vite-pages library-demo --template lib` to initialize a library project, or
+   - execute `npm init vite-pages library-monorepo-demo --template lib-monorepo` to initialize a library project.
 2. `npm install`
 3. `npm run dev` and play with the local dev envirenment.
 4. `npm run build`.

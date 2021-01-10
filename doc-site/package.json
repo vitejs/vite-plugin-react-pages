@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "vite serve --force",
+    "dev": "vite serve",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
-    "build": "rm -rf dist && vite build --outDir dist",
+    "build": "rm -rf dist && vite build --outDir dist && serve -s dist",
     "ssr": "rm -rf dist && vite-pages ssr",
     "ssr-for-deploy": "rm -rf dist && vite-pages ssr --base \"/vite-plugin-react-pages\"",
     "deploy": "npm run ssr-for-deploy && touch ./dist/.nojekyll && gh-pages -d dist -t"
@@ -24,6 +24,7 @@
     "@types/react": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
     "@vitejs/plugin-react-refresh": "^1.1.1",
+    "serve": "^11.3.2",
     "gh-pages": "^3.1.0",
     "vite": "^2.0.0-beta.12",
     "vite-plugin-mdx": "workspace:*",
