@@ -17,6 +17,6 @@ module.exports = {
     base:
       process.env.GITHUB_PAGES_DEPLOY === 'true'
         ? '/vite-plugin-react-pages'
-        : undefined,
+        : '/',
   },
 } as UserConfig

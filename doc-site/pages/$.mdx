@@ -4,6 +4,7 @@ sort: 0
 ---
 
 import { Link } from 'react-router-dom'
+import HmrVideo from './video'
 
 # 📘 vite-plugin-react-page
 
@@ -16,6 +17,7 @@ import { Link } from 'react-router-dom'
 It provides many features that help developers **build a React App quickly**:
 
 - **Fantastic development experience**. Start the local development server in a blink, even when you have many pages. Hot module replacement works with React and Mdx, so you can get instant feedback when you edit your code.
+  - <HmrVideo />
 - **Filesystem based routing**. By following a <Link to="/fs-routing">simple filesystem routing convention</Link>, It is easy to create, locate and develop pages. You don't need to worry about routing configuration. For advanced users, you can <Link to="/advanced-fs-routing">tell vite-pages how to find page files</Link>, so that vite-pages can work with any project file structure.
 - **Support Mdx**. You can write content with either "normal React" or [Mdx](https://mdxjs.com/). Normal Reactjs is more flexible and composable. While Mdx is more readable and easier to edit. You can choose the proper format for your task. These formats can import each other like normal esModules.
 - **Powerful <Link to="/theme">theme customization</Link>**. Vite-pages itself doesn't render any concrete DOM node. You can customize **anything** on the page with theme. It is easy to write a theme that is sharable and configurable. If you use typescript, the users of your theme will get type-check and intelliSense.
