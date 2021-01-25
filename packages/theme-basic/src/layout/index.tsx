@@ -107,7 +107,17 @@ export function renderNav(navs: ITopNavData[]) {
     if ('path' in item) {
       return (
         <Nav.Item key={idx}>
-          <Link to={item.path}>{item.text}</Link>
+          <Link
+            to={(location) => {
+              if (location.search) {
+                // preserve query
+                return `${item.path}${location.search}`
+              }
+              return item.path
+            }}
+          >
+            {item.text}
+          </Link>
         </Nav.Item>
       )
     }
