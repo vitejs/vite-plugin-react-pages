@@ -33,6 +33,13 @@ export default function pluginFactory(
       define: {
         __HASH_ROUTER__: !!useHashRouter,
       },
+      build: {
+        rollupOptions: {
+          output: {
+            manualChunks: undefined,
+          },
+        },
+      },
     }),
     configResolved: (config) => {
       if (!pagesDir) {
