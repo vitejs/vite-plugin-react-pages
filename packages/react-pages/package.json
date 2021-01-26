@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-react-pages",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "main": "dist/node/index.js",
   "bin": {
     "vite-pages": "bin/vite-pages.js"
@@ -34,10 +34,10 @@
     "@types/enhanced-resolve": "^3.0.6",
     "@types/fs-extra": "^9.0.6",
     "@types/glob": "^7.1.3",
+    "@types/minimist": "^1.2.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
-    "@types/minimist": "^1.2.0",
     "chokidar": "^3.4.3",
     "concurrently": "^5.3.0",
     "react": "^17.0.1",
@@ -48,6 +48,7 @@
     "@babel/preset-react": "^7.12.10",
     "@babel/preset-typescript": "^7.12.7",
     "@rollup/plugin-babel": "^5.2.2",
+    "chalk": "^4.1.0",
     "enhanced-resolve": "^5.4.1",
     "find-up": "^5.0.0",
     "fs-extra": "^9.0.1",
@@ -55,13 +56,13 @@
     "globby": "^11.0.2",
     "gray-matter": "^4.0.2",
     "jest-docblock": "^26.0.0",
-    "ora": "^5.1.0",
-    "chalk": "^4.1.0",
     "minimist": "^1.2.5",
+    "ora": "^5.1.0",
     "query-string": "^6.13.8",
     "read-pkg-up": "^7.0.1",
     "rollup": "^2.36.1",
     "rollup-plugin-postcss": "^4.0.0",
+    "slash": "^3.0.0",
     "tiny-invariant": "^1.1.0"
   }
 }

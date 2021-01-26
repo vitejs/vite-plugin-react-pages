@@ -4,6 +4,7 @@ import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
 import { defaultFindPages as _defaultFindPages } from './find-pages-strategy/default'
 import { globFind } from './find-pages-strategy/utils'
+import slash from 'slash'
 
 export interface IFindPagesHelpers {
   /**
@@ -131,7 +132,7 @@ export default pages;
 export function renderOnePageData(onePageData: { [dataKey: string]: string }) {
   const importModule = Object.entries(onePageData).map(
     ([dataKey, path], idx) => `
-import * as m${idx} from "${path}";
+import * as m${idx} from "${slash(path)}";
 modules["${dataKey}"] = m${idx};`
   )
   return `
