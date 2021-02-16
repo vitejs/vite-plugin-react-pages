@@ -21,16 +21,20 @@ If the filename is `index$.tsx`, the page route path will be the path of the dir
 
 ## Examples
 
-| file path                                 | page url path          |
-| ----------------------------------------- | ---------------------- |
-| `index$.tsx`                              | `/`                    |
-| `$.tsx` (has same effect as `index$.tsx`) | `/`                    |
-| `page-one$.tsx`                           | `/page-one`            |
-| `page-two$.md`                            | `/page-two`            |
-| `dir-name/index$.jsx`                     | `/dir-name`            |
-| `dir-name/page-three$.mdx`                | `/dir-name/page-three` |
+| file path                                   | page url path          |
+| ------------------------------------------- | ---------------------- |
+| `index$.tsx`                                | `/`                    |
+| `$.tsx` (has same effect as `index$.tsx`)   | `/`                    |
+| `page-one$.tsx`                             | `/page-one`            |
+| `page-two$.md`                              | `/page-two`            |
+| `dir-name/index$.jsx`                       | `/dir-name`            |
+| `dir-name/page-three$.mdx`                  | `/dir-name/page-three` |
+| `dir-name/[id]/index$.tsx` (URL Paramater)  | `/dir-name/:id`        |
+| `dir-name/[id]/[id2]$.tsx` (URL Paramaters) | `/dir-name/:id/:id2`   |
 
 Theme can decide what to render when no page matches the url. Checkout <Link to="/theme">the theme doc</Link>.
+
+If a page path contains url paramaters, you can use [useParams](https://reactrouter.com/web/example/url-params) of `react-router-dom` to access the actual paramaters.
 
 Checkout [the basic fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/basic/pages) for an example.
 

@@ -1,22 +1,14 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 import PageLoader from './PageLoader'
-import type { IRenderPage } from './types'
 
 import pages from '@!virtual-modules/pages'
 import Theme from '@!virtual-modules/theme'
 
 const App: React.FC = () => {
-  const renderPage: IRenderPage = (routePath: string) => {
-    if (!pages[routePath]) {
-      throw new Error(`page not exist. routePath: ${routePath}`)
-    }
-    return <PageLoader Theme={Theme} pages={pages} routePath={routePath} />
-  }
-
   const pageRoutes = Object.keys(pages)
     .filter((path) => path !== '/404')
-    .map((path) => getPageRoute(path, pages[path].staticData, renderPage))
+    .map((path) => getPageRoute(path, pages[path].staticData))
 
   return (
     <Switch>
@@ -37,7 +29,10 @@ const App: React.FC = () => {
 
 export default App
 
-function getPageRoute(path: string, staticData: any, renderPage: IRenderPage) {
+function getPageRoute(path: string, staticData: any) {
+  if (!pages[path]) {
+    throw new Error(`page not exist. route path: ${path}`)
+  }
   return (
     <Route
       // avoid re-mount layout component
@@ -45,9 +40,10 @@ function getPageRoute(path: string, staticData: any, renderPage: IRenderPage) {
       key="same"
       exact
       path={path}
+      // not used for now
       {...staticData._routeConfig}
     >
-      {renderPage(path)}
+      <PageLoader Theme={Theme} pages={pages} routePath={path} />
     </Route>
   )
 }

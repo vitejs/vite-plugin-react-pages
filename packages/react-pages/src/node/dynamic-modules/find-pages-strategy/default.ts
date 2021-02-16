@@ -28,5 +28,13 @@ function getPagePublicPath(relativePageFilePath: string) {
   // ensure starting slash
   pagePublicPath = pagePublicPath.replace(/\/$/, '')
   pagePublicPath = `/${pagePublicPath}`
+
+  // turn [id] into :id
+  // so that react-router can recognize it as url params
+  pagePublicPath = pagePublicPath.replace(
+    /\[(.*?)\]/g,
+    (_, paramName) => `:${paramName}`
+  )
+
   return pagePublicPath
 }

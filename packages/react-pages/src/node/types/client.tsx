@@ -50,7 +50,6 @@ export type ILoadState =
       error?: any
     }
 
-export type IRenderPage = (routePath: string) => React.ReactElement
 export interface IPagesInternal {
   [routePath: string]: {
     data: () => Promise<IPageLoaded>
