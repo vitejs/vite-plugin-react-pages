@@ -149,30 +149,36 @@ export function createTheme({
 export { Layout }
 
 export function defaultMenu(pages: PagesStaticData): SideMenuData[] {
-  return Object.entries(pages)
-    .filter(([path, staticData]) => path !== '/404' && !staticData.hideInMenu)
-    .sort((a, b) => {
-      const [pathA, staticDataA] = a
-      const [pathB, staticDataB] = b
+  return (
+    Object.entries(pages)
+      // These special pages should not be showed in side menu
+      .filter(
+        ([path, staticData]) =>
+          path !== '/404' && !path.match(/\/:[^/]+/) && !staticData.hideInMenu
+      )
+      .sort((a, b) => {
+        const [pathA, staticDataA] = a
+        const [pathB, staticDataB] = b
 
-      let ASort: number
-      let BSort: number
-      if (staticDataA.sort !== undefined) ASort = Number(staticDataA.sort)
-      else if (staticDataA.main?.sort !== undefined)
-        ASort = Number(staticDataA.main.sort)
-      else ASort = 1
-      if (staticDataB.sort !== undefined) BSort = Number(staticDataB.sort)
-      else if (staticDataB.main?.sort !== undefined)
-        BSort = Number(staticDataB.main.sort)
-      else BSort = 1
+        let ASort: number
+        let BSort: number
+        if (staticDataA.sort !== undefined) ASort = Number(staticDataA.sort)
+        else if (staticDataA.main?.sort !== undefined)
+          ASort = Number(staticDataA.main.sort)
+        else ASort = 1
+        if (staticDataB.sort !== undefined) BSort = Number(staticDataB.sort)
+        else if (staticDataB.main?.sort !== undefined)
+          BSort = Number(staticDataB.main.sort)
+        else BSort = 1
 
-      if (ASort !== BSort) return ASort - BSort
-      return pathA.localeCompare(pathB)
-    })
-    .map(([path, staticData]) => {
-      return {
-        path,
-        text: staticData.title ?? staticData.main?.title ?? path,
-      }
-    })
+        if (ASort !== BSort) return ASort - BSort
+        return pathA.localeCompare(pathB)
+      })
+      .map(([path, staticData]) => {
+        return {
+          path,
+          text: staticData.title ?? staticData.main?.title ?? path,
+        }
+      })
+  )
 }
