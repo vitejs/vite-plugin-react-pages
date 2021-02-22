@@ -62,8 +62,10 @@ module.exports = {
       },
     }),
   ],
-  alias: {
-    'my-lib': 'my-lib/src',
+  resolve: {
+    alias: {
+      'my-lib': 'my-lib/src',
+    },
   },
   minify: false,
 } as UserConfig

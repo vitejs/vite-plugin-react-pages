@@ -62,8 +62,10 @@ module.exports = {
       },
     }),
   ],
-  alias: {
-    'my-lib': '/src',
+  resolve: {
+    alias: {
+      'my-lib': '/src',
+    },
   },
   outDir: 'docs-dist',
 } as UserConfig

@@ -27,8 +27,10 @@ export default function pluginFactory(
   return {
     name: 'vite-plugin-react-pages',
     config: () => ({
-      alias: {
-        '/@pages-infra': path.join(__dirname, '../client/'),
+      resolve: {
+        alias: {
+          '/@pages-infra': path.join(__dirname, '../client/'),
+        },
       },
       define: {
         __HASH_ROUTER__: !!useHashRouter,

@@ -6,8 +6,10 @@ import mdx from 'vite-plugin-mdx'
 
 module.exports = {
   jsx: 'react',
-  alias: {
-    '/@layout/': path.join(__dirname, 'layout'),
+  resolve: {
+    alias: {
+      '/@layout/': path.join(__dirname, 'layout'),
+    },
   },
   plugins: [vpr, mdx(), pages()],
   optimizeDeps: {
