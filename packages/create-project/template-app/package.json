@@ -22,8 +22,8 @@
     "sass": "^1.32.8",
     "serve": "^11.3.2",
     "vite": "^2.0.1",
-    "vite-pages-theme-basic": "workspace:^2.0.0",
-    "vite-plugin-mdx": "workspace:^2.0.0",
-    "vite-plugin-react-pages": "workspace:^2.0.0"
+    "vite-pages-theme-basic": "workspace:^2.0.4",
+    "vite-plugin-mdx": "workspace:^2.0.1",
+    "vite-plugin-react-pages": "workspace:^2.1.0"
   }
 }
