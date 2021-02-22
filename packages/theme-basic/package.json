@@ -1,7 +1,9 @@
 {
   "name": "vite-pages-theme-basic",
   "version": "2.0.4",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
+  "module": "dist/index.js",
+  "types": "lib/index.d.ts",
   "keywords": [
     "vite",
     "react",
@@ -10,7 +12,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf ./dist && tsc && rollup -c && node scripts/add-css-import.js",
+    "build": "rm -rf ./dist ./lib && tsc && rollup -c && node scripts/add-css-import.js",
     "dev": "rm -rf ./dist && concurrently \"npm:dev-*\"",
     "dev-rollup": "rollup -wc",
     "dev-watch": "node scripts/watch",

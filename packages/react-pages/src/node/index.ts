@@ -60,7 +60,7 @@ export default function pluginFactory(
       if (importee === '@!virtual-modules/theme') {
         return importee
       }
-      if (importee.startsWith('@!virtual-modules/ssrData')) {
+      if (importee === '@!virtual-modules/ssrData') {
         return importee
       }
     },
