@@ -1,35 +1,35 @@
 import React, { useMemo } from 'react'
-import type { ITheme, IPagesStaticData } from 'vite-plugin-react-pages'
+import type { Theme, PagesStaticData } from 'vite-plugin-react-pages'
 import Layout from './layout'
-import type { ISideMenuData, ITopNavData } from './layout'
+import type { SideMenuData, TopNavData } from './layout'
 import MD from './layout/MDX'
 
-interface IOption {
+interface Option {
   /**
    * Take fully control of side nav menu.
    */
-  sideMenuData?: ISideMenuData[]
+  readonly sideMenuData?: ReadonlyArray<SideMenuData>
   /**
    * Navigation menu at top bar.
    */
-  topNavs?: ITopNavData[]
+  readonly topNavs?: ReadonlyArray<TopNavData>
   /**
    * Logo area at top bar.
    */
-  logo?: React.ReactNode
+  readonly logo?: React.ReactNode
   /**
    * Operation area at top bar.
    */
-  topbarOperations?: React.ReactNode
+  readonly topbarOperations?: React.ReactNode
   /**
    * Footer area.
    */
-  footer?: React.ReactNode
+  readonly footer?: React.ReactNode
   /**
    * Enable search.
    * @default true
    */
-  search?: boolean
+  readonly search?: boolean
 }
 
 export function createTheme({
@@ -39,8 +39,8 @@ export function createTheme({
   footer,
   topbarOperations,
   search = true,
-}: IOption = {}): ITheme {
-  const Theme: ITheme = ({ staticData, loadedData, loadState }) => {
+}: Option = {}): Theme {
+  const Theme: Theme = ({ staticData, loadedData, loadState }) => {
     console.log('#Theme', staticData, loadedData, loadState)
 
     const menu = useMemo(() => {
@@ -119,13 +119,12 @@ export function createTheme({
         {Object.entries(pageData).map(([key, dataPart], idx) => {
           const ContentComp = (dataPart as any).default
           const pageStaticDataPart = pageStaticData[key]
-          const isMD = pageStaticDataPart.sourceType === 'md'
-          const content = isMD ? (
-            <MD>
+          const MdWrap =
+            pageStaticDataPart.sourceType === 'md' ? MD : React.Fragment
+          const content = (
+            <MdWrap>
               <ContentComp />
-            </MD>
-          ) : (
-            <ContentComp />
+            </MdWrap>
           )
           if (isComposedPage) {
             return (
@@ -149,10 +148,9 @@ export function createTheme({
 
 export { Layout }
 
-export function defaultMenu(pages: IPagesStaticData): ISideMenuData[] {
-  return Object.entries<any>(pages)
-    .filter(([path]) => path !== '/404')
-    .filter(([path, staticData]) => !staticData.hideInMenu)
+export function defaultMenu(pages: PagesStaticData): SideMenuData[] {
+  return Object.entries(pages)
+    .filter(([path, staticData]) => path !== '/404' && !staticData.hideInMenu)
     .sort((a, b) => {
       const [pathA, staticDataA] = a
       const [pathB, staticDataB] = b

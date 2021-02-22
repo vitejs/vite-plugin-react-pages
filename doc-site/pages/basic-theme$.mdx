@@ -72,15 +72,15 @@ Basic theme also generate a search box automatically. It help readers to filter 
 The `createTheme` exported by `vite-pages-theme-basic` accepts [these options](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx):
 
 ```ts
-interface IOption {
+interface Option {
   /**
    * Take fully control of side nav menu.
    */
-  sideMenuData?: ISideMenuData[]
+  sideMenuData?: SideMenuData[]
   /**
    * Navigation menu at top bar.
    */
-  topNavs?: ITopNavData[]
+  topNavs?: TopNavData[]
   /**
    * Logo area at top bar.
    */
@@ -100,9 +100,9 @@ interface IOption {
   search?: boolean
 }
 
-export type ISideMenuData = { text: string; path: string }
+export type SideMenuData = { text: string; path: string }
 
-export type ITopNavData =
+export type TopNavData =
   | {
       text: string
       /**

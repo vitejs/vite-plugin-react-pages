@@ -6,44 +6,46 @@ import { defaultFindPages as _defaultFindPages } from './find-pages-strategy/def
 import { globFind } from './find-pages-strategy/utils'
 import slash from 'slash'
 
-export interface IFindPagesHelpers {
+export interface FindPagesHelpers {
   /**
    * readFile util with cache
    */
-  readFile: (filePath: string) => Promise<string>
+  readonly readFile: (filePath: string) => Promise<string>
   /**
    * Read the static data from a file.
    */
-  extractStaticData: (
+  readonly extractStaticData: (
     filePath: string
   ) => Promise<{
-    [key: string]: any
-    sourceType: string
+    readonly [key: string]: any
+    readonly sourceType: string
   }>
   /**
    * Glob utils. Return matched file paths.
    */
-  globFind: (
+  readonly globFind: (
     baseDir: string,
     glob: string
   ) => Promise<
-    {
-      relative: string
-      absolute: string
-    }[]
+    ReadonlyArray<{
+      readonly relative: string
+      readonly absolute: string
+    }>
   >
   /**
    * Use the basic filesystem routing convention to find pages.
    */
-  defaultFindPages: (baseDir: string) => Promise<IPageData[]>
+  readonly defaultFindPages: (
+    baseDir: string
+  ) => Promise<ReadonlyArray<PageData>>
   /**
    * Register page data.
    * User who custom findPages should use it to register the data he/she finds.
    */
-  addPageData: (pageData: IPageData) => void
+  readonly addPageData: (pageData: PageData) => void
 }
 
-export interface IPageData {
+export interface PageData {
   /**
    * The page route path.
    * User can register multiple page data with same pageId,
@@ -52,7 +54,7 @@ export interface IPageData {
    *
    * @example '/posts/hello-world'
    */
-  pageId: string
+  readonly pageId: string
   /**
    * The data key.
    * If it conflicts with an already-registered data,
@@ -60,19 +62,19 @@ export interface IPageData {
    *
    * @default 'main'
    */
-  key?: string
+  readonly key?: string
   /**
    * The path to the runtime data module
    */
-  dataPath?: string
+  readonly dataPath?: string
 
-  staticData?: any
+  readonly staticData?: any
 }
 
 export async function collectPagesData(
   pagesDir: string,
-  findPages?: (helpers: IFindPagesHelpers) => Promise<void>
-): Promise<IFindPagesResult> {
+  findPages?: (helpers: FindPagesHelpers) => Promise<void>
+): Promise<FindPagesResult> {
   const [pages, findPagesHelpers] = createFindPagesContext()
   if (typeof findPages === 'function') {
     await findPages(findPagesHelpers)
@@ -83,7 +85,7 @@ export async function collectPagesData(
   return pages
 }
 
-export async function renderPageList(pagesData: IFindPagesResult) {
+export async function renderPageList(pagesData: FindPagesResult) {
   const addPagesData = Object.entries(pagesData).map(
     ([pageId, { staticData }]) => {
       let subPath = pageId
@@ -106,7 +108,7 @@ export default pages;
 `
 }
 
-export async function renderPageListInSSR(pagesData: IFindPagesResult) {
+export async function renderPageListInSSR(pagesData: FindPagesResult) {
   const addPagesData = Object.entries(pagesData).map(
     ([pageId, { staticData }], index) => {
       let subPath = pageId
@@ -160,8 +162,8 @@ export async function extractStaticData(
   }
 }
 
-function createFindPagesContext(): [IFindPagesResult, IFindPagesHelpers] {
-  const result: IFindPagesResult = {}
+function createFindPagesContext(): [FindPagesResult, FindPagesHelpers] {
+  const result: FindPagesResult = {}
 
   const readFileCache: { [filePath: string]: Promise<string> } = {}
   const readFileWithCache = async (filePath: string) => {
@@ -177,7 +179,7 @@ function createFindPagesContext(): [IFindPagesResult, IFindPagesHelpers] {
   const defaultFindPages = (baseDir: string) =>
     _defaultFindPages(baseDir, helpers)
 
-  const addPageData = (pageData: IPageData) => {
+  const addPageData = (pageData: PageData) => {
     if (!pageData.pageId.startsWith('/')) {
       throw new Error(
         `addPageData error: pageId should starts with "/", but got "${pageData.pageId}"`
@@ -209,7 +211,7 @@ function createFindPagesContext(): [IFindPagesResult, IFindPagesHelpers] {
     }
   }
 
-  const helpers: IFindPagesHelpers = {
+  const helpers: FindPagesHelpers = {
     readFile: readFileWithCache,
     extractStaticData: extractStaticDataWithCache,
     globFind,
@@ -219,13 +221,13 @@ function createFindPagesContext(): [IFindPagesResult, IFindPagesHelpers] {
   return [result, helpers]
 }
 
-export interface IFindPagesResult {
-  [pageId: string]: {
-    data: {
-      [key: string]: string
+export interface FindPagesResult {
+  readonly [pageId: string]: {
+    readonly data: {
+      readonly [key: string]: string
     }
-    staticData: {
-      [key: string]: any
+    readonly staticData: {
+      readonly [key: string]: any
     }
   }
 }

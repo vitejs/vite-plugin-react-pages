@@ -1,17 +1,17 @@
 ```ts
 /** The type of a theme. */
-export type ITheme = React.ComponentType<IThemeProps>
+export type Theme = React.ComponentType<ThemeProps>
 
-export interface IThemeProps {
-  staticData: IPagesStaticData
-  loadedData: IPagesLoaded
-  loadState: ILoadState
+export interface ThemeProps {
+  staticData: PagesStaticData
+  loadedData: PagesLoaded
+  loadState: LoadState
 }
 
 /**
  * All pages' static data.
  */
-export interface IPagesStaticData {
+export interface PagesStaticData {
   /**
    * For each page, its static data is indexed by keys.
    */
@@ -21,8 +21,8 @@ export interface IPagesStaticData {
 /**
  * All runtime data that is already loaded.
  */
-export interface IPagesLoaded {
-  [routePath: string]: IPageLoaded
+export interface PagesLoaded {
+  [routePath: string]: PageLoaded
 }
 
 /**
@@ -30,12 +30,12 @@ export interface IPagesLoaded {
  * Normally, it has a `default` property,
  * which is the main component of the page.
  */
-export type IPageLoaded = any
+export type PageLoaded = any
 
 /**
  * The current loading state of the app.
  */
-export type ILoadState =
+export type LoadState =
   | {
       type: 'loading' | 'loaded' | '404'
       routePath: string

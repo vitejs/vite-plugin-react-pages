@@ -1,8 +1,8 @@
 import * as path from 'path'
 import type { Plugin } from 'vite'
 import {
-  IFindPagesHelpers,
-  IFindPagesResult,
+  FindPagesHelpers,
+  FindPagesResult,
   renderPageListInSSR,
 } from './dynamic-modules/pages'
 import {
@@ -15,7 +15,7 @@ import { resolveTheme } from './dynamic-modules/resolveTheme'
 export default function pluginFactory(
   opts: {
     pagesDir?: string
-    findPages?: (helpers: IFindPagesHelpers) => Promise<void>
+    findPages?: (helpers: FindPagesHelpers) => Promise<void>
     useHashRouter?: boolean
     staticSiteGeneration?: {}
   } = {}
@@ -23,7 +23,7 @@ export default function pluginFactory(
   const { findPages, useHashRouter = false, staticSiteGeneration } = opts
   let pagesDir: string = opts.pagesDir ?? ''
 
-  let pagesData: Promise<IFindPagesResult>
+  let pagesData: Promise<FindPagesResult>
   return {
     name: 'vite-plugin-react-pages',
     config: () => ({
@@ -88,9 +88,13 @@ export default function pluginFactory(
         return renderPageListInSSR(await pagesData)
       }
     },
-    // @ts-ignore
+    // @ts-expect-error
     vitePagesStaticSiteGeneration: staticSiteGeneration,
   }
 }
 
-export type { ITheme, IPagesStaticData, IPagesLoaded } from './types/client'
+export type {
+  Theme as Theme,
+  PagesStaticData as PagesStaticData,
+  PagesLoaded as PagesLoaded,
+} from './types/client'

@@ -7,9 +7,7 @@
 import React from 'react'
 import './style.scss'
 
-interface IProps {}
-
-const Page1: React.FC<IProps> = (props) => {
+const Page1 = () => {
   return <p className="page">Page1. This page should have red border.</p>
 }
 

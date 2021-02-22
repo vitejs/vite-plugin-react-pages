@@ -4,9 +4,7 @@
 
 import React from 'react'
 
-interface IProps {}
-
-const IndexPage: React.FC<IProps> = (props) => {
+const IndexPage = () => {
   return <div>IndexPage</div>
 }
 

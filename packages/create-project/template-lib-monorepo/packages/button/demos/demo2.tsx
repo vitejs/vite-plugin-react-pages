@@ -6,7 +6,7 @@
 import React from 'react'
 import Button from 'my-button'
 
-const Demo2: React.FC = () => {
+const Demo2 = () => {
   return <Button>demo2</Button>
 }
 

@@ -29,9 +29,9 @@ This is probably [the simplest theme](https://github.com/vitejs/vite-plugin-reac
 
 ```tsx
 import React, { useMemo } from 'react'
-import type { ITheme } from 'vite-plugin-react-pages'
+import type { Theme } from 'vite-plugin-react-pages'
 
-const Theme: ITheme = ({ staticData, loadedData, loadState }) => {
+const Theme: Theme = ({ staticData, loadedData, loadState }) => {
   console.log('#Theme', staticData, loadedData, loadState)
 
   // You can generate side nav menu from staticData
@@ -60,13 +60,13 @@ You can customize every bits of UI with theme. Welcome to share your theme with 
 
 ### To theme providers: make your theme easier to use
 
-We encourage theme providers to export your theme as **a config function** that receive user config and return a `ITheme`.
+We encourage theme providers to export your theme as **a config function** that receive user config and return a `Theme`.
 
 For example, the theme provider can export theme like this:
 
 ```tsx
 // The theme config function accepts navs config
-export default function createTheme({ navs }: IOption = {}): ITheme {
+export default function createTheme({ navs }: Option = {}): Theme {
   return ({ loadedData, loadState }) => {
     if (loadState.type !== 'loaded')
       return (
@@ -100,7 +100,7 @@ export default createTheme({
 })
 ```
 
-As you can see, the theme is easier to use because **theme consumers don't need to know about the `ITheme` API from vite-pages**. They only need to know about `createTheme` API from the theme. Users should be talking to the theme, instead of talking directly to vite-pages framework.
+As you can see, the theme is easier to use because **theme consumers don't need to know about the `Theme` API from vite-pages**. They only need to know about `createTheme` API from the theme. Users should be talking to the theme, instead of talking directly to vite-pages framework.
 
 For this reason, we encourage theme providers to export config function like the `createTheme` above.
 

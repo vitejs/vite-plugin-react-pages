@@ -1,10 +1,10 @@
 import { globFind } from './utils'
-import type { IFindPagesHelpers, IPageData } from '../pages'
+import type { FindPagesHelpers, PageData } from '../pages'
 
 export async function defaultFindPages(
   pagesDirPath: string,
-  findPagesHelpers: IFindPagesHelpers
-): Promise<IPageData[]> {
+  findPagesHelpers: FindPagesHelpers
+): Promise<PageData[]> {
   const pages = await globFind(pagesDirPath, '**/*$.{md,mdx,js,jsx,ts,tsx}')
 
   return Promise.all(

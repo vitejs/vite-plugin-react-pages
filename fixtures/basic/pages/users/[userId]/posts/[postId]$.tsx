@@ -5,9 +5,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 
-interface IProps {}
-
-const IndexPage: React.FC<IProps> = (props) => {
+const IndexPage = () => {
   const { userId, postId } = useParams<{ userId: string; postId: string }>()
   return (
     <div>

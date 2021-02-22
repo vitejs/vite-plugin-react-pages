@@ -5,9 +5,7 @@
 
 import React from 'react'
 
-interface IProps {}
-
-const Page: React.FC<IProps> = (props) => {
+const Page = () => {
   return <p>page 2. This is a page inside a dir.</p>
 }
 

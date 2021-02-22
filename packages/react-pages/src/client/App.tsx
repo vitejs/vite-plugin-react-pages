@@ -5,7 +5,7 @@ import PageLoader from './PageLoader'
 import pages from '@!virtual-modules/pages'
 import Theme from '@!virtual-modules/theme'
 
-const App: React.FC = () => {
+const App = () => {
   const pageRoutes = Object.keys(pages)
     .filter((path) => path !== '/404')
     .map((path) => getPageRoute(path, pages[path].staticData))

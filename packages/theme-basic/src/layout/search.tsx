@@ -1,22 +1,24 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { Search, Select } from '@alifd/next'
 import s from './style.module.css'
-import type { IPagesStaticData } from 'vite-plugin-react-pages'
+import type { PagesStaticData } from 'vite-plugin-react-pages'
 import { useHistory } from 'react-router-dom'
 
-interface IProps {
-  pagesStaticData: IPagesStaticData
+interface Props {
+  readonly pagesStaticData: PagesStaticData
 }
 
-interface IFilteredData {
-  label: string
-  path: string
+interface FilteredData {
+  readonly label: string
+  readonly path: string
 }
 
-const SiteSearch: React.FC<IProps> = ({ pagesStaticData }) => {
+const SiteSearch = ({ pagesStaticData }: Props) => {
   const [searchVal, setSearchVal] = useState('')
 
-  const [filteredData, setFilteredData] = useState<IFilteredData[]>([])
+  const [filteredData, setFilteredData] = useState<ReadonlyArray<FilteredData>>(
+    []
+  )
   const history = useHistory()
 
   useEffect(() => {
@@ -41,7 +43,7 @@ const SiteSearch: React.FC<IProps> = ({ pagesStaticData }) => {
       filterLocal={false}
       className={s.search}
       value={searchVal}
-      // @ts-ignore
+      // @ts-expect-error
       onChange={onChange}
     >
       {filteredData.map(({ label, path }) => (
@@ -60,9 +62,9 @@ function containString(whole: string, part: string) {
 }
 
 function search(
-  pagesStaticData: IPagesStaticData,
+  pagesStaticData: PagesStaticData,
   value: string
-): IFilteredData[] {
+): FilteredData[] {
   return Object.entries(pagesStaticData)
     .map(([path, staticData]) => {
       if (path === '/404') return null
@@ -72,5 +74,5 @@ function search(
       }
       return null
     })
-    .filter(Boolean) as IFilteredData[]
+    .filter(Boolean) as FilteredData[]
 }

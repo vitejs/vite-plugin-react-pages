@@ -5,9 +5,7 @@
 
 import React from 'react'
 
-interface IProps {}
-
-const Page: React.FC<IProps> = (props) => {
+const Page = () => {
   return <p>This is page1. This is a page defined with React component.</p>
 }
 

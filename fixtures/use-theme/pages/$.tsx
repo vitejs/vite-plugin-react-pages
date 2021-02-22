@@ -6,9 +6,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-interface IProps {}
-
-const Page: React.FC<IProps> = (props) => {
+const Page = () => {
   return (
     <div>
       Index page

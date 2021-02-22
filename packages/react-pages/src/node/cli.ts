@@ -21,7 +21,7 @@ if (root) {
     const thisPlugin = viteConfig.plugins.find((plugin) => {
       return plugin.name === 'vite-plugin-react-pages'
     })
-    // @ts-ignore
+    // @ts-expect-error
     const ssrConfig = thisPlugin?.vitePagesStaticSiteGeneration
 
     await ssrBuild(viteConfig, ssrConfig, argv).catch((err: any) => {

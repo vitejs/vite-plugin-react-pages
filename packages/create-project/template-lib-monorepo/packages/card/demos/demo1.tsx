@@ -6,7 +6,7 @@
 import React from 'react'
 import Card from 'my-card'
 
-const Demo1: React.FC = () => {
+const Demo1 = () => {
   return <Card>demo1</Card>
 }
 
