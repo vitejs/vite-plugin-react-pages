@@ -11,7 +11,7 @@ module.exports = {
   },
   plugins: [vpr, mdx(), pages()],
   optimizeDeps: {
-    include: ["antd"]
+    include: ['antd'],
   },
   minify: false,
 } as UserConfig

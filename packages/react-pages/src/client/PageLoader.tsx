@@ -33,9 +33,6 @@ export default PageLoader
 // filter out internal fields inside pages
 function getPublicPages(pages: IPagesInternal): IPagesStaticData {
   return Object.fromEntries(
-    Object.entries(pages).map(([path, { staticData }]) => [
-      path,
-      staticData,
-    ])
+    Object.entries(pages).map(([path, { staticData }]) => [path, staticData])
   )
 }

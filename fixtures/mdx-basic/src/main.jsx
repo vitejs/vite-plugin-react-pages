@@ -1,7 +1,7 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react'
+import ReactDOM from 'react-dom'
 // import App from "./App";
-import Doc from "./Doc.mdx";
+import Doc from './Doc.mdx'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -9,5 +9,5 @@ ReactDOM.render(
     {/* Doc is self-accepting */}
     <Doc />
   </React.StrictMode>,
-  document.getElementById("root")
-);
+  document.getElementById('root')
+)

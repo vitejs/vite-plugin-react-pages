@@ -15,8 +15,7 @@
 
 DATA node, graph, lazy/eager node
 
-
-core
+- core
   - theme
   - pages
     - page1
