@@ -163,7 +163,7 @@ export async function extractStaticData(
 }
 
 function createFindPagesContext(): [FindPagesResult, FindPagesHelpers] {
-  const result: FindPagesResult = {}
+  const result: FindPagesResultInner = {}
 
   const readFileCache: { [filePath: string]: Promise<string> } = {}
   const readFileWithCache = async (filePath: string) => {
@@ -228,6 +228,17 @@ export interface FindPagesResult {
     }
     readonly staticData: {
       readonly [key: string]: any
+    }
+  }
+}
+
+interface FindPagesResultInner {
+  [pageId: string]: {
+    data: {
+      [key: string]: string
+    }
+    staticData: {
+      [key: string]: any
     }
   }
 }
