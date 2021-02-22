@@ -20,14 +20,14 @@
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
-    "@types/react": "^17.0.0",
+    "@types/react": "^17.0.2",
     "@types/react-router-dom": "^5.1.7",
-    "antd": "^4.10.0",
+    "antd": "^4.12.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "sass": "^1.32.0",
+    "sass": "^1.32.8",
     "serve": "^11.3.2",
-    "vite": "^2.0.0-beta.12",
+    "vite": "^2.0.1",
     "vite-plugin-mdx": "^0.4.0",
     "vite-plugin-react": "^4.0.1",
     "vite-plugin-react-pages": "workspace:*"
