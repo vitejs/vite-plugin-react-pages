@@ -1,22 +1,23 @@
 import React from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/github'
+import type { Language } from 'prism-react-renderer'
 
 // copied from https://mdxjs.com/guides/syntax-highlighting
 
-interface IProps {
-  className?: string
-  children?: string
+interface Props {
+  readonly className?: string
+  readonly children?: string
 }
 
-const CodeBlock: React.FC<IProps> = ({ children = '', className = '' }) => {
-  const language = className?.replace(/language-/, '')
+const CodeBlock = ({ children = '', className = '' }: Props) => {
+  const language = className?.replace(/language-/, '') as Language
   return (
     <Highlight
       {...defaultProps}
       theme={theme}
       code={children.trim()}
-      language={language as any}
+      language={language}
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <pre className={className} style={style}>

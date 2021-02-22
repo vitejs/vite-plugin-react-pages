@@ -1,11 +1,9 @@
 import path from 'path'
-// @ts-ignore
 import babel from '@rollup/plugin-babel'
 import * as enhancedResolve from 'enhanced-resolve'
 import * as rollup from 'rollup'
 import invariant from 'tiny-invariant'
 import fs from 'fs-extra'
-// @ts-ignore
 import postcss from 'rollup-plugin-postcss'
 import readPkgUp from 'read-pkg-up'
 

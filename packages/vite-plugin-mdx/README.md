@@ -11,7 +11,7 @@ import react from 'vite-plugin-react'
 
 module.exports = {
   jsx: 'react',
-  plugins: [react, mdx]
+  plugins: [react, mdx],
 }
 ```
 
@@ -29,8 +29,8 @@ module.exports = {
   plugins: [
     react,
     mdx({
-      remarkPlugins: [remarkToc, remarkSlug]
-    })
-  ]
+      remarkPlugins: [remarkToc, remarkSlug],
+    }),
+  ],
 }
 ```

@@ -1,12 +1,16 @@
 import React from 'react'
 import s from './style.module.css'
 
-interface IProps extends React.HTMLProps<HTMLDivElement> {}
+interface Props
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLDivElement>,
+    HTMLDivElement
+  > {}
 
-const Card: React.FC<IProps> = (props) => {
+const Card = (props: Props) => {
   return (
     <div
-      {...(props as any)}
+      {...props}
       className={[s.card, props.className].filter(Boolean).join(' ')}
     />
   )

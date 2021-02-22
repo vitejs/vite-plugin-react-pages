@@ -1,29 +1,29 @@
 import React from 'react'
 
 /** The type of a theme. */
-export type ITheme = React.ComponentType<IThemeProps>
+export type Theme = React.ComponentType<ThemeProps>
 
-export interface IThemeProps {
-  staticData: IPagesStaticData
-  loadedData: IPagesLoaded
-  loadState: ILoadState
+export interface ThemeProps {
+  readonly staticData: PagesStaticData
+  readonly loadedData: PagesLoaded
+  readonly loadState: LoadState
 }
 
 /**
  * All pages' static data.
  */
-export interface IPagesStaticData {
+export interface PagesStaticData {
   /**
    * For each page, its static data is indexed by keys.
    */
-  [routePath: string]: Record<string, any>
+  readonly [routePath: string]: Record<string, any>
 }
 
 /**
  * All runtime data that is already loaded.
  */
-export interface IPagesLoaded {
-  [routePath: string]: IPageLoaded
+export interface PagesLoaded {
+  readonly [routePath: string]: PageLoaded
 }
 
 /**
@@ -34,25 +34,25 @@ export interface IPagesLoaded {
  * And the default export of the main module is a React component,
  * which will render the page.
  */
-export type IPageLoaded = Record<string, any>
+export type PageLoaded = Record<string, any>
 
 /**
  * The current loading state of the app.
  */
-export type ILoadState =
+export type LoadState =
   | {
-      type: 'loading' | 'loaded' | '404'
-      routePath: string
+      readonly type: 'loading' | 'loaded' | '404'
+      readonly routePath: string
     }
   | {
-      type: 'load-error'
-      routePath: string
-      error?: any
+      readonly type: 'load-error'
+      readonly routePath: string
+      readonly error?: any
     }
 
-export interface IPagesInternal {
-  [routePath: string]: {
-    data: () => Promise<IPageLoaded>
-    staticData: any
+export interface PagesInternal {
+  readonly [routePath: string]: {
+    readonly data: () => Promise<PageLoaded>
+    readonly staticData: any
   }
 }

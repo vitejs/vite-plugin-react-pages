@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react'
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live'
+import { LiveProvider, LiveEditor } from 'react-live'
 
 import s from './index.module.css'
 import Demo from '../demos/demo1'
 import demoSource from '../demos/demo1?analyzeSource'
 
-interface IProps {}
-
-const IndexPage: React.FC<IProps> = (props) => {
+const IndexPage = () => {
   useEffect(() => {
     console.log('Source code analysis result', demoSource)
   }, [])

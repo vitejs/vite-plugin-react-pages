@@ -1,13 +1,17 @@
 import React from 'react'
 import s from './style.module.css'
 
-interface IProps extends React.HTMLProps<HTMLButtonElement> {}
+interface Props
+  extends React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > {}
 
-const Button: React.FC<IProps> = (props) => {
+const Button = ({ className, ...props }: Props) => {
   return (
     <button
-      {...(props as any)}
-      className={[s.button, props.className].filter(Boolean).join(' ')}
+      {...props}
+      className={[s.button, className].filter(Boolean).join(' ')}
     />
   )
 }

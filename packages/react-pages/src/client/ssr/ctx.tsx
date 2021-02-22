@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { IPagesLoaded } from '../types'
+import { PagesLoaded } from '../types'
 
 /**
  * dynamic import don't work in ssr
@@ -8,9 +8,9 @@ import { IPagesLoaded } from '../types'
  * so the App can render the page data directly
  * instead of render the loading state
  */
-export const dataCacheCtx = createContext<IPagesLoaded>({})
+export const dataCacheCtx = createContext<PagesLoaded>({})
 export const setDataCacheCtx = createContext<
-  React.Dispatch<React.SetStateAction<IPagesLoaded>>
+  React.Dispatch<React.SetStateAction<PagesLoaded>>
 >(() => {
   throw new Error(`setDataCacheCtx not found`)
 })

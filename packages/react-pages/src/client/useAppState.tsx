@@ -1,21 +1,21 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
-import type { IPagesInternal, ILoadState } from './types'
+import type { PagesInternal, LoadState } from './types'
 import { dataCacheCtx, setDataCacheCtx } from './ssr/ctx'
 
 export default function useAppState(
-  pages: IPagesInternal,
+  pages: PagesInternal,
   latestRoutePath: string
 ) {
   const dataCache = useContext(dataCacheCtx)
   const setDataCache = useContext(setDataCacheCtx)
-  const [loadState, _setLoadState] = useState<ILoadState>(() => {
+  const [loadState, _setLoadState] = useState<LoadState>(() => {
     return {
       type: 'loading',
       routePath: latestRoutePath,
     }
   })
 
-  const setLoadState = (newLoadState: ILoadState) => {
+  const setLoadState = (newLoadState: LoadState) => {
     if (
       newLoadState.type === loadState.type &&
       newLoadState.routePath === loadState.routePath

@@ -2,24 +2,24 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Nav, Shell, ConfigProvider } from '@alifd/next'
 import 'github-markdown-css/github-markdown.css'
-import type { IPagesStaticData } from 'vite-plugin-react-pages'
+import type { PagesStaticData } from 'vite-plugin-react-pages'
 
 import s from './style.module.css'
 import './global.css'
 import SiteSearch from './search'
 
-interface IProps {
-  sideMenuData: ISideMenuData[]
-  topNavs: ITopNavData[]
-  logo: React.ReactNode
-  path?: string
-  footer?: React.ReactNode
-  pagesStaticData?: IPagesStaticData
-  topbarOperations?: React.ReactNode
-  search?: boolean
+interface Props {
+  readonly sideMenuData: ReadonlyArray<SideMenuData>
+  readonly topNavs: ReadonlyArray<TopNavData>
+  readonly logo: React.ReactNode
+  readonly path?: string
+  readonly footer?: React.ReactNode
+  readonly pagesStaticData?: PagesStaticData
+  readonly topbarOperations?: React.ReactNode
+  readonly search?: boolean
 }
 
-const Layout: React.FC<IProps> = ({
+const Layout: React.FC<Props> = ({
   sideMenuData,
   topNavs,
   logo,
@@ -46,10 +46,7 @@ const Layout: React.FC<IProps> = ({
           )}
         </Shell.Action>
 
-        <Shell.Navigation
-          // @ts-ignore
-          trigger={null}
-        >
+        <Shell.Navigation trigger={null}>
           <Nav embeddable>{renderNav(sideMenuData)}</Nav>
         </Shell.Navigation>
 
@@ -68,41 +65,41 @@ const Layout: React.FC<IProps> = ({
 
 export default Layout
 
-export type ISideMenuData = { text: string; path: string }
+export type SideMenuData = { readonly text: string; readonly path: string }
 
-export type ITopNavData =
+export type TopNavData =
   | {
-      text: string
+      readonly text: string
       /**
        * The url.
        * @example 'https://www.google.com/'
        */
-      href: string
+      readonly href: string
     }
   | {
-      text: string
+      readonly text: string
       /**
        * The path in the current webapp.
        * @example '/posts/hello-world'
        */
-      path: string
+      readonly path: string
     }
   | {
       /**
        * The label of the subnav
        */
-      subNav: string
-      children: ITopNavData[]
+      readonly subNav: string
+      readonly children: ReadonlyArray<TopNavData>
     }
   | {
       /**
        * The label of the nav group
        */
-      group: string
-      children: ITopNavData[]
+      readonly group: string
+      readonly children: ReadonlyArray<TopNavData>
     }
 
-export function renderNav(navs: ITopNavData[]) {
+export function renderNav(navs: ReadonlyArray<TopNavData>) {
   return navs.map((item, idx) => {
     if ('path' in item) {
       return (

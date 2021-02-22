@@ -16,7 +16,7 @@ This is page3. This is a complicated [mdx](https://mdxjs.com/) page.
 ## Test code block with syntax highlighing
 
 ```tsx
-export function createTheme({ sideMenuData }: IOption = {}): ICreateTheme {
+export function createTheme({ sideMenuData }: Option = {}): ICreateTheme {
   return (pages) => {
     // theme can create menu from pages data
     const actualMenuData = sideMenuData || defaultMenu(pages)
@@ -28,7 +28,7 @@ export function createTheme({ sideMenuData }: IOption = {}): ICreateTheme {
             <Component />
           </Layout>
         )
-      }
+      },
     }
   }
 }

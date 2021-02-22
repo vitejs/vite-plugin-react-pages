@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import Doc from "./Doc.mdx";
+import React, { useState } from 'react'
+import Doc from './Doc.mdx'
 
 const App = () => {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0)
   return (
     <div>
       <p>
         count: {count}
         <button
           onClick={() => {
-            setCount(count + 1);
+            setCount(count + 1)
           }}
         >
           add count
@@ -17,7 +17,7 @@ const App = () => {
       </p>
       <Doc />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

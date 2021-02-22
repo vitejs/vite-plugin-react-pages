@@ -1,1 +1,1 @@
-export type { ITheme } from './types'
+export type { Theme } from './types'

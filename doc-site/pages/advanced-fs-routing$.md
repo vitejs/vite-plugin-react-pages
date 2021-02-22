@@ -17,13 +17,13 @@ Here is the definition of the vite-plugin-react-pages config function:
 function pluginFactory(
   opts: {
     pagesDir?: string
-    findPages?: (helpers: IFindPagesHelpers) => Promise<void>
+    findPages?: (helpers: FindPagesHelpers) => Promise<void>
     useHashRouter?: boolean
     staticSiteGeneration?: {}
   } = {}
 ): VitePlugin
 
-interface IFindPagesHelpers {
+interface FindPagesHelpers {
   /**
    * readFile util with cache
    */
@@ -52,15 +52,15 @@ interface IFindPagesHelpers {
   /**
    * Use the basic filesystem routing convention to find pages.
    */
-  defaultFindPages: (baseDir: string) => Promise<IPageData[]>
+  defaultFindPages: (baseDir: string) => Promise<PageData[]>
   /**
    * Register page data.
    * User who custom findPages should use it to register the data he/she finds.
    */
-  addPageData: (pageData: IPageData) => void
+  addPageData: (pageData: PageData) => void
 }
 
-interface IPageData {
+interface PageData {
   /**
    * The page route path.
    * User can register multiple page data with same pageId,

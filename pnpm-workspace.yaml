@@ -1,4 +1,4 @@
 packages:
-  - "packages/**"
-  - "fixtures/**"
-  - "doc-site"
+  - 'packages/**'
+  - 'fixtures/**'
+  - 'doc-site'

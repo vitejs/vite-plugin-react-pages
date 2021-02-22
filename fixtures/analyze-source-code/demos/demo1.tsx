@@ -8,9 +8,7 @@ import util2 from '../util2'
 import style from './demo1.module.css'
 import './demo1.scss'
 
-interface IProps {}
-
-const Demo1: React.FC<IProps> = (props) => {
+const Demo1 = () => {
   useEffect(() => {
     util('demo1')
     util2('demo1')

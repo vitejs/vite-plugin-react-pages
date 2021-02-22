@@ -2,9 +2,7 @@ import React, { useEffect } from 'react'
 
 import util from './dir/util'
 
-interface IProps {}
-
-const Demo2: React.FC<IProps> = (props) => {
+const Demo2 = () => {
   useEffect(() => {
     util('demo2')
   }, [])

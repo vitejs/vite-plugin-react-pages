@@ -4,5 +4,5 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 
 module.exports = {
   jsx: 'react',
-  plugins: [reactRefresh(), mdx()]
+  plugins: [reactRefresh(), mdx()],
 } as UserConfig
