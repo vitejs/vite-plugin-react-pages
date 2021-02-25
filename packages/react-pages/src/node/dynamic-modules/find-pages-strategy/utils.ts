@@ -1,10 +1,15 @@
 import globby from 'globby'
 import * as path from 'path'
 
+export interface PagePath {
+  readonly relative: string
+  readonly absolute: string
+}
+
 export async function globFind(
   baseDir: string,
   glob: string
-): Promise<{ relative: string; absolute: string }[]> {
+): Promise<PagePath[]> {
   const pageFiles: string[] = await globby(glob, {
     cwd: baseDir,
     ignore: ['**/node_modules/**/*'],

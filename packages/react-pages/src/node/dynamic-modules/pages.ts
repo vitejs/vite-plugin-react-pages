@@ -2,9 +2,10 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
-import { defaultFindPages as _defaultFindPages } from './find-pages-strategy/default'
-import { globFind } from './find-pages-strategy/utils'
+import { defaultStrategy } from './find-pages-strategy/default'
+import { globFind, PagePath } from './find-pages-strategy/utils'
 import slash from 'slash'
+import chokidar, { FSWatcher } from 'chokidar'
 
 export interface FindPagesHelpers {
   /**
@@ -22,25 +23,23 @@ export interface FindPagesHelpers {
   }>
   /**
    * Glob utils. Return matched file paths.
+   *
+   * Globs are automatically watched for changes.
    */
-  readonly globFind: (
-    baseDir: string,
-    glob: string
-  ) => Promise<
-    ReadonlyArray<{
-      readonly relative: string
-      readonly absolute: string
-    }>
-  >
+  readonly globFind: (baseDir: string, glob: string) => Promise<PagePath[]>
   /**
    * Use the basic filesystem routing convention to find pages.
    */
-  readonly defaultFindPages: (
-    baseDir: string
-  ) => Promise<ReadonlyArray<PageData>>
+  readonly findPages: (pagesDir: string) => Promise<PagePath[]>
   /**
-   * Register page data.
-   * User who custom findPages should use it to register the data he/she finds.
+   * Load page data using the default page loader.
+   */
+  readonly loadPageData: (pagePath: PagePath) => Promise<PageData>
+  /**
+   * Register page data manually.
+   *
+   * Calling this is only necessary for pages not found using
+   * the `globFind` function.
    */
   readonly addPageData: (pageData: PageData) => void
 }
@@ -69,20 +68,6 @@ export interface PageData {
   readonly dataPath?: string
 
   readonly staticData?: any
-}
-
-export async function collectPagesData(
-  pagesDir: string,
-  findPages?: (helpers: FindPagesHelpers) => Promise<void>
-): Promise<FindPagesResult> {
-  const [pages, findPagesHelpers] = createFindPagesContext()
-  if (typeof findPages === 'function') {
-    await findPages(findPagesHelpers)
-  } else {
-    const found = await findPagesHelpers.defaultFindPages(pagesDir)
-    found.forEach(findPagesHelpers.addPageData)
-  }
-  return pages
 }
 
 export async function renderPageList(pagesData: FindPagesResult) {
@@ -162,22 +147,27 @@ export async function extractStaticData(
   }
 }
 
-function createFindPagesContext(): [FindPagesResult, FindPagesHelpers] {
-  const result: FindPagesResultInner = {}
+export interface PageFinder {
+  readonly results: Promise<PageCache>
+  close(): void
+}
 
-  const readFileCache: { [filePath: string]: Promise<string> } = {}
+export function getPageFinder(
+  pagesDir: string,
+  {
+    findPages = defaultStrategy.findPages,
+    loadPageData = defaultStrategy.loadPageData,
+  }: PageStrategy = {}
+): PageFinder {
+  const pageCache: PageCache = {}
+  const fileCache: FileCache = {}
+  const watchers: WatcherCache = {}
+
   const readFileWithCache = async (filePath: string) => {
-    if (readFileCache[filePath]) return readFileCache[filePath]
-    readFileCache[filePath] = fs.readFile(filePath, 'utf-8')
-    return readFileCache[filePath]
+    if (fileCache[filePath]) return fileCache[filePath]
+    fileCache[filePath] = fs.readFile(filePath, 'utf-8')
+    return fileCache[filePath]
   }
-  const extractStaticDataWithCache = async (filePath: string) =>
-    extractStaticData(
-      await readFileWithCache(filePath),
-      path.extname(filePath).slice(1)
-    )
-  const defaultFindPages = (baseDir: string) =>
-    _defaultFindPages(baseDir, helpers)
 
   const addPageData = (pageData: PageData) => {
     if (!pageData.pageId.startsWith('/')) {
@@ -185,9 +175,9 @@ function createFindPagesContext(): [FindPagesResult, FindPagesHelpers] {
         `addPageData error: pageId should starts with "/", but got "${pageData.pageId}"`
       )
     }
-    let exist = result[pageData.pageId]
+    let exist = pageCache[pageData.pageId]
     if (!exist) {
-      exist = result[pageData.pageId] = {
+      exist = pageCache[pageData.pageId] = {
         data: {},
         staticData: {},
       }
@@ -211,14 +201,109 @@ function createFindPagesContext(): [FindPagesResult, FindPagesHelpers] {
     }
   }
 
+  const pageIdByFilePath: { [filePath: string]: string } = {}
+  const watchFiles = (baseDir: string, glob: string) => {
+    // Strip trailing slash and make absolute
+    baseDir = path.resolve(baseDir)
+
+    let watcher = watchers[baseDir]
+    if (!watcher) {
+      const reloadPageData = async (filePath: string) => {
+        const relative = filePath.slice(baseDir.length + 1)
+        const pageData = await loadPageData(
+          { relative, absolute: filePath },
+          helpers
+        )
+        pageIdByFilePath[filePath] = pageData.pageId
+        addPageData(pageData)
+      }
+
+      watchers[baseDir] = watcher = chokidar.watch([], {
+        cwd: baseDir,
+        ignored: ['**/node_modules/**/*'],
+        ignoreInitial: true,
+      })
+
+      watcher
+        .on('add', async (filePath) => {
+          filePath = path.join(baseDir, filePath)
+          addResult(reloadPageData(filePath))
+        })
+        .on('change', async (filePath) => {
+          filePath = path.join(baseDir, filePath)
+          delete fileCache[filePath]
+          const oldPageId = pageIdByFilePath[filePath]
+          if (oldPageId) delete pageCache[oldPageId]
+          addResult(reloadPageData(filePath))
+        })
+        .on('unlink', (filePath) => {
+          filePath = path.join(baseDir, filePath)
+          const pageId = pageIdByFilePath[filePath]
+          delete pageIdByFilePath[filePath]
+          delete pageCache[pageId]
+        })
+    }
+    watcher.add(glob)
+  }
+
   const helpers: FindPagesHelpers = {
     readFile: readFileWithCache,
-    extractStaticData: extractStaticDataWithCache,
-    globFind,
-    defaultFindPages,
+    extractStaticData: async (filePath) =>
+      extractStaticData(
+        await readFileWithCache(filePath),
+        path.extname(filePath).slice(1)
+      ),
+    findPages: (pagesDir) =>
+      defaultStrategy.findPages(pagesDir, helpers) as Promise<PagePath[]>,
+    loadPageData: (pagePath) =>
+      defaultStrategy.loadPageData(pagePath, helpers) as Promise<PageData>,
     addPageData,
+    async globFind(baseDir, glob) {
+      const paths = await globFind(baseDir, glob)
+      watchFiles(baseDir, glob)
+      return paths
+    },
   }
-  return [result, helpers]
+
+  // The results promise is replaced as pages are added/changed/deleted.
+  let results = Promise.resolve(findPages(pagesDir, helpers)).then(
+    async (pagePaths) => {
+      if (pagePaths) {
+        const pageData = await Promise.all(
+          pagePaths.map((pagePath) => loadPageData(pagePath, helpers))
+        )
+        pageData.forEach((pageData, i) => {
+          pageIdByFilePath[pagePaths[i].absolute] = pageData.pageId
+          addPageData(pageData)
+        })
+      }
+      return pageCache
+    }
+  )
+
+  // Ensure file changes are processed before resolving the results.
+  const addResult = (result: Promise<void>) =>
+    (results = Promise.all([results, result]).then(() => pageCache))
+
+  return {
+    get results() {
+      return results
+    },
+    close() {
+      Object.values(watchers).forEach((watcher) => watcher.close())
+    },
+  }
+}
+
+export interface PageStrategy {
+  findPages?: (
+    pagesDir: string,
+    helpers: FindPagesHelpers
+  ) => PagePath[] | Promise<PagePath[] | undefined> | undefined
+  loadPageData?: (
+    pagePath: PagePath,
+    helpers: FindPagesHelpers
+  ) => PageData | Promise<PageData>
 }
 
 export interface FindPagesResult {
@@ -232,7 +317,7 @@ export interface FindPagesResult {
   }
 }
 
-interface FindPagesResultInner {
+interface PageCache {
   [pageId: string]: {
     data: {
       [key: string]: string
@@ -241,4 +326,12 @@ interface FindPagesResultInner {
       [key: string]: any
     }
   }
+}
+
+interface FileCache {
+  [filePath: string]: Promise<string>
+}
+
+interface WatcherCache {
+  [cwd: string]: FSWatcher
 }

@@ -1,29 +1,33 @@
 import * as path from 'path'
 import type { Plugin } from 'vite'
 import {
-  FindPagesHelpers,
-  FindPagesResult,
-  renderPageListInSSR,
-} from './dynamic-modules/pages'
-import {
-  collectPagesData,
+  PageFinder,
+  getPageFinder,
   renderPageList,
+  renderPageListInSSR,
   renderOnePageData,
+  PageStrategy,
 } from './dynamic-modules/pages'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 
 export default function pluginFactory(
   opts: {
     pagesDir?: string
-    findPages?: (helpers: FindPagesHelpers) => Promise<void>
+    findPages?: PageStrategy['findPages']
+    loadPageData?: PageStrategy['loadPageData']
     useHashRouter?: boolean
     staticSiteGeneration?: {}
   } = {}
 ): Plugin {
-  const { findPages, useHashRouter = false, staticSiteGeneration } = opts
+  const {
+    findPages,
+    loadPageData,
+    useHashRouter = false,
+    staticSiteGeneration,
+  } = opts
   let pagesDir: string = opts.pagesDir ?? ''
+  let pagesFinder: PageFinder
 
-  let pagesData: Promise<FindPagesResult>
   return {
     name: 'vite-plugin-react-pages',
     config: () => ({
@@ -67,16 +71,16 @@ export default function pluginFactory(
     async load(id) {
       if (id === '@!virtual-modules/pages') {
         // page list
-        if (!pagesData) pagesData = collectPagesData(pagesDir, findPages)
-        return renderPageList(await pagesData)
+        pagesFinder ??= getPageFinder(pagesDir, { findPages, loadPageData })
+        return renderPageList(await pagesFinder.results)
       }
       if (id.startsWith('@!virtual-modules/pages/')) {
         // one page data
         let pageId = id.slice('@!virtual-modules/pages'.length)
         if (pageId === '/__index') pageId = '/'
-        if (!pagesData) pagesData = collectPagesData(pagesDir, findPages)
-        const pagesDataAwaited = await pagesData
-        const page = pagesDataAwaited?.[pageId]
+        pagesFinder ??= getPageFinder(pagesDir, { findPages, loadPageData })
+        const pagesData = await pagesFinder.results
+        const page = pagesData?.[pageId]
         if (!page) {
           throw new Error(`Page not exist: ${pageId}`)
         }
@@ -86,12 +90,15 @@ export default function pluginFactory(
         return `export { default } from "${await resolveTheme(pagesDir)}";`
       }
       if (id === '@!virtual-modules/ssrData') {
-        if (!pagesData) pagesData = collectPagesData(pagesDir, findPages)
-        return renderPageListInSSR(await pagesData)
+        pagesFinder ??= getPageFinder(pagesDir, { findPages, loadPageData })
+        return renderPageListInSSR(await pagesFinder.results)
       }
     },
     // @ts-expect-error
     vitePagesStaticSiteGeneration: staticSiteGeneration,
+    closeWatcher() {
+      pagesFinder?.close()
+    },
   }
 }
 
