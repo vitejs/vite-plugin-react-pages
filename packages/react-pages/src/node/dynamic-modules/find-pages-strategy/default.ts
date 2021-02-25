@@ -1,22 +1,16 @@
-import { globFind } from './utils'
-import type { FindPagesHelpers, PageData } from '../pages'
+import type { PageStrategy } from '../pages'
 
-export async function defaultFindPages(
-  pagesDirPath: string,
-  findPagesHelpers: FindPagesHelpers
-): Promise<PageData[]> {
-  const pages = await globFind(pagesDirPath, '**/*$.{md,mdx,js,jsx,ts,tsx}')
-
-  return Promise.all(
-    pages.map(async ({ relative, absolute }) => {
-      const pagePublicPath = getPagePublicPath(relative)
-      return {
-        pageId: pagePublicPath,
-        dataPath: absolute,
-        staticData: await findPagesHelpers.extractStaticData(absolute),
-      }
-    })
-  )
+export const defaultStrategy: Required<PageStrategy> = {
+  findPages: (pagesDirPath, { globFind }) =>
+    globFind(pagesDirPath, '**/*$.{md,mdx,js,jsx,ts,tsx}'),
+  async loadPageData({ relative, absolute }, { extractStaticData }) {
+    const pagePublicPath = getPagePublicPath(relative)
+    return {
+      pageId: pagePublicPath,
+      dataPath: absolute,
+      staticData: await extractStaticData(absolute),
+    }
+  },
 }
 
 function getPagePublicPath(relativePageFilePath: string) {
