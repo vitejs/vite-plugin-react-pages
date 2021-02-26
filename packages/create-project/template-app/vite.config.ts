@@ -1,10 +1,10 @@
-import type { UserConfig } from 'vite'
+import { defineConfig } from 'vite'
 import * as path from 'path'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import mdx from 'vite-plugin-mdx'
 import pages from 'vite-plugin-react-pages'
 
-module.exports = {
+export default defineConfig({
   plugins: [
     reactRefresh(),
     mdx(),
@@ -12,4 +12,4 @@ module.exports = {
       pagesDir: path.join(__dirname, 'pages'),
     }),
   ],
-} as UserConfig
+})
