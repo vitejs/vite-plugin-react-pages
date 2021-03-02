@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { PagesLoaded } from '../types'
+import { PagesLoaded } from '../../../client'
 
 /**
  * dynamic import don't work in ssr

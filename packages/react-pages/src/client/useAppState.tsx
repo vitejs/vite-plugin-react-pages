@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext, useCallback } from 'react'
-import type { PagesInternal, LoadState } from './types'
+import type { PagesInternal, LoadState } from '../../client'
 import { dataCacheCtx, setDataCacheCtx } from './ssr/ctx'
 
 export default function useAppState(
