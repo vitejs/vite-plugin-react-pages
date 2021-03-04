@@ -144,12 +144,8 @@ export class PageStrategy extends EventEmitter {
         type: 'add' | 'change' | 'unlink',
         file: File
       ) => {
-        // Clear any data associated with this file.
         file.dataKeys.forEach(removePageData)
-
-        if (type === 'unlink') {
-          delete fileCache[file.path]
-        } else {
+        if (type !== 'unlink') {
           if (type === 'change') {
             file.content = null
             file.dataKeys.clear()
@@ -180,14 +176,18 @@ export class PageStrategy extends EventEmitter {
                 fileCache[filePath] ||
                 (fileCache[filePath] = new File(filePath, baseDir))
 
-              if (!file.queued) {
-                file.queued = true
-                pagesPromise = pagesPromise.finally(() => {
-                  file.queued = false
-                  return processFile(type, file)
-                })
-                emitPromise()
+              if (type === 'unlink') {
+                delete fileCache[file.path]
+              } else if (file.queued) {
+                return
               }
+
+              file.queued = true
+              pagesPromise = pagesPromise.finally(() => {
+                file.queued = false
+                return processFile(type, file)
+              })
+              emitPromise()
             }
           })
       )
