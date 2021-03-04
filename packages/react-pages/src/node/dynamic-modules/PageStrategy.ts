@@ -256,7 +256,7 @@ export class File {
   }
 
   get extname() {
-    return path.extname(this.path)
+    return path.extname(this.path).slice(1)
   }
 
   read() {
