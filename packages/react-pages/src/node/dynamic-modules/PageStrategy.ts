@@ -126,7 +126,10 @@ export class PageStrategy extends EventEmitter {
           }
         }
 
-        const result = await handler(file, type)
+        const result =
+          handler.length > 1 || type !== 'unlink'
+            ? await handler(file, type)
+            : null
 
         if (type === 'unlink') {
           delete fileCache[file.path]
