@@ -102,7 +102,7 @@ export class PageStrategy extends EventEmitter {
         globs = ['**/*']
         handler = arg2
       } else {
-        globs = typeof arg2 === 'string' ? [arg2] : arg2!
+        globs = Array.isArray(arg2) ? arg2 : [arg2 || '**/*']
         handler = arg3 || defaultPageLoader
       }
 
