@@ -40,10 +40,12 @@ export class PageStrategy extends EventEmitter {
     const helpers: PageHelpers = {
       extractStaticData,
       loadPageData: (file) => Promise.resolve(loadPageData(file, helpers)),
-      setPageData,
-      removePageData,
+      addPageData,
       watchFiles,
     }
+
+    // The file currently being processed.
+    let currentFile: File | null = null
 
     let pagesPromise = Promise.resolve(pageCache)
     findPages(pagesDir, helpers)
@@ -51,16 +53,15 @@ export class PageStrategy extends EventEmitter {
     this.getPages = () => pagesPromise
     this.close = () => watchers.forEach((w) => w.close())
 
-    // Ensure file changes are processed before resolving `getPages` call.
-    function onPageUpdate(update: Promise<void>) {
-      pagesPromise = Promise.all([pagesPromise, update]).then(() => pageCache)
-      emitPromise()
-    }
-
-    function setPageData(pageId: string, pageData: Partial<PageData>) {
+    function addPageData({
+      pageId,
+      key = 'main',
+      dataPath,
+      staticData,
+    }: PageData) {
       if (!pageId.startsWith('/'))
         throw Error(
-          `setPageData error: pageId should start with "/", but got "${pageId}"`
+          `addPageData error: pageId should start with "/", but got "${pageId}"`
         )
 
       const existingPage = pageCache[pageId]
@@ -71,20 +72,26 @@ export class PageStrategy extends EventEmitter {
           staticData: {},
         })
 
-      const key = pageData.key ?? 'main'
-      if (pageData.dataPath) {
+      if (dataPath) {
         if (page.data[key])
           throw Error(
-            `setPageData conflict: data with key "${key}" already exists`
+            `addPageData conflict: data with key "${key}" already exists`
           )
-        page.data[key] = pageData.dataPath
+        page.data[key] = dataPath
       }
-      if (pageData.staticData) {
+
+      if (staticData) {
         if (page.staticData[key])
           throw Error(
-            `setPageData conflict: staticData with key "${key}" already exists`
+            `addPageData conflict: staticData with key "${key}" already exists`
           )
-        page.staticData[key] = pageData.staticData
+        page.staticData[key] = staticData
+      }
+
+      if (currentFile) {
+        let dataKeys = currentFile.dataKeys.get(pageId)
+        if (!dataKeys) currentFile.dataKeys.set(pageId, (dataKeys = []))
+        dataKeys.push(key)
       }
 
       if (existingPage) {
@@ -93,18 +100,25 @@ export class PageStrategy extends EventEmitter {
       }
     }
 
-    function removePageData(pageId: string, key?: string) {
+    function removePageData(dataKeys: string[], pageId: string) {
       const page = pageCache[pageId]
-      if (page) {
-        if (key) {
-          delete page.data[key]
-          delete page.staticData[key]
-          changedPages.add(pageId)
-          emitChange()
-        } else {
-          delete pageCache[pageId]
-        }
+
+      dataKeys.forEach((key) => {
+        delete page.data[key]
+        delete page.staticData[key]
+      })
+
+      if (hasKeys(page.data) || hasKeys(page.staticData)) {
+        changedPages.add(pageId)
+        emitChange()
+      } else {
+        delete pageCache[pageId]
       }
+    }
+
+    function hasKeys(obj: object) {
+      for (const _ in obj) return true
+      return false
     }
 
     function watchFiles(
@@ -113,10 +127,7 @@ export class PageStrategy extends EventEmitter {
       arg3?: FileHandler
     ) {
       let globs: string[]
-      let handler: (
-        file: File,
-        type: string
-      ) => PageData | Promise<PageData> | void
+      let handler: FileHandler
 
       if (typeof arg2 === 'function') {
         globs = ['**/*']
@@ -131,33 +142,27 @@ export class PageStrategy extends EventEmitter {
 
       const processFile = async (
         type: 'add' | 'change' | 'unlink',
-        filePath: string
+        file: File
       ) => {
-        filePath = path.join(baseDir, filePath)
-
-        const file =
-          fileCache[filePath] ||
-          (fileCache[filePath] = new File(filePath, baseDir))
-
-        file.pageIds.forEach((pageId) => {
-          delete pageCache[pageId]
-        })
-
-        if (type === 'change') {
-          file.content = null
-          file.pageIds.clear()
-        }
-
-        const result =
-          handler.length > 1 || type !== 'unlink'
-            ? await handler(file, type)
-            : null
+        // Clear any data associated with this file.
+        file.dataKeys.forEach(removePageData)
 
         if (type === 'unlink') {
           delete fileCache[file.path]
-        } else if (result) {
-          file.pageIds.add(result.pageId)
-          setPageData(result.pageId, result)
+        } else {
+          if (type === 'change') {
+            file.content = null
+            file.dataKeys.clear()
+          }
+          currentFile = file
+          try {
+            const pageData = await handler(file)
+            if (pageData) {
+              addPageData(pageData)
+            }
+          } finally {
+            currentFile = null
+          }
         }
       }
 
@@ -167,13 +172,24 @@ export class PageStrategy extends EventEmitter {
             cwd: baseDir,
             ignored: ['**/node_modules/**/*'],
           })
-          .on(
-            'all',
-            (type, filePath) =>
-              type !== 'addDir' &&
-              type !== 'unlinkDir' &&
-              onPageUpdate(processFile(type, filePath))
-          )
+          .on('all', (type, filePath) => {
+            if (type !== 'addDir' && type !== 'unlinkDir') {
+              filePath = path.join(baseDir, filePath)
+
+              const file =
+                fileCache[filePath] ||
+                (fileCache[filePath] = new File(filePath, baseDir))
+
+              if (!file.queued) {
+                file.queued = true
+                pagesPromise = pagesPromise.finally(() => {
+                  file.queued = false
+                  return processFile(type, file)
+                })
+                emitPromise()
+              }
+            }
+          })
       )
     }
   }
@@ -236,18 +252,17 @@ export interface PageHelpers {
    */
   readonly loadPageData: (file: File) => Promise<PageData>
   /**
-   * Upsert page data manually.
+   * Add page data manually.
    */
-  readonly setPageData: (pageId: string, pageData: Partial<PageData>) => void
-  /**
-   * Remove page data manually.
-   */
-  readonly removePageData: (pageId: string, dataKey?: string) => void
+  readonly addPageData: (pageData: PageData) => void
 }
 
 export class File {
-  pageIds = new Set<string>()
   content: Promise<string> | null = null
+  /** pageId -> dataKey[] */
+  dataKeys = new Map<string, string[]>()
+  /** When true, this file will be processed soon */
+  queued = false
 
   constructor(readonly path: string, readonly base: string) {}
 
@@ -265,10 +280,7 @@ export class File {
 }
 
 interface FileHandler {
-  /** Associate page data with a file */
-  (file: File): PageData | Promise<PageData>
-  /** Handle file changes */
-  (file: File, type: 'add' | 'change' | 'unlink'): void
+  (file: File): PageData | Promise<PageData> | void
 }
 
 interface WatchFilesHelper {
