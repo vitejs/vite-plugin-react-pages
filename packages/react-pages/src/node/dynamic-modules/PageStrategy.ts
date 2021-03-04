@@ -37,7 +37,27 @@ export class PageStrategy extends EventEmitter {
       changedPages.clear()
     }, 100)
 
-    const setPageData = (pageId: string, pageData: Partial<PageData>) => {
+    const helpers: PageHelpers = {
+      extractStaticData,
+      loadPageData: (file) => Promise.resolve(loadPageData(file, helpers)),
+      setPageData,
+      removePageData,
+      watchFiles,
+    }
+
+    let pagesPromise = Promise.resolve(pageCache)
+    findPages(pagesDir, helpers)
+
+    this.getPages = () => pagesPromise
+    this.close = () => watchers.forEach((w) => w.close())
+
+    // Ensure file changes are processed before resolving `getPages` call.
+    function onPageUpdate(update: Promise<void>) {
+      pagesPromise = Promise.all([pagesPromise, update]).then(() => pageCache)
+      emitPromise()
+    }
+
+    function setPageData(pageId: string, pageData: Partial<PageData>) {
       if (!pageId.startsWith('/'))
         throw Error(
           `setPageData error: pageId should start with "/", but got "${pageId}"`
@@ -73,7 +93,7 @@ export class PageStrategy extends EventEmitter {
       }
     }
 
-    const removePageData = (pageId: string, key?: string) => {
+    function removePageData(pageId: string, key?: string) {
       const page = pageCache[pageId]
       if (page) {
         if (key) {
@@ -87,11 +107,11 @@ export class PageStrategy extends EventEmitter {
       }
     }
 
-    const watchFiles = (
+    function watchFiles(
       baseDir: string,
       arg2?: string | string[] | FileHandler,
       arg3?: FileHandler
-    ) => {
+    ) {
       let globs: string[]
       let handler: (
         file: File,
@@ -156,26 +176,6 @@ export class PageStrategy extends EventEmitter {
           )
       )
     }
-
-    const helpers: PageHelpers = {
-      extractStaticData,
-      loadPageData: (file) => Promise.resolve(loadPageData(file, helpers)),
-      setPageData,
-      removePageData,
-      watchFiles,
-    }
-
-    let pagesPromise = Promise.resolve(pageCache)
-    findPages(pagesDir, helpers)
-
-    // Ensure file changes are processed before resolving `getPages` call.
-    const onPageUpdate = (update: Promise<void>) => {
-      pagesPromise = Promise.all([pagesPromise, update]).then(() => pageCache)
-      emitPromise()
-    }
-
-    this.getPages = () => pagesPromise
-    this.close = () => watchers.forEach((w) => w.close())
   }
 }
 
