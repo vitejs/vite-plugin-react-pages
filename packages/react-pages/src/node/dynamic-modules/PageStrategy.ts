@@ -119,11 +119,13 @@ export class PageStrategy extends EventEmitter {
           fileCache[filePath] ||
           (fileCache[filePath] = new File(filePath, baseDir))
 
+        file.pageIds.forEach((pageId) => {
+          delete pageCache[pageId]
+        })
+
         if (type === 'change') {
           file.content = null
-          if (file.pageId) {
-            delete pageCache[file.pageId]
-          }
+          file.pageIds.clear()
         }
 
         const result =
@@ -133,11 +135,9 @@ export class PageStrategy extends EventEmitter {
 
         if (type === 'unlink') {
           delete fileCache[file.path]
-          if (file.pageId) {
-            delete pageCache[file.pageId]
-          }
         } else if (result) {
-          setPageData((file.pageId = result.pageId), result)
+          file.pageIds.add(result.pageId)
+          setPageData(result.pageId, result)
         }
       }
 
@@ -246,7 +246,7 @@ export interface PageHelpers {
 }
 
 export class File {
-  pageId: string | null = null
+  pageIds = new Set<string>()
   content: Promise<string> | null = null
 
   constructor(readonly path: string, readonly base: string) {}
