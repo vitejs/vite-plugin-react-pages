@@ -348,6 +348,7 @@ importers:
       globby: 11.0.2
       gray-matter: 4.0.2
       jest-docblock: 26.0.0
+      mini-debounce: 1.0.8
       minimist: 1.2.5
       ora: 5.3.0
       query-string: 6.14.0
@@ -390,6 +391,7 @@ importers:
       globby: ^11.0.2
       gray-matter: ^4.0.2
       jest-docblock: ^26.0.0
+      mini-debounce: ^1.0.8
       minimist: ^1.2.5
       ora: ^5.3.0
       query-string: ^6.14.0
@@ -3457,6 +3459,10 @@ packages:
       react: ^0.14.0 || ^15.0.0 || ^16.0.0
     resolution:
       integrity: sha512-b0TytUgFSbgFJGzJqXPKCFCBWigAjpjo+Fl7Vf7ZbKRDptszpppKxXH6DRXEABZ/gcEQczeb0iZ7JvL8e8jjCA==
+  /mini-debounce/1.0.8:
+    dev: false
+    resolution:
+      integrity: sha512-EqUsV34zuw2N9UHjRl1bwaDiLe1d/P8AemSp/EbDjOsZ7gB+z+7F9wcJWqfU3QpPnHD1oKGe2n6Fw90QsLkBkA==
   /mini-store/3.0.6_react-dom@17.0.1+react@17.0.1:
     dependencies:
       hoist-non-react-statics: 3.3.2

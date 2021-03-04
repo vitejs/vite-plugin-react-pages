@@ -1,20 +1,26 @@
 import * as path from 'path'
 import type { Plugin } from 'vite'
 import {
-  PageFinder,
-  getPageFinder,
   renderPageList,
   renderPageListInSSR,
   renderOnePageData,
-  PageStrategy,
 } from './dynamic-modules/pages'
+import {
+  FindPages,
+  LoadPageData,
+  PageStrategy,
+} from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
+
+const pagesModuleId = '@!virtual-modules/pages'
+const themeModuleId = '@!virtual-modules/theme'
+const ssrDataModuleId = '@!virtual-modules/ssrData'
 
 export default function pluginFactory(
   opts: {
     pagesDir?: string
-    findPages?: PageStrategy['findPages']
-    loadPageData?: PageStrategy['loadPageData']
+    findPages?: FindPages
+    loadPageData?: LoadPageData
     useHashRouter?: boolean
     staticSiteGeneration?: {}
   } = {}
@@ -25,8 +31,9 @@ export default function pluginFactory(
     useHashRouter = false,
     staticSiteGeneration,
   } = opts
-  let pagesDir: string = opts.pagesDir ?? ''
-  let pagesFinder: PageFinder
+
+  let pagesDir: string
+  let pageStrategy: PageStrategy
 
   return {
     name: 'vite-plugin-react-pages',
@@ -47,57 +54,52 @@ export default function pluginFactory(
         },
       },
     }),
-    configResolved: (config) => {
-      if (!pagesDir) {
-        pagesDir = path.resolve(config.root, 'pages')
-      }
+    configResolved(config) {
+      pagesDir = opts.pagesDir ?? path.resolve(config.root, 'pages')
+      pageStrategy = new PageStrategy(pagesDir, findPages, loadPageData)
     },
-    resolveId(importee, importer) {
-      if (importee === '@!virtual-modules/pages') {
-        // page list
-        return importee
-      }
-      if (importee.startsWith('@!virtual-modules/pages/')) {
-        // one page data
-        return importee
-      }
-      if (importee === '@!virtual-modules/theme') {
-        return importee
-      }
-      if (importee === '@!virtual-modules/ssrData') {
-        return importee
-      }
+    configureServer({ watcher }) {
+      pageStrategy
+        .on('promise', () => watcher.emit('change', pagesModuleId))
+        .on('change', (pageId: string) =>
+          watcher.emit('change', pagesModuleId + pageId)
+        )
+    },
+    resolveId(id) {
+      return id === themeModuleId ||
+        id === ssrDataModuleId ||
+        id === pagesModuleId ||
+        id.startsWith(pagesModuleId + '/')
+        ? id
+        : undefined
     },
     async load(id) {
-      if (id === '@!virtual-modules/pages') {
-        // page list
-        pagesFinder ??= getPageFinder(pagesDir, { findPages, loadPageData })
-        return renderPageList(await pagesFinder.results)
+      // page list
+      if (id === pagesModuleId) {
+        return renderPageList(await pageStrategy.getPages())
       }
-      if (id.startsWith('@!virtual-modules/pages/')) {
-        // one page data
-        let pageId = id.slice('@!virtual-modules/pages'.length)
+      // one page data
+      if (id.startsWith(pagesModuleId + '/')) {
+        let pageId = id.slice(pagesModuleId.length)
         if (pageId === '/__index') pageId = '/'
-        pagesFinder ??= getPageFinder(pagesDir, { findPages, loadPageData })
-        const pagesData = await pagesFinder.results
-        const page = pagesData?.[pageId]
+        const pages = await pageStrategy.getPages()
+        const page = pages[pageId]
         if (!page) {
-          throw new Error(`Page not exist: ${pageId}`)
+          throw Error(`Page not found: ${pageId}`)
         }
         return renderOnePageData(page.data)
       }
-      if (id === '@!virtual-modules/theme') {
+      if (id === themeModuleId) {
         return `export { default } from "${await resolveTheme(pagesDir)}";`
       }
-      if (id === '@!virtual-modules/ssrData') {
-        pagesFinder ??= getPageFinder(pagesDir, { findPages, loadPageData })
-        return renderPageListInSSR(await pagesFinder.results)
+      if (id === ssrDataModuleId) {
+        return renderPageListInSSR(await pageStrategy.getPages())
       }
     },
     // @ts-expect-error
     vitePagesStaticSiteGeneration: staticSiteGeneration,
     closeWatcher() {
-      pagesFinder?.close()
+      pageStrategy.close()
     },
   }
 }
