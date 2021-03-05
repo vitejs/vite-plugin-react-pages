@@ -1,90 +1,54 @@
-import { useState, useEffect, useContext, useCallback } from 'react'
-import type { PagesInternal, LoadState } from '../../client'
+import { useState, useLayoutEffect, useContext, useRef } from 'react'
+import { unstable_batchedUpdates as batchedUpdates } from 'react-dom'
+import type { LoadState } from '../../client'
 import { dataCacheCtx, setDataCacheCtx } from './ssr/ctx'
+import { usePageModule } from './state'
 
-export default function useAppState(
-  pages: PagesInternal,
-  latestRoutePath: string
-) {
+export default function useAppState(routePath: string) {
   const dataCache = useContext(dataCacheCtx)
   const setDataCache = useContext(setDataCacheCtx)
-  const [loadState, _setLoadState] = useState<LoadState>(() => {
-    return {
-      type: 'loading',
-      routePath: latestRoutePath,
-    }
-  })
 
-  const setLoadState = (newLoadState: LoadState) => {
-    if (
-      newLoadState.type === loadState.type &&
-      newLoadState.routePath === loadState.routePath
-    ) {
-      // don't set state if prev is already what I want
+  const [loadState, setLoadState] = useState<LoadState>(() => ({
+    type: 'loading',
+    routePath,
+  }))
+
+  const onLoadState = (
+    type: LoadState['type'],
+    routePath: string,
+    error?: any
+  ) =>
+    (type !== loadState.type || routePath !== loadState.routePath) &&
+    setLoadState({ type, routePath, error })
+
+  const loading = usePageModule(routePath)
+  const loadingRef = useRef<Promise<any> | undefined>()
+  useLayoutEffect(() => {
+    loadingRef.current = loading
+    if (!loading) {
+      onLoadState('404', routePath)
     } else {
-      _setLoadState(newLoadState)
-    }
-  }
-
-  const { routePath } = loadState
-
-  if (!pages[latestRoutePath]) {
-    if (pages['/404'] && !dataCache['/404']) {
-      // load /404 page
-      setLoadState({
-        type: 'loading',
-        routePath: latestRoutePath,
-      })
-    } else {
-      setLoadState({
-        type: '404',
-        routePath: latestRoutePath,
-      })
-    }
-  } else if (routePath !== latestRoutePath) {
-    // if routePath has changed,
-    // update loadState and rerender this component
-    setLoadState({
-      type: 'loading',
-      routePath: latestRoutePath,
-    })
-  } else if (dataCache[routePath]) {
-    // if we have the data in cache (.e.g during ssr or loaded done)
-    // update loadState and rerender this component
-    setLoadState({
-      type: 'loaded',
-      routePath,
-    })
-  }
-
-  useEffect(() => {
-    // FIXME handle race condition of this async setState
-    if (loadState.type === 'loading') {
-      let loadPath = routePath
-      if (!pages[routePath]) {
-        // loading a non-exist page
-        if (pages['/404']) {
-          loadPath = '/404'
-        }
+      if (dataCache[routePath]) {
+        onLoadState('loaded', routePath)
+      } else {
+        onLoadState('loading', routePath)
+        loading.then(
+          (page) =>
+            loading === loadingRef.current &&
+            batchedUpdates(() => {
+              onLoadState('loaded', routePath)
+              setDataCache((prev) => ({
+                ...prev,
+                [routePath]: page.default,
+              }))
+            }),
+          (error) =>
+            loading === loadingRef.current &&
+            onLoadState('load-error', routePath, error)
+        )
       }
-      const { data: dataImporter } = pages[loadPath]
-      dataImporter()
-        .then(({ default: pageLoaded }) => {
-          setDataCache((prev) => ({
-            ...prev,
-            [loadPath]: pageLoaded,
-          }))
-        })
-        .catch((error) => {
-          setLoadState({
-            type: 'load-error',
-            routePath,
-            error,
-          })
-          throw error
-        })
     }
-  }, [routePath])
+  }, [loading])
 
   return loadState
 }

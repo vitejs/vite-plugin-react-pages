@@ -11,7 +11,7 @@ export interface PagesData {
   }
 }
 
-export async function renderPageList(pagesData: PagesData) {
+export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
   const addPagesData = Object.entries(pagesData).map(
     ([pageId, { staticData }]) => {
       let subPath = pageId
@@ -20,9 +20,12 @@ export async function renderPageList(pagesData: PagesData) {
         // so we change the sub path
         subPath = '/__index'
       }
+      const dataProperty = isBuild
+        ? `data = () => import("@!virtual-modules/pages${subPath}")`
+        : `dataPath = "/@id/@!virtual-modules/pages${subPath}"`
       const code = `
 pages["${pageId}"] = {};
-pages["${pageId}"].data = () => import("@!virtual-modules/pages${subPath}");
+pages["${pageId}"].${dataProperty};
 pages["${pageId}"].staticData = ${JSON.stringify(staticData)};`
       return code
     }
