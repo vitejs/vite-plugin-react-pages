@@ -1,29 +1,40 @@
 import * as path from 'path'
 import type { Plugin } from 'vite'
 import {
-  FindPagesHelpers,
-  FindPagesResult,
-  renderPageListInSSR,
-} from './dynamic-modules/pages'
-import {
-  collectPagesData,
   renderPageList,
+  renderPageListInSSR,
   renderOnePageData,
 } from './dynamic-modules/pages'
+import {
+  FindPages,
+  LoadPageData,
+  PageStrategy,
+} from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
+
+const pagesModuleId = '@!virtual-modules/pages'
+const themeModuleId = '@!virtual-modules/theme'
+const ssrDataModuleId = '@!virtual-modules/ssrData'
 
 export default function pluginFactory(
   opts: {
     pagesDir?: string
-    findPages?: (helpers: FindPagesHelpers) => Promise<void>
+    findPages?: FindPages
+    loadPageData?: LoadPageData
     useHashRouter?: boolean
     staticSiteGeneration?: {}
   } = {}
 ): Plugin {
-  const { findPages, useHashRouter = false, staticSiteGeneration } = opts
-  let pagesDir: string = opts.pagesDir ?? ''
+  const {
+    findPages,
+    loadPageData,
+    useHashRouter = false,
+    staticSiteGeneration,
+  } = opts
 
-  let pagesData: Promise<FindPagesResult>
+  let pagesDir: string
+  let pageStrategy: PageStrategy
+
   return {
     name: 'vite-plugin-react-pages',
     config: () => ({
@@ -43,55 +54,53 @@ export default function pluginFactory(
         },
       },
     }),
-    configResolved: (config) => {
-      if (!pagesDir) {
-        pagesDir = path.resolve(config.root, 'pages')
-      }
+    configResolved(config) {
+      pagesDir = opts.pagesDir ?? path.resolve(config.root, 'pages')
+      pageStrategy = new PageStrategy(pagesDir, findPages, loadPageData)
     },
-    resolveId(importee, importer) {
-      if (importee === '@!virtual-modules/pages') {
-        // page list
-        return importee
-      }
-      if (importee.startsWith('@!virtual-modules/pages/')) {
-        // one page data
-        return importee
-      }
-      if (importee === '@!virtual-modules/theme') {
-        return importee
-      }
-      if (importee === '@!virtual-modules/ssrData') {
-        return importee
-      }
+    configureServer({ watcher }) {
+      pageStrategy
+        .on('promise', () => watcher.emit('change', pagesModuleId))
+        .on('change', (pageId: string) =>
+          watcher.emit('change', pagesModuleId + pageId)
+        )
+    },
+    resolveId(id) {
+      return id === themeModuleId ||
+        id === ssrDataModuleId ||
+        id === pagesModuleId ||
+        id.startsWith(pagesModuleId + '/')
+        ? id
+        : undefined
     },
     async load(id) {
-      if (id === '@!virtual-modules/pages') {
-        // page list
-        if (!pagesData) pagesData = collectPagesData(pagesDir, findPages)
-        return renderPageList(await pagesData)
+      // page list
+      if (id === pagesModuleId) {
+        return renderPageList(await pageStrategy.getPages())
       }
-      if (id.startsWith('@!virtual-modules/pages/')) {
-        // one page data
-        let pageId = id.slice('@!virtual-modules/pages'.length)
+      // one page data
+      if (id.startsWith(pagesModuleId + '/')) {
+        let pageId = id.slice(pagesModuleId.length)
         if (pageId === '/__index') pageId = '/'
-        if (!pagesData) pagesData = collectPagesData(pagesDir, findPages)
-        const pagesDataAwaited = await pagesData
-        const page = pagesDataAwaited?.[pageId]
+        const pages = await pageStrategy.getPages()
+        const page = pages[pageId]
         if (!page) {
-          throw new Error(`Page not exist: ${pageId}`)
+          throw Error(`Page not found: ${pageId}`)
         }
         return renderOnePageData(page.data)
       }
-      if (id === '@!virtual-modules/theme') {
+      if (id === themeModuleId) {
         return `export { default } from "${await resolveTheme(pagesDir)}";`
       }
-      if (id === '@!virtual-modules/ssrData') {
-        if (!pagesData) pagesData = collectPagesData(pagesDir, findPages)
-        return renderPageListInSSR(await pagesData)
+      if (id === ssrDataModuleId) {
+        return renderPageListInSSR(await pageStrategy.getPages())
       }
     },
     // @ts-expect-error
     vitePagesStaticSiteGeneration: staticSiteGeneration,
+    closeWatcher() {
+      pageStrategy.close()
+    },
   }
 }
 
