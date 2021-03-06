@@ -29,15 +29,15 @@ const initialPagePaths = Object.keys(initialPages)
 // by the same Provider. It also mutates during render, which is
 // generally discouraged, but in this case it's okay.
 if (import.meta.hot) {
-  let setTheme: SetAtom<{ Theme: Theme }>
-  let setPages: SetAtom<PagesStaticData>
+  let setTheme: SetAtom<{ Theme: Theme }> | undefined
+  let setPages: SetAtom<PagesStaticData> | undefined
 
   // Without /@id/ prefix, Vite will resolve them relative to __dirname.
   import.meta.hot!.accept('/@id/@!virtual-modules/theme', (module) => {
-    setTheme(module.default)
+    setTheme?.(module.default)
   })
   import.meta.hot!.accept('/@id/@!virtual-modules/pages', (module) => {
-    setPages(module.default)
+    setPages?.(module.default)
   })
 
   const themeAtom = atom({ Theme: initialTheme })
