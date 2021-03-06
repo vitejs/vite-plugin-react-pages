@@ -134,7 +134,8 @@ export class PageStrategy extends EventEmitter {
         handler = arg2
       } else {
         globs = Array.isArray(arg2) ? arg2 : [arg2 || '**/*']
-        handler = arg3 || defaultPageLoader
+        handler =
+          arg3 || ((file) => Promise.resolve(loadPageData(file, helpers)))
       }
 
       // Strip trailing slash and make absolute
