@@ -1,8 +1,9 @@
 import type { Plugin } from 'vite'
+import type { Options } from '@mdx-js/mdx'
 import remarkFrontmatter from 'remark-frontmatter'
 import { stopService, transformMdx } from './transform'
 
-export function cleanCreatePlugin(mdxOpts?: any): Plugin {
+export function cleanCreatePlugin(mdxOpts?: Options): Plugin {
   let shouldApplyHMR = true
 
   return {

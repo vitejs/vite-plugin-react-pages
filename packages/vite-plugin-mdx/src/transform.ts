@@ -1,5 +1,5 @@
 import { startService, Service } from 'esbuild'
-import mdx from '@mdx-js/mdx'
+import mdx, { Options } from '@mdx-js/mdx'
 
 const DEFAULT_RENDERER = `
 import React from 'react'
@@ -13,7 +13,7 @@ export async function transformMdx({
   id,
 }: {
   code: string
-  mdxOpts?: any
+  mdxOpts?: Options
   forHMR?: boolean
   id?: string
 }): Promise<string> {
