@@ -39,7 +39,7 @@ export class PageStrategy extends EventEmitter {
 
     const helpers: PageHelpers = {
       extractStaticData,
-      loadPageData: (file) => Promise.resolve(loadPageData(file, helpers)),
+      loadPageData: defaultPageLoader,
       addPageData,
       watchFiles,
     }
@@ -48,7 +48,10 @@ export class PageStrategy extends EventEmitter {
     let currentFile: File | null = null
 
     let pagesPromise = Promise.resolve(pageCache)
-    findPages(pagesDir, helpers)
+    findPages(pagesDir, {
+      ...helpers,
+      loadPageData: (file) => Promise.resolve(loadPageData(file, helpers)),
+    })
 
     this.getPages = () => pagesPromise
     this.close = () => watchers.forEach((w) => w.close())
