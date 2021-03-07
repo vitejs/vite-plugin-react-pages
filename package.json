@@ -10,7 +10,20 @@
     "ver:mi": "npm run ver -- minor",
     "pub": "pnpm -r publish --filter {packages}",
     "update-deps": "pnpm -r update -i -L",
-    "update-local-deps": "pnpm update -r vite-plugin-mdx vite-plugin-react-pages vite-pages-theme-basic --workspace"
+    "update-local-deps": "pnpm update -r vite-plugin-mdx vite-plugin-react-pages vite-pages-theme-basic --workspace",
+    "test-serve": "jest",
+    "postinstall": "node ./scripts/linkBins.js"
+  },
+  "devDependencies": {
+    "@pnpm/link-bins": "^5.3.23",
+    "@types/jest": "^26.0.19",
+    "@types/node": "^14.14.10",
+    "jest": "^26.6.3",
+    "playwright-chromium": "^1.7.0",
+    "sirv": "^1.0.10",
+    "slash": "^3.0.0",
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.5"
   },
   "pnpm": {
     "overrides": {
