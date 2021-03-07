@@ -1,5 +1,6 @@
 import * as path from 'path'
 import type { Plugin } from 'vite'
+import noMatter from 'nomatter'
 import {
   renderPageList,
   renderPageListInSSR,
@@ -37,6 +38,7 @@ export default function pluginFactory(
 
   return {
     name: 'vite-plugin-react-pages',
+    enforce: 'pre',
     config: () => ({
       resolve: {
         alias: {
@@ -64,6 +66,11 @@ export default function pluginFactory(
         .on('change', (pageId: string) =>
           watcher.emit('change', pagesModuleId + pageId)
         )
+    },
+    transform(code, id) {
+      if (/\.mdx$/.test(id)) {
+        return noMatter(code)
+      }
     },
     resolveId(id) {
       return id === themeModuleId ||
