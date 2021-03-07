@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react'
-import type { PagesStaticData, PagesInternal, Theme } from './types'
+import type { PagesStaticData, PagesInternal, Theme } from '../../client'
 import { dataCacheCtx } from './ssr/ctx'
 import useAppState from './useAppState'
 

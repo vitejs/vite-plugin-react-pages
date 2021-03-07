@@ -105,7 +105,8 @@ export default function pluginFactory(
 }
 
 export type {
-  Theme as Theme,
-  PagesStaticData as PagesStaticData,
-  PagesLoaded as PagesLoaded,
-} from './types/client'
+  Theme,
+  LoadState,
+  PagesLoaded,
+  PagesStaticData,
+} from '../../client'
