@@ -1,7 +1,6 @@
 import * as path from 'path'
 import type { Plugin } from 'vite'
 import type { MdxPlugin } from 'vite-plugin-mdx'
-import resolve from 'resolve-from'
 import {
   renderPageList,
   renderPageListInSSR,
@@ -61,7 +60,8 @@ export default function pluginFactory(
       pageStrategy = new PageStrategy(pagesDir, findPages, loadPageData)
 
       // Inject parsing logic for frontmatter if missing.
-      if (!resolve.silent(root, 'remark-frontmatter')) {
+      const { devDependencies = {} } = require(path.join(root, 'package.json'))
+      if (!devDependencies['remark-frontmatter']) {
         const mdxPlugin = plugins.find(
           (plugin) => plugin.name === 'vite-plugin-mdx'
         ) as MdxPlugin | undefined
