@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 
-import ssrData from '@!virtual-modules/ssrData'
+import ssrData from '/@react-pages/ssrData'
 import App from '../App'
 import { dataCacheCtx } from './ctx'
 import type { PagesLoaded } from '../../../client'

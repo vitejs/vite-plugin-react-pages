@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from '../App'
 import SSRContextProvider from '../SSRContextProvider'
-import pages from '@!virtual-modules/pages'
+import pages from '/@react-pages/pages'
 
 declare global {
   interface Window {

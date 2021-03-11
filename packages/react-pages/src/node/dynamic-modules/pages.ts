@@ -16,13 +16,13 @@ export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
     ([pageId, { staticData }]) => {
       let subPath = pageId
       if (subPath === '/') {
-        // import("@!virtual-modules/pages/") would make vite confused
+        // import("/@react-pages/pages/") would make vite confused
         // so we change the sub path
         subPath = '/__index'
       }
       const dataProperty = isBuild
-        ? `data = () => import("@!virtual-modules/pages${subPath}")`
-        : `dataPath = "/@id/@!virtual-modules/pages${subPath}"`
+        ? `data = () => import("/@react-pages/pages${subPath}")`
+        : `dataPath = "/@react-pages/pages${subPath}"`
       const code = `
 pages["${pageId}"] = {};
 pages["${pageId}"].${dataProperty};
@@ -42,13 +42,13 @@ export async function renderPageListInSSR(pagesData: PagesData) {
     ([pageId, { staticData }], index) => {
       let subPath = pageId
       if (subPath === '/') {
-        // import("@!virtual-modules/pages/") would make vite confused
+        // import("/@react-pages/pages/") would make vite confused
         // so we change the sub path
         subPath = '/__index'
       }
       const code = `
 pages["${pageId}"] = {};
-import page${index} from "@!virtual-modules/pages${subPath}";
+import page${index} from "/@react-pages/pages${subPath}";
 pages["${pageId}"] = page${index};`
       return code
     }

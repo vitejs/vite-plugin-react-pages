@@ -12,9 +12,10 @@ import {
 } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 
-const pagesModuleId = '@!virtual-modules/pages'
-const themeModuleId = '@!virtual-modules/theme'
-const ssrDataModuleId = '@!virtual-modules/ssrData'
+const modulePrefix = '/@react-pages/'
+const pagesModuleId = modulePrefix + 'pages'
+const themeModuleId = modulePrefix + 'theme'
+const ssrDataModuleId = modulePrefix + 'ssrData'
 
 export default function pluginFactory(
   opts: {
@@ -65,7 +66,7 @@ export default function pluginFactory(
         const module = moduleGraph.getModuleById(moduleId)
         if (module) {
           moduleGraph.invalidateModule(module)
-          watcher.emit('change', '/@id/' + moduleId)
+          watcher.emit('change', moduleId)
         }
       }
 

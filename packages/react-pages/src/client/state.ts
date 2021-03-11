@@ -20,8 +20,8 @@ interface UseStaticData {
   <T>(path: string, selector: (staticData: Record<string, any>) => T): T
 }
 
-import initialPages from '@!virtual-modules/pages'
-import initialTheme from '@!virtual-modules/theme'
+import initialPages from '/@react-pages/pages'
+import initialTheme from '/@react-pages/theme'
 
 const initialPagePaths = Object.keys(initialPages)
 
@@ -30,14 +30,8 @@ const initialPagePaths = Object.keys(initialPages)
 // generally discouraged, but in this case it's okay.
 if (import.meta.hot) {
   let setTheme: SetAtom<{ Theme: Theme }> | undefined
-  let setPages: SetAtom<PagesStaticData> | undefined
-
-  // Without /@id/ prefix, Vite will resolve them relative to __dirname.
-  import.meta.hot!.accept('/@id/@!virtual-modules/theme', (module) => {
-    setTheme?.(module.default)
-  })
-  import.meta.hot!.accept('/@id/@!virtual-modules/pages', (module) => {
-    setPages?.(module.default)
+  import.meta.hot!.accept('/@react-pages/theme', (module) => {
+    setTheme?.({ Theme: module.default })
   })
 
   const themeAtom = atom({ Theme: initialTheme })
@@ -46,6 +40,11 @@ if (import.meta.hot) {
     setTheme = set
     return Theme
   }
+
+  let setPages: SetAtom<any> | undefined
+  import.meta.hot!.accept('/@react-pages/pages', (module) => {
+    setPages?.(module.default)
+  })
 
   const pagesAtom = atom(initialPages)
   const pagePathsAtom = atom(initialPagePaths.sort())

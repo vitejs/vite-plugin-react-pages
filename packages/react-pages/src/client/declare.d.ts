@@ -1,1 +1,1 @@
-declare module '@!virtual-modules/*'
+declare module '/@react-pages/*'
