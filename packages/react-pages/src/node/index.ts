@@ -77,12 +77,7 @@ export default function pluginFactory(
         )
     },
     resolveId(id) {
-      return id === themeModuleId ||
-        id === ssrDataModuleId ||
-        id === pagesModuleId ||
-        id.startsWith(pagesModuleId + '/')
-        ? id
-        : undefined
+      return id.startsWith(modulePrefix) ? id : undefined
     },
     async load(id) {
       // page list
