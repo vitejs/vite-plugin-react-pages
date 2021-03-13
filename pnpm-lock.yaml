@@ -399,6 +399,7 @@ importers:
       '@babel/preset-typescript': 7.12.17
       '@rollup/plugin-babel': 5.3.0_rollup@2.39.0
       chalk: 4.1.0
+      dequal: 2.0.2
       enhanced-resolve: 5.7.0
       find-up: 5.0.0
       fs-extra: 9.1.0
@@ -406,6 +407,7 @@ importers:
       globby: 11.0.2
       gray-matter: 4.0.2
       jest-docblock: 26.0.0
+      jotai: 0.15.1_react@17.0.1
       mini-debounce: 1.0.8
       minimist: 1.2.5
       ora: 5.3.0
@@ -445,6 +447,7 @@ importers:
       chalk: ^4.1.0
       chokidar: ^3.5.1
       concurrently: ^6.0.0
+      dequal: ^2.0.2
       enhanced-resolve: ^5.7.0
       find-up: ^5.0.0
       fs-extra: ^9.1.0
@@ -452,6 +455,7 @@ importers:
       globby: ^11.0.2
       gray-matter: ^4.0.2
       jest-docblock: ^26.0.0
+      jotai: ^0.15.1
       mini-debounce: ^1.0.8
       minimist: ^1.2.5
       ora: ^5.3.0
@@ -3331,37 +3335,12 @@ packages:
       node: '>= 0.4'
     resolution:
       integrity: sha512-3MqfYKj2lLzdMSf8ZIZE/V+Zuy+BgD6f164e8K2w7dgnpKArBDerGYpM46IYYcjnkdPNMjPk9A6VFB8+3SKlXQ==
-  /define-property/0.2.5:
-    dependencies:
-      is-descriptor: 0.1.6
-    dev: true
+  /dequal/2.0.2:
+    dev: false
     engines:
-      node: '>=0.10.0'
+      node: '>=6'
     resolution:
-      integrity: sha1-w1se+RjsPJkPmlvFe+BKrOxcgRY=
-  /define-property/1.0.0:
-    dependencies:
-      is-descriptor: 1.0.2
-    dev: true
-    engines:
-      node: '>=0.10.0'
-    resolution:
-      integrity: sha1-dp66rz9KY6rTr56NMEybvnm/sOY=
-  /define-property/2.0.2:
-    dependencies:
-      is-descriptor: 1.0.2
-      isobject: 3.0.1
-    dev: true
-    engines:
-      node: '>=0.10.0'
-    resolution:
-      integrity: sha512-jwK2UV4cnPpbcG7+VRARKTZPUWowwXA8bzH5NP6ud0oeAxyYPuGZUAC7hMugpCdz4BeSZl2Dl9k66CHJ/46ZYQ==
-  /delayed-stream/1.0.0:
-    dev: true
-    engines:
-      node: '>=0.4.0'
-    resolution:
-      integrity: sha1-3zrhmayt+31ECqrgsp4icrJOxhk=
+      integrity: sha512-q9K8BlJVxK7hQYqa6XISGmBZbtQQWVXSrRrWreHC94rMt1QL/Impruc+7p2CYSYuVIUr+YCt6hjrs1kkdJRTug==
   /detab/2.0.4:
     dependencies:
       repeat-string: 1.6.1
@@ -4785,7 +4764,51 @@ packages:
       isarray: 1.0.0
     dev: true
     engines:
-      node: '>=0.10.0'
+      node: '>= 10.14.2'
+    resolution:
+      integrity: sha512-RDZ4Iz3QbtRWycd8bUEPxQsTlYazfYn/h5R65Fc6gOfwozFhoImx+affzky/FFBuqISPTqjXomoIGJVKBWoo0w==
+  /jotai/0.15.1_react@17.0.1:
+    dependencies:
+      react: 17.0.1
+    dev: false
+    peerDependencies:
+      immer: '*'
+      optics-ts: '*'
+      react: '>=16.8'
+      react-query: '*'
+      xstate: '*'
+    peerDependenciesMeta:
+      immer:
+        optional: true
+      optics-ts:
+        optional: true
+      react-query:
+        optional: true
+      xstate:
+        optional: true
+    resolution:
+      integrity: sha512-ffC+CGYLyV6CiWZ2Pm2XcySzH3+AhaIdGN2LTmpOrbFQqH+JBPHQTRqw0G9ys7/6xhzhWDvBASigTaQQGEBubA==
+  /js-tokens/4.0.0:
+    resolution:
+      integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
+  /js-yaml/3.14.0:
+    dependencies:
+      argparse: 1.0.10
+      esprima: 4.0.1
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-/4IbIeHcD9VMHFqDR/gQ7EdZdLimOvW2DdcxFjdyyZ9NsbS+ccrXqVWDtab/lRl5AlUqmpBx8EhPaWR+OtY17A==
+  /js-yaml/3.14.1:
+    dependencies:
+      argparse: 1.0.10
+      esprima: 4.0.1
+    hasBin: true
+    resolution:
+      integrity: sha512-okMH7OXXJ7YrN9Ok3/SXrnu4iX9yOk+25nqX4imS2npuvTYDmo/QEZoqwZkYaIDk3jVvBOTOIEgEhaLOynBS9g==
+  /jsesc/0.5.0:
+    dev: false
+    hasBin: true
     resolution:
       integrity: sha1-8GVWEJaj8dou9GJy+BXIQNh+DIk=
   /isobject/3.0.1:

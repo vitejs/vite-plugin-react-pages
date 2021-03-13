@@ -1,34 +1,18 @@
-import React, { useContext, useMemo } from 'react'
-import type { PagesStaticData, PagesInternal, Theme } from '../../client'
+import React, { useContext } from 'react'
 import { dataCacheCtx } from './ssr/ctx'
+import { useTheme } from './state'
 import useAppState from './useAppState'
 
 interface Props {
-  readonly Theme: Theme
-  readonly pages: PagesInternal
-  readonly routePath: string
+  routePath: string
 }
 
-const PageLoader = ({ pages, routePath: routePathFromProps, Theme }: Props) => {
+const PageLoader = React.memo(({ routePath }: Props) => {
+  const Theme = useTheme()
+  const loadState = useAppState(routePath)
   const dataCache = useContext(dataCacheCtx)
-  const loadState = useAppState(pages, routePathFromProps)
 
-  const pagesStaticData = useMemo(() => getPublicPages(pages), [pages])
-
-  return (
-    <Theme
-      loadState={loadState}
-      loadedData={dataCache}
-      staticData={pagesStaticData}
-    />
-  )
-}
+  return <Theme loadState={loadState} loadedData={dataCache} />
+})
 
 export default PageLoader
-
-// filter out internal fields inside pages
-function getPublicPages(pages: PagesInternal): PagesStaticData {
-  return Object.fromEntries(
-    Object.entries(pages).map(([path, { staticData }]) => [path, staticData])
-  )
-}

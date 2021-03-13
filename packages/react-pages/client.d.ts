@@ -4,7 +4,6 @@ import React from 'react'
 export type Theme = React.ComponentType<ThemeProps>
 
 export interface ThemeProps {
-  readonly staticData: PagesStaticData
   readonly loadedData: PagesLoaded
   readonly loadState: LoadState
 }

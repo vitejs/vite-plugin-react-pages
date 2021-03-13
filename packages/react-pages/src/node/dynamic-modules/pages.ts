@@ -11,18 +11,21 @@ export interface PagesData {
   }
 }
 
-export async function renderPageList(pagesData: PagesData) {
+export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
   const addPagesData = Object.entries(pagesData).map(
     ([pageId, { staticData }]) => {
       let subPath = pageId
       if (subPath === '/') {
-        // import("@!virtual-modules/pages/") would make vite confused
+        // import("/@react-pages/pages/") would make vite confused
         // so we change the sub path
         subPath = '/__index'
       }
+      const dataProperty = isBuild
+        ? `data = () => import("/@react-pages/pages${subPath}")`
+        : `dataPath = "/@react-pages/pages${subPath}"`
       const code = `
 pages["${pageId}"] = {};
-pages["${pageId}"].data = () => import("@!virtual-modules/pages${subPath}");
+pages["${pageId}"].${dataProperty};
 pages["${pageId}"].staticData = ${JSON.stringify(staticData)};`
       return code
     }
@@ -39,13 +42,13 @@ export async function renderPageListInSSR(pagesData: PagesData) {
     ([pageId, { staticData }], index) => {
       let subPath = pageId
       if (subPath === '/') {
-        // import("@!virtual-modules/pages/") would make vite confused
+        // import("/@react-pages/pages/") would make vite confused
         // so we change the sub path
         subPath = '/__index'
       }
       const code = `
 pages["${pageId}"] = {};
-import page${index} from "@!virtual-modules/pages${subPath}";
+import page${index} from "/@react-pages/pages${subPath}";
 pages["${pageId}"] = page${index};`
       return code
     }

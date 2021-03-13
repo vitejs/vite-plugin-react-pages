@@ -13,9 +13,10 @@ import {
 } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 
-const pagesModuleId = '@!virtual-modules/pages'
-const themeModuleId = '@!virtual-modules/theme'
-const ssrDataModuleId = '@!virtual-modules/ssrData'
+const modulePrefix = '/@react-pages/'
+const pagesModuleId = modulePrefix + 'pages'
+const themeModuleId = modulePrefix + 'theme'
+const ssrDataModuleId = modulePrefix + 'ssrData'
 
 export default function pluginFactory(
   opts: {
@@ -33,6 +34,7 @@ export default function pluginFactory(
     staticSiteGeneration,
   } = opts
 
+  let isBuild: boolean
   let pagesDir: string
   let pageStrategy: PageStrategy
 
@@ -55,7 +57,8 @@ export default function pluginFactory(
         },
       },
     }),
-    configResolved({ root, plugins, logger }) {
+    configResolved({ root, plugins, logger, command }) {
+      isBuild = command === 'build'
       pagesDir = opts.pagesDir ?? path.resolve(root, 'pages')
       pageStrategy = new PageStrategy(pagesDir, findPages, loadPageData)
 
@@ -75,25 +78,28 @@ export default function pluginFactory(
         }
       }
     },
-    configureServer({ watcher }) {
+    configureServer({ watcher, moduleGraph }) {
+      const reloadVirtualModule = (moduleId: string) => {
+        const module = moduleGraph.getModuleById(moduleId)
+        if (module) {
+          moduleGraph.invalidateModule(module)
+          watcher.emit('change', moduleId)
+        }
+      }
+
       pageStrategy
-        .on('promise', () => watcher.emit('change', pagesModuleId))
+        .on('promise', () => reloadVirtualModule(pagesModuleId))
         .on('change', (pageId: string) =>
-          watcher.emit('change', pagesModuleId + pageId)
+          reloadVirtualModule(pagesModuleId + pageId)
         )
     },
     resolveId(id) {
-      return id === themeModuleId ||
-        id === ssrDataModuleId ||
-        id === pagesModuleId ||
-        id.startsWith(pagesModuleId + '/')
-        ? id
-        : undefined
+      return id.startsWith(modulePrefix) ? id : undefined
     },
     async load(id) {
       // page list
       if (id === pagesModuleId) {
-        return renderPageList(await pageStrategy.getPages())
+        return renderPageList(await pageStrategy.getPages(), isBuild)
       }
       // one page data
       if (id.startsWith(pagesModuleId + '/')) {
