@@ -40,7 +40,8 @@
     "concurrently": "^6.0.0",
     "react": "^17.0.1",
     "typescript": "^4.1.5",
-    "vite": "^2.0.1"
+    "vite": "^2.0.1",
+    "vite-plugin-mdx": "^3.1.0"
   },
   "dependencies": {
     "@babel/preset-react": "^7.12.13",
@@ -55,6 +56,7 @@
     "mini-debounce": "^1.0.8",
     "minimist": "^1.2.5",
     "read-pkg-up": "^7.0.1",
+    "remark-frontmatter": "^2.0.0",
     "rollup": "^2.39.0",
     "rollup-plugin-postcss": "^4.0.0",
     "slash": "^3.0.0",

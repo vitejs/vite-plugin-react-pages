@@ -1,5 +1,6 @@
 import * as path from 'path'
 import type { Plugin } from 'vite'
+import type { MdxPlugin } from 'vite-plugin-mdx'
 import {
   renderPageList,
   renderPageListInSSR,
@@ -54,9 +55,25 @@ export default function pluginFactory(
         },
       },
     }),
-    configResolved(config) {
-      pagesDir = opts.pagesDir ?? path.resolve(config.root, 'pages')
+    configResolved({ root, plugins, logger }) {
+      pagesDir = opts.pagesDir ?? path.resolve(root, 'pages')
       pageStrategy = new PageStrategy(pagesDir, findPages, loadPageData)
+
+      // Inject parsing logic for frontmatter if missing.
+      const { devDependencies = {} } = require(path.join(root, 'package.json'))
+      if (!devDependencies['remark-frontmatter']) {
+        const mdxPlugin = plugins.find(
+          (plugin) => plugin.name === 'vite-plugin-mdx'
+        ) as MdxPlugin | undefined
+
+        if (mdxPlugin?.mdxOptions) {
+          mdxPlugin.mdxOptions.remarkPlugins.push(require('remark-frontmatter'))
+        } else {
+          logger.warn(
+            '[react-pages] Please install vite-plugin-mdx@3.1 or higher'
+          )
+        }
+      }
     },
     configureServer({ watcher }) {
       pageStrategy
