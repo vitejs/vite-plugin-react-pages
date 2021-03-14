@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { dataCacheCtx } from './ssr/ctx'
-import { useTheme } from './state'
+import { useTheme, useStaticData } from './state'
 import useAppState from './useAppState'
 
 interface Props {
@@ -12,7 +12,13 @@ const PageLoader = React.memo(({ routePath }: Props) => {
   const loadState = useAppState(routePath)
   const dataCache = useContext(dataCacheCtx)
 
-  return <Theme loadState={loadState} loadedData={dataCache} />
+  return (
+    <Theme
+      loadState={loadState}
+      loadedData={dataCache}
+      useStaticData={useStaticData}
+    />
+  )
 })
 
 export default PageLoader

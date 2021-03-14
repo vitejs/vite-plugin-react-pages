@@ -18,6 +18,7 @@ export default {
     'react-dom',
     'react-router-dom',
     '@mdx-js/react',
+    'vite-plugin-react-pages',
     // /babel-runtime/
   ],
   plugins: [

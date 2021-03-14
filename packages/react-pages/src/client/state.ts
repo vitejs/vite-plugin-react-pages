@@ -3,7 +3,7 @@ import { dequal } from 'dequal'
 import type { SetAtom } from 'jotai/core/types'
 import { atom, useAtom } from 'jotai'
 import { atomFamily, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import type { PageLoaded, PagesStaticData, Theme } from '../../client'
+import type { PageLoaded, UseStaticData, Theme } from '../../client'
 
 export let useTheme: () => Theme
 export let usePagePaths: () => string[]
@@ -12,12 +12,6 @@ export let useStaticData: UseStaticData
 
 interface PageModule {
   ['default']: PageLoaded
-}
-
-interface UseStaticData {
-  (): PagesStaticData
-  (path: string): Record<string, any>
-  <T>(path: string, selector: (staticData: Record<string, any>) => T): T
 }
 
 import initialPages from '/@react-pages/pages'

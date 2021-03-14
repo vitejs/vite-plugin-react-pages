@@ -6,6 +6,7 @@ export type Theme = React.ComponentType<ThemeProps>
 export interface ThemeProps {
   readonly loadedData: PagesLoaded
   readonly loadState: LoadState
+  readonly useStaticData: UseStaticData
 }
 
 /**
@@ -16,6 +17,17 @@ export interface PagesStaticData {
    * For each page, its static data is indexed by keys.
    */
   readonly [routePath: string]: Record<string, any>
+}
+
+/**
+ * get static data.
+ * In dev, if users edit file and change some pages' static data,
+ * it will react to the update, and return the latest data.
+ */
+export interface UseStaticData {
+  (): PagesStaticData
+  (path: string): Record<string, any>
+  <T>(path: string, selector: (staticData: Record<string, any>) => T): T
 }
 
 /**
