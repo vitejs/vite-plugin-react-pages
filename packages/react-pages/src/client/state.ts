@@ -49,8 +49,8 @@ if (import.meta.hot) {
 
     const pages = get(pagesAtom)
     for (const path in newPages) {
-      const page = pages[path]
       const newPage = newPages[path]
+      const page = pages[path]
 
       // Avoid changing the identity of `page.staticData` unless
       // a change is detected. This prevents unnecessary renders
@@ -63,15 +63,28 @@ if (import.meta.hot) {
       }
     }
 
+    // detect deleted pages
+    for (const path in pages) {
+      if (!newPages[path]) {
+        newStaticData ??= {}
+        newStaticData[path] = undefined
+      }
+    }
+
     // Update the `pagesAtom` every time, since no hook uses it directly.
     set(pagesAtom, newPages)
 
     // Avoid re-rendering `useStaticData()` callers if no data changed.
     if (newStaticData) {
-      set(staticDataAtom, {
+      newStaticData = {
         ...get(staticDataAtom),
         ...newStaticData,
-      })
+      }
+      // filter out deleted paths
+      newStaticData = Object.fromEntries(
+        Object.entries(newStaticData).filter(([k, v]) => v !== undefined)
+      )
+      set(staticDataAtom, newStaticData)
     }
 
     // Avoid re-rendering `usePagePaths()` callers if no paths were added/deleted.
