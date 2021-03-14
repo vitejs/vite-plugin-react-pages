@@ -30,6 +30,7 @@ test('should render pages', async () => {
 })
 
 test('hmr', async () => {
+  await page.goto(viteTestUrl)
   await untilUpdated(() => page.textContent('#root'), 'IndexPage')
   editFile('pages/index$.tsx', (code) =>
     code.replace(`<div>IndexPage</div>`, `<div>hmr works!</div>`)
