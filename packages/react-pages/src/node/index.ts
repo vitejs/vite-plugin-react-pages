@@ -121,7 +121,7 @@ export default function pluginFactory(
     },
     // @ts-expect-error
     vitePagesStaticSiteGeneration: staticSiteGeneration,
-    closeWatcher() {
+    closeBundle() {
       pageStrategy.close()
     },
   }
