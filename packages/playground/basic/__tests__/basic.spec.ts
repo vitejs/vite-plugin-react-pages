@@ -32,15 +32,29 @@ test('should render pages', async () => {
 test('hmr', async () => {
   await page.goto(viteTestUrl)
   await untilUpdated(() => page.textContent('#root'), 'IndexPage')
+  // js hmr
   editFile('pages/index$.tsx', (code) =>
     code.replace(`<div>IndexPage</div>`, `<div>hmr works!</div>`)
   )
   await untilUpdated(() => page.textContent('#root'), 'hmr works!')
 
+  // css hmr
   await page.goto(viteTestUrl + '/page1')
   await untilUpdated(() => page.textContent('.page'), 'Page1')
   const el = await page.$('.page')
   await untilUpdated(() => getColor(el), 'blue')
-  editFile('pages/style.scss', (code) => code.replace(`color: blue`, `color: red`))
+  editFile('pages/style.scss', (code) =>
+    code.replace(`color: blue`, `color: red`)
+  )
   await untilUpdated(() => getColor(el), 'red')
+
+  // markdown hmr
+  await page.goto(viteTestUrl + '/dir/page3')
+  await page.waitForSelector('h2:first-of-type')
+  const headingEl = await page.$('h2:first-of-type')
+  expect(await headingEl.textContent()).toBe('Overview')
+  editFile('pages/dir/page3$.md', (code) =>
+    code.replace(`## Overview`, `## HMR works!`)
+  )
+  await untilUpdated(() => headingEl.textContent(), 'HMR works!')
 })

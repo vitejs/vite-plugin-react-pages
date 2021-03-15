@@ -20,13 +20,14 @@ test('should render theme pages', async () => {
   expect(await getColor('text=React Box')).toBe('blue')
 })
 
-test('hmr', async () => {
+test('static data hmr', async () => {
   await page.goto(viteTestUrl)
   const sideNav = await page.$('.vp-theme-aside-navigation .vp-theme-menu')
 
   expect(await sideNav.textContent()).toBe(
     'index page titlepage1 titlepage2 titlepage3 titlepage4 title'
   )
+  // update static data
   editFile('pages/page1$.tsx', (code) =>
     code.replace('@title page1 title', '@title page1 updated title')
   )
