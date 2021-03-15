@@ -133,3 +133,5 @@ export type {
   PagesLoaded,
   PagesStaticData,
 } from '../../client'
+
+export { defaultPageFinder, defaultPageLoader } from './dynamic-modules/utils'
