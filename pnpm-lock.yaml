@@ -458,6 +458,7 @@ importers:
       chokidar: 3.5.1
       dequal: 2.0.2
       enhanced-resolve: 5.7.0
+      fast-deep-equal: 3.1.3
       fs-extra: 9.1.0
       gray-matter: 4.0.2
       jest-docblock: 26.0.0
@@ -497,6 +498,7 @@ importers:
       concurrently: ^6.0.0
       dequal: ^2.0.2
       enhanced-resolve: ^5.7.0
+      fast-deep-equal: ^3.1.3
       fs-extra: ^9.1.0
       gray-matter: ^4.0.2
       jest-docblock: ^26.0.0
@@ -3951,7 +3953,6 @@ packages:
     resolution:
       integrity: sha1-ewUhjd+WZ79/Nwv3/bLLFf3Qqkk=
   /fast-deep-equal/3.1.3:
-    dev: true
     resolution:
       integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
   /fast-glob/3.2.4:

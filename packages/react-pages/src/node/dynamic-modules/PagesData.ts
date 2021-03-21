@@ -1,3 +1,4 @@
+import deepEqual from 'fast-deep-equal'
 import { File } from './PageStrategy'
 import type { ScheduleUpdate } from './UpdateBuffer'
 
@@ -61,8 +62,8 @@ export class PagesDataKeeper {
     const dataObj = this.getDataObj(pageId, dataType)
     return new Proxy(dataObj, {
       set(target, prop: string, value) {
-        // delete data with key 'prop'
         if (value === undefined) {
+          // undefined means 'delete'
           const existValue = dataObj[prop]
           if (existValue) {
             existValue.unBind(scheduleUpdate)
@@ -233,11 +234,18 @@ export class Association<ValueType = any> {
     scheduleUpdate: ScheduleUpdate
   ) {
     this.dataObj = pagesDataKeeper.getDataObj(pageId, dataType)
-    const existValue = this.dataObj[key]
+    const existAssociation = this.dataObj[key]
     const isEmptyBeforeSet = pagesDataKeeper.isEmptyPage(pageId)
-    // delete exist data and its file association
-    if (existValue) {
-      existValue.unBind(scheduleUpdate)
+    if (existAssociation) {
+      if (
+        existAssociation.sourceFile === sourceFile &&
+        deepEqual(existAssociation.value, value)
+      ) {
+        // exist same value set by same file. bail out
+        return existAssociation
+      }
+      // delete exist data and its file association
+      existAssociation.unBind(scheduleUpdate)
     }
     this.dataObj[key] = this
     if (sourceFile) sourceFile.associations.add(this)
