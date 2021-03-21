@@ -1,15 +1,5 @@
 import slash from 'slash'
-
-export interface PagesData {
-  [pageId: string]: {
-    data: {
-      [key: string]: string
-    }
-    staticData: {
-      [key: string]: any
-    }
-  }
-}
+import type { PagesData } from "./PagesData";
 
 export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
   const addPagesData = Object.entries(pagesData).map(

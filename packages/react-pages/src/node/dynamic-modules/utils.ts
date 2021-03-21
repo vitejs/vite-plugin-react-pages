@@ -1,17 +1,16 @@
 import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
-import { File, FindPages, PageData } from './PageStrategy'
+import { File, FindPages, FileHandler } from './PageStrategy'
 
 export const defaultPageFinder: FindPages = (pagesDir, { watchFiles }) =>
-  watchFiles(pagesDir, '**/*$.{md,mdx,js,jsx,ts,tsx}')
+  watchFiles({ baseDir: pagesDir, globs: '**/*$.{md,mdx,js,jsx,ts,tsx}' })
 
-export const defaultPageLoader = async (file: File): Promise<PageData> => {
+export const defaultFileHandler: FileHandler = async (file: File, api) => {
   const pagePublicPath = getPagePublicPath(file.relative)
-  return {
-    pageId: pagePublicPath,
-    dataPath: file.path,
-    staticData: await extractStaticData(file),
-  }
+  const runtimeData = api.getRuntimeData(pagePublicPath)
+  const staticData = api.getStaticData(pagePublicPath)
+  runtimeData.main = file.path
+  staticData.main = await extractStaticData(file)
 }
 
 export async function extractStaticData(

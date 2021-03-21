@@ -30,8 +30,9 @@ module.exports = {
               dataPath: absolute,
               staticData: await helpers.extractStaticData(file),
             })
-            // set page's title
-            // currently doesn't work
+            // want to set page's title
+            // currently throw addPageData conflict: staticData with key "title" already exists
+            // because other demo files have set it
             helpers.addPageData({
               pageId: publicPath,
               key: 'title',

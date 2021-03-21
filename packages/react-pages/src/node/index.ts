@@ -6,11 +6,7 @@ import {
   renderPageListInSSR,
   renderOnePageData,
 } from './dynamic-modules/pages'
-import {
-  FindPages,
-  LoadPageData,
-  PageStrategy,
-} from './dynamic-modules/PageStrategy'
+import { FindPages, PageStrategy } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 
 const modulePrefix = '/@react-pages/'
@@ -22,17 +18,11 @@ export default function pluginFactory(
   opts: {
     pagesDir?: string
     findPages?: FindPages
-    loadPageData?: LoadPageData
     useHashRouter?: boolean
     staticSiteGeneration?: {}
   } = {}
 ): Plugin {
-  const {
-    findPages,
-    loadPageData,
-    useHashRouter = false,
-    staticSiteGeneration,
-  } = opts
+  const { findPages, useHashRouter = false, staticSiteGeneration } = opts
 
   let isBuild: boolean
   let pagesDir: string
@@ -60,7 +50,7 @@ export default function pluginFactory(
     configResolved({ root, plugins, logger, command }) {
       isBuild = command === 'build'
       pagesDir = opts.pagesDir ?? path.resolve(root, 'pages')
-      pageStrategy = new PageStrategy(pagesDir, findPages, loadPageData)
+      pageStrategy = new PageStrategy(pagesDir, findPages)
 
       // Inject parsing logic for frontmatter if missing.
       const { devDependencies = {} } = require(path.join(root, 'package.json'))
@@ -88,10 +78,12 @@ export default function pluginFactory(
       }
 
       pageStrategy
-        .on('promise', () => reloadVirtualModule(pagesModuleId))
-        .on('change', (pageId: string) =>
-          reloadVirtualModule(pagesModuleId + pageId)
-        )
+        .on('page-list', () => reloadVirtualModule(pagesModuleId))
+        .on('page', (pageIds: string[]) => {
+          pageIds.forEach((pageId) => {
+            reloadVirtualModule(pagesModuleId + pageId)
+          })
+        })
     },
     resolveId(id) {
       return id.startsWith(modulePrefix) ? id : undefined
@@ -134,4 +126,4 @@ export type {
   PagesStaticData,
 } from '../../client'
 
-export { defaultPageFinder, defaultPageLoader } from './dynamic-modules/utils'
+export { defaultPageFinder, extractStaticData } from './dynamic-modules/utils'
