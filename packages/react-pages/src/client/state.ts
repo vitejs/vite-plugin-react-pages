@@ -94,10 +94,10 @@ if (import.meta.hot) {
     }
   })
 
-  const dataPathAtoms = atomFamily((path: string) => (get) => {
+  const dataAtoms = atomFamily((path: string) => (get) => {
     const pages = get(pagesAtom)
     const page = pages[path] || pages['/404']
-    return page?.dataPath || null
+    return page || null
   })
 
   const emptyData: any = {}
@@ -115,10 +115,10 @@ if (import.meta.hot) {
   // This hook uses dynamic import with a variable, which is not supported
   // by Rollup, but that's okay since HMR is for development only.
   usePageModule = (pagePath) => {
-    const dataPath = useAtomValue(dataPathAtoms(pagePath))
+    const data = useAtomValue(dataAtoms(pagePath))
     return useMemo(() => {
-      return dataPath ? import(dataPath /* @vite-ignore */) : void 0
-    }, [dataPath])
+      return data ? data.data() : void 0
+    }, [data])
   }
 
   useStaticData = (pagePath?: string, selector?: Function) => {

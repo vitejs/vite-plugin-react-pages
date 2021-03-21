@@ -10,12 +10,9 @@ export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
         // so we change the sub path
         subPath = '/__index'
       }
-      const dataProperty = isBuild
-        ? `data = () => import("/@react-pages/pages${subPath}")`
-        : `dataPath = "/@react-pages/pages${subPath}"`
       const code = `
 pages["${pageId}"] = {};
-pages["${pageId}"].${dataProperty};
+pages["${pageId}"].data = () => import("/@react-pages/pages${subPath}");
 pages["${pageId}"].staticData = ${JSON.stringify(staticData)};`
       return code
     }
