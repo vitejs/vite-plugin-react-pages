@@ -259,6 +259,7 @@ export class Association<ValueType = any> {
       scheduleUpdate({
         type: 'update',
         pageId,
+        dataType,
       })
     }
   }
@@ -272,7 +273,7 @@ export class Association<ValueType = any> {
     delete dataObj[this.key]
     if (this.sourceFile) this.sourceFile.associations.delete(this)
     if (this.pagesDataKeeper.isEmptyPage(this.pageId)) {
-      // the whole page is empty
+      // the whole page is empty after deleting this data
       scheduleUpdate({
         type: 'delete',
         pageId: this.pageId,
@@ -281,6 +282,7 @@ export class Association<ValueType = any> {
       scheduleUpdate({
         type: 'update',
         pageId: this.pageId,
+        dataType: this.dataType,
       })
     }
   }

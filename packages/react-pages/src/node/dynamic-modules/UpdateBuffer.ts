@@ -5,22 +5,27 @@ import { debounce } from 'mini-debounce'
  * Types of page data updates.
  *
  * add:
- *  the page list module will be updated.
+ *  A new page is added.
+ *  The page list module will be updated.
  * update:
- *  the page list module will be updated.(because static data changed)
- *  the page data module will be updated.
+ *  A page is updated.
+ *  The page list module will be updated if it is static data change
+ *  The page data module will be updated if it is runtime data change
  * delete:
- *  the page list module will be updated.
- *  buffered update of the deleted page will be cancled.
- *
- * TODO: seperate the updates of runtime data and static data
- * because updates of runtime data don't need to trigger the update of page list module,
- * and updates of static data don't need to trigger the update of page data module.
+ *  A page is deleted.
+ *  The page list module will be updated.
+ *  Buffered update of the deleted page will be cancled.
  */
-type Update = {
-  type: 'add' | 'update' | 'delete'
-  pageId: string
-}
+type Update =
+  | {
+      type: 'add' | 'delete'
+      pageId: string
+    }
+  | {
+      type: 'update'
+      pageId: string
+      dataType: 'runtime' | 'static'
+    }
 
 export type ScheduleUpdate = (update: Update) => void
 
@@ -45,15 +50,19 @@ export class UpdateBuffer extends EventEmitter {
   constructor() {
     super()
     this.scheduleFlush = debounce(() => {
-      if (this.pageListUpdateBuffer) {
-        this.emit('page-list')
-        this.pageListUpdateBuffer = false
-      }
-
       if (this.pageUpdateBuffer.size > 0) {
         const updates = [...this.pageUpdateBuffer.values()]
         this.emit('page', updates)
         this.pageUpdateBuffer.clear()
+      }
+
+      if (this.pageListUpdateBuffer) {
+        // if this.pageUpdateBuffer.size >= 0
+        // the page update will automatically update the page list
+        // (because the whole import chain will update)
+        // so we don't need to trigger page list update in that case
+        if (this.pageUpdateBuffer.size === 0) this.emit('page-list')
+        this.pageListUpdateBuffer = false
       }
     }, 100)
   }
@@ -64,15 +73,15 @@ export class UpdateBuffer extends EventEmitter {
         this.pageListUpdateBuffer = true
         break
       case 'update':
-        this.pageListUpdateBuffer = true
-        this.pageUpdateBuffer.add(update.pageId)
+        if (update.dataType === 'static') this.pageListUpdateBuffer = true
+        else this.pageUpdateBuffer.add(update.pageId)
         break
       case 'delete':
         this.pageListUpdateBuffer = true
         this.pageUpdateBuffer.delete(update.pageId)
         break
       default:
-        throw new Error(`invalid update type ${update.type}`)
+        throw new Error(`invalid update type ${JSON.stringify(update)}`)
     }
     this.scheduleFlush()
   }
