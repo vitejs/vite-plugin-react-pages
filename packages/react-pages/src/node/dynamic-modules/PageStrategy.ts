@@ -12,7 +12,7 @@ import {
   PagesDataKeeper,
   PagesData,
   Association,
-  HanlderAPI,
+  HandlerAPI,
 } from './PagesData'
 import { UpdateBuffer } from './UpdateBuffer'
 
@@ -132,7 +132,7 @@ export interface FindPages {
   (pagesDir: string, helpers: PageHelpers): void | Promise<void>
 }
 
-export interface PageHelpers extends HanlderAPI {
+export interface PageHelpers extends HandlerAPI {
   /**
    * Read the static data from a file.
    */
@@ -172,7 +172,7 @@ export class File {
 }
 
 export interface FileHandler {
-  (file: File, api: HanlderAPI): void | Promise<void>
+  (file: File, api: HandlerAPI): void | Promise<void>
 }
 
 type WatchFilesHelper = (opts: {

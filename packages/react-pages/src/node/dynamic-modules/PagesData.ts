@@ -14,7 +14,7 @@ export class PagesDataKeeper {
   createAPIForSourceFile(
     sourceFile: File,
     scheduleUpdate: ScheduleUpdate
-  ): HanlderAPI {
+  ): HandlerAPI {
     return {
       getRuntimeData: (
         pageId: string
@@ -35,7 +35,7 @@ export class PagesDataKeeper {
    * If the page page does not come from local file (.e.g from remote database),
    * then we can't track the source of page data.
    */
-  createAPIForCustomSource(scheduleUpdate: ScheduleUpdate): HanlderAPI {
+  createAPIForCustomSource(scheduleUpdate: ScheduleUpdate): HandlerAPI {
     return {
       getRuntimeData: (
         pageId: string
@@ -202,7 +202,7 @@ interface PagesDataInternal {
   }
 }
 
-export interface HanlderAPI {
+export interface HandlerAPI {
   getRuntimeData: (
     pageId: string
   ) => {
