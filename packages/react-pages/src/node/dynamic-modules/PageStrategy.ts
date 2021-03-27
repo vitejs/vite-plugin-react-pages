@@ -6,6 +6,7 @@ import {
   extractStaticData,
   defaultFileHandler,
   defaultPageFinder,
+  PendingList,
 } from './utils'
 import {
   PagesDataKeeper,
@@ -26,6 +27,11 @@ export class PageStrategy extends EventEmitter {
     const watchers = new Set<FSWatcher>()
     const pagesDataKeeper = new PagesDataKeeper()
     const updateBuffer = new UpdateBuffer()
+    /**
+     * track how many works are pending
+     * to avoid returning half-finished page data
+     */
+    const pendingList = new PendingList()
 
     updateBuffer.on('page', (updates: string[]) => {
       this.emit('page', updates)
@@ -45,15 +51,17 @@ export class PageStrategy extends EventEmitter {
       ...apiForCustomSource,
     }
 
-    // The file currently being processed.
-    // let currentFile: File | null = null
+    pendingList.addPending(
+      Promise.resolve(
+        findPages(pagesDir, {
+          ...helpers,
+        })
+      )
+    )
 
-    // let pagesPromise = Promise.resolve(pageCache)
-    findPages(pagesDir, {
-      ...helpers,
-    })
+    this.getPages = () =>
+      pendingList.subscribe().then(() => pagesDataKeeper.toPagesData())
 
-    this.getPages = () => Promise.resolve(pagesDataKeeper.toPagesData())
     this.close = () => watchers.forEach((w) => w.close())
 
     function watchFiles({
@@ -70,6 +78,12 @@ export class PageStrategy extends EventEmitter {
       // Strip trailing slash and make absolute
       baseDir = path.resolve(pagesDir, baseDir)
 
+      let fsScanFinish: () => void
+      pendingList.addPending(
+        new Promise((resolve) => {
+          fsScanFinish = resolve
+        })
+      )
       watchers.add(
         chokidar
           .watch(globs, {
@@ -79,6 +93,7 @@ export class PageStrategy extends EventEmitter {
           .on('add', handleFileChange)
           .on('change', handleFileChange)
           .on('unlink', handleFileUnLink)
+          .on('ready', () => fsScanFinish())
       )
 
       async function handleFileChange(filePath: string) {
@@ -87,13 +102,15 @@ export class PageStrategy extends EventEmitter {
           fileCache[filePath] ||
           (fileCache[filePath] = new File(filePath, baseDir))
         file.content = null
-        updateBuffer.batchUpdate(async (scheduleUpdate) => {
-          const handlerAPI = pagesDataKeeper.createAPIForSourceFile(
-            file,
-            scheduleUpdate
-          )
-          await fileHandler(file, handlerAPI)
-        })
+        pendingList.addPending(
+          updateBuffer.batchUpdate(async (scheduleUpdate) => {
+            const handlerAPI = pagesDataKeeper.createAPIForSourceFile(
+              file,
+              scheduleUpdate
+            )
+            await fileHandler(file, handlerAPI)
+          })
+        )
       }
 
       function handleFileUnLink(filePath: string) {
@@ -101,16 +118,18 @@ export class PageStrategy extends EventEmitter {
         const file = fileCache[filePath]
         if (!file) return
         delete fileCache[filePath]
-        updateBuffer.batchUpdate(async (scheduleUpdate) => {
-          pagesDataKeeper.deleteDataAssociatedWithFile(file, scheduleUpdate)
-        })
+        pendingList.addPending(
+          updateBuffer.batchUpdate(async (scheduleUpdate) => {
+            pagesDataKeeper.deleteDataAssociatedWithFile(file, scheduleUpdate)
+          })
+        )
       }
     }
   }
 }
 
 export interface FindPages {
-  (pagesDir: string, helpers: PageHelpers): void
+  (pagesDir: string, helpers: PageHelpers): void | Promise<void>
 }
 
 export interface PageHelpers extends HanlderAPI {

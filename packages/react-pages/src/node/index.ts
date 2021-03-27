@@ -36,6 +36,9 @@ export default function pluginFactory(
           '/@pages-infra': path.join(__dirname, '../client/'),
         },
       },
+      optimizeDeps: {
+        include: ['@mdx-js/react'],
+      },
       define: {
         __HASH_ROUTER__: !!useHashRouter,
       },
