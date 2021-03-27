@@ -106,6 +106,50 @@ export function createTheme({
     const pageData = loadedData[loadState.routePath]
     const pageStaticData = staticData[loadState.routePath]
     const isComposedPage = Object.keys(pageData).length > 1
+    let body
+    if (isComposedPage) {
+      body = Object.entries(pageData)
+        .sort(([key1], [key2]) => {
+          // README should be the first section
+          if (key1 === 'README') return -1
+          if (key2 === 'README') return 1
+          return key1.localeCompare(key2)
+        })
+        .map(([key, dataPart], idx) => {
+          const isREADME = key === 'README'
+          const ContentComp = (dataPart as any).default
+          const pageStaticDataPart = pageStaticData[key]
+          const MdWrap =
+            pageStaticDataPart.sourceType === 'md' ? MD : React.Fragment
+          const content = (
+            <MdWrap>
+              <ContentComp />
+            </MdWrap>
+          )
+          return (
+            <section style={{ marginBottom: '40px' }} key={idx}>
+              {!isREADME && <h2>{pageStaticDataPart.title}</h2>}
+              {pageStaticDataPart.description && (
+                <p>{pageStaticDataPart.description}</p>
+              )}
+              {content}
+            </section>
+          )
+        })
+    } else {
+      body = Object.entries(pageData).map(([key, dataPart], idx) => {
+        const ContentComp = (dataPart as any).default
+        const pageStaticDataPart = pageStaticData[key]
+        const MdWrap =
+          pageStaticDataPart.sourceType === 'md' ? MD : React.Fragment
+        const content = (
+          <MdWrap>
+            <ContentComp />
+          </MdWrap>
+        )
+        return <div key={idx}>{content}</div>
+      })
+    }
     return (
       <Layout
         sideMenuData={menu}
@@ -117,29 +161,7 @@ export function createTheme({
         pagesStaticData={staticData}
         search={search}
       >
-        {Object.entries(pageData).map(([key, dataPart], idx) => {
-          const ContentComp = (dataPart as any).default
-          const pageStaticDataPart = pageStaticData[key]
-          const MdWrap =
-            pageStaticDataPart.sourceType === 'md' ? MD : React.Fragment
-          const content = (
-            <MdWrap>
-              <ContentComp />
-            </MdWrap>
-          )
-          if (isComposedPage) {
-            return (
-              <section style={{ marginBottom: '40px' }} key={idx}>
-                <h2>{pageStaticDataPart.title}</h2>
-                {pageStaticDataPart.description && (
-                  <p>{pageStaticDataPart.description}</p>
-                )}
-                {content}
-              </section>
-            )
-          }
-          return <div key={idx}>{content}</div>
-        })}
+        {body}
       </Layout>
     )
   }
