@@ -101,7 +101,7 @@ beforeAll(async () => {
     // https://github.com/facebook/jest/issues/2713
     err = e
   }
-})
+}, 30000)
 
 afterAll(async () => {
   global.page && global.page.off('console', onConsole)
@@ -130,7 +130,7 @@ function startStaticServer(): Promise<string> {
   }
 
   // start static file server
-  const serve = sirv(resolve(tempDir, 'dist'))
+  const serve = sirv(resolve(tempDir, 'dist'), { single: true })
   const httpServer = (server = http.createServer((req, res) => {
     if (req.url === '/ping') {
       res.statusCode = 200

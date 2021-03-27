@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "ESNext",
+    "lib": ["ES2015"],
+    "jsx": "react",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "preserveWatchOutput": true,
+    "baseUrl": ".",
+    "paths": {
+      "playground-button": ["./packages/button/src/index.tsx"],
+      "playground-card": ["./packages/card/src/index.tsx"]
+    }
+  }
+}

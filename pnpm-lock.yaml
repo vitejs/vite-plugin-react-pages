@@ -11,10 +11,12 @@ importers:
       ts-jest: 26.5.4_jest@26.6.3+typescript@4.2.3
       typescript: 4.2.3
       vite-pages-theme-basic: link:packages/theme-basic
+      vite-plugin-react-pages: link:packages/react-pages
     specifiers:
       '@pnpm/link-bins': ^5.3.24
       '@types/jest': ^26.0.19
       '@types/node': ^14.14.34
+      cross-env: ^7.0.3
       jest: ^26.6.3
       playwright-chromium: ~1.9.2
       sirv: ^1.0.10
@@ -22,6 +24,7 @@ importers:
       ts-jest: ^26.4.4
       typescript: ^4.2.3
       vite-pages-theme-basic: workspace:*
+      vite-plugin-react-pages: workspace:*
   doc-site:
     dependencies:
       react: 17.0.2
@@ -381,7 +384,7 @@ importers:
       react: ^17.0.1
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
-      sass: ^1.32.8
+      serve: ^11.3.2
       vite: ^2.0.5
       vite-plugin-mdx: workspace:*
       vite-plugin-react-pages: workspace:*
@@ -404,7 +407,6 @@ importers:
       '@types/react': ^17.0.3
       '@types/react-router-dom': ^5.1.7
       '@vitejs/plugin-react-refresh': ^1.3.1
-      globby: ^11.0.2
       react: ^17.0.1
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
@@ -413,16 +415,56 @@ importers:
       vite-pages-theme-basic: workspace:*
       vite-plugin-mdx: workspace:*
       vite-plugin-react-pages: workspace:*
-  packages/playground/react:
+  packages/playground/lib-monorepo:
+    specifiers: {}
+  packages/playground/lib-monorepo/packages/button:
+    devDependencies:
+      '@types/react': 17.0.3
+      react: 17.0.1
+      typescript: 4.2.3
+    specifiers:
+      '@types/react': ^17.0.3
+      react: ^17.0.1
+      typescript: ^4.2.3
+  packages/playground/lib-monorepo/packages/card:
+    devDependencies:
+      '@types/react': 17.0.3
+      react: 17.0.1
+      typescript: 4.2.3
+    specifiers:
+      '@types/react': ^17.0.3
+      react: ^17.0.1
+      typescript: ^4.2.3
+  packages/playground/lib-monorepo/packages/demos:
     dependencies:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     devDependencies:
+      '@types/react': 17.0.3
+      '@types/react-router-dom': 5.1.7
       '@vitejs/plugin-react-refresh': 1.3.1
+      globby: 11.0.2
+      playground-button: link:../button
+      playground-card: link:../card
+      serve: 11.3.2
+      vite: 2.0.5
+      vite-plugin-mdx: link:../../../../vite-plugin-mdx
+      vite-plugin-react-pages: link:../../../../react-pages
     specifiers:
+      '@types/react': ^17.0.3
+      '@types/react-router-dom': ^5.1.7
       '@vitejs/plugin-react-refresh': ^1.3.1
+      globby: ^11.0.2
+      playground-button: '*'
+      playground-card: '*'
       react: ^17.0.1
       react-dom: ^17.0.1
+      react-router-dom: ^5.2.0
+      serve: ^11.3.2
+      vite: ^2.0.5
+      vite-pages-theme-basic: workspace:*
+      vite-plugin-mdx: workspace:*
+      vite-plugin-react-pages: workspace:*
   packages/playground/use-theme:
     dependencies:
       react: 17.0.2
@@ -584,7 +626,7 @@ importers:
       '@babel/plugin-syntax-import-meta': ^7.10.4
       '@mdx-js/mdx': ^1.6.22
       '@mdx-js/react': ^1.6.22
-      esbuild: ^0.8.50
+      esbuild: ^0.8.57
       react-refresh: ^0.9.0
       remark-frontmatter: ^2.0.0
       typescript: ^4.2.3
@@ -2838,6 +2880,17 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-pondGvTuVYDk++upghXJabWzL6Kxu6f26ljFw64Swq9v6sQPUL3EUlVDV56diOjpCayKihL6hVe8exIACU4XcA==
+  /cross-env/7.0.3:
+    dependencies:
+      cross-spawn: 7.0.3
+    dev: true
+    engines:
+      node: '>=10.14'
+      npm: '>=6'
+      yarn: '>=1'
+    hasBin: true
+    resolution:
+      integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==
   /cross-spawn/5.1.0:
     dependencies:
       lru-cache: 4.1.5

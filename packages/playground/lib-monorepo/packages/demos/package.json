@@ -1,14 +1,11 @@
 {
-  "name": "use-theme",
-  "version": "1.0.0",
+  "name": "library-demos",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
-    "dev": "vite serve",
-    "debug": "node --inspect ./node_modules/vite/bin/vite serve",
-    "build": "rm -rf dist && vite build --outDir dist && serve -s dist",
-    "debug:build": "node --inspect ./node_modules/vite/bin/vite build --outDir dist",
-    "ssr": "rm -rf dist && vite-pages ssr",
-    "debug:ssr": "rm -rf dist && node --inspect-brk ./node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr"
+    "dev": "vite serve --config ./vite.demos.ts",
+    "build": "rm -rf dist && vite build --config ./vite.demos.ts --outDir dist && serve -s dist",
+    "ssr": "rm -rf dist && vite-pages ssr --configFile ./vite.demos.ts && serve dist"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +20,9 @@
     "@types/react": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
     "@vitejs/plugin-react-refresh": "^1.3.1",
+    "globby": "^11.0.2",
+    "playground-button": "*",
+    "playground-card": "*",
     "serve": "^11.3.2",
     "vite": "^2.0.5",
     "vite-plugin-mdx": "workspace:*",

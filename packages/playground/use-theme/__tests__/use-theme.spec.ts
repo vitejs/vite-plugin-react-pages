@@ -1,4 +1,10 @@
-import { editFile, untilUpdated, removeFile, getColor } from '../../testUtils'
+import {
+  editFile,
+  untilUpdated,
+  removeFile,
+  getColor,
+  isBuild,
+} from '../../testUtils'
 
 test('should render theme pages', async () => {
   await page.waitForLoadState('networkidle')
@@ -20,32 +26,34 @@ test('should render theme pages', async () => {
   expect(await getColor('text=React Box')).toBe('blue')
 })
 
-test('static data hmr', async () => {
-  await page.goto(viteTestUrl)
-  const sideNav = await page.$('.vp-theme-aside-navigation .vp-theme-menu')
+if (!isBuild) {
+  test('static data hmr', async () => {
+    await page.goto(viteTestUrl)
+    const sideNav = await page.$('.vp-theme-aside-navigation .vp-theme-menu')
 
-  expect(await sideNav.textContent()).toBe(
-    'index page titlepage1 titlepage2 titlepage3 titlepage4 title'
-  )
-  // update static data
-  editFile('pages/page1$.tsx', (code) =>
-    code.replace('@title page1 title', '@title page1 updated title')
-  )
-  await untilUpdated(
-    () => sideNav.textContent(),
-    'index page titlepage1 updated titlepage2 titlepage3 titlepage4 title'
-  )
-  // put it before page1
-  editFile('pages/page2$.md', (code) => code.replace('sort: 2', 'sort: 0.5'))
-  await untilUpdated(
-    () => sideNav.textContent(),
-    'index page titlepage2 titlepage1 updated titlepage3 titlepage4 title'
-  )
+    expect(await sideNav.textContent()).toBe(
+      'index page titlepage1 titlepage2 titlepage3 titlepage4 title'
+    )
+    // update static data
+    editFile('pages/page1$.tsx', (code) =>
+      code.replace('@title page1 title', '@title page1 updated title')
+    )
+    await untilUpdated(
+      () => sideNav.textContent(),
+      'index page titlepage1 updated titlepage2 titlepage3 titlepage4 title'
+    )
+    // put it before page1
+    editFile('pages/page2$.md', (code) => code.replace('sort: 2', 'sort: 0.5'))
+    await untilUpdated(
+      () => sideNav.textContent(),
+      'index page titlepage2 titlepage1 updated titlepage3 titlepage4 title'
+    )
 
-  // delete page2
-  await removeFile('pages/page2$.md')
-  await untilUpdated(
-    () => sideNav.textContent(),
-    'index page titlepage1 updated titlepage3 titlepage4 title'
-  )
-})
+    // delete page2
+    await removeFile('pages/page2$.md')
+    await untilUpdated(
+      () => sideNav.textContent(),
+      'index page titlepage1 updated titlepage3 titlepage4 title'
+    )
+  })
+}
