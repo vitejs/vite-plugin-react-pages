@@ -1,5 +1,6 @@
 import type { UserConfig } from 'vite'
 import * as path from 'path'
+
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import mdx from 'vite-plugin-mdx'
 import pages, { defaultPageFinder } from 'vite-plugin-react-pages'
@@ -12,8 +13,8 @@ module.exports = {
     pages({
       pagesDir: path.join(__dirname, 'pages'),
       findPages: async (pagesDir, helpers) => {
-        const demosBasePath = path.join(__dirname, 'src')
-        // find all component demos
+        const demosBasePath = path.join(__dirname, '../')
+
         helpers.watchFiles({
           baseDir: demosBasePath,
           globs: '*/demos/**/*.{[tj]sx,md?(x)}',
@@ -59,10 +60,9 @@ module.exports = {
   ],
   resolve: {
     alias: {
-      'my-lib': '/src',
+      'playground-button': path.resolve(__dirname, '../button/src'),
+      'playground-card': path.resolve(__dirname, '../card/src'),
     },
   },
-  optimizeDeps: {
-    include: ['@mdx-js/react'],
-  },
+  minify: false,
 } as UserConfig
