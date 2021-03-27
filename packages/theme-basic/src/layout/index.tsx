@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Nav, Shell, ConfigProvider } from '@alifd/next'
 import 'github-markdown-css/github-markdown.css'
 import type { PagesStaticData } from 'vite-plugin-react-pages'
@@ -30,6 +30,7 @@ const Layout: React.FC<Props> = ({
   topbarOperations,
   search,
 }) => {
+  const location = useLocation()
   return (
     <ConfigProvider prefix="vp-theme-">
       <Shell className={s.layout}>
@@ -40,14 +41,16 @@ const Layout: React.FC<Props> = ({
             <SiteSearch pagesStaticData={pagesStaticData} />
           )}
           {topNavs && (
-            <Nav direction="hoz" embeddable>
+            <Nav direction="hoz" embeddable selectedKeys="">
               {renderNav(topNavs)}
             </Nav>
           )}
         </Shell.Action>
 
         <Shell.Navigation trigger={null}>
-          <Nav embeddable>{renderNav(sideMenuData)}</Nav>
+          <Nav embeddable selectedKeys={location.pathname}>
+            {renderNav(sideMenuData)}
+          </Nav>
         </Shell.Navigation>
 
         <Shell.Content className={s.content} key={path}>
@@ -103,7 +106,7 @@ export function renderNav(navs: ReadonlyArray<TopNavData>) {
   return navs.map((item, idx) => {
     if ('path' in item) {
       return (
-        <Nav.Item key={idx}>
+        <Nav.Item key={item.path}>
           <Link
             to={(location) => {
               if (location.search) {
@@ -120,7 +123,7 @@ export function renderNav(navs: ReadonlyArray<TopNavData>) {
     }
     if ('href' in item) {
       return (
-        <Nav.Item key={idx}>
+        <Nav.Item key={item.href}>
           <a href={item.href} target="_blank">
             {item.text}
           </a>

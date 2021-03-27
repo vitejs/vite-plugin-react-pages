@@ -23,7 +23,7 @@ const SiteSearch = ({ pagesStaticData }: Props) => {
 
   useEffect(() => {
     setFilteredData(search(pagesStaticData, ''))
-  }, [])
+  }, [pagesStaticData])
 
   const onChange = useCallback((value, type, _) => {
     if (type === 'itemClick' || type === 'enter') {
@@ -34,7 +34,7 @@ const SiteSearch = ({ pagesStaticData }: Props) => {
       setFilteredData(search(pagesStaticData, value))
       setSearchVal(value)
     }
-  }, [])
+  }, [pagesStaticData])
 
   return (
     <Search
