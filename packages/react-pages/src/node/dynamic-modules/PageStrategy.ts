@@ -64,20 +64,25 @@ export class PageStrategy extends EventEmitter {
 
     this.close = () => watchers.forEach((w) => w.close())
 
-    function watchFiles({
-      baseDir,
-      globs = ['**/*'],
-      fileHandler = defaultFileHandler,
-      ignored = [],
-    }: {
-      baseDir: string
-      globs?: string | string[]
-      fileHandler?: FileHandler
-      ignored?: string[]
-    }) {
+    function watchFiles(
+      baseDir: string,
+      arg2?: string | string[] | FileHandler,
+      arg3?: FileHandler
+    ) {
       // Strip trailing slash and make absolute
       baseDir = path.resolve(pagesDir, baseDir)
+      let globs: string[]
+      let fileHandler: FileHandler
+      if (typeof arg2 === 'function') {
+        globs = ['**/*']
+        fileHandler = arg2
+      } else {
+        globs = Array.isArray(arg2) ? arg2 : [arg2 || '**/*']
+        fileHandler = arg3 || defaultFileHandler
+      }
 
+      // should wait for a complete fs scan
+      // before returning the page data
       let fsScanFinish: () => void
       pendingList.addPending(
         new Promise((resolve) => {
@@ -88,7 +93,7 @@ export class PageStrategy extends EventEmitter {
         chokidar
           .watch(globs, {
             cwd: baseDir,
-            ignored: ['**/node_modules/**/*', '**/.git/**', ...ignored],
+            ignored: ['**/node_modules/**/*', '**/.git/**'],
           })
           .on('add', handleFileChange)
           .on('change', handleFileChange)
@@ -102,6 +107,8 @@ export class PageStrategy extends EventEmitter {
           fileCache[filePath] ||
           (fileCache[filePath] = new File(filePath, baseDir))
         file.content = null
+        // should wait for the fileHandler to finish
+        // before returning the page data
         pendingList.addPending(
           updateBuffer.batchUpdate(async (scheduleUpdate) => {
             const handlerAPI = pagesDataKeeper.createAPIForSourceFile(
@@ -175,12 +182,14 @@ export interface FileHandler {
   (file: File, api: HandlerAPI): void | Promise<void>
 }
 
-type WatchFilesHelper = (opts: {
-  baseDir: string
-  globs?: string | string[] | undefined
-  fileHandler?: FileHandler | undefined
-  ignored?: string[] | undefined
-}) => void
+export interface WatchFilesHelper {
+  /** Watch all files within a directory (except node_modules and .git) */
+  (baseDir: string, fileHandler?: FileHandler): void
+  /** Watch files matching the given glob */
+  (baseDir: string, glob: string, fileHandler?: FileHandler): void
+  /** Watch files matching one of the given globs */
+  (baseDir: string, globs: string[], fileHandler?: FileHandler): void
+}
 
 interface FileCache {
   [filePath: string]: File
