@@ -50,18 +50,20 @@ export class UpdateBuffer extends EventEmitter {
   constructor() {
     super()
     this.scheduleFlush = debounce(() => {
+      let havePageUpdate = false
       if (this.pageUpdateBuffer.size > 0) {
+        havePageUpdate = true
         const updates = [...this.pageUpdateBuffer.values()]
         this.emit('page', updates)
         this.pageUpdateBuffer.clear()
       }
 
       if (this.pageListUpdateBuffer) {
-        // if this.pageUpdateBuffer.size >= 0
-        // the page update will automatically update the page list
-        // (because the whole import chain will update)
-        // so we don't need to trigger page list update in that case
-        if (this.pageUpdateBuffer.size === 0) this.emit('page-list')
+        // if we have just sent a page update,
+        // we don't need to trigger page list update.
+        // because during the page update hmr, the page list will automatically get updated
+        // (because the whole import chain will get re-imported)
+        if (!havePageUpdate) this.emit('page-list')
         this.pageListUpdateBuffer = false
       }
     }, 100)
