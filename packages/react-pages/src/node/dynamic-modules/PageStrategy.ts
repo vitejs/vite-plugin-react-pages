@@ -2,12 +2,7 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import { EventEmitter } from 'events'
 import chokidar, { FSWatcher } from 'chokidar'
-import {
-  extractStaticData,
-  defaultFileHandler,
-  defaultPageFinder,
-  PendingList,
-} from './utils'
+import { extractStaticData, PendingList } from './utils'
 import {
   PagesDataKeeper,
   PagesData,
@@ -17,21 +12,19 @@ import {
 import { UpdateBuffer } from './UpdateBuffer'
 
 export class PageStrategy extends EventEmitter {
-  readonly getPages: () => Promise<Readonly<PagesData>>
-  readonly close: () => void
+  private fileCache: FileCache = {}
+  private watchers = new Set<FSWatcher>()
+  private pagesDataKeeper = new PagesDataKeeper()
+  private updateBuffer = new UpdateBuffer()
+  /**
+   * track how many works are pending
+   * to avoid returning half-finished page data
+   */
+  private pendingList = new PendingList()
 
-  constructor(pagesDir: string, findPages: FindPages = defaultPageFinder) {
+  constructor(private pagesDir: string, findPages: FindPages) {
     super()
-
-    const fileCache: FileCache = {}
-    const watchers = new Set<FSWatcher>()
-    const pagesDataKeeper = new PagesDataKeeper()
-    const updateBuffer = new UpdateBuffer()
-    /**
-     * track how many works are pending
-     * to avoid returning half-finished page data
-     */
-    const pendingList = new PendingList()
+    const { updateBuffer, pendingList } = this
 
     updateBuffer.on('page', (updates: string[]) => {
       this.emit('page', updates)
@@ -41,34 +34,51 @@ export class PageStrategy extends EventEmitter {
       this.emit('page-list')
     })
 
-    const apiForCustomSource = pagesDataKeeper.createAPIForCustomSource(
-      updateBuffer.scheduleUpdate.bind(updateBuffer)
-    )
+    const helpers = this.createHelpers(() => {
+      throw new Error(
+        `No defaultFileHandler found. You should pass fileHandler argument when calling watchFiles`
+      )
+    })
+    pendingList.addPending(Promise.resolve(findPages(pagesDir, helpers)))
+  }
 
+  public getPages(): Promise<Readonly<PagesData>> {
+    return this.pendingList
+      .subscribe()
+      .then(() => this.pagesDataKeeper.toPagesData())
+  }
+  public close() {
+    this.watchers.forEach((w) => w.close())
+  }
+  /**
+   * Custom PageStrategy can use it to create helpers with custom defaultFileHandler
+   */
+  protected createHelpers(defaultFileHandler: FileHandler): PageHelpers {
+    const apiForCustomSource = this.pagesDataKeeper.createAPIForCustomSource(
+      this.updateBuffer.scheduleUpdate.bind(this.updateBuffer)
+    )
     const helpers: PageHelpers = {
       extractStaticData,
       watchFiles,
       ...apiForCustomSource,
     }
-
-    pendingList.addPending(
-      Promise.resolve(
-        findPages(pagesDir, {
-          ...helpers,
-        })
-      )
-    )
-
-    this.getPages = () =>
-      pendingList.subscribe().then(() => pagesDataKeeper.toPagesData())
-
-    this.close = () => watchers.forEach((w) => w.close())
+    const _this = this
+    return helpers
 
     function watchFiles(
       baseDir: string,
       arg2?: string | string[] | FileHandler,
       arg3?: FileHandler
     ) {
+      const {
+        pagesDir,
+        pendingList,
+        watchers,
+        fileCache,
+        updateBuffer,
+        pagesDataKeeper,
+      } = _this
+
       // Strip trailing slash and make absolute
       baseDir = path.resolve(pagesDir, baseDir)
       let globs: string[]
@@ -115,7 +125,10 @@ export class PageStrategy extends EventEmitter {
               file,
               scheduleUpdate
             )
-            await fileHandler(file, handlerAPI)
+            const pageData = await fileHandler(file, handlerAPI)
+            if (pageData) {
+              handlerAPI.addPageData(pageData)
+            }
           })
         )
       }
@@ -137,6 +150,38 @@ export class PageStrategy extends EventEmitter {
 
 export interface FindPages {
   (pagesDir: string, helpers: PageHelpers): void | Promise<void>
+}
+
+export interface LoadPageData {
+  (file: File, helpers: PageHelpers): PageData | Promise<PageData>
+}
+
+export interface PageData {
+  /**
+   * The page route path.
+   * User can register multiple page data with same pageId,
+   * as long as they have different keys.
+   * Page data with same pageId will be merged.
+   *
+   * @example '/posts/hello-world'
+   */
+  readonly pageId: string
+  /**
+   * The data key.
+   * If it conflicts with an already-registered data,
+   * error will be thrown.
+   *
+   * @default 'main'
+   */
+  readonly key?: string
+  /**
+   * The path to the runtime data module
+   */
+  readonly dataPath?: string
+  /**
+   * The value of static data
+   */
+  readonly staticData?: any
 }
 
 export interface PageHelpers extends HandlerAPI {
@@ -179,7 +224,11 @@ export class File {
 }
 
 export interface FileHandler {
-  (file: File, api: HandlerAPI): void | Promise<void>
+  (file: File, api: HandlerAPI):
+    | void
+    | Promise<void>
+    | PageData
+    | Promise<PageData>
 }
 
 export interface WatchFilesHelper {

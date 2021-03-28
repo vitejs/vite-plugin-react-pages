@@ -1,17 +1,6 @@
 import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
-import { File, FindPages, FileHandler } from './PageStrategy'
-
-export const defaultPageFinder: FindPages = (pagesDir, { watchFiles }) =>
-  watchFiles({ baseDir: pagesDir, globs: '**/*$.{md,mdx,js,jsx,ts,tsx}' })
-
-export const defaultFileHandler: FileHandler = async (file: File, api) => {
-  const pagePublicPath = getPagePublicPath(file.relative)
-  const runtimeData = api.getRuntimeData(pagePublicPath)
-  const staticData = api.getStaticData(pagePublicPath)
-  runtimeData.main = file.path
-  staticData.main = await extractStaticData(file)
-}
+import { File } from './PageStrategy'
 
 export async function extractStaticData(
   file: File
@@ -29,26 +18,6 @@ export async function extractStaticData(
     default:
       throw new Error(`unexpected extension name "${file.extname}"`)
   }
-}
-
-export function getPagePublicPath(relativePageFilePath: string) {
-  let pagePublicPath = relativePageFilePath.replace(
-    /\$\.(md|mdx|js|jsx|ts|tsx)$/,
-    ''
-  )
-  pagePublicPath = pagePublicPath.replace(/index$/, '')
-  // ensure starting slash
-  pagePublicPath = pagePublicPath.replace(/\/$/, '')
-  pagePublicPath = `/${pagePublicPath}`
-
-  // turn [id] into :id
-  // so that react-router can recognize it as url params
-  pagePublicPath = pagePublicPath.replace(
-    /\[(.*?)\]/g,
-    (_, paramName) => `:${paramName}`
-  )
-
-  return pagePublicPath
 }
 
 /**

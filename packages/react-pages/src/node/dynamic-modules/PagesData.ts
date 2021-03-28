@@ -1,5 +1,5 @@
 import deepEqual from 'fast-deep-equal'
-import { File } from './PageStrategy'
+import { File, PageData } from './PageStrategy'
 import type { ScheduleUpdate } from './UpdateBuffer'
 
 export class PagesDataKeeper {
@@ -15,19 +15,28 @@ export class PagesDataKeeper {
     sourceFile: File,
     scheduleUpdate: ScheduleUpdate
   ): HandlerAPI {
+    const getRuntimeData: HandlerAPI['getRuntimeData'] = (pageId) =>
+      this.createMutableProxy(pageId, 'runtime', sourceFile, scheduleUpdate)
+
+    const getStaticData: HandlerAPI['getStaticData'] = (pageId) =>
+      this.createMutableProxy(pageId, 'static', sourceFile, scheduleUpdate)
+
+    const addPageData: HandlerAPI['addPageData'] = (pageData) => {
+      const key = pageData.key ?? 'main'
+      if (pageData.dataPath) {
+        const runtimeData = getRuntimeData(pageData.pageId)
+        runtimeData[key] = pageData.dataPath
+      }
+      if (pageData.staticData) {
+        const staticData = getStaticData(pageData.pageId)
+        staticData[key] = pageData.staticData
+      }
+    }
+
     return {
-      getRuntimeData: (
-        pageId: string
-      ): {
-        [key: string]: string
-      } =>
-        this.createMutableProxy(pageId, 'runtime', sourceFile, scheduleUpdate),
-      getStaticData: (
-        pageId: string
-      ): {
-        [key: string]: any
-      } =>
-        this.createMutableProxy(pageId, 'static', sourceFile, scheduleUpdate),
+      getRuntimeData,
+      getStaticData,
+      addPageData,
     }
   }
 
@@ -36,17 +45,28 @@ export class PagesDataKeeper {
    * then we can't track the source of page data.
    */
   createAPIForCustomSource(scheduleUpdate: ScheduleUpdate): HandlerAPI {
+    const getRuntimeData: HandlerAPI['getRuntimeData'] = (pageId) =>
+      this.createMutableProxy(pageId, 'runtime', null, scheduleUpdate)
+
+    const getStaticData: HandlerAPI['getStaticData'] = (pageId) =>
+      this.createMutableProxy(pageId, 'static', null, scheduleUpdate)
+
+    const addPageData: HandlerAPI['addPageData'] = (pageData) => {
+      const key = pageData.key ?? 'main'
+      if (pageData.dataPath) {
+        const runtimeData = getRuntimeData(pageData.pageId)
+        runtimeData[key] = pageData.dataPath
+      }
+      if (pageData.staticData) {
+        const staticData = getStaticData(pageData.pageId)
+        staticData[key] = pageData.staticData
+      }
+    }
+
     return {
-      getRuntimeData: (
-        pageId: string
-      ): {
-        [key: string]: string
-      } => this.createMutableProxy(pageId, 'runtime', null, scheduleUpdate),
-      getStaticData: (
-        pageId: string
-      ): {
-        [key: string]: any
-      } => this.createMutableProxy(pageId, 'static', null, scheduleUpdate),
+      getRuntimeData,
+      getStaticData,
+      addPageData,
     }
   }
 
@@ -203,16 +223,27 @@ interface PagesDataInternal {
 }
 
 export interface HandlerAPI {
+  /**
+   * Get a mutable data object of runtimeData
+   */
   getRuntimeData: (
     pageId: string
   ) => {
     [key: string]: string
   }
+  /**
+   * Get a mutable data object of staticData
+   */
   getStaticData: (
     pageId: string
   ) => {
     [key: string]: any
   }
+  /**
+   * Add page data.
+   * If the data already exists, overwrite it.
+   */
+  readonly addPageData: (pageData: PageData) => void
 }
 
 export class Association<ValueType = any> {

@@ -2,11 +2,15 @@ import * as path from 'path'
 import type { Plugin } from 'vite'
 import type { MdxPlugin } from 'vite-plugin-mdx'
 import {
+  DefaultPageStrategy,
+  defaultFileHandler,
+} from './dynamic-modules/DefaultPageStrategy'
+import {
   renderPageList,
   renderPageListInSSR,
   renderOnePageData,
 } from './dynamic-modules/pages'
-import { FindPages, PageStrategy } from './dynamic-modules/PageStrategy'
+import { PageStrategy } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 
 const modulePrefix = '/@react-pages/'
@@ -17,12 +21,12 @@ const ssrDataModuleId = modulePrefix + 'ssrData'
 export default function pluginFactory(
   opts: {
     pagesDir?: string
-    findPages?: FindPages
+    pageStrategy?: PageStrategy
     useHashRouter?: boolean
     staticSiteGeneration?: {}
   } = {}
 ): Plugin {
-  const { findPages, useHashRouter = false, staticSiteGeneration } = opts
+  const { useHashRouter = false, staticSiteGeneration } = opts
 
   let isBuild: boolean
   let pagesDir: string
@@ -53,7 +57,11 @@ export default function pluginFactory(
     configResolved({ root, plugins, logger, command }) {
       isBuild = command === 'build'
       pagesDir = opts.pagesDir ?? path.resolve(root, 'pages')
-      pageStrategy = new PageStrategy(pagesDir, findPages)
+      if (opts.pageStrategy) {
+        pageStrategy = opts.pageStrategy
+      } else {
+        pageStrategy = new DefaultPageStrategy(pagesDir)
+      }
 
       // Inject parsing logic for frontmatter if missing.
       const { devDependencies = {} } = require(path.join(root, 'package.json'))
@@ -129,4 +137,6 @@ export type {
   PagesStaticData,
 } from '../../client'
 
-export { defaultPageFinder, extractStaticData } from './dynamic-modules/utils'
+export { extractStaticData } from './dynamic-modules/utils'
+export { PageStrategy }
+export { DefaultPageStrategy, defaultFileHandler }
