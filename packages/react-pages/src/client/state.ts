@@ -113,7 +113,11 @@ if (import.meta.hot) {
 
   usePageModule = (pagePath) => {
     const data = useAtomValue(dataAtoms(pagePath))
-    return useMemo(() => data?.data(), [data])
+    // if the dataModulePath hasn't changed,
+    // we can keep using the same dataModule.
+    // vite hmr will handle it's update.
+    // (all dataModules should be self-accepted)
+    return useMemo(() => data?.data(), [data.dataModulePath])
   }
 
   useStaticData = (pagePath?: string, selector?: Function) => {

@@ -1,5 +1,5 @@
 import slash from 'slash'
-import type { PagesData } from "./PagesData";
+import type { PagesData } from './PagesData'
 
 export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
   const addPagesData = Object.entries(pagesData).map(
@@ -10,10 +10,17 @@ export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
         // so we change the sub path
         subPath = '/__index'
       }
-      const code = `
+      const dataModulePath = `/@react-pages/pages${subPath}`
+      let code = `
 pages["${pageId}"] = {};
-pages["${pageId}"].data = () => import("/@react-pages/pages${subPath}");
+pages["${pageId}"].data = () => import("${dataModulePath}");
 pages["${pageId}"].staticData = ${JSON.stringify(staticData)};`
+      if (!isBuild) {
+        // in dev mode, we provide dataModulePath to let client know
+        // whether the imported module has changed
+        code = `${code}
+pages["${pageId}"].dataModulePath = "${dataModulePath}"`
+      }
       return code
     }
   )
