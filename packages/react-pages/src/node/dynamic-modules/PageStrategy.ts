@@ -34,6 +34,7 @@ export class PageStrategy extends EventEmitter {
     const changedPages = new Set<string>()
     const emitChange = debounce(() => {
       this.emit('change', Array.from(changedPages))
+      console.log('emitChange for page module! full reload will happen!', Array.from(changedPages))
       changedPages.clear()
     }, 100)
 

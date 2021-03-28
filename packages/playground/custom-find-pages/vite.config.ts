@@ -32,14 +32,25 @@ module.exports = {
             })
             // set page's title
             // currently doesn't work
-            helpers.addPageData({
-              pageId: publicPath,
-              key: 'title',
-              staticData: componentName + ' Title',
-            })
+            // helpers.addPageData({
+            //   pageId: publicPath,
+            //   key: 'title',
+            //   staticData: componentName + ' Title',
+            // })
             return null
           }
         )
+        // temporally avoid some other bug
+        helpers.addPageData({
+          pageId: `/Button`,
+          key: 'title',
+          staticData: 'Button Title',
+        })
+        helpers.addPageData({
+          pageId: `/Card`,
+          key: 'title',
+          staticData: 'Card Title',
+        })
         // we also want to collect pages from `/pages` with basic filesystem routing convention
         defaultPageFinder(pagesDir, helpers)
       },
