@@ -109,7 +109,7 @@ export class UpdateBuffer extends EventEmitter {
         _this.scheduleUpdate(update)
         return
       }
-      // store it, will flust these updates together later
+      // store it, will flush these updates together later
       updates.push(update)
     }
   }
