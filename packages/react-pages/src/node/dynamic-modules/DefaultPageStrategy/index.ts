@@ -3,11 +3,10 @@ import { extractStaticData } from '../utils'
 
 export class DefaultPageStrategy extends PageStrategy {
   constructor(
-    pagesDir: string,
     opts: { extraFindPages?: FindPages; fileHandler?: FileHandler } = {}
   ) {
     const { extraFindPages, fileHandler = defaultFileHandler } = opts
-    super(pagesDir, (pagesDir) => {
+    super((pagesDir) => {
       const helpers = this.createHelpers(fileHandler)
       helpers.watchFiles(pagesDir, '**/*$.{md,mdx,js,jsx,ts,tsx}')
       if (typeof extraFindPages === 'function') {

@@ -12,6 +12,7 @@ import {
 import { UpdateBuffer } from './UpdateBuffer'
 
 export class PageStrategy extends EventEmitter {
+  protected pagesDir: string = '/pagesDir_not_initialized'
   private fileCache: FileCache = {}
   private watchers = new Set<FSWatcher>()
   private pagesDataKeeper = new PagesDataKeeper()
@@ -21,36 +22,40 @@ export class PageStrategy extends EventEmitter {
    * to avoid returning half-finished page data
    */
   private pendingList = new PendingList()
+  private started = false
 
-  constructor(private pagesDir: string, private findPages: FindPages) {
+  constructor(private findPages: FindPages) {
     super()
-    const { updateBuffer } = this
+  }
 
+  public start(pagesDir: string) {
+    if (this.started) throw new Error(`PageStrategy aready started`)
+    this.started = true
+    this.pagesDir = pagesDir
+    const { updateBuffer } = this
     updateBuffer.on('page', (updates: string[]) => {
       this.emit('page', updates)
     })
-
     updateBuffer.on('page-list', () => {
       this.emit('page-list')
     })
-  }
-
-  public start() {
     const helpers = this.createHelpers(() => {
       throw new Error(
         `No defaultFileHandler found. You should pass fileHandler argument when calling watchFiles`
       )
     })
-    const { findPages, pendingList, pagesDir } = this
+    const { findPages, pendingList } = this
     pendingList.addPending(Promise.resolve(findPages(pagesDir, helpers)))
   }
 
   public getPages(): Promise<Readonly<PagesData>> {
+    if (!this.started) throw new Error(`PageStrategy not started yet`)
     return this.pendingList
       .subscribe()
       .then(() => this.pagesDataKeeper.toPagesData())
   }
   public close() {
+    if (!this.started) throw new Error(`PageStrategy not started yet`)
     this.watchers.forEach((w) => w.close())
   }
   /**

@@ -60,7 +60,7 @@ export default function pluginFactory(
       if (opts.pageStrategy) {
         pageStrategy = opts.pageStrategy
       } else {
-        pageStrategy = new DefaultPageStrategy(pagesDir)
+        pageStrategy = new DefaultPageStrategy()
       }
 
       // Inject parsing logic for frontmatter if missing.
@@ -79,7 +79,7 @@ export default function pluginFactory(
         }
       }
 
-      pageStrategy.start()
+      pageStrategy.start(pagesDir)
     },
     configureServer({ watcher, moduleGraph }) {
       const reloadVirtualModule = (moduleId: string) => {
