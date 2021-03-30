@@ -62,7 +62,6 @@ export default function pluginFactory(
       } else {
         pageStrategy = new DefaultPageStrategy(pagesDir)
       }
-      pageStrategy.start()
 
       // Inject parsing logic for frontmatter if missing.
       const { devDependencies = {} } = require(path.join(root, 'package.json'))
@@ -79,6 +78,8 @@ export default function pluginFactory(
           )
         }
       }
+
+      pageStrategy.start()
     },
     configureServer({ watcher, moduleGraph }) {
       const reloadVirtualModule = (moduleId: string) => {
