@@ -22,9 +22,9 @@ export class PageStrategy extends EventEmitter {
    */
   private pendingList = new PendingList()
 
-  constructor(private pagesDir: string, findPages: FindPages) {
+  constructor(private pagesDir: string, private findPages: FindPages) {
     super()
-    const { updateBuffer, pendingList } = this
+    const { updateBuffer } = this
 
     updateBuffer.on('page', (updates: string[]) => {
       this.emit('page', updates)
@@ -33,12 +33,15 @@ export class PageStrategy extends EventEmitter {
     updateBuffer.on('page-list', () => {
       this.emit('page-list')
     })
+  }
 
+  public start() {
     const helpers = this.createHelpers(() => {
       throw new Error(
         `No defaultFileHandler found. You should pass fileHandler argument when calling watchFiles`
       )
     })
+    const { findPages, pendingList, pagesDir } = this
     pendingList.addPending(Promise.resolve(findPages(pagesDir, helpers)))
   }
 
