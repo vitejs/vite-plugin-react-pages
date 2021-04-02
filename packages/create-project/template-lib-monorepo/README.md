@@ -16,6 +16,8 @@ Edit `packages/button/demos/demo1.tsx` or other demo files, the demos will infle
 
 `yarn build` The demos are built and served.
 
+`npm run ssr` The app are built into a static site (Static-Site Generation) and served.
+
 ---
 
 Checkout [vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages) for more info.

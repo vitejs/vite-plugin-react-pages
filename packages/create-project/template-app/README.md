@@ -13,6 +13,8 @@ Edit `pages/page1$.tsx` or other souce files, the playground will inflect your c
 
 `npm run build` The app are built and served.
 
+`npm run ssr` The app are built into a static site (Static-Site Generation) and served.
+
 ---
 
 Checkout [vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages) for more info.
