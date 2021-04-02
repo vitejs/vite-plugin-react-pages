@@ -1,6 +1,6 @@
 import * as path from 'path'
 import type { Plugin } from 'vite'
-import type { MdxPlugin } from 'vite-plugin-mdx'
+import type { MdxPlugin } from 'vite-plugin-mdx/dist/types'
 import {
   DefaultPageStrategy,
   defaultFileHandler,
