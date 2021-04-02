@@ -26,7 +26,7 @@
     "my-card": "*",
     "serve": "^11.3.2",
     "vite": "^2.0.5",
-    "vite-plugin-mdx": "workspace:^2.0.1",
+    "vite-plugin-mdx": "^3.3.1",
     "vite-plugin-react-pages": "workspace:^2.1.0"
   }
 }

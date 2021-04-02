@@ -25,7 +25,7 @@
     "playground-card": "*",
     "serve": "^11.3.2",
     "vite": "^2.0.5",
-    "vite-plugin-mdx": "workspace:*",
+    "vite-plugin-mdx": "^3.3.1",
     "vite-plugin-react-pages": "workspace:*"
   }
 }
