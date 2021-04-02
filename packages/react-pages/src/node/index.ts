@@ -78,7 +78,8 @@ export default function pluginFactory(
           )
         }
       }
-
+    },
+    buildStart() {
       pageStrategy.start(pagesDir)
     },
     configureServer({ watcher, moduleGraph }) {

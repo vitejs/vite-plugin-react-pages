@@ -7,7 +7,7 @@
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
     "build": "rm -rf dist && vite build --outDir dist && serve -s dist",
     "debug:build": "node --inspect ./node_modules/vite/bin/vite build --outDir dist",
-    "ssr": "rm -rf dist && vite-pages ssr",
+    "ssr": "rm -rf dist && vite-pages ssr && serve dist",
     "debug:ssr": "rm -rf dist && node --inspect-brk ./node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr"
   },
   "keywords": [],

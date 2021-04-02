@@ -33,13 +33,6 @@ export async function ssrBuild(
       rollupOptions: {
         input: path.join(CLIENT_PATH, 'ssr', 'serverRender.js'),
         preserveEntrySignatures: 'allow-extension',
-        // TODO: don't hard code external
-        external: [
-          'react',
-          'react-router-dom',
-          'react-dom',
-          'react-dom/server',
-        ],
         output: {
           format: 'cjs',
           exports: 'named',
@@ -48,6 +41,11 @@ export async function ssrBuild(
       },
       outDir: ssrOutDir,
       minify: false,
+    },
+    // @ts-ignore
+    ssr: {
+      external: ['react', 'react-router-dom', 'react-dom', 'react-dom/server'],
+      noExternal: ['vite-pages-theme-basic'],
     },
   })
 
@@ -97,7 +95,7 @@ export async function ssrBuild(
     return chunk.type === 'asset' && chunk.fileName.endsWith('.css')
   })
 
-  const basePath = viteConfig.build.base ?? '/'
+  const basePath = viteConfig.base ?? '/'
 
   const htmlCode = await fs.readFile(path.join(root, 'index.html'), 'utf-8')
   const RootElementInjectPoint = '<div id="root"></div>'
@@ -111,6 +109,12 @@ export async function ssrBuild(
   if (!htmlCode.includes(EntryModuleInjectPoint)) {
     throw new Error(
       `Your index.html should contain EntryModuleInjectPoint: "${EntryModuleInjectPoint}" (it must appear exactly as-is)`
+    )
+  }
+  const CSSInjectPoint = '</head>'
+  if (!htmlCode.includes(CSSInjectPoint)) {
+    throw new Error(
+      `Your index.html should contain CSSInjectPoint: "${CSSInjectPoint}" (it must appear exactly as-is)`
     )
   }
 
@@ -132,9 +136,13 @@ export async function ssrBuild(
         })
         .join('\n')
       html = html.replace(
-        EntryModuleInjectPoint,
+        CSSInjectPoint,
         `${cssInject}
-<script type="module" src="${basePath}${entryChunk.fileName}"></script>`
+${CSSInjectPoint}`
+      )
+      html = html.replace(
+        EntryModuleInjectPoint,
+        `<script type="module" src="${basePath}${entryChunk.fileName}"></script>`
       )
       // TODO: injectPreload
       // preload data module for this page
