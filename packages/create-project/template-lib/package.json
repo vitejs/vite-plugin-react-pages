@@ -20,6 +20,8 @@
     "serve": "^11.3.2",
     "vite": "^2.0.5",
     "vite-plugin-mdx": "^3.3.1",
+    "@mdx-js/mdx": "^1.6.22",
+    "@mdx-js/react": "^1.6.22",
     "vite-plugin-react-pages": "workspace:^3.0.0",
     "vite-pages-theme-basic": "workspace:^3.0.0"
   }
