@@ -17,6 +17,10 @@ interface PageModule {
 import initialPages from '/@react-pages/pages'
 import initialTheme from '/@react-pages/theme'
 
+// TODO: simplify this
+// there is no easy way to handle the hmr of module such as `/@react-pages/pages/page1` so stop trying it
+// https://github.com/vitejs/vite-plugin-react-pages/pull/19#discussion_r604251258
+
 const initialPagePaths = Object.keys(initialPages)
 
 // This HMR code assumes that our Jotai atoms are always managed
@@ -94,17 +98,15 @@ if (import.meta.hot) {
     }
   })
 
-  const dataPathAtoms = atomFamily((path: string) => (get) => {
+  const dataAtoms = atomFamily((path: string) => (get) => {
     const pages = get(pagesAtom)
-    const page = pages[path] || pages['/404']
-    return page?.dataPath || null
+    return pages[path]
   })
 
-  const emptyData: any = {}
   const staticDataAtoms = atomFamily((path: string) => (get) => {
     const pages = get(pagesAtom)
-    const page = pages[path] || pages['/404']
-    return page?.staticData || emptyData
+    const page = pages[path]
+    return page?.staticData
   })
 
   usePagePaths = () => {
@@ -112,13 +114,9 @@ if (import.meta.hot) {
     return useAtomValue(pagePathsAtom)
   }
 
-  // This hook uses dynamic import with a variable, which is not supported
-  // by Rollup, but that's okay since HMR is for development only.
   usePageModule = (pagePath) => {
-    const dataPath = useAtomValue(dataPathAtoms(pagePath))
-    return useMemo(() => {
-      return dataPath ? import(dataPath /* @vite-ignore */) : void 0
-    }, [dataPath])
+    const data = useAtomValue(dataAtoms(pagePath))
+    return useMemo(() => data?.data(), [data])
   }
 
   useStaticData = (pagePath?: string, selector?: Function) => {
@@ -139,12 +137,12 @@ else {
   useTheme = () => initialTheme
   usePagePaths = () => initialPagePaths
   usePageModule = (path) => {
-    const page = initialPages[path] || initialPages['/404']
+    const page = initialPages[path]
     return useMemo(() => page?.data(), [page])
   }
   useStaticData = (path?: string, selector?: Function) => {
     if (path) {
-      const page = initialPages[path] || initialPages['/404']
+      const page = initialPages[path]
       const staticData = page?.staticData || {}
       return selector ? selector(staticData) : staticData
     }

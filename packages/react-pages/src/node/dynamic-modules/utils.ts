@@ -1,18 +1,6 @@
 import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
-import { File, FindPages, PageData } from './PageStrategy'
-
-export const defaultPageFinder: FindPages = (pagesDir, { watchFiles }) =>
-  watchFiles(pagesDir, '**/*$.{md,mdx,js,jsx,ts,tsx}')
-
-export const defaultPageLoader = async (file: File): Promise<PageData> => {
-  const pagePublicPath = getPagePublicPath(file.relative)
-  return {
-    pageId: pagePublicPath,
-    dataPath: file.path,
-    staticData: await extractStaticData(file),
-  }
-}
+import { File } from './PageStrategy'
 
 export async function extractStaticData(
   file: File
@@ -32,22 +20,32 @@ export async function extractStaticData(
   }
 }
 
-export function getPagePublicPath(relativePageFilePath: string) {
-  let pagePublicPath = relativePageFilePath.replace(
-    /\$\.(md|mdx|js|jsx|ts|tsx)$/,
-    ''
-  )
-  pagePublicPath = pagePublicPath.replace(/index$/, '')
-  // ensure starting slash
-  pagePublicPath = pagePublicPath.replace(/\/$/, '')
-  pagePublicPath = `/${pagePublicPath}`
+/**
+ * track how many works are pending
+ * to avoid returning half-finished page data
+ */
+export class PendingList {
+  private pendingCount = 0
+  private subscribers: Array<() => void> = []
 
-  // turn [id] into :id
-  // so that react-router can recognize it as url params
-  pagePublicPath = pagePublicPath.replace(
-    /\[(.*?)\]/g,
-    (_, paramName) => `:${paramName}`
-  )
+  addPending(p: Promise<void>) {
+    this.pendingCount++
+    p.finally(() => {
+      this.pendingCount--
+      if (this.pendingCount === 0) {
+        // all pending works are finished
+        this.subscribers.forEach((notify) => notify())
+        this.subscribers.length = 0
+      }
+    })
+  }
 
-  return pagePublicPath
+  subscribe(): Promise<void> {
+    if (this.pendingCount === 0) return Promise.resolve()
+    return new Promise((res) => {
+      this.subscribers.push(() => {
+        res()
+      })
+    })
+  }
 }

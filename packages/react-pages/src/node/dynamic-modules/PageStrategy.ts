@@ -2,205 +2,162 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import { EventEmitter } from 'events'
 import chokidar, { FSWatcher } from 'chokidar'
-import { debounce } from 'mini-debounce'
-import { PagesData } from './pages'
+import { extractStaticData, PendingList } from './utils'
 import {
-  extractStaticData,
-  defaultPageLoader,
-  defaultPageFinder,
-} from './utils'
+  PagesDataKeeper,
+  PagesData,
+  Association,
+  HandlerAPI,
+} from './PagesData'
+import { UpdateBuffer } from './UpdateBuffer'
 
 export class PageStrategy extends EventEmitter {
-  readonly getPages: () => Promise<Readonly<PagesData>>
-  readonly close: () => void
+  protected pagesDir: string = '/pagesDir_not_initialized'
+  private fileCache: FileCache = {}
+  private watchers = new Set<FSWatcher>()
+  private pagesDataKeeper = new PagesDataKeeper()
+  private updateBuffer = new UpdateBuffer()
+  /**
+   * track how many works are pending
+   * to avoid returning half-finished page data
+   */
+  private pendingList = new PendingList()
+  private started = false
 
-  constructor(
-    pagesDir: string,
-    findPages: FindPages = defaultPageFinder,
-    loadPageData: LoadPageData = defaultPageLoader
-  ) {
+  constructor(private findPages: FindPages) {
     super()
+  }
 
-    const pageCache: PagesData = {}
-    const fileCache: FileCache = {}
-    const watchers = new Set<FSWatcher>()
+  public start(pagesDir: string) {
+    if (this.started) throw new Error(`PageStrategy aready started`)
+    this.started = true
+    this.pagesDir = pagesDir
+    const { updateBuffer } = this
+    updateBuffer.on('page', (updates: string[]) => {
+      this.emit('page', updates)
+    })
+    updateBuffer.on('page-list', () => {
+      this.emit('page-list')
+    })
+    const helpers = this.createHelpers(() => {
+      throw new Error(
+        `No defaultFileHandler found. You should pass fileHandler argument when calling watchFiles`
+      )
+    })
+    const { findPages, pendingList } = this
+    pendingList.addPending(Promise.resolve(findPages(pagesDir, helpers)))
+  }
 
-    // The "promise" event is for HMR updates to the pages map.
-    const emitPromise = debounce(() => {
-      this.emit('promise', pagesPromise)
-    }, 100)
-
-    // The "change" event is for HMR updates to each page.
-    const changedPages = new Set<string>()
-    const emitChange = debounce(() => {
-      this.emit('change', Array.from(changedPages))
-      changedPages.clear()
-    }, 100)
-
+  public getPages(): Promise<Readonly<PagesData>> {
+    if (!this.started) throw new Error(`PageStrategy not started yet`)
+    return this.pendingList
+      .subscribe()
+      .then(() => this.pagesDataKeeper.toPagesData())
+  }
+  public close() {
+    if (!this.started) throw new Error(`PageStrategy not started yet`)
+    this.watchers.forEach((w) => w.close())
+  }
+  /**
+   * Custom PageStrategy can use it to create helpers with custom defaultFileHandler
+   */
+  protected createHelpers(defaultFileHandler: FileHandler): PageHelpers {
+    const apiForCustomSource = this.pagesDataKeeper.createAPIForCustomSource(
+      this.updateBuffer.scheduleUpdate.bind(this.updateBuffer)
+    )
     const helpers: PageHelpers = {
       extractStaticData,
-      loadPageData: defaultPageLoader,
-      addPageData,
       watchFiles,
+      ...apiForCustomSource,
     }
-
-    // The file currently being processed.
-    let currentFile: File | null = null
-
-    let pagesPromise = Promise.resolve(pageCache)
-    findPages(pagesDir, {
-      ...helpers,
-      loadPageData: (file) => Promise.resolve(loadPageData(file, helpers)),
-    })
-
-    this.getPages = () => pagesPromise
-    this.close = () => watchers.forEach((w) => w.close())
-
-    function addPageData({
-      pageId,
-      key = 'main',
-      dataPath,
-      staticData,
-    }: PageData) {
-      if (!pageId.startsWith('/'))
-        throw Error(
-          `addPageData error: pageId should start with "/", but got "${pageId}"`
-        )
-
-      const existingPage = pageCache[pageId]
-      const page =
-        existingPage ||
-        (pageCache[pageId] = {
-          data: {},
-          staticData: {},
-        })
-
-      if (dataPath) {
-        if (page.data[key])
-          throw Error(
-            `addPageData conflict: data with key "${key}" already exists`
-          )
-        page.data[key] = dataPath
-      }
-
-      if (staticData) {
-        if (page.staticData[key])
-          throw Error(
-            `addPageData conflict: staticData with key "${key}" already exists`
-          )
-        page.staticData[key] = staticData
-      }
-
-      if (currentFile) {
-        let dataKeys = currentFile.dataKeys.get(pageId)
-        if (!dataKeys) currentFile.dataKeys.set(pageId, (dataKeys = []))
-        dataKeys.push(key)
-      }
-
-      if (existingPage) {
-        changedPages.add(pageId)
-        emitChange()
-      }
-    }
-
-    function removePageData(dataKeys: string[], pageId: string) {
-      const page = pageCache[pageId]
-
-      dataKeys.forEach((key) => {
-        delete page.data[key]
-        delete page.staticData[key]
-      })
-
-      if (hasKeys(page.data) || hasKeys(page.staticData)) {
-        changedPages.add(pageId)
-        emitChange()
-      } else {
-        delete pageCache[pageId]
-      }
-    }
-
-    function hasKeys(obj: object) {
-      for (const _ in obj) return true
-      return false
-    }
+    const _this = this
+    return helpers
 
     function watchFiles(
       baseDir: string,
       arg2?: string | string[] | FileHandler,
       arg3?: FileHandler
     ) {
-      let globs: string[]
-      let handler: FileHandler
-
-      if (typeof arg2 === 'function') {
-        globs = ['**/*']
-        handler = arg2
-      } else {
-        globs = Array.isArray(arg2) ? arg2 : [arg2 || '**/*']
-        handler =
-          arg3 || ((file) => Promise.resolve(loadPageData(file, helpers)))
-      }
+      const {
+        pagesDir,
+        pendingList,
+        watchers,
+        fileCache,
+        updateBuffer,
+        pagesDataKeeper,
+      } = _this
 
       // Strip trailing slash and make absolute
       baseDir = path.resolve(pagesDir, baseDir)
-
-      const processFile = async (
-        type: 'add' | 'change' | 'unlink',
-        file: File
-      ) => {
-        file.dataKeys.forEach(removePageData)
-        if (type !== 'unlink') {
-          if (type === 'change') {
-            file.content = null
-            file.dataKeys.clear()
-          }
-          currentFile = file
-          try {
-            const pageData = await handler(file)
-            if (pageData) {
-              addPageData(pageData)
-            }
-          } finally {
-            currentFile = null
-          }
-        }
+      let globs: string[]
+      let fileHandler: FileHandler
+      if (typeof arg2 === 'function') {
+        globs = ['**/*']
+        fileHandler = arg2
+      } else {
+        globs = Array.isArray(arg2) ? arg2 : [arg2 || '**/*']
+        fileHandler = arg3 || defaultFileHandler
       }
 
+      // should wait for a complete fs scan
+      // before returning the page data
+      let fsScanFinish: () => void
+      pendingList.addPending(
+        new Promise((resolve) => {
+          fsScanFinish = resolve
+        })
+      )
       watchers.add(
         chokidar
           .watch(globs, {
             cwd: baseDir,
-            ignored: ['**/node_modules/**/*'],
+            ignored: ['**/node_modules/**/*', '**/.git/**'],
           })
-          .on('all', (type, filePath) => {
-            if (type !== 'addDir' && type !== 'unlinkDir') {
-              filePath = path.join(baseDir, filePath)
+          .on('add', handleFileChange)
+          .on('change', handleFileChange)
+          .on('unlink', handleFileUnLink)
+          .on('ready', () => fsScanFinish())
+      )
 
-              const file =
-                fileCache[filePath] ||
-                (fileCache[filePath] = new File(filePath, baseDir))
-
-              if (type === 'unlink') {
-                delete fileCache[file.path]
-              } else if (file.queued) {
-                return
-              }
-
-              file.queued = true
-              pagesPromise = pagesPromise.finally(() => {
-                file.queued = false
-                return processFile(type, file)
-              })
-              emitPromise()
+      async function handleFileChange(filePath: string) {
+        filePath = path.join(baseDir, filePath)
+        const file =
+          fileCache[filePath] ||
+          (fileCache[filePath] = new File(filePath, baseDir))
+        file.content = null
+        // should wait for the fileHandler to finish
+        // before returning the page data
+        pendingList.addPending(
+          updateBuffer.batchUpdate(async (scheduleUpdate) => {
+            const handlerAPI = pagesDataKeeper.createAPIForSourceFile(
+              file,
+              scheduleUpdate
+            )
+            const pageData = await fileHandler(file, handlerAPI)
+            if (pageData) {
+              handlerAPI.addPageData(pageData)
             }
           })
-      )
+        )
+      }
+
+      function handleFileUnLink(filePath: string) {
+        filePath = path.join(baseDir, filePath)
+        const file = fileCache[filePath]
+        if (!file) return
+        delete fileCache[filePath]
+        pendingList.addPending(
+          updateBuffer.batchUpdate(async (scheduleUpdate) => {
+            pagesDataKeeper.deleteDataAssociatedWithFile(file, scheduleUpdate)
+          })
+        )
+      }
     }
   }
 }
 
 export interface FindPages {
-  (pagesDir: string, helpers: PageHelpers): void
+  (pagesDir: string, helpers: PageHelpers): void | Promise<void>
 }
 
 export interface LoadPageData {
@@ -229,11 +186,13 @@ export interface PageData {
    * The path to the runtime data module
    */
   readonly dataPath?: string
-
+  /**
+   * The value of static data
+   */
   readonly staticData?: any
 }
 
-export interface PageHelpers {
+export interface PageHelpers extends HandlerAPI {
   /**
    * Read the static data from a file.
    */
@@ -244,27 +203,16 @@ export interface PageHelpers {
     readonly sourceType: string
   }>
   /**
-   * Watch files for changes (not necessarily pages).
-   *
-   * Return page data to have deletion handled automatically.
-   * If no handler is passed, the `loadPageData` helper is used
-   * on every matching file.
+   * set page data in the file handler,
+   * and file deletion will be handled automatically
    */
   readonly watchFiles: WatchFilesHelper
-  /**
-   * Load page data using the default page loader.
-   */
-  readonly loadPageData: (file: File) => Promise<PageData>
-  /**
-   * Add page data manually.
-   */
-  readonly addPageData: (pageData: PageData) => void
 }
 
 export class File {
   content: Promise<string> | null = null
-  /** pageId -> dataKey[] */
-  dataKeys = new Map<string, string[]>()
+  // the page data that this file is associated with
+  associations: Set<Association> = new Set()
   /** When true, this file will be processed soon */
   queued = false
 
@@ -283,17 +231,21 @@ export class File {
   }
 }
 
-interface FileHandler {
-  (file: File): PageData | Promise<PageData> | void
+export interface FileHandler {
+  (file: File, api: HandlerAPI):
+    | void
+    | Promise<void>
+    | PageData
+    | Promise<PageData>
 }
 
-interface WatchFilesHelper {
-  /** Watch all files within a directory (except node_modules) */
-  (baseDir: string, handler?: FileHandler): void
+export interface WatchFilesHelper {
+  /** Watch all files within a directory (except node_modules and .git) */
+  (baseDir: string, fileHandler?: FileHandler): void
   /** Watch files matching the given glob */
-  (baseDir: string, glob: string, handler?: FileHandler): void
+  (baseDir: string, glob: string, fileHandler?: FileHandler): void
   /** Watch files matching one of the given globs */
-  (baseDir: string, globs: string[], handler?: FileHandler): void
+  (baseDir: string, globs: string[], fileHandler?: FileHandler): void
 }
 
 interface FileCache {

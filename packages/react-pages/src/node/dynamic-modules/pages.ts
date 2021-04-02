@@ -1,15 +1,5 @@
 import slash from 'slash'
-
-export interface PagesData {
-  [pageId: string]: {
-    data: {
-      [key: string]: string
-    }
-    staticData: {
-      [key: string]: any
-    }
-  }
-}
+import type { PagesData } from './PagesData'
 
 export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
   const addPagesData = Object.entries(pagesData).map(
@@ -20,12 +10,10 @@ export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
         // so we change the sub path
         subPath = '/__index'
       }
-      const dataProperty = isBuild
-        ? `data = () => import("/@react-pages/pages${subPath}")`
-        : `dataPath = "/@react-pages/pages${subPath}"`
-      const code = `
+      const dataModulePath = `/@react-pages/pages${subPath}`
+      let code = `
 pages["${pageId}"] = {};
-pages["${pageId}"].${dataProperty};
+pages["${pageId}"].data = () => import("${dataModulePath}");
 pages["${pageId}"].staticData = ${JSON.stringify(staticData)};`
       return code
     }

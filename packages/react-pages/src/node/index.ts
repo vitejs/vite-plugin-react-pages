@@ -2,15 +2,15 @@ import * as path from 'path'
 import type { Plugin } from 'vite'
 import type { MdxPlugin } from 'vite-plugin-mdx'
 import {
+  DefaultPageStrategy,
+  defaultFileHandler,
+} from './dynamic-modules/DefaultPageStrategy'
+import {
   renderPageList,
   renderPageListInSSR,
   renderOnePageData,
 } from './dynamic-modules/pages'
-import {
-  FindPages,
-  LoadPageData,
-  PageStrategy,
-} from './dynamic-modules/PageStrategy'
+import { PageStrategy } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 
 const modulePrefix = '/@react-pages/'
@@ -21,18 +21,12 @@ const ssrDataModuleId = modulePrefix + 'ssrData'
 export default function pluginFactory(
   opts: {
     pagesDir?: string
-    findPages?: FindPages
-    loadPageData?: LoadPageData
+    pageStrategy?: PageStrategy
     useHashRouter?: boolean
     staticSiteGeneration?: {}
   } = {}
 ): Plugin {
-  const {
-    findPages,
-    loadPageData,
-    useHashRouter = false,
-    staticSiteGeneration,
-  } = opts
+  const { useHashRouter = false, staticSiteGeneration } = opts
 
   let isBuild: boolean
   let pagesDir: string
@@ -45,6 +39,9 @@ export default function pluginFactory(
         alias: {
           '/@pages-infra': path.join(__dirname, '../client/'),
         },
+      },
+      optimizeDeps: {
+        include: ['@mdx-js/react'],
       },
       define: {
         __HASH_ROUTER__: !!useHashRouter,
@@ -60,7 +57,11 @@ export default function pluginFactory(
     configResolved({ root, plugins, logger, command }) {
       isBuild = command === 'build'
       pagesDir = opts.pagesDir ?? path.resolve(root, 'pages')
-      pageStrategy = new PageStrategy(pagesDir, findPages, loadPageData)
+      if (opts.pageStrategy) {
+        pageStrategy = opts.pageStrategy
+      } else {
+        pageStrategy = new DefaultPageStrategy()
+      }
 
       // Inject parsing logic for frontmatter if missing.
       const { devDependencies = {} } = require(path.join(root, 'package.json'))
@@ -77,6 +78,8 @@ export default function pluginFactory(
           )
         }
       }
+
+      pageStrategy.start(pagesDir)
     },
     configureServer({ watcher, moduleGraph }) {
       const reloadVirtualModule = (moduleId: string) => {
@@ -88,10 +91,12 @@ export default function pluginFactory(
       }
 
       pageStrategy
-        .on('promise', () => reloadVirtualModule(pagesModuleId))
-        .on('change', (pageId: string) =>
-          reloadVirtualModule(pagesModuleId + pageId)
-        )
+        .on('page-list', () => reloadVirtualModule(pagesModuleId))
+        .on('page', (pageIds: string[]) => {
+          pageIds.forEach((pageId) => {
+            reloadVirtualModule(pagesModuleId + pageId)
+          })
+        })
     },
     resolveId(id) {
       return id.startsWith(modulePrefix) ? id : undefined
@@ -134,4 +139,6 @@ export type {
   PagesStaticData,
 } from '../../client'
 
-export { defaultPageFinder, defaultPageLoader } from './dynamic-modules/utils'
+export { extractStaticData } from './dynamic-modules/utils'
+export { PageStrategy }
+export { DefaultPageStrategy, defaultFileHandler }
