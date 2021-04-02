@@ -17,6 +17,10 @@ interface PageModule {
 import initialPages from '/@react-pages/pages'
 import initialTheme from '/@react-pages/theme'
 
+// TODO: simplify this
+// there is no easy way to handle the hmr of module such as `/@react-pages/pages/page1` so stop trying it
+// https://github.com/vitejs/vite-plugin-react-pages/pull/19#discussion_r604251258
+
 const initialPagePaths = Object.keys(initialPages)
 
 // This HMR code assumes that our Jotai atoms are always managed
@@ -99,7 +103,6 @@ if (import.meta.hot) {
     return pages[path]
   })
 
-  const emptyData: any = {}
   const staticDataAtoms = atomFamily((path: string) => (get) => {
     const pages = get(pagesAtom)
     const page = pages[path]
@@ -113,11 +116,7 @@ if (import.meta.hot) {
 
   usePageModule = (pagePath) => {
     const data = useAtomValue(dataAtoms(pagePath))
-    // if the dataModulePath hasn't changed,
-    // we can keep using the same dataModule.
-    // vite hmr will handle it's update.
-    // (all dataModules should be self-accepted)
-    return useMemo(() => data?.data(), [data.dataModulePath])
+    return useMemo(() => data?.data(), [data])
   }
 
   useStaticData = (pagePath?: string, selector?: Function) => {

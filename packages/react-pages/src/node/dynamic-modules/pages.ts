@@ -15,12 +15,6 @@ export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
 pages["${pageId}"] = {};
 pages["${pageId}"].data = () => import("${dataModulePath}");
 pages["${pageId}"].staticData = ${JSON.stringify(staticData)};`
-      if (!isBuild) {
-        // in dev mode, we provide dataModulePath to let client know
-        // whether the imported module has changed
-        code = `${code}
-pages["${pageId}"].dataModulePath = "${dataModulePath}"`
-      }
       return code
     }
   )
