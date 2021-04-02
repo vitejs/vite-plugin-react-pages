@@ -28,7 +28,7 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "vite": "^2.0.0-beta.3"
+    "vite": "^2.0.5"
   },
   "devDependencies": {
     "@types/enhanced-resolve": "^3.0.6",
