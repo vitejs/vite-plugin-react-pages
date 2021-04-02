@@ -1,5 +1,6 @@
 /**
  * @title Card Demo2 Title
+ * @description Card demo2 description
  */
 
 import React from 'react'

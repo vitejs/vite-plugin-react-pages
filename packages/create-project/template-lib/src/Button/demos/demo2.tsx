@@ -1,5 +1,6 @@
 /**
  * @title Button Demo2 Title
+ * @description Button demo2 description
  */
 
 import React from 'react'

@@ -3,7 +3,7 @@ import * as path from 'path'
 
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import mdx from 'vite-plugin-mdx'
-import pages from 'vite-plugin-react-pages'
+import pages, { defaultPageFinder } from 'vite-plugin-react-pages'
 
 module.exports = {
   jsx: 'react',
@@ -11,61 +11,57 @@ module.exports = {
     reactRefresh(),
     mdx(),
     pages({
-      findPages: async (helpers) => {
-        const pagesByComponent: { [comp: string]: any } = {}
+      pagesDir: path.join(__dirname, 'pages'),
+      findPages: async (pagesDir, helpers) => {
         const demosBasePath = path.join(__dirname, '../')
-        // find all demo modules
-        let demoPaths = await helpers.globFind(
-          demosBasePath,
-          '*/demos/**/*.{[tj]sx,md?(x)}'
-        )
 
-        await Promise.all(
-          demoPaths.map(async ({ relative, absolute }) => {
+        helpers.watchFiles({
+          baseDir: demosBasePath,
+          globs: '*/demos/**/*.{[tj]sx,md?(x)}',
+          async fileHandler(file, api) {
+            const { relative, path: absolute } = file
             const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
             if (!match) throw new Error('unexpected file: ' + absolute)
             const [_, componentName, demoPath] = match
-            const publicPath = `/${componentName}`
+            const pageId = `/${componentName}`
+            const runtimeDataPaths = api.getRuntimeData(pageId)
+            runtimeDataPaths[demoPath] = absolute
+            const staticDataPaths = api.getStaticData(pageId)
+            staticDataPaths[demoPath] = await helpers.extractStaticData(file)
+            if (!staticDataPaths.title)
+              staticDataPaths.title = `${componentName} Title`
+          },
+        })
 
-            // register the demo module as page daga
-            helpers.addPageData({
-              pageId: publicPath,
-              key: demoPath,
-              dataPath: absolute,
-              staticData: await helpers.extractStaticData(absolute),
-            })
-
-            if (!pagesByComponent[componentName]) {
-              pagesByComponent[componentName] = {
-                publicPath,
-              }
-            }
-          })
-        )
-
-        // add static data(title) for each component page
-        Object.entries(pagesByComponent).forEach(
-          ([componentName, { publicPath }]) => {
-            helpers.addPageData({
-              pageId: publicPath,
-              key: 'title',
-              staticData: componentName + ' Title',
-            })
-          }
-        )
-
+        // find all component README
+        helpers.watchFiles({
+          baseDir: demosBasePath,
+          globs: '*/README.md?(x)',
+          async fileHandler(file, api) {
+            const { relative, path: absolute } = file
+            const match = relative.match(/(.*)\/README\.mdx?$/)
+            if (!match) throw new Error('unexpected file: ' + absolute)
+            const [_, componentName] = match
+            const pageId = `/${componentName}`
+            const runtimeDataPaths = api.getRuntimeData(pageId)
+            runtimeDataPaths['README'] = absolute
+            const staticDataPaths = api.getStaticData(pageId)
+            staticDataPaths['README'] = await helpers.extractStaticData(file)
+            // make sure the title data is bound to this file
+            staticDataPaths.title = undefined
+            staticDataPaths.title =
+              staticDataPaths['README'].title ?? `${componentName} Title`
+          },
+        })
         // we also want to collect pages from `/pages` with basic filesystem routing convention
-        const defaultPages = await helpers.defaultFindPages(
-          path.join(__dirname, 'pages')
-        )
-        defaultPages.forEach(helpers.addPageData)
+        defaultPageFinder(pagesDir, helpers)
       },
     }),
   ],
   resolve: {
     alias: {
-      'my-button': path.resolve(__dirname, '../button/src'),
-      'my-card': path.resolve(__dirname, '../card/src'),
+      'playground-button': path.resolve(__dirname, '../button/src'),
+      'playground-card': path.resolve(__dirname, '../card/src'),
     },
   },
   minify: false,

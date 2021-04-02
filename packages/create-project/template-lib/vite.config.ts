@@ -1,65 +1,60 @@
 import type { UserConfig } from 'vite'
 import * as path from 'path'
-
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import mdx from 'vite-plugin-mdx'
-import pages from 'vite-plugin-react-pages'
+import pages, { DefaultPageStrategy } from 'vite-plugin-react-pages'
 
 module.exports = {
+  jsx: 'react',
   plugins: [
     reactRefresh(),
     mdx(),
     pages({
       pagesDir: path.join(__dirname, 'pages'),
-      findPages: async (helpers) => {
-        const pagesByComponent: { [comp: string]: any } = {}
-        const demosBasePath = path.join(__dirname, 'src')
-        // find all demo modules
-        let demoPaths = await helpers.globFind(
-          demosBasePath,
-          '*/demos/**/*.{[tj]sx,md?(x)}'
-        )
-
-        await Promise.all(
-          demoPaths.map(async ({ relative, absolute }) => {
-            const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
-            if (!match) throw new Error('unexpected file: ' + absolute)
-            const [_, componentName, demoPath] = match
-            const publicPath = `/${componentName}`
-
-            // register the demo module as page daga
-            helpers.addPageData({
-              pageId: publicPath,
-              key: demoPath,
-              dataPath: absolute,
-              staticData: await helpers.extractStaticData(absolute),
-            })
-
-            if (!pagesByComponent[componentName]) {
-              pagesByComponent[componentName] = {
-                publicPath,
-              }
+      pageStrategy: new DefaultPageStrategy({
+        extraFindPages: async (pagesDir, helpers) => {
+          const demosBasePath = path.join(__dirname, 'src')
+          // find all component demos
+          helpers.watchFiles(
+            demosBasePath,
+            '*/demos/**/*.{[tj]sx,md?(x)}',
+            async function fileHandler(file, api) {
+              const { relative, path: absolute } = file
+              const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
+              if (!match) throw new Error('unexpected file: ' + absolute)
+              const [_, componentName, demoPath] = match
+              const pageId = `/${componentName}`
+              const runtimeDataPaths = api.getRuntimeData(pageId)
+              runtimeDataPaths[demoPath] = absolute
+              const staticDataPaths = api.getStaticData(pageId)
+              staticDataPaths[demoPath] = await helpers.extractStaticData(file)
+              if (!staticDataPaths.title)
+                staticDataPaths.title = `${componentName} Title`
             }
-          })
-        )
+          )
 
-        // add static data(title) for each component page
-        Object.entries(pagesByComponent).forEach(
-          ([componentName, { publicPath }]) => {
-            helpers.addPageData({
-              pageId: publicPath,
-              key: 'title',
-              staticData: componentName + ' Title',
-            })
-          }
-        )
-
-        // we also want to collect pages from `/pages` with basic filesystem routing convention
-        const defaultPages = await helpers.defaultFindPages(
-          path.join(__dirname, 'pages')
-        )
-        defaultPages.forEach(helpers.addPageData)
-      },
+          // find all component README
+          helpers.watchFiles(
+            demosBasePath,
+            '*/README.md?(x)',
+            async function fileHandler(file, api) {
+              const { relative, path: absolute } = file
+              const match = relative.match(/(.*)\/README\.mdx?$/)
+              if (!match) throw new Error('unexpected file: ' + absolute)
+              const [_, componentName] = match
+              const pageId = `/${componentName}`
+              const runtimeDataPaths = api.getRuntimeData(pageId)
+              runtimeDataPaths['README'] = absolute
+              const staticDataPaths = api.getStaticData(pageId)
+              staticDataPaths['README'] = await helpers.extractStaticData(file)
+              // make sure the title data is bound to this file
+              staticDataPaths.title = undefined
+              staticDataPaths.title =
+                staticDataPaths['README'].title ?? `${componentName} Title`
+            }
+          )
+        },
+      }),
     }),
   ],
   resolve: {
@@ -67,5 +62,4 @@ module.exports = {
       'my-lib': '/src',
     },
   },
-  outDir: 'docs-dist',
 } as UserConfig

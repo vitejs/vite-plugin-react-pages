@@ -14,7 +14,7 @@ module.exports = {
       pageStrategy: new DefaultPageStrategy({
         extraFindPages: async (pagesDir, helpers) => {
           const demosBasePath = path.join(__dirname, 'src')
-          // find all demo modules
+          // find all component demos
           helpers.watchFiles(
             demosBasePath,
             '*/demos/**/*.{[tj]sx,md?(x)}',
@@ -28,7 +28,29 @@ module.exports = {
               runtimeDataPaths[demoPath] = absolute
               const staticDataPaths = api.getStaticData(pageId)
               staticDataPaths[demoPath] = await helpers.extractStaticData(file)
-              staticDataPaths.title = `${componentName} Title`
+              if (!staticDataPaths.title)
+                staticDataPaths.title = `${componentName} Title`
+            }
+          )
+
+          // find all component README
+          helpers.watchFiles(
+            demosBasePath,
+            '*/README.md?(x)',
+            async function fileHandler(file, api) {
+              const { relative, path: absolute } = file
+              const match = relative.match(/(.*)\/README\.mdx?$/)
+              if (!match) throw new Error('unexpected file: ' + absolute)
+              const [_, componentName] = match
+              const pageId = `/${componentName}`
+              const runtimeDataPaths = api.getRuntimeData(pageId)
+              runtimeDataPaths['README'] = absolute
+              const staticDataPaths = api.getStaticData(pageId)
+              staticDataPaths['README'] = await helpers.extractStaticData(file)
+              // make sure the title data is bound to this file
+              staticDataPaths.title = undefined
+              staticDataPaths.title =
+                staticDataPaths['README'].title ?? `${componentName} Title`
             }
           )
         },
@@ -39,8 +61,5 @@ module.exports = {
     alias: {
       'my-lib': '/src',
     },
-  },
-  optimizeDeps: {
-    include: ['@mdx-js/react'],
   },
 } as UserConfig
