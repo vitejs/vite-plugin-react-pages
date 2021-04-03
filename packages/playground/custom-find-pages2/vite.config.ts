@@ -1,4 +1,4 @@
-import type { UserConfig } from 'vite'
+import { defineConfig } from 'vite'
 import * as path from 'path'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import mdx from 'vite-plugin-mdx'
@@ -9,13 +9,13 @@ import pages, {
   extractStaticData,
 } from 'vite-plugin-react-pages'
 
-module.exports = {
-  jsx: 'react',
+export default defineConfig({
   plugins: [
     reactRefresh(),
     mdx(),
     pages({
       pagesDir: path.join(__dirname, 'pages'),
+      // custom pageStrategy
       pageStrategy: new PageStrategy(function findPages(pagesDir, helpers) {
         helpers.watchFiles(
           pagesDir,
@@ -25,12 +25,7 @@ module.exports = {
       }),
     }),
   ],
-  resolve: {
-    alias: {
-      'my-lib': '/src',
-    },
-  },
-} as UserConfig
+})
 
 const fileHandler: FileHandler = async (file: File, fileHandlerAPI) => {
   const pagePublicPath = getPagePublicPath(file.relative)
