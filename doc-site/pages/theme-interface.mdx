@@ -3,9 +3,17 @@
 export type Theme = React.ComponentType<ThemeProps>
 
 export interface ThemeProps {
-  staticData: PagesStaticData
-  loadedData: PagesLoaded
-  loadState: LoadState
+  readonly loadedData: PagesLoaded
+  readonly loadState: LoadState
+}
+
+/**
+ * A react hook to get static data.
+ * import { useStaticData } from 'vite-plugin-react-pages/client'
+ */
+export interface UseStaticData {
+  (): PagesStaticData
+  (path: string): Record<string, any>
 }
 
 /**
@@ -15,34 +23,37 @@ export interface PagesStaticData {
   /**
    * For each page, its static data is indexed by keys.
    */
-  [routePath: string]: Record<string, any>
+  readonly [routePath: string]: Record<string, any>
 }
 
 /**
  * All runtime data that is already loaded.
  */
 export interface PagesLoaded {
-  [routePath: string]: PageLoaded
+  readonly [routePath: string]: PageLoaded
 }
 
 /**
- * The runtime data of a page is a module.
- * Normally, it has a `default` property,
- * which is the main component of the page.
+ * For each page, its runtime data can be composed of multile modules.
+ * These modules are indexed by keys.
+ *
+ * Normally, a page only contains one module, with the key being `main`.
+ * And the default export of the main module is a React component,
+ * which will render the page. In that case, `pageLoaded.main.default` is the component.
  */
-export type PageLoaded = any
+export type PageLoaded = Record<string, any>
 
 /**
  * The current loading state of the app.
  */
 export type LoadState =
   | {
-      type: 'loading' | 'loaded' | '404'
-      routePath: string
+      readonly type: 'loading' | 'loaded' | '404'
+      readonly routePath: string
     }
   | {
-      type: 'load-error'
-      routePath: string
-      error?: any
+      readonly type: 'load-error'
+      readonly routePath: string
+      readonly error?: any
     }
 ```

@@ -17,9 +17,10 @@ It provides many features that help developers **build a React App quickly**:
 
 ## Getting stated
 
-1. initialize a vite-pages project:
-   - use `npm init @csr632/vite-app my-app --template react-pages-app` to initialize an app starter, or
-   - use `npm init @csr632/vite-app my-lib --template react-pages-lib` to initialize a library starter.
+1. Initialize a vite-pages project:
+   - execute `npm init vite-pages app-demo --template app` to initialize an app project, or
+   - execute `npm init vite-pages library-demo --template lib` to initialize a library project, or
+   - execute `npm init vite-pages library-monorepo-demo --template lib-monorepo` to initialize a library project with monorepo setup.
 2. `npm install`
 3. `npm run dev` and play with the local dev envirenment.
 4. `npm run build`.

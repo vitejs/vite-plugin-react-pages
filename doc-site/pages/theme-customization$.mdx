@@ -25,7 +25,7 @@ import ThemeInterface from './theme-interface.mdx'
 
 You can learn more about the "data" received by the render functions in <Link to="/page-data">the page data doc</Link>.
 
-This is probably [the simplest theme](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/basic/pages/_theme.tsx):
+This is probably [the simplest theme](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/playground/basic/pages/_theme.tsx):
 
 ```tsx
 import React, { useMemo } from 'react'
@@ -52,7 +52,7 @@ const Theme: Theme = ({ staticData, loadedData, loadState }) => {
 export default Theme
 ```
 
-> Here is a more useful theme: [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/use-theme/pages/_theme.tsx) demonstrate how to use it.
+> Here is a more useful theme: [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/playground/use-theme/pages/_theme.tsx) demonstrate how to use it.
 
 You can customize every bits of UI with theme. Welcome to share your theme with a npm package!
 
@@ -100,16 +100,18 @@ export default createTheme({
 })
 ```
 
-As you can see, the theme is easier to use because **theme consumers don't need to know about the `Theme` API from vite-pages**. They only need to know about `createTheme` API from the theme. Users should be talking to the theme, instead of talking directly to vite-pages framework.
+As you can see, the theme is easier to use because **theme consumers don't need to know about the `Theme` API of vite-pages**. They only need to know about `createTheme` API from the theme. Users should be talking to the theme, instead of talking directly to vite-pages framework.
 
 For this reason, we encourage theme providers to export config function like the `createTheme` above.
 
-#### Releases the power of Typescript
+> You can refer to [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx)
 
-The above example show another benefit for users: theme users can get Typescript type-check and intelliSense when they are writing theme config. This is because users are calling the theme config function, instead of "exporting some configs".
+#### Release the power of Typescript
+
+The above example show another benefit for users: theme users can get Typescript type-check and intelliSense when they are configuring theme. This is because users are calling the theme config function, instead of "exporting some configs".
 
 ## Share your theme!
 
 It is easy to write a theme that is sharable and configurable.
 
-If you have design and implement a theme(.e.g a blog theme, a document site theme), welcome to share your theme with a npm package, or contribute it to [the vite-pages repo](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages)!
+If you have designed and implemented a theme (.e.g a blog theme, a document site theme), welcome to add a link to your theme package in this document!

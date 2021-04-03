@@ -157,9 +157,10 @@ export class PageStrategy extends EventEmitter {
   }
 }
 
-export interface FindPages {
-  (pagesDir: string, helpers: PageHelpers): void | Promise<void>
-}
+export type FindPages = (
+  pagesDir: string,
+  helpers: PageHelpers
+) => void | Promise<void>
 
 export interface LoadPageData {
   (file: File, helpers: PageHelpers): PageData | Promise<PageData>
@@ -177,18 +178,20 @@ export interface PageData {
   readonly pageId: string
   /**
    * The data key.
-   * If it conflicts with an already-registered data,
-   * error will be thrown.
+   * For a same page, users can register multiple data pieces,
+   * each with its own key. (Composed Page Data)
    *
    * @default 'main'
    */
   readonly key?: string
   /**
-   * The path to the runtime data module
+   * The path to the runtime data module.
+   * It will be registered with the `key`.
    */
   readonly dataPath?: string
   /**
-   * The value of static data
+   * The value of static data.
+   * It will be registered with the `key`.
    */
   readonly staticData?: any
 }
@@ -204,8 +207,9 @@ export interface PageHelpers extends HandlerAPI {
     readonly sourceType: string
   }>
   /**
-   * set page data in the file handler,
-   * and file deletion will be handled automatically
+   * Scan the fileSystem and
+   * set page data in the file handler.
+   * File deletion will be handled automatically
    */
   readonly watchFiles: WatchFilesHelper
 }
@@ -232,13 +236,10 @@ export class File {
   }
 }
 
-export interface FileHandler {
-  (file: File, api: HandlerAPI):
-    | void
-    | Promise<void>
-    | PageData
-    | Promise<PageData>
-}
+export type FileHandler = (
+  file: File,
+  api: HandlerAPI
+) => void | Promise<void> | PageData | Promise<PageData>
 
 export interface WatchFilesHelper {
   /** Watch all files within a directory (except node_modules and .git) */

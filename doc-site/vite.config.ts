@@ -13,10 +13,8 @@ module.exports = {
       useHashRouter: true,
     }),
   ],
-  build: {
-    base:
-      process.env.GITHUB_PAGES_DEPLOY === 'true'
-        ? '/vite-plugin-react-pages'
-        : '/',
-  },
+  base:
+    process.env.GITHUB_PAGES_DEPLOY === 'true'
+      ? '/vite-plugin-react-pages'
+      : '/',
 } as UserConfig

@@ -12,6 +12,7 @@
   - In production, `getStaticProps`/`getStaticPaths` runs at build time
 - 🔧 Project cleanup: don't bump version of templates when `npm run ver:p`
 - 🔧 improve template-lib-monorepo
+- Act as a bridge between development and documentation.
 
 DATA node, graph, lazy/eager node
 

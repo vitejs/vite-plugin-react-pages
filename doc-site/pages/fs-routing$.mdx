@@ -32,12 +32,12 @@ If the filename is `index$.tsx`, the page route path will be the path of the dir
 | `dir-name/[id]/index$.tsx` (URL Paramater)  | `/dir-name/:id`        |
 | `dir-name/[id]/[id2]$.tsx` (URL Paramaters) | `/dir-name/:id/:id2`   |
 
-Theme can decide what to render when no page matches the url. Checkout <Link to="/theme">the theme doc</Link>.
+Theme can decide what to render when no page matches the url. Checkout <Link to="/theme-customization">the theme doc</Link>.
 
 If a page path contains url paramaters, you can use [useParams](https://reactrouter.com/web/example/url-params) of `react-router-dom` to access the actual paramaters.
 
-Checkout [the basic fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/fixtures/basic/pages) for an example.
+Checkout [the basic fixture](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages/playground/basic/pages) for an example.
 
 ## Advanced Filesystem Routing
 
-The "Basic Filesystem Routing Convention" should satisfy most users' needs. For advanced users, vite-pages let you implement your own filesystem routing convention: you can **teach vite-pages how to collect pages from your project**. Checkout <Link to="/advanced-fs-routing">advanced fs routing</Link>.
+The "Basic Filesystem Routing Convention" should satisfy most users' needs. For advanced users, vite-pages let you implement your own filesystem routing convention: you can**teach vite-pages how to collect page data from your project**. Checkout <Link to="/advanced-fs-routing">advanced fs routing</Link>.

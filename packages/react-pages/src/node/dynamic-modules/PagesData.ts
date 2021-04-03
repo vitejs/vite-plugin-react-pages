@@ -243,7 +243,7 @@ export interface HandlerAPI {
    * Add page data.
    * If the data already exists, overwrite it.
    */
-  readonly addPageData: (pageData: PageData) => void
+  addPageData: (pageData: PageData) => void
 }
 
 export class Association<ValueType = any> {
