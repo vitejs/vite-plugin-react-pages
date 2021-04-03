@@ -16,6 +16,7 @@ export interface ThemeProps {
 export interface UseStaticData {
   (): PagesStaticData
   (path: string): Record<string, any>
+  /** users should not rely on this. we may drop jotai in the future */
   <T>(path: string, selector: (staticData: Record<string, any>) => T): T
 }
 

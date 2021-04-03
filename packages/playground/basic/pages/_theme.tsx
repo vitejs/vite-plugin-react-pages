@@ -1,7 +1,9 @@
 import React, { useMemo } from 'react'
 import type { Theme } from 'vite-plugin-react-pages'
+import { useStaticData } from 'vite-plugin-react-pages/client'
 
-const theme: Theme = ({ staticData, loadedData, loadState }) => {
+const theme: Theme = ({ loadedData, loadState }) => {
+  const staticData = useStaticData()
   console.log('#Theme', staticData, loadedData, loadState)
 
   // You can generate side nav menu from staticData
