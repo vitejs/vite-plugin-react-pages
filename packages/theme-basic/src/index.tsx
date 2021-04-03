@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import type { Theme, PagesStaticData } from 'vite-plugin-react-pages'
+import { useStaticData } from 'vite-plugin-react-pages/client'
 import Layout from './layout'
 import type { SideMenuData, TopNavData } from './layout'
 import MD from './layout/MDX'
@@ -40,7 +41,7 @@ export function createTheme({
   topbarOperations,
   search = true,
 }: Option = {}): Theme {
-  const Theme: Theme = ({ loadedData, loadState, useStaticData }) => {
+  const Theme: Theme = ({ loadedData, loadState }) => {
     const staticData = useStaticData()
     console.log('#Theme', staticData, loadedData, loadState)
 

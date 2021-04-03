@@ -3,7 +3,7 @@ import { dequal } from 'dequal'
 import type { SetAtom } from 'jotai/core/types'
 import { atom, useAtom } from 'jotai'
 import { atomFamily, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import type { PageLoaded, UseStaticData, Theme } from '../../client'
+import type { PageLoaded, UseStaticData, Theme } from '../../clientTypes'
 
 export let useTheme: () => Theme
 export let usePagePaths: () => string[]

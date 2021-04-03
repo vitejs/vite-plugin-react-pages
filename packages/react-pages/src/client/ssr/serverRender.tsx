@@ -5,7 +5,7 @@ import { StaticRouter } from 'react-router-dom'
 import ssrData from '/@react-pages/ssrData'
 import App from '../App'
 import { dataCacheCtx } from './ctx'
-import type { PagesLoaded } from '../../../client'
+import type { PagesLoaded } from '../../../clientTypes'
 
 // put all page data in cache, so that we don't need to load it in ssr
 const dataCache: PagesLoaded = ssrData

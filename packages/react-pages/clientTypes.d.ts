@@ -1,3 +1,5 @@
+// users can import type { PagesStaticData } from "vite-plugin-react-pages/clientTypes"
+
 import React from 'react'
 
 /** The type of a theme. */
@@ -6,7 +8,15 @@ export type Theme = React.ComponentType<ThemeProps>
 export interface ThemeProps {
   readonly loadedData: PagesLoaded
   readonly loadState: LoadState
-  readonly useStaticData: UseStaticData
+}
+
+/**
+ * A react hook to get static data.
+ */
+export interface UseStaticData {
+  (): PagesStaticData
+  (path: string): Record<string, any>
+  <T>(path: string, selector: (staticData: Record<string, any>) => T): T
 }
 
 /**
@@ -17,17 +27,6 @@ export interface PagesStaticData {
    * For each page, its static data is indexed by keys.
    */
   readonly [routePath: string]: Record<string, any>
-}
-
-/**
- * get static data.
- * In dev, if users edit file and change some pages' static data,
- * it will react to the update, and return the latest data.
- */
-export interface UseStaticData {
-  (): PagesStaticData
-  (path: string): Record<string, any>
-  <T>(path: string, selector: (staticData: Record<string, any>) => T): T
 }
 
 /**
@@ -43,7 +42,7 @@ export interface PagesLoaded {
  *
  * Normally, a page only contains one module, with the key being `main`.
  * And the default export of the main module is a React component,
- * which will render the page.
+ * which will render the page. In that case, `pageLoaded.main.default` is the component.
  */
 export type PageLoaded = Record<string, any>
 

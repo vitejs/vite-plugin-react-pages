@@ -143,7 +143,7 @@ export type {
   LoadState,
   PagesLoaded,
   PagesStaticData,
-} from '../../client'
+} from '../../clientTypes'
 
 export { extractStaticData } from './dynamic-modules/utils'
 export { PageStrategy }

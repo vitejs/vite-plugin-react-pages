@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { HashRouter, BrowserRouter } from 'react-router-dom'
 import { dataCacheCtx, setDataCacheCtx } from './ssr/ctx'
-import type { PageLoaded } from '../../client'
+import type { PageLoaded } from '../../clientTypes'
 
 // @ts-expect-error
 const Router = __HASH_ROUTER__ ? HashRouter : BrowserRouter
