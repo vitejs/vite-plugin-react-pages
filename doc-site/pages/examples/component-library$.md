@@ -61,10 +61,10 @@ module.exports = {
               const pageId = `/${componentName}`
               const runtimeDataPaths = api.getRuntimeData(pageId)
               runtimeDataPaths[demoPath] = absolute
-              const staticDataPaths = api.getStaticData(pageId)
-              staticDataPaths[demoPath] = await helpers.extractStaticData(file)
-              if (!staticDataPaths.title)
-                staticDataPaths.title = `${componentName} Title`
+              const staticData = api.getStaticData(pageId)
+              staticData[demoPath] = await helpers.extractStaticData(file)
+              if (!staticData.title)
+                staticData.title = `${componentName} Title`
             }
           )
 
@@ -80,12 +80,12 @@ module.exports = {
               const pageId = `/${componentName}`
               const runtimeDataPaths = api.getRuntimeData(pageId)
               runtimeDataPaths['README'] = absolute
-              const staticDataPaths = api.getStaticData(pageId)
-              staticDataPaths['README'] = await helpers.extractStaticData(file)
+              const staticData = api.getStaticData(pageId)
+              staticData['README'] = await helpers.extractStaticData(file)
               // make sure the title data is bound to this file
-              staticDataPaths.title = undefined
-              staticDataPaths.title =
-                staticDataPaths['README'].title ?? `${componentName} Title`
+              staticData.title = undefined
+              staticData.title =
+                staticData['README'].title ?? `${componentName} Title`
             }
           )
         },
