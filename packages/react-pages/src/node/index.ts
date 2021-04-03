@@ -79,9 +79,6 @@ export default function pluginFactory(
         }
       }
     },
-    buildStart() {
-      pageStrategy.start(pagesDir)
-    },
     configureServer({ watcher, moduleGraph }) {
       const reloadVirtualModule = (moduleId: string) => {
         const module = moduleGraph.getModuleById(moduleId)
@@ -98,6 +95,14 @@ export default function pluginFactory(
             reloadVirtualModule(pagesModuleId + pageId)
           })
         })
+    },
+    buildStart() {
+      // buildStart will be called multiple times
+      // when the serve port has already been taken
+
+      // pageStrategy.start can't be put in configResolved
+      // because vite's resolveConfig will call configResolved without calling close hook
+      pageStrategy.start(pagesDir)
     },
     resolveId(id) {
       return id.startsWith(modulePrefix) ? id : undefined

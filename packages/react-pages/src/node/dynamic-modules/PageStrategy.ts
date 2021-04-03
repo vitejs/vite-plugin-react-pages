@@ -29,7 +29,8 @@ export class PageStrategy extends EventEmitter {
   }
 
   public start(pagesDir: string) {
-    if (this.started) throw new Error(`PageStrategy aready started`)
+    // buildStart may be called multiple times
+    if (this.started) return
     this.started = true
     this.pagesDir = pagesDir
     const { updateBuffer } = this
