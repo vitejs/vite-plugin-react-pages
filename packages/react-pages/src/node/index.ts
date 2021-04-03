@@ -145,6 +145,7 @@ export type {
   PagesStaticData,
 } from '../../clientTypes'
 
+export { File, FileHandler } from './dynamic-modules/PageStrategy'
 export { extractStaticData } from './dynamic-modules/utils'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
