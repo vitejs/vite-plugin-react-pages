@@ -45,7 +45,11 @@ export async function ssrBuild(
     // @ts-ignore
     ssr: {
       external: ['react', 'react-router-dom', 'react-dom', 'react-dom/server'],
-      noExternal: ['vite-pages-theme-basic'],
+      noExternal: [
+        'vite-pages-theme-basic',
+        'vite-plugin-react-pages',
+        'vite-plugin-react-pages/client',
+      ],
     },
   })
 
