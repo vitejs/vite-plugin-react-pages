@@ -13,6 +13,15 @@ import {
 import { PageStrategy } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 
+/**
+ * This is a public API that users use in their index.html.
+ * Changing this would introduce breaking change for users.
+ */
+const appEntryId = '/@pages-infra/main.js'
+
+/**
+ * This is a private prefix an users should not use them
+ */
 const modulePrefix = '/@react-pages/'
 const pagesModuleId = modulePrefix + 'pages'
 const themeModuleId = modulePrefix + 'theme'
@@ -35,13 +44,19 @@ export default function pluginFactory(
   return {
     name: 'vite-plugin-react-pages',
     config: () => ({
-      resolve: {
-        alias: {
-          '/@pages-infra': path.join(__dirname, '../client/'),
-        },
-      },
       optimizeDeps: {
-        include: ['@mdx-js/react'],
+        include: [
+          'react',
+          'react-dom',
+          'react-router-dom',
+          '@mdx-js/react',
+          'jotai',
+          'jotai/utils',
+          // it is imported by both core and theme
+          // optimize it to make sure we only have one copy of it
+          'vite-plugin-react-pages/_state_declaration',
+        ],
+        exclude: ['vite-plugin-react-pages'],
       },
       define: {
         __HASH_ROUTER__: !!useHashRouter,
@@ -105,9 +120,14 @@ export default function pluginFactory(
       pageStrategy.start(pagesDir)
     },
     resolveId(id) {
+      if (id === appEntryId) return id
       return id.startsWith(modulePrefix) ? id : undefined
     },
     async load(id) {
+      // vite will resolve it with v=${versionHash} query
+      // so that this import can be cached
+      if (id === appEntryId)
+        return `import "vite-plugin-react-pages/dist/client/main.js";`
       // page list
       if (id === pagesModuleId) {
         return renderPageList(await pageStrategy.getPages(), isBuild)

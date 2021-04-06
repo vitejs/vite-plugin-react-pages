@@ -3,16 +3,22 @@ import { dequal } from 'dequal'
 import type { SetAtom } from 'jotai/core/types'
 import { atom, useAtom } from 'jotai'
 import { atomFamily, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import type { PageLoaded, UseStaticData, Theme } from '../../clientTypes'
+import type { Theme } from '../../clientTypes'
 
-export let useTheme: () => Theme
-export let usePagePaths: () => string[]
-export let usePageModule: (path: string) => Promise<PageModule> | undefined
-export let useStaticData: UseStaticData
-
-interface PageModule {
-  ['default']: PageLoaded
-}
+// import state setter
+import {
+  setUseTheme,
+  setUsePagePaths,
+  setUsePageModule,
+  setUseStaticData,
+} from 'vite-plugin-react-pages/_state_declaration'
+// re-export state
+export {
+  useTheme,
+  usePagePaths,
+  usePageModule,
+  useStaticData,
+} from 'vite-plugin-react-pages/_state_declaration'
 
 import initialPages from '/@react-pages/pages'
 import initialTheme from '/@react-pages/theme'
@@ -33,11 +39,11 @@ if (import.meta.hot) {
   })
 
   const themeAtom = atom({ Theme: initialTheme })
-  useTheme = () => {
+  setUseTheme(() => {
     const [{ Theme }, set] = useAtom(themeAtom)
     setTheme = set
     return Theme
-  }
+  })
 
   let setPages: SetAtom<any> | undefined
   import.meta.hot!.accept('/@react-pages/pages', (module) => {
@@ -109,17 +115,17 @@ if (import.meta.hot) {
     return page?.staticData
   })
 
-  usePagePaths = () => {
+  setUsePagePaths(() => {
     setPages = useUpdateAtom(setPagesAtom)
     return useAtomValue(pagePathsAtom)
-  }
+  })
 
-  usePageModule = (pagePath) => {
+  setUsePageModule((pagePath) => {
     const data = useAtomValue(dataAtoms(pagePath))
     return useMemo(() => data?.data(), [data])
-  }
+  })
 
-  useStaticData = (pagePath?: string, selector?: Function) => {
+  setUseStaticData((pagePath?: string, selector?: Function) => {
     const staticData = pagePath ? staticDataAtoms(pagePath) : staticDataAtom
     if (selector) {
       const selection = useMemo(
@@ -129,25 +135,25 @@ if (import.meta.hot) {
       return useAtomValue(selection)
     }
     return useAtomValue(staticData)
-  }
+  })
 }
 
 // Static mode
 else {
-  useTheme = () => initialTheme
-  usePagePaths = () => initialPagePaths
-  usePageModule = (path) => {
+  setUseTheme(() => initialTheme)
+  setUsePagePaths(() => initialPagePaths)
+  setUsePageModule((path) => {
     const page = initialPages[path]
     return useMemo(() => page?.data(), [page])
-  }
-  useStaticData = (path?: string, selector?: Function) => {
+  })
+  setUseStaticData((path?: string, selector?: Function) => {
     if (path) {
       const page = initialPages[path]
       const staticData = page?.staticData || {}
       return selector ? selector(staticData) : staticData
     }
     return toStaticData(initialPages)
-  }
+  })
 }
 
 function toStaticData(pages: Record<string, any>) {
