@@ -19,10 +19,13 @@ export const setUsePagePaths = (v: typeof usePagePaths) => (usePagePaths = v)
 export const setUsePageModule = (v: typeof usePageModule) => (usePageModule = v)
 export const setUseStaticData = (v: typeof useStaticData) => (useStaticData = v)
 
-const key: any = '__vite-pages-state-declaration-singleton'
-if (window[key]) {
-  throw new Error(
-    'There are multiple copies of vite-pages-state-declaration. Please report this issue to vite-plugin-react-pages.'
-  )
+if (typeof window !== 'undefined') {
+  // make sure we have only one copy of this module
+  const key: any = '__vite-pages-state-declaration-singleton'
+  if (window[key]) {
+    throw new Error(
+      'There are multiple copies of vite-pages-state-declaration. Please report this issue to vite-plugin-react-pages.'
+    )
+  }
+  ;(window as any)[key] = true
 }
-;(window as any)[key] = true
