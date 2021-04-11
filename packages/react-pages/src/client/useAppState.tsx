@@ -8,10 +8,20 @@ export default function useAppState(routePath: string) {
   const dataCache = useContext(dataCacheCtx)
   const setDataCache = useContext(setDataCacheCtx)
 
-  const [loadState, setLoadState] = useState<LoadState>(() => ({
-    type: 'loading',
-    routePath,
-  }))
+  const [loadState, setLoadState] = useState<LoadState>(() => {
+    if (dataCache[routePath]) {
+      // this is a ssr or hydration
+      // this page's data has already been loaded
+      return {
+        type: 'loaded',
+        routePath,
+      }
+    }
+    return {
+      type: 'loading',
+      routePath,
+    }
+  })
 
   const onLoadState = (
     type: LoadState['type'],
