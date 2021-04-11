@@ -36,6 +36,9 @@ export const defaultFileHandler: FileHandler = async (
   }
 }
 
+/**
+ * turn `sub-path/page2/index.tsx` into `/sub-path/page2`
+ */
 export function getPagePublicPath(relativePageFilePath: string) {
   let pagePublicPath = relativePageFilePath.replace(
     /\$\.(md|mdx|js|jsx|ts|tsx)$/,

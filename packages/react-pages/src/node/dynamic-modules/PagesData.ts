@@ -78,6 +78,10 @@ export class PagesDataKeeper {
   ): {
     [key: string]: any
   } {
+    if (pageId.includes('\\'))
+      throw new Error(
+        `pageId should not contains backward slash (\\). If it comes from a windows path, make sure they are replaced with a forward slash. (str.replace(/\\\\/g, '/'))`
+      )
     const _this = this
     const dataObj = this.getDataObj(pageId, dataType)
     return new Proxy(dataObj, {

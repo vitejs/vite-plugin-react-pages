@@ -2,6 +2,7 @@ import * as fs from 'fs-extra'
 import * as path from 'path'
 import { EventEmitter } from 'events'
 import chokidar, { FSWatcher } from 'chokidar'
+import slash from 'slash'
 import { extractStaticData, PendingList } from './utils'
 import {
   PagesDataKeeper,
@@ -89,7 +90,7 @@ export class PageStrategy extends EventEmitter {
       } = _this
 
       // Strip trailing slash and make absolute
-      baseDir = path.resolve(pagesDir, baseDir)
+      baseDir = slash(path.resolve(pagesDir, baseDir))
       let globs: string[]
       let fileHandler: FileHandler
       if (typeof arg2 === 'function') {
@@ -121,7 +122,7 @@ export class PageStrategy extends EventEmitter {
       )
 
       async function handleFileChange(filePath: string) {
-        filePath = path.join(baseDir, filePath)
+        filePath = slash(path.join(baseDir, filePath))
         const file =
           fileCache[filePath] ||
           (fileCache[filePath] = new File(filePath, baseDir))
@@ -143,7 +144,7 @@ export class PageStrategy extends EventEmitter {
       }
 
       function handleFileUnLink(filePath: string) {
-        filePath = path.join(baseDir, filePath)
+        filePath = slash(path.join(baseDir, filePath))
         const file = fileCache[filePath]
         if (!file) return
         delete fileCache[filePath]
@@ -224,11 +225,11 @@ export class File {
   constructor(readonly path: string, readonly base: string) {}
 
   get relative() {
-    return path.relative(this.base, this.path)
+    return path.posix.relative(this.base, this.path)
   }
 
   get extname() {
-    return path.extname(this.path).slice(1)
+    return path.posix.extname(this.path).slice(1)
   }
 
   read() {
