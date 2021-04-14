@@ -1,10 +1,19 @@
+// so that users or themes can:
+// import { useStaticData } from "vite-plugin-react-pages/client"
+
 // This module can be imported by theme, which may be optimized by vite
 // so this module must be optimizable too.
-// should not contains "import initialPages from '/@react-pages/pages'",
-// otherwise vite will throw error when optimizing theme: Could not resolve "/@react-pages/pages"
+// So this module can't import vite-pages core.
+// Otherwise vite will try to optimize vite-pages core during dev.
 
-// users can import { useStaticData } from "vite-plugin-react-pages/client"
+import type { UseStaticData } from './clientTypes'
+
+const globalObject: any = typeof window !== 'undefined' ? window : global
+
+// access globalObject['__vite_pages_use_static_data'] lazily
+export const useStaticData: UseStaticData = (...params: any[]) => {
+  const actualUseStaticData: any = globalObject['__vite_pages_use_static_data']
+  return actualUseStaticData(...params)
+}
 
 export type { Theme } from './clientTypes'
-// we don't use ./_state_declaration because vite-plugin-react-pages/_state_declaration is an entry of vite optimization
-export { useStaticData } from 'vite-plugin-react-pages/_state_declaration'

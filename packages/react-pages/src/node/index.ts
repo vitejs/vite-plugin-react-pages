@@ -52,9 +52,6 @@ export default function pluginFactory(
           '@mdx-js/react',
           'jotai',
           'jotai/utils',
-          // it is imported by both core and theme
-          // optimize it to make sure we only have one copy of it
-          'vite-plugin-react-pages/_state_declaration',
         ],
         exclude: ['vite-plugin-react-pages'],
       },

@@ -1,24 +1,18 @@
-import { useMemo } from 'react'
+import { useMemo, createContext } from 'react'
 import { dequal } from 'dequal'
 import type { SetAtom } from 'jotai/core/types'
 import { atom, useAtom } from 'jotai'
 import { atomFamily, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import type { Theme } from '../../clientTypes'
+import type { PageLoaded, UseStaticData, Theme } from '../../clientTypes'
 
-// import state setter
-import {
-  setUseTheme,
-  setUsePagePaths,
-  setUsePageModule,
-  setUseStaticData,
-} from 'vite-plugin-react-pages/_state_declaration'
-// re-export state
-export {
-  useTheme,
-  usePagePaths,
-  usePageModule,
-  useStaticData,
-} from 'vite-plugin-react-pages/_state_declaration'
+export let useTheme: () => Theme
+export let usePagePaths: () => string[]
+export let usePageModule: (path: string) => Promise<PageModule> | undefined
+export let useStaticData: UseStaticData
+
+interface PageModule {
+  ['default']: PageLoaded
+}
 
 import initialPages from '/@react-pages/pages'
 import initialTheme from '/@react-pages/theme'
@@ -39,11 +33,11 @@ if (import.meta.hot) {
   })
 
   const themeAtom = atom({ Theme: initialTheme })
-  setUseTheme(() => {
+  useTheme = () => {
     const [{ Theme }, set] = useAtom(themeAtom)
     setTheme = set
     return Theme
-  })
+  }
 
   let setPages: SetAtom<any> | undefined
   import.meta.hot!.accept('/@react-pages/pages', (module) => {
@@ -115,17 +109,17 @@ if (import.meta.hot) {
     return page?.staticData
   })
 
-  setUsePagePaths(() => {
+  usePagePaths = () => {
     setPages = useUpdateAtom(setPagesAtom)
     return useAtomValue(pagePathsAtom)
-  })
+  }
 
-  setUsePageModule((pagePath) => {
+  usePageModule = (pagePath) => {
     const data = useAtomValue(dataAtoms(pagePath))
     return useMemo(() => data?.data(), [data])
-  })
+  }
 
-  setUseStaticData((pagePath?: string, selector?: Function) => {
+  useStaticData = (pagePath?: string, selector?: Function) => {
     const staticData = pagePath ? staticDataAtoms(pagePath) : staticDataAtom
     if (selector) {
       const selection = useMemo(
@@ -135,25 +129,25 @@ if (import.meta.hot) {
       return useAtomValue(selection)
     }
     return useAtomValue(staticData)
-  })
+  }
 }
 
 // Static mode
 else {
-  setUseTheme(() => initialTheme)
-  setUsePagePaths(() => initialPagePaths)
-  setUsePageModule((path) => {
+  useTheme = () => initialTheme
+  usePagePaths = () => initialPagePaths
+  usePageModule = (path) => {
     const page = initialPages[path]
     return useMemo(() => page?.data(), [page])
-  })
-  setUseStaticData((path?: string, selector?: Function) => {
+  }
+  useStaticData = (path?: string, selector?: Function) => {
     if (path) {
       const page = initialPages[path]
       const staticData = page?.staticData || {}
       return selector ? selector(staticData) : staticData
     }
     return toStaticData(initialPages)
-  })
+  }
 }
 
 function toStaticData(pages: Record<string, any>) {
@@ -162,4 +156,14 @@ function toStaticData(pages: Record<string, any>) {
     staticData[path] = pages[path].staticData
   }
   return staticData
+}
+
+const globalObject: any = typeof window !== 'undefined' ? window : global
+if (globalObject['__vite_pages_use_static_data']) {
+  throw new Error(
+    `[vite-pages] useStaticData already exists on window. There are multiple vite-pages apps in this page. Please report this to vite-pages.`
+  )
+} else {
+  // make it available to vite-plugin-react-pages/client
+  globalObject['__vite_pages_use_static_data'] = useStaticData
 }
