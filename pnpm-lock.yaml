@@ -9,8 +9,8 @@ importers:
       playwright-chromium: 1.9.2
       sirv: 1.0.11
       slash: 3.0.0
-      ts-jest: 26.5.4_jest@26.6.3+typescript@4.2.3
-      typescript: 4.2.3
+      ts-jest: 26.5.4_jest@26.6.3+typescript@4.2.4
+      typescript: 4.2.4
       vite-pages-theme-basic: link:packages/theme-basic
       vite-plugin-react-pages: link:packages/react-pages
     specifiers:
@@ -23,7 +23,7 @@ importers:
       sirv: ^1.0.10
       slash: ^3.0.0
       ts-jest: ^26.4.4
-      typescript: ^4.2.3
+      typescript: ^4.2.4
       vite-pages-theme-basic: workspace:*
       vite-plugin-react-pages: workspace:*
   doc-site:
@@ -37,9 +37,9 @@ importers:
       '@vitejs/plugin-react-refresh': 1.3.2
       gh-pages: 3.1.0
       serve: 11.3.2
-      vite: 2.1.5
+      vite: 2.3.2
       vite-pages-theme-basic: link:../packages/theme-basic
-      vite-plugin-mdx: 3.3.1_vite@2.1.5
+      vite-plugin-mdx: 3.5.5_vite@2.3.2
       vite-plugin-react-pages: link:../packages/react-pages
     specifiers:
       '@types/react': ^17.0.3
@@ -50,9 +50,9 @@ importers:
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       serve: ^11.3.2
-      vite: ^2.0.5
+      vite: ^2.3.2
       vite-pages-theme-basic: workspace:*
-      vite-plugin-mdx: ^3.3.1
+      vite-plugin-mdx: ^3.5.5
       vite-plugin-react-pages: workspace:*
   packages/create-project:
     dependencies:
@@ -74,9 +74,9 @@ importers:
       '@types/react-router-dom': 5.1.7
       '@vitejs/plugin-react-refresh': 1.3.2
       serve: 11.3.2
-      vite: 2.1.5
+      vite: 2.3.2
       vite-pages-theme-basic: link:../../theme-basic
-      vite-plugin-mdx: 3.3.1_@mdx-js+mdx@1.6.22+vite@2.1.5
+      vite-plugin-mdx: 3.5.5_@mdx-js+mdx@1.6.22+vite@2.3.2
       vite-plugin-react-pages: link:../../react-pages
     specifiers:
       '@mdx-js/mdx': ^1.6.22
@@ -89,9 +89,9 @@ importers:
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       serve: ^11.3.2
-      vite: ^2.0.5
+      vite: ^2.3.2
       vite-pages-theme-basic: workspace:^3.0.0
-      vite-plugin-mdx: ^3.3.1
+      vite-plugin-mdx: ^3.5.5
       vite-plugin-react-pages: workspace:^3.0.0
   packages/create-project/template-lib:
     dependencies:
@@ -106,9 +106,9 @@ importers:
       '@types/react-router-dom': 5.1.7
       '@vitejs/plugin-react-refresh': 1.3.2
       serve: 11.3.2
-      vite: 2.1.5
+      vite: 2.3.2
       vite-pages-theme-basic: link:../../theme-basic
-      vite-plugin-mdx: 3.3.1_@mdx-js+mdx@1.6.22+vite@2.1.5
+      vite-plugin-mdx: 3.5.5_@mdx-js+mdx@1.6.22+vite@2.3.2
       vite-plugin-react-pages: link:../../react-pages
     specifiers:
       '@mdx-js/mdx': ^1.6.22
@@ -121,9 +121,9 @@ importers:
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       serve: ^11.3.2
-      vite: ^2.0.5
+      vite: ^2.3.2
       vite-pages-theme-basic: workspace:^3.0.0
-      vite-plugin-mdx: ^3.3.1
+      vite-plugin-mdx: ^3.5.5
       vite-plugin-react-pages: workspace:^3.0.0
   packages/create-project/template-lib-monorepo:
     specifiers: {}
@@ -131,20 +131,20 @@ importers:
     devDependencies:
       '@types/react': 17.0.3
       react: 17.0.2
-      typescript: 4.2.3
+      typescript: 4.2.4
     specifiers:
       '@types/react': ^17.0.3
       react: ^17.0.1
-      typescript: ^4.2.3
+      typescript: ^4.2.4
   packages/create-project/template-lib-monorepo/packages/card:
     devDependencies:
       '@types/react': 17.0.3
       react: 17.0.2
-      typescript: 4.2.3
+      typescript: 4.2.4
     specifiers:
       '@types/react': ^17.0.3
       react: ^17.0.1
-      typescript: ^4.2.3
+      typescript: ^4.2.4
   packages/create-project/template-lib-monorepo/packages/demos:
     dependencies:
       react: 17.0.2
@@ -161,9 +161,9 @@ importers:
       my-button: link:../button
       my-card: link:../card
       serve: 11.3.2
-      vite: 2.1.5
+      vite: 2.3.2
       vite-pages-theme-basic: link:../../../../theme-basic
-      vite-plugin-mdx: 3.3.1_@mdx-js+mdx@1.6.22+vite@2.1.5
+      vite-plugin-mdx: 3.5.5_@mdx-js+mdx@1.6.22+vite@2.3.2
       vite-plugin-react-pages: link:../../../../react-pages
     specifiers:
       '@mdx-js/mdx': ^1.6.22
@@ -179,9 +179,9 @@ importers:
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       serve: ^11.3.2
-      vite: ^2.0.5
+      vite: ^2.3.2
       vite-pages-theme-basic: ^3.0.0
-      vite-plugin-mdx: ^3.3.1
+      vite-plugin-mdx: ^3.5.5
       vite-plugin-react-pages: ^3.0.0
   packages/playground:
     devDependencies:
@@ -199,8 +199,8 @@ importers:
       '@types/react-router-dom': 5.1.7
       '@vitejs/plugin-react-refresh': 1.3.2
       serve: 11.3.2
-      vite: 2.1.5
-      vite-plugin-mdx: 3.3.1_@mdx-js+mdx@1.6.22+vite@2.1.5
+      vite: 2.3.2
+      vite-plugin-mdx: 3.5.5_@mdx-js+mdx@1.6.22+vite@2.3.2
       vite-plugin-react-pages: link:../../react-pages
     specifiers:
       '@mdx-js/mdx': ^1.6.22
@@ -211,8 +211,8 @@ importers:
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       serve: ^11.3.2
-      vite: ^2.0.5
-      vite-plugin-mdx: ^3.3.1
+      vite: ^2.3.2
+      vite-plugin-mdx: ^3.5.5
       vite-plugin-react-pages: workspace:*
   packages/playground/custom-find-pages:
     dependencies:
@@ -224,9 +224,9 @@ importers:
       '@types/react-router-dom': 5.1.7
       '@vitejs/plugin-react-refresh': 1.3.2
       serve: 11.3.2
-      vite: 2.1.5
+      vite: 2.3.2
       vite-pages-theme-basic: link:../../theme-basic
-      vite-plugin-mdx: 3.3.1_vite@2.1.5
+      vite-plugin-mdx: 3.5.5_vite@2.3.2
       vite-plugin-react-pages: link:../../react-pages
     specifiers:
       '@types/react': ^17.0.3
@@ -236,9 +236,9 @@ importers:
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       serve: ^11.3.2
-      vite: ^2.0.5
+      vite: ^2.3.2
       vite-pages-theme-basic: workspace:*
-      vite-plugin-mdx: ^3.3.1
+      vite-plugin-mdx: ^3.5.5
       vite-plugin-react-pages: workspace:*
   packages/playground/custom-find-pages2:
     dependencies:
@@ -250,9 +250,9 @@ importers:
       '@types/react-router-dom': 5.1.7
       '@vitejs/plugin-react-refresh': 1.3.2
       serve: 11.3.2
-      vite: 2.1.5
+      vite: 2.3.2
       vite-pages-theme-basic: link:../../theme-basic
-      vite-plugin-mdx: 3.3.1_vite@2.1.5
+      vite-plugin-mdx: 3.5.5_vite@2.3.2
       vite-plugin-react-pages: link:../../react-pages
     specifiers:
       '@types/react': ^17.0.3
@@ -262,9 +262,9 @@ importers:
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       serve: ^11.3.2
-      vite: ^2.0.5
+      vite: ^2.3.2
       vite-pages-theme-basic: workspace:*
-      vite-plugin-mdx: ^3.3.1
+      vite-plugin-mdx: ^3.5.5
       vite-plugin-react-pages: workspace:*
   packages/playground/lib-monorepo:
     specifiers: {}
@@ -272,20 +272,20 @@ importers:
     devDependencies:
       '@types/react': 17.0.3
       react: 17.0.2
-      typescript: 4.2.3
+      typescript: 4.2.4
     specifiers:
       '@types/react': ^17.0.3
       react: ^17.0.1
-      typescript: ^4.2.3
+      typescript: ^4.2.4
   packages/playground/lib-monorepo/packages/card:
     devDependencies:
       '@types/react': 17.0.3
       react: 17.0.2
-      typescript: 4.2.3
+      typescript: 4.2.4
     specifiers:
       '@types/react': ^17.0.3
       react: ^17.0.1
-      typescript: ^4.2.3
+      typescript: ^4.2.4
   packages/playground/lib-monorepo/packages/demos:
     dependencies:
       react: 17.0.2
@@ -299,9 +299,9 @@ importers:
       playground-button: link:../button
       playground-card: link:../card
       serve: 11.3.2
-      vite: 2.1.5
+      vite: 2.3.2
       vite-pages-theme-basic: link:../../../../theme-basic
-      vite-plugin-mdx: 3.3.1_vite@2.1.5
+      vite-plugin-mdx: 3.5.5_vite@2.3.2
       vite-plugin-react-pages: link:../../../../react-pages
     specifiers:
       '@types/react': ^17.0.3
@@ -314,9 +314,9 @@ importers:
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       serve: ^11.3.2
-      vite: ^2.0.5
+      vite: ^2.3.2
       vite-pages-theme-basic: workspace:*
-      vite-plugin-mdx: ^3.3.1
+      vite-plugin-mdx: ^3.5.5
       vite-plugin-react-pages: workspace:*
   packages/playground/use-theme:
     dependencies:
@@ -328,9 +328,9 @@ importers:
       '@types/react-router-dom': 5.1.7
       '@vitejs/plugin-react-refresh': 1.3.2
       serve: 11.3.2
-      vite: 2.1.5
+      vite: 2.3.2
       vite-pages-theme-basic: link:../../theme-basic
-      vite-plugin-mdx: 3.3.1_vite@2.1.5
+      vite-plugin-mdx: 3.5.5_vite@2.3.2
       vite-plugin-react-pages: link:../../react-pages
     specifiers:
       '@types/react': ^17.0.3
@@ -340,9 +340,9 @@ importers:
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       serve: ^11.3.2
-      vite: ^2.0.5
+      vite: ^2.3.2
       vite-pages-theme-basic: workspace:*
-      vite-plugin-mdx: ^3.3.1
+      vite-plugin-mdx: ^3.5.5
       vite-plugin-react-pages: workspace:*
   packages/playground/use-theme-new:
     dependencies:
@@ -354,9 +354,9 @@ importers:
       '@types/react-router-dom': 5.1.7
       '@vitejs/plugin-react-refresh': 1.3.2
       serve: 11.3.2
-      vite: 2.1.5
+      vite: 2.3.2
       vite-pages-new-theme-basic: link:../../theme-basic-new
-      vite-plugin-mdx: 3.3.1_vite@2.1.5
+      vite-plugin-mdx: 3.5.5_vite@2.3.2
       vite-plugin-react-pages: link:../../react-pages
     specifiers:
       '@types/react': ^17.0.3
@@ -366,9 +366,9 @@ importers:
       react-dom: ^17.0.1
       react-router-dom: ^5.2.0
       serve: ^11.3.2
-      vite: ^2.0.5
+      vite: ^2.3.2
       vite-pages-new-theme-basic: workspace:*
-      vite-plugin-mdx: ^3.3.1
+      vite-plugin-mdx: ^3.5.5
       vite-plugin-react-pages: workspace:*
   packages/react-pages:
     dependencies:
@@ -401,9 +401,9 @@ importers:
       '@types/react-router-dom': 5.1.7
       concurrently: 6.0.0
       react: 17.0.2
-      typescript: 4.2.3
-      vite: 2.1.5
-      vite-plugin-mdx: 3.3.1_vite@2.1.5
+      typescript: 4.2.4
+      vite: 2.3.2
+      vite-plugin-mdx: 3.5.5_vite@2.3.2
     specifiers:
       '@babel/preset-react': ^7.12.13
       '@babel/preset-typescript': ^7.13.0
@@ -433,9 +433,9 @@ importers:
       rollup-plugin-postcss: ^4.0.0
       slash: ^3.0.0
       tiny-invariant: ^1.1.0
-      typescript: ^4.2.3
-      vite: ^2.0.5
-      vite-plugin-mdx: ^3.3.1
+      typescript: ^4.2.4
+      vite: ^2.3.2
+      vite-plugin-mdx: ^3.5.5
   packages/theme-basic:
     dependencies:
       github-markdown-css: 4.0.0
@@ -447,7 +447,7 @@ importers:
       '@rollup/plugin-babel': 5.3.0_rollup@2.44.0
       '@rollup/plugin-commonjs': 17.1.0_rollup@2.44.0
       '@rollup/plugin-node-resolve': 11.2.1_rollup@2.44.0
-      '@rollup/plugin-typescript': 8.2.1_rollup@2.44.0+typescript@4.2.3
+      '@rollup/plugin-typescript': 8.2.1_rollup@2.44.0+typescript@4.2.4
       '@types/mdx-js__react': 1.5.3
       '@types/react': 17.0.3
       '@types/react-router-dom': 5.1.7
@@ -462,7 +462,7 @@ importers:
       rollup: 2.44.0
       rollup-plugin-postcss: 4.0.0
       sass: 1.32.8
-      typescript: 4.2.3
+      typescript: 4.2.4
       vite-plugin-react-pages: link:../react-pages
     specifiers:
       '@alifd/next': ^1.22.11
@@ -488,7 +488,7 @@ importers:
       rollup: ^2.41.2
       rollup-plugin-postcss: ^4.0.0
       sass: ^1.32.8
-      typescript: ^4.2.3
+      typescript: ^4.2.4
       vite-plugin-react-pages: workspace:*
   packages/theme-basic-new:
     devDependencies:
@@ -534,6 +534,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-fXy+c4fi2bWuiUVXCO+z5VFSel2tIvk68FmqU9D5WPpyD6zV0Q6w2Q5VH8eUOT4uyQd1y2o/dEK7TD92cLnpgA==
+  /@alloc/quick-lru/5.2.0:
+    dev: true
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==
   /@babel/code-frame/7.12.13:
     dependencies:
       '@babel/highlight': 7.13.10
@@ -1407,12 +1413,12 @@ packages:
       rollup: ^1.20.0||^2.0.0
     resolution:
       integrity: sha512-yc2n43jcqVyGE2sqV5/YCmocy9ArjVAP/BeXyTtADTBBX6V0e5UMqwO8CdQ0kzjb6zu5P1qMzsScCMRvE9OlVg==
-  /@rollup/plugin-typescript/8.2.1_rollup@2.44.0+typescript@4.2.3:
+  /@rollup/plugin-typescript/8.2.1_rollup@2.44.0+typescript@4.2.4:
     dependencies:
       '@rollup/pluginutils': 3.1.0_rollup@2.44.0
       resolve: 1.20.0
       rollup: 2.44.0
-      typescript: 4.2.3
+      typescript: 4.2.4
     dev: true
     engines:
       node: '>=8.0.0'
@@ -3016,18 +3022,18 @@ packages:
       node: '>= 0.4'
     resolution:
       integrity: sha512-QCOllgZJtaUo9miYBcLChTUaHNjJF3PYs1VidD7AwiEj1kYxKeQTctLAezAOH5ZKRH0g2IgPn6KwB4IT8iRpvA==
+  /esbuild/0.11.21:
+    dev: true
+    hasBin: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-FqpYdJqiTeLDbj3vqxc/fG8UmHIEvQrDaUxSw1oJf4giLd/tnMDUUlXellCjOab7qGKQ5hUFD5eQgmO+tkZeow==
   /esbuild/0.8.57:
     dev: true
     hasBin: true
     requiresBuild: true
     resolution:
       integrity: sha512-j02SFrUwFTRUqiY0Kjplwjm1psuzO1d6AjaXKuOR9hrY0HuPsT6sV42B6myW34h1q4CRy+Y3g4RU/cGJeI/nNA==
-  /esbuild/0.9.7:
-    dev: true
-    hasBin: true
-    requiresBuild: true
-    resolution:
-      integrity: sha512-VtUf6aQ89VTmMLKrWHYG50uByMF4JQlVysb8dmg6cOgW8JnFCipmz7p+HNBl+RR3LLCuBxFGVauAe2wfnF9bLg==
   /escalade/3.1.1:
     engines:
       node: '>=6'
@@ -5217,13 +5223,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==
-  /nanoid/3.1.22:
+  /nanoid/3.1.23:
     dev: true
     engines:
       node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1
     hasBin: true
     resolution:
-      integrity: sha512-/2ZUaJX2ANuLtTvqTlgqBQNJoQO398KyJgZloL0PZkC0dpysjncRUPsFe3DUPzz/y3h+u7C46np8RMuvF3jsSQ==
+      integrity: sha512-FiB0kzdP0FFVGDKlRLEQ1BgDzU87dy5NnzjeW9YZNt+/c3+q82EQDUwniSAUxp/F0gFNI1ZhKU1FqYsMuqZVnw==
   /nanomatch/1.2.13:
     dependencies:
       arr-diff: 4.0.0
@@ -6035,16 +6041,16 @@ packages:
       node: '>=6.0.0'
     resolution:
       integrity: sha512-3QT8bBJeX/S5zKTTjTCIjRF3If4avAT6kqxcASlTWEtAFCb9NH0OUxNDfgZSWdP5fJnBYCMEWkIFfWeugjzYMg==
-  /postcss/8.2.9:
+  /postcss/8.2.15:
     dependencies:
       colorette: 1.2.2
-      nanoid: 3.1.22
+      nanoid: 3.1.23
       source-map: 0.6.1
     dev: true
     engines:
       node: ^10 || ^12 || >=14
     resolution:
-      integrity: sha512-b+TmuIL4jGtCHtoLi+G/PisuIl9avxs8IZMSmlABRwNz5RLUUACrC+ws81dcomz1nRezm5YPdXiMEzBEKgYn+Q==
+      integrity: sha512-2zO3b26eJD/8rb106Qu2o7Qgg52ND5HPjcyQiK2B98O388h43A448LCslC0dI2P97wCAQRJsFvwTRcXxTKds+Q==
   /prelude-ls/1.1.2:
     dev: true
     engines:
@@ -6576,6 +6582,15 @@ packages:
       fsevents: 2.3.2
     resolution:
       integrity: sha512-rGSF4pLwvuaH/x4nAS+zP6UNn5YUDWf/TeEU5IoXSZKBbKRNTCI3qMnYXKZgrC0D2KzS2baiOZt1OlqhMu5rnQ==
+  /rollup/2.47.0:
+    dev: true
+    engines:
+      node: '>=10.0.0'
+    hasBin: true
+    optionalDependencies:
+      fsevents: 2.3.2
+    resolution:
+      integrity: sha512-rqBjgq9hQfW0vRmz+0S062ORRNJXvwRpzxhFXORvar/maZqY6za3rgQ/p1Glg+j1hnc1GtYyQCPiAei95uTElg==
   /rsvp/4.8.5:
     dev: true
     engines:
@@ -7329,7 +7344,7 @@ packages:
     dev: true
     resolution:
       integrity: sha512-rvuRbTarPXmMb79SmzEp8aqXNKcK+y0XaB298IXueQ8I2PsrATcPBCSPyK/dDNa2iWOhKlfNnOjdAOTBU/nkFA==
-  /ts-jest/26.5.4_jest@26.6.3+typescript@4.2.3:
+  /ts-jest/26.5.4_jest@26.6.3+typescript@4.2.4:
     dependencies:
       bs-logger: 0.2.6
       buffer-from: 1.1.1
@@ -7341,7 +7356,7 @@ packages:
       make-error: 1.3.6
       mkdirp: 1.0.4
       semver: 7.3.5
-      typescript: 4.2.3
+      typescript: 4.2.4
       yargs-parser: 20.2.7
     dev: true
     engines:
@@ -7402,13 +7417,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==
-  /typescript/4.2.3:
+  /typescript/4.2.4:
     dev: true
     engines:
       node: '>=4.2.0'
     hasBin: true
     resolution:
-      integrity: sha512-qOcYwxaByStAWrBf4x0fibwZvMRG+r4cQoTjbPtUlrWjBHbmCAww1i448U0GJ+3cNNEtebDteo/cHOR3xJ4wEw==
+      integrity: sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg==
   /unbox-primitive/1.0.1:
     dependencies:
       function-bind: 1.1.1
@@ -7435,6 +7450,17 @@ packages:
     dev: true
     resolution:
       integrity: sha512-vx2Z0vY+a3YoTj8+pttM3tiJHCwY5UFbYdiWrwBEbHmK8pvsPj2rtAX2BFfgXen8T39CJWblWRDT4L5WGXtDdg==
+  /unified/9.2.1:
+    dependencies:
+      bail: 1.0.5
+      extend: 3.0.2
+      is-buffer: 2.0.5
+      is-plain-obj: 2.1.0
+      trough: 1.0.5
+      vfile: 4.2.1
+    dev: true
+    resolution:
+      integrity: sha512-juWjuI8Z4xFg8pJbnEZ41b5xjGUWGHqXALmBZ3FC3WX0PIx1CZBIIJ6mXbYMcf6Yw4Fi0rFUTA1cdz/BglbOhA==
   /union-value/1.0.1:
     dependencies:
       arr-union: 3.1.0
@@ -7629,35 +7655,39 @@ packages:
     dev: true
     resolution:
       integrity: sha512-O6AE4OskCG5S1emQ/4gl8zK586RqA3srz3nfK/Viy0UPToBc5Trp9BVFb1u0CjsKrAWwnpr4ifM/KBXPWwJbCA==
-  /vite-plugin-mdx/3.3.1_@mdx-js+mdx@1.6.22+vite@2.1.5:
+  /vite-plugin-mdx/3.5.5_@mdx-js+mdx@1.6.22+vite@2.3.2:
     dependencies:
+      '@alloc/quick-lru': 5.2.0
       '@mdx-js/mdx': 1.6.22
       esbuild: 0.8.57
       find-dependency: 1.3.3
-      vite: 2.1.5
+      unified: 9.2.1
+      vite: 2.3.2
     dev: true
     peerDependencies:
       '@mdx-js/mdx': '*'
       vite: '*'
     resolution:
-      integrity: sha512-uvDces+uxKwKajqNc17Sb0AfIwdbIMmgQalL+TNNqY3C9ziauuXYGqibovysWXkIQMIV91OtFA8plthoKkyOkA==
-  /vite-plugin-mdx/3.3.1_vite@2.1.5:
+      integrity: sha512-/5VKYHss6rlM7VlKfm7is6/bWE3FcKmie3p8GGYcuhWHkFtC4nxnFz+sfO+bim1LPz03ND11nZwab61b1ZbKQw==
+  /vite-plugin-mdx/3.5.5_vite@2.3.2:
     dependencies:
+      '@alloc/quick-lru': 5.2.0
       esbuild: 0.8.57
       find-dependency: 1.3.3
-      vite: 2.1.5
+      unified: 9.2.1
+      vite: 2.3.2
     dev: true
     peerDependencies:
       '@mdx-js/mdx': '*'
       vite: '*'
     resolution:
-      integrity: sha512-uvDces+uxKwKajqNc17Sb0AfIwdbIMmgQalL+TNNqY3C9ziauuXYGqibovysWXkIQMIV91OtFA8plthoKkyOkA==
-  /vite/2.1.5:
+      integrity: sha512-/5VKYHss6rlM7VlKfm7is6/bWE3FcKmie3p8GGYcuhWHkFtC4nxnFz+sfO+bim1LPz03ND11nZwab61b1ZbKQw==
+  /vite/2.3.2:
     dependencies:
-      esbuild: 0.9.7
-      postcss: 8.2.9
+      esbuild: 0.11.21
+      postcss: 8.2.15
       resolve: 1.20.0
-      rollup: 2.44.0
+      rollup: 2.47.0
     dev: true
     engines:
       node: '>=12.0.0'
@@ -7665,7 +7695,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.2
     resolution:
-      integrity: sha512-tYU5iaYeUgQYvK/CNNz3tiJ8vYqPWfCE9IQ7K0iuzYovWw7lzty7KRYGWwV3CQPh0NKxWjOczAqiJsCL0Xb+Og==
+      integrity: sha512-QhLdOompDrfkyryCNTts9HE+eJhvhN9ibKNJ5Q8DpQai+6nOsuIlaveZNg67e1O/2QaWqXeBo82eHnAs1De2bQ==
   /w3c-hr-time/1.0.2:
     dependencies:
       browser-process-hrtime: 1.0.0
