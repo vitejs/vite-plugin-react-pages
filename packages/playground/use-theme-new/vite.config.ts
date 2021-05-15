@@ -12,4 +12,15 @@ module.exports = defineConfig({
       pagesDir: path.join(__dirname, 'pages'),
     }),
   ],
+  // theme local dev 
+  css: {
+    preprocessorOptions: {
+      less: {
+        modifyVars: {
+          'ant-prefix': 'vp-antd',
+        },
+        javascriptEnabled: true,
+      }
+    }
+  }
 })
