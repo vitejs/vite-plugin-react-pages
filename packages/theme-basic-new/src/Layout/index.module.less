@@ -1,0 +1,28 @@
+.logo {
+  float: left;
+  width: 120px;
+  height: 31px;
+  margin: 16px 24px 16px 0;
+  background: gray;
+}
+
+.header {
+  background: #fff;
+  box-shadow: 0 2px 8px #f0f1f2;
+
+  && {
+    :global(.vp-antd-menu-item),
+    :global(.vp-antd-menu-submenu) {
+      // ref: https://github.com/ant-design/ant-design/blob/13a829d20c8a1a83c3bfa1f9d7c30d95659f5b57/site/theme/template/Layout/Header/Navigation.less
+      border-top: 2px solid transparent;
+      &:hover {
+        border-bottom: 2px solid transparent;
+        border-top: 2px solid #1890ff;
+      }
+    }
+    :global(.vp-antd-menu-item-selected) {
+      border-bottom: 2px solid transparent;
+      border-top: 2px solid #1890ff;
+    }
+  }
+}
