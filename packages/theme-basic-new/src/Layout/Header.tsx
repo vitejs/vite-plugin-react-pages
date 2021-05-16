@@ -1,14 +1,21 @@
-import React from 'react'
-import { Layout, Menu, Row, Col, Button } from 'antd'
-import { SettingOutlined } from '@ant-design/icons'
+import React, { useContext } from 'react'
+import { Layout, Menu, Row, Col } from 'antd'
+import { useLocation } from 'react-router-dom'
 
-const { SubMenu } = Menu
 const { Header } = Layout
 import s from './index.module.less'
+import { themeConfigCtx } from '../ctx'
+import { renderMenuHelper } from './renderMenu'
+
+const renderMenu = renderMenuHelper(true)
 
 interface Props {}
 
 const AppHeader: React.FC<Props> = (props) => {
+  const themeConfig = useContext(themeConfigCtx)
+  const { TopBarExtra, topNavs } = themeConfig
+  const location = useLocation()
+
   return (
     <Header className={s.header}>
       <Row align="stretch" style={{ height: '100%' }}>
@@ -22,35 +29,17 @@ const AppHeader: React.FC<Props> = (props) => {
         <Col flex="auto">
           <Row justify="end">
             <Col>
-              <Menu
-                className={s.nav}
-                mode="horizontal"
-                defaultSelectedKeys={['2']}
-              >
-                <Menu.Item key="1">nav 1</Menu.Item>
-                <Menu.Item key="2">nav 2</Menu.Item>
-                <SubMenu
-                  key="SubMenu"
-                  icon={<SettingOutlined />}
-                  title="Navigation Three - Submenu"
+              {topNavs && (
+                <Menu
+                  className={s.nav}
+                  mode="horizontal"
+                  selectedKeys={[location.pathname]}
                 >
-                  <Menu.ItemGroup title="Item 1">
-                    <Menu.Item key="setting:1">Option 1</Menu.Item>
-                    <Menu.Item key="setting:2">Option 2</Menu.Item>
-                  </Menu.ItemGroup>
-                  <Menu.ItemGroup title="Item 2">
-                    <Menu.Item key="setting:3">Option 3</Menu.Item>
-                    <Menu.Item key="setting:4">Option 4</Menu.Item>
-                  </Menu.ItemGroup>
-                </SubMenu>
-                <Menu.Item key="3">nav 4</Menu.Item>
-              </Menu>
+                  {renderMenu(topNavs, true)}
+                </Menu>
+              )}
             </Col>
-            <Col>
-              <Button size="small" style={{ verticalAlign: 'middle' }}>
-                Custom Action
-              </Button>
-            </Col>
+            <Col>{TopBarExtra && <TopBarExtra />}</Col>
           </Row>
         </Col>
       </Row>

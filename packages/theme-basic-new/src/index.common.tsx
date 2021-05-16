@@ -4,8 +4,11 @@ import { useStaticData } from 'vite-plugin-react-pages/client'
 
 import AppLayout from './Layout'
 import { themeConfigCtx, themePropsCtx } from './ctx'
+import { MenuConfig } from './Layout/renderMenu'
 
-export function createTheme(themeConfig: any) {
+import './style.less'
+
+export function createTheme(themeConfig: ThemeConfig) {
   const ThemeComp = (props: ThemeProps) => {
     const { loadState, loadedData } = props
     const staticData = useStaticData()
@@ -20,4 +23,12 @@ export function createTheme(themeConfig: any) {
     )
   }
   return ThemeComp
+}
+
+export interface ThemeConfig {
+  topNavs?: ReadonlyArray<MenuConfig>
+  sideNavs?:
+    | ReadonlyArray<MenuConfig>
+    | ((ctx: ThemeProps) => ReadonlyArray<MenuConfig>)
+  TopBarExtra?: React.ComponentType
 }

@@ -12,7 +12,7 @@ module.exports = defineConfig({
       pagesDir: path.join(__dirname, 'pages'),
     }),
   ],
-  // theme local dev 
+  // theme local dev
   css: {
     preprocessorOptions: {
       less: {
@@ -20,7 +20,10 @@ module.exports = defineConfig({
           'ant-prefix': 'vp-antd',
         },
         javascriptEnabled: true,
-      }
-    }
-  }
+      },
+    },
+    modules: {
+      generateScopedName: `vp-local-[local]`,
+    },
+  },
 })

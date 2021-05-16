@@ -1,36 +1,147 @@
-.logo {
-  width: 120px;
-  height: 31px;
-  background: gray;
-}
-
-.header {
-  padding: 0;
+.layout {
   background: #fff;
-  box-shadow: 0 2px 8px #f0f1f2;
+  .header {
+    padding: 0;
+    padding-right: 24px;
+    background: #fff;
+    box-shadow: 0 2px 8px #f0f1f2;
+    z-index: 10;
 
-  && .nav {
-    border: 0;
+    .logo {
+      width: 120px;
+      height: 32px;
+      background: gray;
+    }
 
-    :global(.vp-antd-menu-item),
-    :global(.vp-antd-menu-submenu) {
-      height: 64px;
-      line-height: 60px;
-      margin-left: 12px;
-      margin-right: 12px;
-      min-width: 40px;
-      text-align: center;
+    .nav.nav {
+      border: 0;
 
-      // ref: https://github.com/ant-design/ant-design/blob/13a829d20c8a1a83c3bfa1f9d7c30d95659f5b57/site/theme/template/Layout/Header/Navigation.less
-      border-top: 2px solid transparent;
-      border-bottom: 2px solid transparent;
+      :global(.vp-antd-menu-item),
+      :global(.vp-antd-menu-submenu) {
+        height: 64px;
+        line-height: 60px;
+        margin-left: 12px;
+        margin-right: 12px;
+        min-width: 40px;
+        text-align: center;
 
-      &:hover {
+        // ref: https://github.com/ant-design/ant-design/blob/13a829d20c8a1a83c3bfa1f9d7c30d95659f5b57/site/theme/template/Layout/Header/Navigation.less
+        border-top: 2px solid transparent;
+        border-bottom: 2px solid transparent;
+
+        &:hover {
+          border-top: 2px solid #1890ff;
+        }
+      }
+      :global(.vp-antd-menu-item-selected) {
         border-top: 2px solid #1890ff;
       }
     }
-    :global(.vp-antd-menu-item-selected) {
-      border-top: 2px solid #1890ff;
+  }
+
+  .body {
+    flex: 1 1 auto;
+    padding-top: 40px;
+    display: flex;
+    flex-wrap: nowrap;
+
+    .sider {
+      height: 100%;
+      max-height: 100vh;
+      overflow: hidden;
+      &:hover {
+        overflow-y: auto;
+      }
+      position: sticky;
+      top: 0;
+
+      :global {
+        :local(.sideMenu) {
+          min-height: 100vh;
+          // copied from https://github.com/ant-design/ant-design/blob/acbeb0b4f18de5ca4d2c9a12329328c89afea662/site/theme/static/common.less#L61
+          &.vp-antd-menu-inline {
+            .vp-antd-menu-submenu-title h4,
+            > .vp-antd-menu-item,
+            .vp-antd-menu-item a {
+              overflow: hidden;
+              font-size: 14px;
+              text-overflow: ellipsis;
+            }
+
+            > .vp-antd-menu-item-group > .vp-antd-menu-item-group-title {
+              margin-top: 16px;
+              margin-bottom: 16px;
+              font-size: 13px;
+
+              &::after {
+                position: relative;
+                top: 12px;
+                display: block;
+                width: calc(100% - 20px);
+                height: 1px;
+                background: #f0f0f0;
+                content: '';
+              }
+            }
+
+            > .vp-antd-menu-item,
+            > .vp-antd-menu-submenu > .vp-antd-menu-submenu-title,
+            > .vp-antd-menu-item-group > .vp-antd-menu-item-group-title,
+            > .vp-antd-menu-item-group
+              > .vp-antd-menu-item-group-list
+              > .vp-antd-menu-item,
+            &.vp-antd-menu-inline
+              > .vp-antd-menu-item-group
+              > .vp-antd-menu-item-group-list
+              > .vp-antd-menu-item {
+              padding-left: 40px !important;
+
+              .vp-antd-row-rtl & {
+                padding-right: 40px !important;
+                padding-left: 16px !important;
+              }
+            }
+
+            // Nest Category > Type > Article
+            &.vp-antd-menu-inline {
+              .vp-antd-menu-item-group-title {
+                padding-left: 60px;
+
+                .vp-antd-row-rtl & {
+                  padding-right: 60px;
+                  padding-left: 16px;
+                }
+              }
+
+              .vp-antd-menu-item-group-list > .vp-antd-menu-item {
+                padding-left: 80px !important;
+
+                .vp-antd-row-rtl & {
+                  padding-right: 80px !important;
+                  padding-left: 16px !important;
+                }
+              }
+            }
+
+            .vp-antd-menu-item-group:first-child {
+              .vp-antd-menu-item-group-title {
+                margin-top: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .content {
+      padding: 0 170px 32px 64px;
+      margin: 0;
+      min-height: 280;
+
+      img {
+        max-height: 100%;
+        max-width: calc(100% - 32px);
+      }
     }
   }
 }

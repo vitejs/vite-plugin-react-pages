@@ -1,17 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { Layout, ConfigProvider, Row, Col } from 'antd'
 
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from '@ant-design/icons'
-import { Layout, Menu, Breadcrumb, ConfigProvider } from 'antd'
-
-const { SubMenu } = Menu
-const { Content, Sider } = Layout
+const { Content } = Layout
 
 import s from './index.module.less'
 import AppHeader from './Header'
+import AppSider from './Sider'
+import { themePropsCtx } from '../ctx'
 
 ConfigProvider.config({
   prefixCls: 'vp-antd',
@@ -20,61 +15,23 @@ ConfigProvider.config({
 interface Props {}
 
 const AppLayout: React.FC<Props> = (props) => {
-  return <ConfigProvider prefixCls="vp-antd">
-  <Layout>
-    <AppHeader />
-    <Layout>
-      <Sider width={200} className="site-layout-background">
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          style={{ height: '100%', borderRight: 0 }}
-        >
-          <SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
-            <Menu.Item key="1">option1</Menu.Item>
-            <Menu.Item key="2">option2</Menu.Item>
-            <Menu.Item key="3">option3</Menu.Item>
-            <Menu.Item key="4">option4</Menu.Item>
-          </SubMenu>
-          <SubMenu key="sub2" icon={<LaptopOutlined />} title="subnav 2">
-            <Menu.Item key="5">option5</Menu.Item>
-            <Menu.Item key="6">option6</Menu.Item>
-            <Menu.Item key="7">option7</Menu.Item>
-            <Menu.Item key="8">option8</Menu.Item>
-          </SubMenu>
-          <SubMenu
-            key="sub3"
-            icon={<NotificationOutlined />}
-            title="subnav 3"
-          >
-            <Menu.Item key="9">option9</Menu.Item>
-            <Menu.Item key="10">option10</Menu.Item>
-            <Menu.Item key="11">option11</Menu.Item>
-            <Menu.Item key="12">option12</Menu.Item>
-          </SubMenu>
-        </Menu>
-      </Sider>
-      <Layout style={{ padding: '0 24px 24px' }}>
-        <Breadcrumb style={{ margin: '16px 0' }}>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
-        <Content
-          className="site-layout-background"
-          style={{
-            padding: 24,
-            margin: 0,
-            minHeight: 280,
-          }}
-        >
-          Content223
-        </Content>
-      </Layout>
-    </Layout>
-  </Layout>
-</ConfigProvider>
+  const { loadState, loadedData } = useContext(themePropsCtx)
+  const Main = loadedData[loadState.routePath]?.main?.default
+  return (
+    <ConfigProvider prefixCls="vp-antd">
+      <div className={s.layout}>
+        <AppHeader />
+        <Row className={s.body}>
+          <Col xxl={4} xl={5} lg={6} md={6}>
+            <AppSider />
+          </Col>
+          <Col flex="auto" style={{ minWidth: 0 }}>
+            <Content className={s.content}>{Main && <Main />}</Content>
+          </Col>
+        </Row>
+      </div>
+    </ConfigProvider>
+  )
 }
 
 export default AppLayout
