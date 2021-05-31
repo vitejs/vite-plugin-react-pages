@@ -72,7 +72,7 @@ export async function ssrBuild(
         input: path.join(CLIENT_PATH, 'ssr', 'clientRender.js'),
         preserveEntrySignatures: 'allow-extension',
       },
-      assetsDir: '_assets',
+      assetsDir: 'assets',
       outDir: clientOutDir,
     },
   })
