@@ -26,6 +26,7 @@ export function createTheme(themeConfig: ThemeConfig) {
 }
 
 export interface ThemeConfig {
+  logo?: React.ReactNode;
   topNavs?: ReadonlyArray<MenuConfig>
   sideNavs?:
     | ReadonlyArray<MenuConfig>

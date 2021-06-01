@@ -19,10 +19,10 @@ const AppHeader: React.FC<Props> = (props) => {
   return (
     <Header className={s.header}>
       <Row align="stretch" style={{ height: '100%' }}>
-        <Col flex="200px">
+        <Col flex="0 0 auto">
           <Row justify="center" align="middle" style={{ height: '100%' }}>
             <Col>
-              <div className={s.logo} />
+              {themeConfig.logo}
             </Col>
           </Row>
         </Col>

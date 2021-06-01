@@ -3,6 +3,7 @@ import { createTheme } from 'vite-pages-new-theme-basic/src/index.dev'
 import { Button } from 'antd'
 
 export default createTheme({
+  logo: <div style={{ marginLeft: 40, fontWeight: 'bold' }}>Vite Pages</div>,
   topNavs: [
     {
       label: 'Design',
