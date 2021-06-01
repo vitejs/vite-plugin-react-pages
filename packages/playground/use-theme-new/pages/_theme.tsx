@@ -113,12 +113,24 @@ export default createTheme({
             },
           ],
         },
-        ...Array.from(Array(20)).map((_, index) => {
-          return {
-            label: 'Mock Item ' + index,
-            path: '/components/mock/' + index,
-          }
-        }),
+        {
+          group: 'Data Display',
+          children: [
+            {
+              label: 'Card',
+              path: '/components/card',
+            },
+          ],
+        },
+        {
+          group: 'Other',
+          children: Array.from(Array(20)).map((_, index) => {
+            return {
+              label: 'Mock Item ' + index,
+              path: '/components/mock/' + index,
+            }
+          }),
+        },
       ]
     }
     if (loadState.routePath.startsWith('/docs/react')) {
@@ -133,5 +145,7 @@ export default createTheme({
         }),
       ]
     }
+    // don't render sidebar
+    return null
   },
 })

@@ -29,6 +29,6 @@ export interface ThemeConfig {
   topNavs?: ReadonlyArray<MenuConfig>
   sideNavs?:
     | ReadonlyArray<MenuConfig>
-    | ((ctx: ThemeProps) => ReadonlyArray<MenuConfig>)
+    | ((ctx: ThemeProps) => ReadonlyArray<MenuConfig> | null | undefined)
   TopBarExtra?: React.ComponentType
 }

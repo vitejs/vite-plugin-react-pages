@@ -2,13 +2,15 @@ import React, { useContext } from 'react'
 import { Layout, Menu } from 'antd'
 import { useLocation } from 'react-router-dom'
 
-import { renderMenuHelper } from './renderMenu'
+import { MenuConfig, renderMenuHelper } from './renderMenu'
 import { themeConfigCtx, themePropsCtx } from '../ctx'
 import s from './index.module.less'
 
 const { Sider } = Layout
 
-interface Props {}
+interface Props {
+  sideNavsData: readonly MenuConfig[] | null | undefined
+}
 
 const renderMenu = renderMenuHelper(false)
 
