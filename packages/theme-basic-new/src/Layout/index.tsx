@@ -9,6 +9,7 @@ import s from './index.module.less'
 import AppHeader from './Header'
 import AppSider from './Sider'
 import { themeConfigCtx, themePropsCtx } from '../ctx'
+import MDX from './MDX'
 
 ConfigProvider.config({
   prefixCls: 'vp-antd',
@@ -27,6 +28,8 @@ const AppLayout: React.FC<Props> = () => {
   const sideNavsData =
     typeof sideNavs === 'function' ? sideNavs(themeProps) : sideNavs
 
+  const mainContent = Main && <Main />
+
   return (
     <ConfigProvider prefixCls="vp-antd">
       <div className={s.layout}>
@@ -42,12 +45,8 @@ const AppLayout: React.FC<Props> = () => {
             </Col>
           )}
           <Col flex="auto" style={{ minWidth: 0 }}>
-            <Content
-              className={[s.content, isMarkdown && 'markdown-body']
-                .filter(Boolean)
-                .join(' ')}
-            >
-              {Main && <Main />}
+            <Content className={s.content}>
+              {isMarkdown ? <MDX>{mainContent}</MDX> : mainContent}
             </Content>
           </Col>
         </Row>

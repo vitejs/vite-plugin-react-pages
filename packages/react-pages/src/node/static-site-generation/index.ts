@@ -82,7 +82,7 @@ export async function ssrBuild(
       throw new Error(`expect viteBuild to have only one BuildResult`)
     clientResult = _clientResult[0]
   } else {
-    clientResult = _clientResult
+    clientResult = _clientResult as RollupOutput
   }
 
   const entryChunk = (() => {
