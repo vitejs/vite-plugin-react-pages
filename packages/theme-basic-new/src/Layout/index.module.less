@@ -135,7 +135,6 @@
 
     .content {
       // padding: 0 170px 32px 64px;
-      margin: 0;
       min-height: 280;
 
       img {
@@ -143,5 +142,15 @@
         max-width: calc(100% - 32px);
       }
     }
+  }
+}
+
+:global {
+  .markdown-body {
+    box-sizing: border-box;
+    min-width: 480px;
+    max-width: 1080px;
+    margin: 0 auto 0 0;
+    padding: 45px;
   }
 }

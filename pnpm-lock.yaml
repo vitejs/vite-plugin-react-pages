@@ -493,6 +493,7 @@ importers:
   packages/theme-basic-new:
     dependencies:
       antd: 4.15.5
+      github-markdown-css: 4.0.0
     devDependencies:
       '@babel/preset-react': 7.13.13
       '@babel/preset-typescript': 7.13.0
@@ -522,6 +523,7 @@ importers:
       chokidar: ^3.5.1
       concurrently: ^6.0.0
       fs-extra: ^9.1.0
+      github-markdown-css: ^4.0.0
       globby: ^11.0.2
       less: ^4.1.1
       rollup: ^2.41.2
