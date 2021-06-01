@@ -35,9 +35,11 @@
 
   .body {
     flex: 1 1 auto;
-    // padding-top: 40px;
     display: flex;
     flex-wrap: nowrap;
+    &.hasSideNav {
+      padding-top: 40px;
+    }
 
     .sider {
       height: 100%;
@@ -145,6 +147,6 @@
     min-width: 480px;
     max-width: 1080px;
     margin: 0 auto 0 0;
-    padding: 45px;
+    padding: 0 45px 45px;
   }
 }

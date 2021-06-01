@@ -31,7 +31,11 @@ const AppLayout: React.FC<Props> = () => {
     <ConfigProvider prefixCls="vp-antd">
       <div className={s.layout}>
         <AppHeader />
-        <Row className={s.body}>
+        <Row
+          className={[s.body, sideNavsData && s.hasSideNav]
+            .filter(Boolean)
+            .join(' ')}
+        >
           {sideNavsData && (
             <Col xxl={4} xl={5} lg={6} md={6}>
               <AppSider sideNavsData={sideNavsData} />
