@@ -18,14 +18,14 @@
   "devDependencies": {
     "@types/react": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
-    "@vitejs/plugin-react-refresh": "^1.3.1",
+    "@vitejs/plugin-react-refresh": "^1.3.3",
     "globby": "^11.0.2",
     "playground-button": "*",
     "playground-card": "*",
     "serve": "^11.3.2",
-    "vite": "^2.3.2",
+    "vite": "^2.3.5",
     "vite-pages-theme-basic": "workspace:*",
-    "vite-plugin-mdx": "^3.5.5",
+    "vite-plugin-mdx": "^3.5.6",
     "vite-plugin-react-pages": "workspace:*"
   }
 }

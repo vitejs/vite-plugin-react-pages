@@ -45,7 +45,7 @@
     "less": "^4.1.1",
     "rollup": "^2.41.2",
     "rollup-plugin-postcss": "^4.0.0",
-    "typescript": "^4.2.4",
+    "typescript": "^4.3.2",
     "vite-plugin-react-pages": "workspace:*"
   }
 }
