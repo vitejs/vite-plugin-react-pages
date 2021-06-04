@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import { Layout, ConfigProvider, Row, Col } from 'antd'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 import 'github-markdown-css/github-markdown.css'
@@ -7,7 +7,7 @@ const { Content } = Layout
 
 import s from './index.module.less'
 import AppHeader from './Header'
-import AppSider from './Sider'
+import AppSider, { defaultSideNav } from './Sider'
 import { themeConfigCtx, themePropsCtx } from '../ctx'
 import MDX from './MDX'
 
@@ -22,11 +22,18 @@ const AppLayout: React.FC<Props> = () => {
   const themeProps = useContext(themePropsCtx)
   const { loadState, loadedData } = themeProps
   const Main = loadedData[loadState.routePath]?.main?.default
-  const staticData = useStaticData(loadState.routePath)
-  const isMarkdown = staticData?.main?.sourceType === 'md'
+  const staticData = useStaticData()
+  const isMarkdown =
+    staticData?.[loadState.routePath]?.main?.sourceType === 'md'
 
-  const sideNavsData =
-    typeof sideNavs === 'function' ? sideNavs(themeProps) : sideNavs
+  const sideNavsData = useMemo(() => {
+    const themeContext = { ...themeProps, staticData }
+    if (typeof sideNavs === 'function') {
+      return sideNavs(themeContext)
+    }
+    if (Array.isArray(sideNavs)) return sideNavs
+    return defaultSideNav(themeContext)
+  }, [themeProps])
 
   const mainContent = Main && <Main />
 

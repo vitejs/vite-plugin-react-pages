@@ -1,5 +1,9 @@
 import React from 'react'
-import type { ThemeProps } from 'vite-plugin-react-pages/clientTypes'
+import type {
+  LoadState,
+  PagesLoaded,
+  ThemeProps,
+} from 'vite-plugin-react-pages/clientTypes'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 
 import AppLayout from './Layout'
@@ -26,10 +30,16 @@ export function createTheme(themeConfig: ThemeConfig) {
 }
 
 export interface ThemeConfig {
-  logo?: React.ReactNode;
+  logo?: React.ReactNode
   topNavs?: ReadonlyArray<MenuConfig>
   sideNavs?:
     | ReadonlyArray<MenuConfig>
-    | ((ctx: ThemeProps) => ReadonlyArray<MenuConfig> | null | undefined)
+    | ((ctx: ThemeContext) => ReadonlyArray<MenuConfig> | null | undefined)
   TopBarExtra?: React.ComponentType
+}
+
+export interface ThemeContext {
+  readonly loadState: LoadState
+  readonly loadedData: PagesLoaded
+  readonly staticData: Record<string, any>
 }
