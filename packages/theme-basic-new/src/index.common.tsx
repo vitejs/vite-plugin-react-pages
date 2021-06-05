@@ -35,12 +35,15 @@ export interface ThemeConfig {
   topNavs?: ReadonlyArray<MenuConfig>
   sideNavs?:
     | ReadonlyArray<MenuConfig>
-    | ((ctx: ThemeContext) => ReadonlyArray<MenuConfig> | null | undefined)
+    | ((ctx: SideNavsContext) => ReadonlyArray<MenuConfig> | null | undefined)
   TopBarExtra?: React.ComponentType
 }
 
-export interface ThemeContext {
+export interface SideNavsContext {
   readonly loadState: LoadState
   readonly loadedData: PagesLoaded
   readonly staticData: Record<string, any>
 }
+
+export { defaultSideNavs } from './Layout/Sider'
+export type { DefaultSideNavsOpts } from './Layout/Sider'

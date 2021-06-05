@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom'
 import { MenuConfig, renderMenuHelper } from './renderMenu'
 import { themeConfigCtx, themePropsCtx } from '../ctx'
 import s from './index.module.less'
-import type { ThemeContext } from '../index.common'
+import type { SideNavsContext } from '../index.common'
 
 const { Sider } = Layout
 
@@ -18,9 +18,6 @@ const renderMenu = renderMenuHelper(false)
 const AppSider: React.FC<Props> = ({ sideNavsData }) => {
   const themeProps = useContext(themePropsCtx)
   const location = useLocation()
-
-  console.log('sideNavsData', sideNavsData)
-
   const subMenuKeys: string[] = []
   const menu = sideNavsData && renderMenu(sideNavsData, true, subMenuKeys)
 
@@ -45,17 +42,26 @@ const AppSider: React.FC<Props> = ({ sideNavsData }) => {
 
 export default AppSider
 
-export function defaultSideNav({
-  loadState,
-  staticData,
-}: ThemeContext): MenuConfig[] | null {
-  const seg = removeStartSlash(loadState.routePath).split('/')
+export interface DefaultSideNavsOpts {
+  groupConfig: {
+    [grouKey: string]: {
+      [subGroupKey: string]: {
+        label?: string
+        order?: number
+      }
+    }
+  }
+}
 
+export function defaultSideNavs(
+  { loadState, staticData }: SideNavsContext,
+  opts?: DefaultSideNavsOpts
+): MenuConfig[] | null {
+  const seg = removeStartSlash(loadState.routePath).split('/')
   if (seg.length === 1) {
     // this is a first-level page .e.g /xxx
-
     /**
-     * current page is a index page for a page group
+     * Whether current active page is a index page for a page group
      * .e.g /guide should not be treated like normal first-level page
      * It should be grouped with /guide/start, /guide/advanced .etc
      */
@@ -95,7 +101,7 @@ export function defaultSideNav({
   // show all pages with this pathPrefix (.e.g /guide)
   const pathPrefix = '/' + seg[0]
 
-  // sub-groups within this page group
+  // collect sub-groups within this pathPrefix
   const subGroups: Record<
     string,
     { pagePath: string; pageStaticData: any; pageName: string }[]
@@ -117,11 +123,10 @@ export function defaultSideNav({
       // show it
       const left = pagePath.substr(pathPrefix.length + 1)
       const leftSeg = left.split('/')
-      if (leftSeg.length === 0) {
-        throw new Error('leftSeg assertion fail')
-      }
+      if (leftSeg.length === 0) throw new Error('leftSeg assertion fail')
       if (leftSeg.length === 1) {
-        // this page is first-level page(don't have sub-group) for this pathPrefix
+        // this page is first-level page for this pathPrefix
+        // (don't belongs to any sub-group)
         ensureGroup('/').push({
           pagePath,
           pageStaticData,
@@ -143,6 +148,9 @@ export function defaultSideNav({
     .sort(([groupKeyA], [groupKeyB]) => {
       if (groupKeyA === '/') return -1
       if (groupKeyB === '/') return 1
+      const groupOrderA = getGroupConfig(pathPrefix, groupKeyA)?.order ?? 1
+      const groupOrderB = getGroupConfig(pathPrefix, groupKeyB)?.order ?? 1
+      if (groupOrderA !== groupOrderB) return groupOrderA - groupOrderB
       return groupKeyA.localeCompare(groupKeyB)
     })
     .map(([groupKey, pages]) => {
@@ -159,8 +167,9 @@ export function defaultSideNav({
         })
         return
       }
+      const groupLabel = getGroupConfig(pathPrefix, groupKey)?.label ?? groupKey
       result.push({
-        group: groupKey,
+        group: groupLabel,
         children: pages.map((page) => {
           const label =
             page.pageStaticData?.title ??
@@ -175,6 +184,10 @@ export function defaultSideNav({
     })
   // console.log('pathPrefix', pathPrefix, 'subGroups', subGroups)
   return result
+
+  function getGroupConfig(grouKey: string, subGrouKey: string) {
+    return opts?.groupConfig?.[grouKey]?.[subGrouKey]
+  }
 }
 
 function removeStartSlash(pagePath: string) {

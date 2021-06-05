@@ -7,9 +7,10 @@ const { Content } = Layout
 
 import s from './index.module.less'
 import AppHeader from './Header'
-import AppSider, { defaultSideNav } from './Sider'
+import AppSider, { defaultSideNavs } from './Sider'
 import { themeConfigCtx, themePropsCtx } from '../ctx'
 import MDX from './MDX'
+import type { SideNavsContext } from '../index.common'
 
 ConfigProvider.config({
   prefixCls: 'vp-antd',
@@ -27,12 +28,12 @@ const AppLayout: React.FC<Props> = () => {
     staticData?.[loadState.routePath]?.main?.sourceType === 'md'
 
   const sideNavsData = useMemo(() => {
-    const themeContext = { ...themeProps, staticData }
+    const themeContext: SideNavsContext = { ...themeProps, staticData }
     if (typeof sideNavs === 'function') {
       return sideNavs(themeContext)
     }
     if (Array.isArray(sideNavs)) return sideNavs
-    return defaultSideNav(themeContext)
+    return defaultSideNavs(themeContext)
   }, [themeProps])
 
   const mainContent = Main && <Main />
