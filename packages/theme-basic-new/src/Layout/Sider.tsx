@@ -148,8 +148,12 @@ export function defaultSideNav({
     .map(([groupKey, pages]) => {
       if (groupKey === '/') {
         pages.forEach((page) => {
+          const label =
+            page.pageStaticData?.title ??
+            page.pageStaticData?.main?.title ??
+            page.pageName
           result.push({
-            label: page.pageName,
+            label,
             path: page.pagePath,
           })
         })
@@ -158,8 +162,12 @@ export function defaultSideNav({
       result.push({
         group: groupKey,
         children: pages.map((page) => {
+          const label =
+            page.pageStaticData?.title ??
+            page.pageStaticData?.main?.title ??
+            page.pageName
           return {
-            label: page.pageName,
+            label,
             path: page.pagePath,
           }
         }),
