@@ -19,6 +19,7 @@ const AppHeader: React.FC<Props> = (props) => {
   const indexPagestaticData = useStaticData('/')
 
   const logoLink = (() => {
+    if (themeConfig.logoLink !== undefined) return themeConfig.logoLink
     if (indexPagestaticData) {
       return '/'
     }

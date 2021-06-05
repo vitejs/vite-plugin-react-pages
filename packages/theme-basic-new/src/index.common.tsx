@@ -31,6 +31,7 @@ export function createTheme(themeConfig: ThemeConfig) {
 
 export interface ThemeConfig {
   logo?: React.ReactNode
+  logoLink?: string | null
   topNavs?: ReadonlyArray<MenuConfig>
   sideNavs?:
     | ReadonlyArray<MenuConfig>
