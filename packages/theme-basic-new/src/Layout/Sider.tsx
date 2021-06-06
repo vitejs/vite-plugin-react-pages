@@ -85,8 +85,12 @@ export function defaultSideNavs(
         return false
       })
       .map(([pagePath, pageStaticData]) => {
+        const label =
+          pageStaticData?.title ??
+          pageStaticData?.main?.title ??
+          removeStartSlash(pagePath)
         return {
-          label: pagePath,
+          label,
           path: pagePath,
         }
       })
@@ -111,7 +115,7 @@ export function defaultSideNavs(
     return subGroups[key]
   }
 
-  Object.entries(staticData).filter(([pagePath, pageStaticData]) => {
+  Object.entries(staticData).forEach(([pagePath, pageStaticData]) => {
     if (pagePath === pathPrefix) {
       // this page is the '/' index page for this pathPrefix
       // show it
