@@ -1,8 +1,6 @@
 import React from 'react'
-import {
-  createTheme,
-  defaultSideNavs,
-} from 'vite-pages-theme-doc/src/index.dev'
+import { createTheme, defaultSideNavs } from 'vite-pages-theme-doc'
+// from 'vite-pages-theme-doc/src/index.dev'
 import { Button } from 'antd'
 
 export default createTheme({

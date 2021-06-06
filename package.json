@@ -5,11 +5,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "ver": "pnpm recursive --filter create-vite-pages --filter vite-plugin-react-pages --filter vite-pages-theme-basic exec -- npm version",
+    "ver": "pnpm recursive --filter create-vite-pages --filter vite-plugin-react-pages --filter vite-pages-theme-basic --filter vite-pages-theme-doc exec -- npm version",
     "ver:p": "npm run ver -- patch",
     "ver:mi": "npm run ver -- minor",
     "ver:major": "npm run ver -- major",
-    "pub": "pnpm -r publish --filter create-vite-pages --filter vite-plugin-react-pages --filter vite-pages-theme-basic",
+    "pub": "pnpm -r publish --filter create-vite-pages --filter vite-plugin-react-pages --filter vite-pages-theme-basic --filter vite-pages-theme-doc",
     "update-deps": "pnpm -r update -i -L",
     "update-local-deps": "pnpm update -r vite-plugin-mdx vite-plugin-react-pages vite-pages-theme-basic --workspace",
     "test-serve": "jest",

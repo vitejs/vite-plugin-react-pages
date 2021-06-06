@@ -1,11 +1,11 @@
 {
   "name": "vite-pages-theme-doc",
-  "version": "1.0.0",
+  "version": "3.0.0-alpha.0",
   "description": "",
   "author": "",
   "license": "ISC",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "lib/index.dev.js",
+  "module": "lib/index.dev.js",
   "types": "lib/index.d.ts",
   "keywords": [
     "vite",
@@ -16,8 +16,9 @@
   "scripts": {
     "clean": "rm -rf ./dist ./lib",
     "build": "npm run clean && concurrently \"npm:build-*\"",
-    "build-dts": "tsc --emitDeclarationOnly",
-    "build-rollup": "rollup -c",
+    "build-dts": "tsc",
+    "build-copy-files": "node ./scripts/copy.js",
+    "// build-rollup": "rollup -c // don't provide rollup build for now",
     "dev": "npm run clean && concurrently \"npm:dev-*\"",
     "dev-dts": "tsc --emitDeclarationOnly --watch",
     "dev-rollup": "rollup -wc",
