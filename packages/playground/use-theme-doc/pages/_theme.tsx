@@ -6,6 +6,8 @@ import { Button } from 'antd'
 export default createTheme({
   logo: <div style={{ marginLeft: 40, fontWeight: 'bold' }}>Vite Pages</div>,
   topNavs: [
+    { label: 'Home', path: '/' },
+    { label: 'Users', path: '/users' },
     {
       label: 'Components',
       path: '/components/overview',
@@ -48,15 +50,23 @@ export default createTheme({
     )
   },
   sideNavs(ctx) {
+    if (ctx.loadState.routePath.startsWith('/users')) {
+      return null
+    }
     return defaultSideNavs(ctx, {
       groupConfig: {
-        '/guide': {
-          react: {
-            label: 'React',
+        '/reference': {
+          concepts: {
+            label: 'Concepts',
+            order: 1,
           },
-          spec: {
-            label: 'Specification',
-            order: 0,
+          'cli-commands': {
+            label: 'CLI Commands',
+            order: 2,
+          },
+          'error-codes': {
+            label: 'Error Codes',
+            order: 3,
           },
         },
       },
