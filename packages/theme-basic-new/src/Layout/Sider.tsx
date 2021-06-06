@@ -84,10 +84,12 @@ export function defaultSideNavs(
         }
         return false
       })
+      .sort(([pagePathA, pageStaticDataA], [pagePathB, pageStaticDataB]) =>
+        sortPages(pageStaticDataA, pageStaticDataB, pagePathA, pagePathB)
+      )
       .map(([pagePath, pageStaticData]) => {
         const label =
-          pageStaticData?.title ??
-          pageStaticData?.main?.title ??
+          getStaticDataValue(pageStaticData, 'title') ??
           removeStartSlash(pagePath)
         return {
           label,
@@ -159,31 +161,45 @@ export function defaultSideNavs(
     })
     .map(([groupKey, pages]) => {
       if (groupKey === '/') {
-        pages.forEach((page) => {
-          const label =
-            page.pageStaticData?.title ??
-            page.pageStaticData?.main?.title ??
-            page.pageName
-          result.push({
-            label,
-            path: page.pagePath,
+        pages
+          .sort((pageA, pageB) =>
+            sortPages(
+              pageA.pageStaticData,
+              pageB.pageStaticData,
+              pageA.pagePath,
+              pageB.pagePath
+            )
+          )
+          .forEach((page) => {
+            const label =
+              getStaticDataValue(page.pageStaticData, 'title') ?? page.pageName
+            result.push({
+              label,
+              path: page.pagePath,
+            })
           })
-        })
         return
       }
       const groupLabel = getGroupConfig(pathPrefix, groupKey)?.label ?? groupKey
       result.push({
         group: groupLabel,
-        children: pages.map((page) => {
-          const label =
-            page.pageStaticData?.title ??
-            page.pageStaticData?.main?.title ??
-            page.pageName
-          return {
-            label,
-            path: page.pagePath,
-          }
-        }),
+        children: pages
+          .sort((pageA, pageB) =>
+            sortPages(
+              pageA.pageStaticData,
+              pageB.pageStaticData,
+              pageA.pagePath,
+              pageB.pagePath
+            )
+          )
+          .map((page) => {
+            const label =
+              getStaticDataValue(page.pageStaticData, 'title') ?? page.pageName
+            return {
+              label,
+              path: page.pagePath,
+            }
+          }),
       })
     })
   // console.log('pathPrefix', pathPrefix, 'subGroups', subGroups)
@@ -196,4 +212,21 @@ export function defaultSideNavs(
 
 function removeStartSlash(pagePath: string) {
   return pagePath.replace(/^\//, '')
+}
+
+function getStaticDataValue(pageStaticData: any, key: string) {
+  return pageStaticData?.[key] ?? pageStaticData?.main?.[key]
+}
+
+function sortPages(
+  pageStaticDataA: any,
+  pageStaticDataB: any,
+  pathA: string,
+  pathB: string
+) {
+  const orderA = Number(getStaticDataValue(pageStaticDataA, 'order') ?? 1)
+  const orderB = Number(getStaticDataValue(pageStaticDataB, 'order') ?? 1)
+  if (!Number.isNaN(orderA) && !Number.isNaN(orderB) && orderA !== orderB)
+    return orderA - orderB
+  return pathA.localeCompare(pathB)
 }
