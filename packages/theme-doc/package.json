@@ -1,9 +1,7 @@
 {
   "name": "vite-pages-theme-doc",
-  "version": "3.0.0-alpha.1",
-  "description": "",
-  "author": "",
-  "license": "ISC",
+  "version": "3.0.0",
+  "description": "A document theme for vite-plugin-react-pages.",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "lib/index.d.ts",
@@ -13,6 +11,15 @@
     "vite-plugin-react-pages",
     "theme"
   ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csr632/vite-plugin-react-pages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/csr632/vite-plugin-react-pages/issues"
+  },
+  "homepage": "https://github.com/csr632/vite-plugin-react-pages",
   "scripts": {
     "clean": "rm -rf ./dist ./lib",
     "build": "npm run clean && concurrently \"npm:build-*\"",
