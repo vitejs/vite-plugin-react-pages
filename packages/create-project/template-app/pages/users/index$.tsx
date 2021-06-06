@@ -9,13 +9,17 @@ const Page = () => {
   return (
     <div>
       Test dynamic routes: <br />
-      <Link to="/users/aaa">/users/aaa</Link>
+      <Link to="/users/userA">/users/userA</Link>
       <br />
-      <Link to="/users/bbb">/users/bbb</Link>
+      <Link to="/users/userA/posts/1">/users/userA/posts/1</Link>
       <br />
-      <Link to="/users/aaa/posts/111">/users/aaa/posts/111</Link>
+      <Link to="/users/userA/posts/2">/users/userA/posts/2</Link>
       <br />
-      <Link to="/users/bbb/posts/222">/users/bbb/posts/222</Link>
+      <Link to="/users/userB">/users/userB</Link>
+      <br />
+      <Link to="/users/userB/posts/1">/users/userB/posts/1</Link>
+      <br />
+      <Link to="/users/userB/posts/2">/users/userB/posts/2</Link>
     </div>
   )
 }
