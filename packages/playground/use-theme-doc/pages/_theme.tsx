@@ -2,7 +2,7 @@ import React from 'react'
 import {
   createTheme,
   defaultSideNavs,
-} from 'vite-pages-new-theme-basic/src/index.dev'
+} from 'vite-pages-theme-doc/src/index.dev'
 import { Button } from 'antd'
 
 export default createTheme({
