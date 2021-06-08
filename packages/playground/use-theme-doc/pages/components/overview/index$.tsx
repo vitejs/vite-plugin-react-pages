@@ -1,6 +1,5 @@
 /**
  * @title Overview
- * @order 0
  */
 
 import React from 'react'

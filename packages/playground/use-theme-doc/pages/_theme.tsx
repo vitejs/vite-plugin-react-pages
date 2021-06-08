@@ -75,6 +75,7 @@ export default createTheme({
             order: 3,
           },
         },
+        '/components': {},
       },
     })
   },

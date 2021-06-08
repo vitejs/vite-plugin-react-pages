@@ -1,6 +1,6 @@
 ---
 title: page2 title
-sort: 2
+subGroup: sub-group
 ---
 
 # Page 2

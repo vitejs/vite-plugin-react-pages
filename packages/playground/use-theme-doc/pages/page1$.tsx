@@ -1,6 +1,6 @@
 /**
  * @title page1 title
- * @sort 1
+ * @subGroup sub-group
  */
 
 import React from 'react'

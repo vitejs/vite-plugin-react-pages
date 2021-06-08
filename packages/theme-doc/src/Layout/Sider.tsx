@@ -44,7 +44,7 @@ export default AppSider
 
 export interface DefaultSideNavsOpts {
   groupConfig: {
-    [grouKey: string]: {
+    [groupKey: string]: {
       [subGroupKey: string]: {
         label?: string
         order?: number
@@ -57,110 +57,29 @@ export function defaultSideNavs(
   { loadState, staticData }: SideNavsContext,
   opts?: DefaultSideNavsOpts
 ): MenuConfig[] | null {
-  const seg = removeStartSlash(loadState.routePath).split('/')
-  if (seg.length === 1) {
-    // this is a first-level page .e.g /xxx
-    /**
-     * Whether current active page is a index page for a page group
-     * .e.g /guide should not be treated like normal first-level page
-     * It should be grouped with /guide/start, /guide/advanced .etc
-     */
-    let currentPageIsGroupIndexPage = false
-    const result = Object.entries(staticData)
-      // show all first-level pages  ( like /xxx or / )
-      .filter(([pagePath]) => {
-        if (pagePath === '/404') return false
-        if (removeStartSlash(pagePath).split('/').length === 1) {
-          const foundSameGroupPage = Object.keys(staticData).find((finding) =>
-            finding.startsWith(pagePath + '/')
-          )
-          // pagePath page belongs to a page group
-          if (foundSameGroupPage) {
-            if (pagePath === loadState.routePath)
-              currentPageIsGroupIndexPage = true
-            return false
-          }
-          return true
-        }
-        return false
-      })
-      .sort(([pagePathA, pageStaticDataA], [pagePathB, pageStaticDataB]) =>
-        sortPages(pageStaticDataA, pageStaticDataB, pagePathA, pagePathB)
-      )
-      .map(([pagePath, pageStaticData]) => {
-        const label =
-          getStaticDataValue(pageStaticData, 'title') ??
-          removeStartSlash(pagePath)
-        return {
-          label,
-          path: pagePath,
-        }
-      })
-    if (!currentPageIsGroupIndexPage) {
-      // this is a normal first-level page
-      // '/' page don't show sideNav if it is the only first-level page
-      if (result.length === 1 && loadState.routePath === '/') return null
-      return result
-    }
-  }
+  const currentGroupInfo = getPageGroupInfo(
+    loadState.routePath,
+    staticData[loadState.routePath]
+  )
 
-  // show all pages with this pathPrefix (.e.g /guide)
-  const pathPrefix = '/' + seg[0]
-
-  // collect sub-groups within this pathPrefix
-  const subGroups: Record<
-    string,
-    { pagePath: string; pageStaticData: any; pageName: string }[]
-  > = {}
-  function ensureGroup(key: string) {
-    if (!subGroups[key]) return (subGroups[key] = [])
-    return subGroups[key]
-  }
-
-  Object.entries(staticData).forEach(([pagePath, pageStaticData]) => {
-    if (pagePath === pathPrefix) {
-      // this page is the '/' index page for this pathPrefix
-      // show it
-      ensureGroup('/').push({ pagePath, pageStaticData, pageName: '/' })
-      return
-    }
-    if (pagePath.startsWith(`${pathPrefix}/`)) {
-      // this page is belongs to this pathPrefix
-      // show it
-      const left = pagePath.substr(pathPrefix.length + 1)
-      const leftSeg = left.split('/')
-      if (leftSeg.length === 0) throw new Error('leftSeg assertion fail')
-      if (leftSeg.length === 1) {
-        // this page is first-level page for this pathPrefix
-        // (don't belongs to any sub-group)
-        ensureGroup('/').push({
-          pagePath,
-          pageStaticData,
-          pageName: leftSeg[0],
-        })
-        return
-      }
-      // this page belongs to a sub-group
-      // for example /pathPrefix/sub-group/pagename have sub-group named "sub-group"
-      const groupKey = leftSeg[0]
-      const pageName = leftSeg.slice(1).join('/')
-      ensureGroup(groupKey).push({ pagePath, pageStaticData, pageName })
-    }
-  })
+  const groupKey = currentGroupInfo.group
+  const groups = getGroups(staticData)
+  const subGroups = groups[groupKey]
 
   const result: MenuConfig[] = []
 
   Object.entries(subGroups)
-    .sort(([groupKeyA], [groupKeyB]) => {
-      if (groupKeyA === '/') return -1
-      if (groupKeyB === '/') return 1
-      const groupOrderA = getGroupConfig(pathPrefix, groupKeyA)?.order ?? 1
-      const groupOrderB = getGroupConfig(pathPrefix, groupKeyB)?.order ?? 1
-      if (groupOrderA !== groupOrderB) return groupOrderA - groupOrderB
-      return groupKeyA.localeCompare(groupKeyB)
+    .sort(([subGroupKeyA], [subGroupKeyB]) => {
+      // pages with '/' subGroup are put afront
+      if (subGroupKeyA === '/') return -1
+      if (subGroupKeyB === '/') return 1
+      const orderA = getGroupConfig(groupKey, subGroupKeyA)?.order ?? 1
+      const orderB = getGroupConfig(groupKey, subGroupKeyB)?.order ?? 1
+      if (orderA !== orderB) return orderA - orderB
+      return subGroupKeyA.localeCompare(subGroupKeyB)
     })
-    .map(([groupKey, pages]) => {
-      if (groupKey === '/') {
+    .map(([subGroupKey, pages]) => {
+      if (subGroupKey === '/') {
         pages
           .sort((pageA, pageB) =>
             sortPages(
@@ -180,7 +99,8 @@ export function defaultSideNavs(
           })
         return
       }
-      const groupLabel = getGroupConfig(pathPrefix, groupKey)?.label ?? groupKey
+      const groupLabel =
+        getGroupConfig(groupKey, subGroupKey)?.label ?? subGroupKey
       result.push({
         group: groupLabel,
         children: pages
@@ -202,11 +122,10 @@ export function defaultSideNavs(
           }),
       })
     })
-  // console.log('pathPrefix', pathPrefix, 'subGroups', subGroups)
   return result
 
-  function getGroupConfig(grouKey: string, subGrouKey: string) {
-    return opts?.groupConfig?.[grouKey]?.[subGrouKey]
+  function getGroupConfig(groupKey: string, subGroupKey: string) {
+    return opts?.groupConfig?.[groupKey]?.[subGroupKey]
   }
 }
 
@@ -229,4 +148,98 @@ function sortPages(
   if (!Number.isNaN(orderA) && !Number.isNaN(orderB) && orderA !== orderB)
     return orderA - orderB
   return pathA.localeCompare(pathB)
+}
+
+// map groups -> subgroups -> pages
+type Groups = {
+  [groupKey: string]: {
+    [subGroupKey: string]: {
+      pagePath: string
+      pageStaticData: any
+      pageName: string
+    }[]
+  }
+}
+
+function getGroups(staticData: any) {
+  const groups: Groups = {}
+  function ensureGroup(
+    group: string
+  ): Record<
+    string,
+    { pagePath: string; pageStaticData: any; pageName: string }[]
+  >
+  function ensureGroup(
+    group: string,
+    subGroup: string
+  ): { pagePath: string; pageStaticData: any; pageName: string }[]
+  function ensureGroup(group: string, subGroup?: string) {
+    const subGroups = (groups[group] ||= {})
+    if (!subGroup) return subGroups
+    return (subGroups[subGroup] ||= [])
+  }
+
+  Object.entries(staticData).forEach(([pagePath, pageStaticData]) => {
+    if (pagePath === '/404') return
+    const pageGroupInfo = getPageGroupInfo(pagePath, pageStaticData)
+    ensureGroup(pageGroupInfo.group, pageGroupInfo.subGroup).push({
+      pagePath,
+      pageStaticData,
+      pageName: pageGroupInfo.pageName,
+    })
+  })
+
+  const rootGroup = groups['/']?.['/']
+  if (rootGroup) {
+    const filtered = rootGroup.filter((page) => {
+      if (page.pageName === '/') return true
+      if (groups[page.pageName]) {
+        // it is explicit grouped
+        if (getStaticDataValue(page.pageStaticData, 'group')) return true
+        // the page belongs to the group `page.pageName`
+        // for example, /guide should not be grouped with /faq
+        // if there is also pages like /guide/start, /guide/advanced
+        // /guide should be moved to "guide" group in this case.
+        ensureGroup(page.pageName, '/').push(page)
+        return false
+      }
+      return true
+    })
+    groups['/']['/'] = filtered
+  }
+
+  return groups
+}
+
+function getPageGroupInfo(
+  pagePath: string,
+  pageStaticData: any
+): {
+  group: string
+  subGroup: string
+  pageName: string
+} {
+  if (!pagePath.startsWith('/')) throw new Error('getPageGroup assertion fail')
+  const seg = removeStartSlash(pagePath).split('/')
+  let group: string = getStaticDataValue(pageStaticData, 'group')
+  let subGroup: string = getStaticDataValue(pageStaticData, 'subGroup')
+  // used as default title
+  const pageName: string = seg[seg.length - 1] || '/'
+  if (seg.length === 1) {
+    group ||= '/'
+    subGroup ||= '/'
+  } else if (seg.length === 2) {
+    group ||= seg[0]
+    subGroup ||= '/'
+  } else if (seg.length >= 3) {
+    group ||= seg[0]
+    subGroup ||= seg[1]
+  } else {
+    throw new Error('getPageGroup assertion fail')
+  }
+  return {
+    group,
+    subGroup,
+    pageName,
+  }
 }
