@@ -1,6 +1,7 @@
 import React from 'react'
 import { Menu } from 'antd'
 import { Link } from 'react-router-dom'
+import type { RouteProps } from 'react-router-dom'
 import { CaretDownOutlined } from '@ant-design/icons'
 
 const { SubMenu } = Menu
@@ -69,7 +70,6 @@ export const renderMenuHelper = (isTopNav: boolean) =>
               </>
             }
             icon={leftIcon}
-            popupOffset={[0, 2]}
           >
             {renderMenu(item.children)}
           </SubMenu>
@@ -104,6 +104,7 @@ export type MenuConfig =
        */
       readonly path: string
       readonly icon?: React.ReactNode
+      readonly activeIfMatch?: string | string[] | RouteProps
     }
   | {
       /**
@@ -112,6 +113,7 @@ export type MenuConfig =
       readonly subMenu: string
       readonly children: ReadonlyArray<MenuConfig>
       readonly icon?: React.ReactNode
+      readonly activeIfMatch?: string | string[] | RouteProps
     }
   | {
       /**

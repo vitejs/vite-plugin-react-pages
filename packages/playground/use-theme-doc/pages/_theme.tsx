@@ -1,24 +1,30 @@
 import React from 'react'
-import { createTheme, defaultSideNavs } from 'vite-pages-theme-doc'
-// from 'vite-pages-theme-doc/src/index.dev'
+import {
+  createTheme,
+  defaultSideNavs,
+} from 'vite-pages-theme-doc/src/index.dev'
+// from 'vite-pages-theme-doc'
 import { Button } from 'antd'
 
 export default createTheme({
   logo: <div style={{ marginLeft: 40, fontWeight: 'bold' }}>Vite Pages</div>,
   topNavs: [
     { label: 'Home', path: '/' },
-    { label: 'Users', path: '/users' },
+    { label: 'Users', path: '/users', activeIfMatch: '/users' },
     {
       label: 'Components',
       path: '/components/overview',
+      activeIfMatch: '/components',
     },
     {
       label: 'Guide',
       path: '/guide/introduce',
+      activeIfMatch: '/guide',
     },
     {
       label: 'Reference',
       path: '/reference/glossary',
+      activeIfMatch: '/reference',
     },
     {
       label: 'Github',
