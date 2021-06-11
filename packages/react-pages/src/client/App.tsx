@@ -6,6 +6,11 @@ import PageLoader from './PageLoader'
 const App = () => {
   const pageRoutes = usePagePaths()
     .filter((path) => path !== '/404')
+    .sort((pathA, pathB) => {
+      if (pathA.includes('/:')) return 1
+      if (pathB.includes('/:')) return -1
+      return 0
+    })
     .map((path) => (
       // avoid re-mount layout component
       // https://github.com/ReactTraining/react-router/issues/3928#issuecomment-284152397
