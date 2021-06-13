@@ -1,10 +1,13 @@
 ---
 title: Card title
+subGroup: data-display
 ---
 
 # Card
 
 This is a **markdown** document of the `Card` component.
+
+You can put this page in a subGroup of the side menu using `staticData.subGroup`.
 
 ## demos
 

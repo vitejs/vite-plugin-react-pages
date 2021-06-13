@@ -1,5 +1,8 @@
 import React from 'react'
-import { createTheme } from 'vite-pages-theme-doc/src/index.dev'
+import {
+  createTheme,
+  defaultSideNavs,
+} from 'vite-pages-theme-doc/src/index.dev'
 
 export default createTheme({
   logo: <div style={{ marginLeft: 40, fontWeight: 'bold' }}>Vite Pages</div>,
@@ -24,4 +27,24 @@ export default createTheme({
       href: 'https://github.com/vitejs/vite-plugin-react-pages',
     },
   ],
+  sideNavs: (ctx) => {
+    return defaultSideNavs(ctx, {
+      groupConfig: {
+        'components': {
+          demos: {
+            label: 'Demos (dev only)',
+            order: -1,
+          },
+          general: {
+            label: 'General',
+            order: 1,
+          },
+          'data-display': {
+            label: 'Data Display',
+            order: 2,
+          },
+        },
+      },
+    })
+  },
 })
