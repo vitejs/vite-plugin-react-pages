@@ -2,7 +2,7 @@
   "name": "vite-pages-theme-doc",
   "version": "3.0.2",
   "description": "A document theme for vite-plugin-react-pages.",
-  "main": "dist/index.js",
+  "main": "lib/index.common.js",
   "module": "dist/index.js",
   "types": "lib/index.d.ts",
   "keywords": [
@@ -27,7 +27,7 @@
     "build-copy-files": "node ./scripts/copy.js",
     "build-rollup": "rollup -c",
     "dev": "npm run clean && concurrently \"npm:dev-*\"",
-    "dev-dts": "tsc --emitDeclarationOnly --watch",
+    "dev-dts": "tsc --watch",
     "dev-rollup": "rollup -wc",
     "prepare": "npm run build"
   },
