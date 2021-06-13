@@ -15,7 +15,7 @@ export default createTheme({
     },
     {
       label: 'Components',
-      path: '/components/Button',
+      path: '/components/button',
       activeIfMatch: '/components',
     },
     { label: 'Vite', href: 'https://github.com/vitejs/vite' },
