@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-react-pages",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "main": "dist/node/index.js",
   "bin": {
     "vite-pages": "bin/vite-pages.js"
@@ -63,6 +63,7 @@
     "rollup": "^2.41.2",
     "rollup-plugin-postcss": "^4.0.0",
     "slash": "^3.0.0",
-    "tiny-invariant": "^1.1.0"
+    "tiny-invariant": "^1.1.0",
+    "typescript": "^4.3.2"
   }
 }
