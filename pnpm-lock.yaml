@@ -162,7 +162,7 @@ importers:
       my-card: link:../card
       serve: 11.3.2
       vite: 2.3.5
-      vite-pages-theme-basic: link:../../../../theme-basic
+      vite-pages-theme-doc: link:../../../../theme-doc
       vite-plugin-mdx: 3.5.6_@mdx-js+mdx@1.6.22+vite@2.3.5
       vite-plugin-react-pages: link:../../../../react-pages
     specifiers:
@@ -180,7 +180,7 @@ importers:
       react-router-dom: ^5.2.0
       serve: ^11.3.2
       vite: ^2.3.5
-      vite-pages-theme-basic: ^3.0.0
+      vite-pages-theme-doc: ^3.0.0
       vite-plugin-mdx: ^3.5.6
       vite-plugin-react-pages: ^3.0.0
   packages/playground:
@@ -377,7 +377,6 @@ importers:
       '@rollup/plugin-babel': 5.3.0_rollup@2.44.0
       chalk: 4.1.0
       chokidar: 3.5.1
-      comment-parser: 1.1.5
       dequal: 2.0.2
       enhanced-resolve: 5.7.0
       fast-deep-equal: 3.1.3
@@ -417,7 +416,6 @@ importers:
       '@types/react-router-dom': ^5.1.7
       chalk: ^4.1.0
       chokidar: ^3.5.1
-      comment-parser: ^1.1.5
       concurrently: ^6.0.0
       dequal: ^2.0.2
       enhanced-resolve: ^5.7.0
@@ -2815,12 +2813,6 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
-  /comment-parser/1.1.5:
-    dev: false
-    engines:
-      node: '>= 10.0.0'
-    resolution:
-      integrity: sha512-RePCE4leIhBlmrqiYTvaqEeGYg7qpSl4etaIabKtdOQVi+mSTIBBklGUwIr79GXYnl3LpMwmDw4KeR2stNc6FA==
   /commondir/1.0.1:
     dev: true
     resolution:

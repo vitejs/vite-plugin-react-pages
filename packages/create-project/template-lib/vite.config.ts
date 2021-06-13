@@ -33,12 +33,6 @@ module.exports = {
                 const runtimeDataPaths = api.getRuntimeData(pageId)
                 // the ?demo query will wrap the module with useful demoInfo
                 runtimeDataPaths[demoName] = `${absolute}?demo`
-                // set page staticData
-                const staticData = api.getStaticData(pageId)
-                staticData[demoName] = {
-                  // doc-theme will render it as a demo
-                  isDemo: true,
-                }
               }
             )
           }
@@ -59,8 +53,6 @@ module.exports = {
               // set page staticData
               const staticData = api.getStaticData(pageId)
               staticData.main = await helpers.extractStaticData(file)
-              staticData.title =
-                staticData.main.title ?? `${componentName} Title`
             }
           )
         },
@@ -70,20 +62,6 @@ module.exports = {
   resolve: {
     alias: {
       'my-lib': '/src',
-    },
-  },
-  // use in theme dev
-  css: {
-    preprocessorOptions: {
-      less: {
-        modifyVars: {
-          'ant-prefix': 'vp-antd',
-        },
-        javascriptEnabled: true,
-      },
-    },
-    modules: {
-      generateScopedName: `vp-local-[local]`,
     },
   },
 } as UserConfig

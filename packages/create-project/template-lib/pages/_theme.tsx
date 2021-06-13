@@ -2,7 +2,7 @@ import React from 'react'
 import {
   createTheme,
   defaultSideNavs,
-} from 'vite-pages-theme-doc/src/index.dev'
+} from 'vite-pages-theme-doc'
 
 export default createTheme({
   logo: <div style={{ marginLeft: 40, fontWeight: 'bold' }}>Vite Pages</div>,

@@ -47,13 +47,13 @@ export function createTheme(themeConfig: ThemeConfig) {
       const ContentComp = (dataPart as any).default
       const pageStaticDataPart = pageStaticData[key]
       const content = (() => {
-        if (pageStaticDataPart.sourceType === 'md')
+        if (pageStaticDataPart?.sourceType === 'md')
           return (
             <MDX>
               <ContentComp />
             </MDX>
           )
-        if (dataPart.isDemo)
+        if (dataPart?.isDemo)
           return <Demo style={{ margin: '16px 45px' }} {...dataPart} />
         return <ContentComp />
       })()

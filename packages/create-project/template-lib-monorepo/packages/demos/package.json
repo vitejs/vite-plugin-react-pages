@@ -3,7 +3,7 @@
   "version": "1.0.2",
   "private": true,
   "scripts": {
-    "dev": "vite serve --config ./vite.demos.ts",
+    "dev": "NODE_ENV=dev vite serve --config ./vite.demos.ts",
     "build": "rm -rf dist && vite build --config ./vite.demos.ts --outDir dist && serve -s dist",
     "ssr": "rm -rf dist && vite-pages ssr --configFile ./vite.demos.ts && serve dist"
   },
@@ -27,7 +27,7 @@
     "my-card": "*",
     "serve": "^11.3.2",
     "vite": "^2.3.5",
-    "vite-pages-theme-basic": "^3.0.0",
+    "vite-pages-theme-doc": "^3.0.0",
     "vite-plugin-mdx": "^3.5.6",
     "vite-plugin-react-pages": "^3.0.0"
   }

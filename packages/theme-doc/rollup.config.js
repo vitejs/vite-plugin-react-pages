@@ -19,6 +19,7 @@ export default {
     'react-router-dom',
     'vite-plugin-react-pages',
     'vite-plugin-react-pages/client',
+    '@mdx-js/react',
     './index.css',
   ],
   plugins: [
