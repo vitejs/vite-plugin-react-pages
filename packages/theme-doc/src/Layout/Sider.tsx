@@ -64,7 +64,7 @@ export function defaultSideNavs(
 
   const groupKey = currentGroupInfo.group
   const groups = getGroups(staticData)
-  const subGroups = groups[groupKey]
+  const subGroups = groups[groupKey] ?? {}
 
   const result: MenuConfig[] = []
 
