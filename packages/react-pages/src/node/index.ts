@@ -12,6 +12,8 @@ import {
 } from './dynamic-modules/pages'
 import { PageStrategy } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
+import { demoModule } from './demo-modules'
+import { demoTransform } from './mdx-plugins/demo'
 
 /**
  * This is a public API that users use in their index.html.
@@ -26,6 +28,7 @@ const modulePrefix = '/@react-pages/'
 const pagesModuleId = modulePrefix + 'pages'
 const themeModuleId = modulePrefix + 'theme'
 const ssrDataModuleId = modulePrefix + 'ssrData'
+const demosModuleId = modulePrefix + 'demos'
 
 export default function pluginFactory(
   opts: {
@@ -43,6 +46,7 @@ export default function pluginFactory(
 
   return {
     name: 'vite-plugin-react-pages',
+    enforce: 'pre',
     config: () => ({
       optimizeDeps: {
         include: [
@@ -75,21 +79,34 @@ export default function pluginFactory(
         pageStrategy = new DefaultPageStrategy()
       }
 
-      // Inject parsing logic for frontmatter if missing.
-      const { devDependencies = {} } = require(path.join(root, 'package.json'))
-      if (!devDependencies['remark-frontmatter']) {
-        const mdxPlugin = plugins.find(
-          (plugin) => plugin.name === 'vite-plugin-mdx'
-        ) as MdxPlugin | undefined
+      const mdxPlugin = plugins.find(
+        (plugin) => plugin.name === 'vite-plugin-mdx'
+      ) as MdxPlugin | undefined
 
-        if (mdxPlugin?.mdxOptions) {
-          mdxPlugin.mdxOptions.remarkPlugins.push(require('remark-frontmatter'))
-        } else {
-          logger.warn(
-            '[react-pages] Please install vite-plugin-mdx@3.1 or higher'
-          )
-        }
+      if (mdxPlugin?.mdxOptions) {
+        // Inject demo transformer
+        mdxPlugin.mdxOptions.remarkPlugins.push(...getRemarkPlugins(root))
+      } else {
+        logger.warn(
+          '[react-pages] Please install vite-plugin-mdx@3.1 or higher'
+        )
       }
+
+      // Inject parsing logic for frontmatter if missing.
+      // const { devDependencies = {} } = require(path.join(root, 'package.json'))
+      // if (!devDependencies['remark-frontmatter']) {
+      //   const mdxPlugin = plugins.find(
+      //     (plugin) => plugin.name === 'vite-plugin-mdx'
+      //   ) as MdxPlugin | undefined
+
+      //   if (mdxPlugin?.mdxOptions) {
+      //     mdxPlugin.mdxOptions.remarkPlugins.push(require('remark-frontmatter'))
+      //   } else {
+      //     logger.warn(
+      //       '[react-pages] Please install vite-plugin-mdx@3.1 or higher'
+      //     )
+      //   }
+      // }
     },
     configureServer({ watcher, moduleGraph }) {
       const reloadVirtualModule = (moduleId: string) => {
@@ -116,9 +133,19 @@ export default function pluginFactory(
       // because vite's resolveConfig will call configResolved without calling close hook
       pageStrategy.start(pagesDir)
     },
-    resolveId(id) {
+    async resolveId(id, importer) {
       if (id === appEntryId) return id
-      return id.startsWith(modulePrefix) ? id : undefined
+      if (id.startsWith(modulePrefix)) return id
+      if (id.endsWith('?demo')) {
+        const bareImport = id.slice(0, 0 - '?demo'.length)
+        const resolved = await this.resolve(bareImport, importer, {
+          skipSelf: true,
+        })
+        if (!resolved || resolved.external)
+          throw new Error(`can not resolve demo: ${id}. importer: ${importer}`)
+        return demosModuleId + resolved.id
+      }
+      return undefined
     },
     async load(id) {
       // vite will resolve it with v=${versionHash} query
@@ -146,6 +173,10 @@ export default function pluginFactory(
       if (id === ssrDataModuleId) {
         return renderPageListInSSR(await pageStrategy.getPages())
       }
+      if (id.startsWith(demosModuleId)) {
+        const demoPath = id.slice(demosModuleId.length)
+        return demoModule(demoPath)
+      }
     },
     // @ts-expect-error
     vitePagesStaticSiteGeneration: staticSiteGeneration,
@@ -166,3 +197,19 @@ export { File, FileHandler } from './dynamic-modules/PageStrategy'
 export { extractStaticData } from './dynamic-modules/utils'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
+
+function getRemarkPlugins(root: string) {
+  const result: any[] = [demoTransform]
+  // Inject frontmatter parser if missing
+  const { devDependencies = {}, dependencies = {} } = require(path.join(
+    root,
+    'package.json'
+  ))
+  if (
+    !devDependencies['remark-frontmatter'] &&
+    !dependencies['remark-frontmatter']
+  ) {
+    result.push(require('remark-frontmatter'))
+  }
+  return result
+}

@@ -9,7 +9,7 @@ import s from './index.module.less'
 import AppHeader from './Header'
 import AppSider, { defaultSideNavs } from './Sider'
 import { themeConfigCtx, themePropsCtx } from '../ctx'
-import MDX from './MDX'
+export { default as MDX } from './MDX'
 import type { SideNavsContext } from '../index.common'
 
 ConfigProvider.config({
@@ -18,14 +18,10 @@ ConfigProvider.config({
 
 interface Props {}
 
-const AppLayout: React.FC<Props> = () => {
+const AppLayout: React.FC<Props> = ({ children }) => {
   const { sideNavs } = useContext(themeConfigCtx)
   const themeProps = useContext(themePropsCtx)
-  const { loadState, loadedData } = themeProps
-  const Main = loadedData[loadState.routePath]?.main?.default
   const staticData = useStaticData()
-  const isMarkdown =
-    staticData?.[loadState.routePath]?.main?.sourceType === 'md'
 
   const sideNavsData = useMemo(() => {
     const themeContext: SideNavsContext = { ...themeProps, staticData }
@@ -35,8 +31,6 @@ const AppLayout: React.FC<Props> = () => {
     if (Array.isArray(sideNavs)) return sideNavs
     return defaultSideNavs(themeContext)
   }, [themeProps])
-
-  const mainContent = Main && <Main />
 
   return (
     <ConfigProvider prefixCls="vp-antd">
@@ -53,9 +47,7 @@ const AppLayout: React.FC<Props> = () => {
             </Col>
           )}
           <Col flex="auto" style={{ minWidth: 0 }}>
-            <Content className={s.content}>
-              {isMarkdown ? <MDX>{mainContent}</MDX> : mainContent}
-            </Content>
+            <Content className={s.content}>{children}</Content>
           </Col>
         </Row>
       </div>

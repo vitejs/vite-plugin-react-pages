@@ -12,6 +12,8 @@ import {
 } from './PagesData'
 import { UpdateBuffer } from './UpdateBuffer'
 
+// TODO: support generating virtual modules according to fs
+
 export class PageStrategy extends EventEmitter {
   protected pagesDir: string = '/pagesDir_not_initialized'
   private fileCache: FileCache = {}
