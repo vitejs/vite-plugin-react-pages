@@ -16,3 +16,28 @@ You can import demos like this:
 <Demo src="./demos/demo1.tsx" />
 
 <Demo src="./demos/demo2.tsx" />
+
+## Extract API info from Typescript code
+
+You can extract API from ts interface and render it into page.
+
+The following markdown
+
+```tsx
+<TsInfo src="./types.ts" name="ButtonProps" />
+```
+
+will result in:
+
+<TsInfo src="./types.ts" name="ButtonProps" />
+
+In jsx page, You can render TsInfo like this:
+
+```tsx
+import _TsInfo0 from './types.ts?tsInfo=ButtonProps'
+import { TsInfo } from 'vite-pages-theme-doc'
+
+export default function Page() {
+  return <TsInfo {..._TsInfo0} />
+}
+```

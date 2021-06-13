@@ -25,9 +25,12 @@ export function Demo({
   className,
 }: Props) {
   if (!DemoComp || !demoMeta || !isDemo) {
-    throw new Error(`<Demo> component receives invalid props.
-You should import demos like "import * as demoInfo from './demos/demo.tsx?demo'"
-and use it like this: <Demo {...demoInfo}>`)
+    return (
+      <pre>{`Demo Error: <Demo> component receives invalid props.
+If you use it in jsx, you should import demos like "import * as demoInfo from './demos/demo.tsx?demo'" and use it like "<Demo {...demoInfo}>"
+If you use it in markdown, you should use it exactly like "<Demo src="./demos/demo1.tsx" />" (we use simple regexp to parse it, so you should use this format strictly)
+`}</pre>
+    )
   }
   const { code, title, desc } = demoMeta
   const [showCode, setShowCode] = useState(false)

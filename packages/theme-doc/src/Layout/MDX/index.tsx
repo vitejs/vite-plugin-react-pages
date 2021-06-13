@@ -5,6 +5,7 @@ import { MDXProvider } from '@mdx-js/react'
 import CodeBlock from './CodeBlock'
 import { themePropsCtx } from '../../ctx'
 import { Demo } from '../Demo'
+import { TsInfo } from '../TsInfo'
 
 const components = {
   pre: (
@@ -15,6 +16,7 @@ const components = {
   ) => <div {...props} />,
   code: CodeBlock,
   Demo,
+  TsInfo,
 }
 
 const MDX: React.FC = ({ children }) => {

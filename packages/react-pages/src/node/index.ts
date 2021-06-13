@@ -14,6 +14,8 @@ import { PageStrategy } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 import { demoModule } from './demo-modules'
 import { demoTransform } from './mdx-plugins/demo'
+import { tsInfoModule } from './ts-info-module'
+import { tsInfoTransform } from './mdx-plugins/tsInfo'
 
 /**
  * This is a public API that users use in their index.html.
@@ -29,6 +31,9 @@ const pagesModuleId = modulePrefix + 'pages'
 const themeModuleId = modulePrefix + 'theme'
 const ssrDataModuleId = modulePrefix + 'ssrData'
 const demosModuleId = modulePrefix + 'demos'
+const tsInfoModuleId = modulePrefix + 'tsInfo'
+
+const tsInfoQueryReg = /\?tsInfo=(.*)$/
 
 export default function pluginFactory(
   opts: {
@@ -138,12 +143,21 @@ export default function pluginFactory(
       if (id.startsWith(modulePrefix)) return id
       if (id.endsWith('?demo')) {
         const bareImport = id.slice(0, 0 - '?demo'.length)
-        const resolved = await this.resolve(bareImport, importer, {
-          skipSelf: true,
-        })
+        const resolved = await this.resolve(bareImport, importer)
         if (!resolved || resolved.external)
           throw new Error(`can not resolve demo: ${id}. importer: ${importer}`)
         return demosModuleId + resolved.id
+      }
+      const matchTsInfo = id.match(tsInfoQueryReg)
+      if (matchTsInfo) {
+        const bareImport = id.replace(tsInfoQueryReg, '')
+        const resolved = await this.resolve(bareImport, importer)
+        if (!resolved || resolved.external)
+          throw new Error(
+            `can not resolve tsInfo: ${id}. importer: ${importer}`
+          )
+        const exportName = matchTsInfo[1]
+        return `${tsInfoModuleId}--${exportName}--${resolved.id}`
       }
       return undefined
     },
@@ -177,6 +191,14 @@ export default function pluginFactory(
         const demoPath = id.slice(demosModuleId.length)
         return demoModule(demoPath)
       }
+      if (id.startsWith(tsInfoModuleId)) {
+        let sourcePath = id.slice(demosModuleId.length)
+        const match = sourcePath.match(/--(.*?)--(.*)$/)
+        if (!match) throw new Error('assertion fail')
+        const exportName = match[1]
+        sourcePath = match[2]
+        return tsInfoModule(sourcePath, exportName)
+      }
     },
     // @ts-expect-error
     vitePagesStaticSiteGeneration: staticSiteGeneration,
@@ -191,6 +213,8 @@ export type {
   LoadState,
   PagesLoaded,
   PagesStaticData,
+  TsInterfaceInfo,
+  TsInterfacePropertyInfo,
 } from '../../clientTypes'
 
 export { File, FileHandler } from './dynamic-modules/PageStrategy'
@@ -199,7 +223,7 @@ export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
 
 function getRemarkPlugins(root: string) {
-  const result: any[] = [demoTransform]
+  const result: any[] = [demoTransform, tsInfoTransform]
   // Inject frontmatter parser if missing
   const { devDependencies = {}, dependencies = {} } = require(path.join(
     root,
