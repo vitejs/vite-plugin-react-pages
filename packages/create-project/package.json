@@ -1,6 +1,6 @@
 {
   "name": "create-vite-pages",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "bin": {
     "create-vite-pages": "index.js",
     "cvp": "index.js"
