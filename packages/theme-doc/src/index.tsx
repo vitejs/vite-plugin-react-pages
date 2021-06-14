@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import type {
   LoadState,
   PagesLoaded,
   ThemeProps,
 } from 'vite-plugin-react-pages/clientTypes'
 import { useStaticData } from 'vite-plugin-react-pages/client'
+import { useLocation } from 'react-router-dom'
 
 import AppLayout, { MDX } from './Layout'
 import { themeConfigCtx, themePropsCtx } from './ctx'
@@ -12,12 +13,23 @@ import { MenuConfig } from './Layout/renderMenu'
 
 import './style.less'
 import { Demo } from './Layout/Demo'
+import AnchorLink from './components/AnchorLink'
 
 export function createTheme(themeConfig: ThemeConfig) {
   const ThemeComp = (props: ThemeProps) => {
     const { loadState, loadedData } = props
     const staticData = useStaticData()
     console.log('theme', loadState, loadedData, staticData)
+
+    const location = useLocation()
+    useEffect(() => {
+      // scroll to anchor after page component loaded
+      if (loadState.type === 'loaded') {
+        if (location.hash) {
+          AnchorLink.scrollToAnchor(decodeURIComponent(location.hash.slice(1)))
+        }
+      }
+    }, [loadState, loadedData])
 
     if (loadState.type === 'loading') {
       return <AppLayout></AppLayout>

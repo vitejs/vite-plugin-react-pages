@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import GithubSlugger from 'github-slugger'
 import { MDXProvider } from '@mdx-js/react'
 
@@ -6,6 +6,7 @@ import CodeBlock from './CodeBlock'
 import { themePropsCtx } from '../../ctx'
 import { Demo } from '../Demo'
 import { TsInfo } from '../TsInfo'
+import AnchorLink from '../../components/AnchorLink'
 
 const components = {
   pre: (
@@ -40,14 +41,16 @@ const MDX: React.FC = ({ children }) => {
           HTMLDivElement
         >
       ) {
+        const [idCache] = useState<Record<string, string>>({})
         const title = props.children
         if (typeof title === 'string') {
-          const id = slugger.slug(title)
+          if (!idCache[title]) idCache[title] = slugger.slug(title)
+          const id = idCache[title]
           return (
             <Tag {...props}>
-              <a id={id} className="anchor" href={`#${id}`}>
+              <AnchorLink id={id} className="anchor" to={`#${id}`}>
                 <span className="octicon octicon-link"></span>
-              </a>
+              </AnchorLink>
               {title}
             </Tag>
           )
