@@ -8,7 +8,7 @@ export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
       if (subPath === '/') {
         // import("/@react-pages/pages/") would make vite confused
         // so we change the sub path
-        subPath = '/__index'
+        subPath = '/index__'
       }
       const dataModulePath = `/@react-pages/pages${subPath}`
       let code = `
@@ -32,7 +32,7 @@ export async function renderPageListInSSR(pagesData: PagesData) {
       if (subPath === '/') {
         // import("/@react-pages/pages/") would make vite confused
         // so we change the sub path
-        subPath = '/__index'
+        subPath = '/index__'
       }
       const code = `
 pages["${pageId}"] = {};

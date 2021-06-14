@@ -96,22 +96,6 @@ export default function pluginFactory(
           '[react-pages] Please install vite-plugin-mdx@3.1 or higher'
         )
       }
-
-      // Inject parsing logic for frontmatter if missing.
-      // const { devDependencies = {} } = require(path.join(root, 'package.json'))
-      // if (!devDependencies['remark-frontmatter']) {
-      //   const mdxPlugin = plugins.find(
-      //     (plugin) => plugin.name === 'vite-plugin-mdx'
-      //   ) as MdxPlugin | undefined
-
-      //   if (mdxPlugin?.mdxOptions) {
-      //     mdxPlugin.mdxOptions.remarkPlugins.push(require('remark-frontmatter'))
-      //   } else {
-      //     logger.warn(
-      //       '[react-pages] Please install vite-plugin-mdx@3.1 or higher'
-      //     )
-      //   }
-      // }
     },
     configureServer({ watcher, moduleGraph }) {
       const reloadVirtualModule = (moduleId: string) => {
@@ -131,8 +115,8 @@ export default function pluginFactory(
         })
     },
     buildStart() {
-      // buildStart will be called multiple times
-      // when the serve port has already been taken
+      // buildStart may be called multiple times
+      // if the port has already been taken and vite retry with another port
 
       // pageStrategy.start can't be put in configResolved
       // because vite's resolveConfig will call configResolved without calling close hook
@@ -173,7 +157,7 @@ export default function pluginFactory(
       // one page data
       if (id.startsWith(pagesModuleId + '/')) {
         let pageId = id.slice(pagesModuleId.length)
-        if (pageId === '/__index') pageId = '/'
+        if (pageId === '/index__') pageId = '/'
         const pages = await pageStrategy.getPages()
         const page = pages[pageId]
         if (!page) {
