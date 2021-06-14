@@ -48,7 +48,6 @@ export async function ssrBuild(
       noExternal: [
         // TODO: remove this
         'vite-pages-theme-basic',
-        'vite-pages-theme-doc',
         'vite-plugin-react-pages',
         'vite-plugin-react-pages/client',
       ],

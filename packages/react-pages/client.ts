@@ -1,4 +1,4 @@
-// so that users or themes can:
+// this module exists so that users or themes can:
 // import { useStaticData } from "vite-plugin-react-pages/client"
 
 // This module can be imported by theme, which may be optimized by vite

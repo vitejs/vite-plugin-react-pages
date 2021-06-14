@@ -2,7 +2,7 @@
   "name": "vite-pages-theme-doc",
   "version": "3.0.3",
   "description": "A document theme for vite-plugin-react-pages.",
-  "main": "lib/index.common.js",
+  "main": "dist-cjs/index.js",
   "module": "dist/index.js",
   "types": "lib/index.d.ts",
   "keywords": [
@@ -21,17 +21,18 @@
   },
   "homepage": "https://github.com/csr632/vite-plugin-react-pages",
   "scripts": {
-    "clean": "rm -rf ./dist ./lib",
+    "clean": "rm -rf ./dist ./lib ./dist-cjs",
     "build": "npm run clean && concurrently \"npm:build-*\"",
     "build-dts": "tsc",
     "build-copy-files": "node ./scripts/copy.js",
-    "build-rollup": "rollup -c",
+    "build-rollup": "rollup -c && node scripts/add-css-import.js",
     "dev": "npm run clean && concurrently \"npm:dev-*\"",
     "dev-dts": "tsc --watch",
     "dev-rollup": "rollup -wc",
     "prepare": "npm run build"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.14.5",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.13.0",
     "@rollup/plugin-babel": "^5.3.0",

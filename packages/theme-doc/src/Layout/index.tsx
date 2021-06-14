@@ -10,7 +10,7 @@ import AppHeader from './Header'
 import AppSider, { defaultSideNavs } from './Sider'
 import { themeConfigCtx, themePropsCtx } from '../ctx'
 export { default as MDX } from './MDX'
-import type { SideNavsContext } from '../index.common'
+import type { SideNavsContext } from '..'
 
 ConfigProvider.config({
   prefixCls: 'vp-antd',

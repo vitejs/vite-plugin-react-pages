@@ -3,9 +3,9 @@ import { Menu } from 'antd'
 import { useLocation } from 'react-router-dom'
 
 import { MenuConfig, renderMenuHelper } from './renderMenu'
-import { themeConfigCtx, themePropsCtx } from '../ctx'
+import { themePropsCtx } from '../ctx'
 import s from './index.module.less'
-import type { SideNavsContext } from '../index.common'
+import type { SideNavsContext } from '..'
 
 interface Props {
   sideNavsData: readonly MenuConfig[] | null | undefined

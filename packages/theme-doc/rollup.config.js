@@ -1,4 +1,3 @@
-import * as path from 'path'
 import postcss from 'rollup-plugin-postcss'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
@@ -8,19 +7,24 @@ const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
 export default {
   input: 'src/index.tsx',
-  output: {
-    dir: 'dist',
-    format: 'esm',
-    sourcemap: true,
-  },
+  output: [
+    {
+      dir: 'dist',
+      format: 'esm',
+      sourcemap: true,
+    },
+    {
+      dir: 'dist-cjs',
+      format: 'cjs',
+      sourcemap: true,
+    },
+  ],
   external: [
     'react',
     'react-dom',
     'react-router-dom',
     'vite-plugin-react-pages',
-    'vite-plugin-react-pages/client',
     '@mdx-js/react',
-    './index.css',
   ],
   plugins: [
     resolve({
@@ -32,7 +36,19 @@ export default {
     babel({
       babelHelpers: 'bundled',
       extensions,
-      presets: ['@babel/preset-typescript', '@babel/preset-react'],
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            targets: {
+              chrome: '90',
+              node: '12',
+            },
+          },
+        ],
+        '@babel/preset-typescript',
+        '@babel/preset-react',
+      ],
       plugins: [
         [
           'babel-plugin-import',
@@ -58,7 +74,7 @@ export default {
       modules: {
         generateScopedName: `vp-local-[local]`,
       },
-      extract: path.resolve(__dirname, 'dist', 'index.css'),
+      extract: 'index.css',
     }),
   ],
 }
