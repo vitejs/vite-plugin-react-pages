@@ -1,5 +1,5 @@
 import * as path from 'path'
-import type { Plugin } from 'vite'
+import type { Plugin, IndexHtmlTransformContext } from 'vite'
 import type { MdxPlugin } from 'vite-plugin-mdx/dist/types'
 import {
   DefaultPageStrategy,
@@ -16,6 +16,7 @@ import { demoModule } from './demo-modules'
 import { demoTransform } from './mdx-plugins/demo'
 import { tsInfoModule } from './ts-info-module'
 import { tsInfoTransform } from './mdx-plugins/tsInfo'
+import { injectHTMLTag } from './utils'
 
 /**
  * This is a public API that users use in their index.html.
@@ -189,6 +190,9 @@ export default function pluginFactory(
     closeBundle() {
       pageStrategy.close()
     },
+    transformIndexHtml(html, ctx) {
+      return moveScriptTagToBodyEnd(html, ctx)
+    },
   }
 }
 
@@ -220,4 +224,27 @@ function getRemarkPlugins(root: string) {
     result.push(require('remark-frontmatter'))
   }
   return result
+}
+
+/**
+ * vite put script before style, which cause style problem for antd
+ * so we move the script tag to the end of the body
+ * https://github.com/vitejs/vite/blob/4112c5d103673b83c50d446096086617dfaac5a3/packages/vite/src/node/plugins/html.ts#L352
+ */
+function moveScriptTagToBodyEnd(
+  html: string,
+  ctx: IndexHtmlTransformContext
+): string | undefined {
+  if (ctx.chunk) {
+    console.log('!!!', ctx.chunk.fileName)
+    const reg = new RegExp(
+      `<script\\s[^>]*?${ctx.chunk.fileName}[^<]*?<\\/script>`
+    )
+    const match = html.match(reg)
+    if (match) {
+      const script = match[0]
+      html = html.replace(script, '')
+      return injectHTMLTag(html, script)
+    }
+  }
 }
