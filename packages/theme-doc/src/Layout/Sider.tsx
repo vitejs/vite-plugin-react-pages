@@ -1,13 +1,11 @@
 import React, { useContext } from 'react'
-import { Layout, Menu } from 'antd'
+import { Menu } from 'antd'
 import { useLocation } from 'react-router-dom'
 
 import { MenuConfig, renderMenuHelper } from './renderMenu'
 import { themeConfigCtx, themePropsCtx } from '../ctx'
 import s from './index.module.less'
 import type { SideNavsContext } from '../index.common'
-
-const { Sider } = Layout
 
 interface Props {
   sideNavsData: readonly MenuConfig[] | null | undefined
@@ -62,8 +60,19 @@ export function defaultSideNavs(
     staticData[loadState.routePath]
   )
 
-  const groupKey = currentGroupInfo.group
   const groups = getGroups(staticData)
+  const groupKey = (() => {
+    // infer the group of the current page
+    // currentGroupInfo.group may be wrong because:
+    // if there is also pages like /guide/start
+    // then /guide should not be grouped with /faq
+    // instead, /guide should be moved to the "guide" group
+    if (currentGroupInfo.group === '/' && groups[currentGroupInfo.pageName]) {
+      return currentGroupInfo.pageName
+    }
+    return currentGroupInfo.group
+  })()
+
   const subGroups = groups[groupKey] ?? {}
 
   const result: MenuConfig[] = []
@@ -196,10 +205,9 @@ function getGroups(staticData: any) {
       if (groups[page.pageName]) {
         // it is explicit grouped
         if (getStaticDataValue(page.pageStaticData, 'group')) return true
-        // the page belongs to the group `page.pageName`
-        // for example, /guide should not be grouped with /faq
-        // if there is also pages like /guide/start, /guide/advanced
-        // /guide should be moved to "guide" group in this case.
+        // if there is also pages like /guide/start
+        // then /guide should not be grouped with /faq
+        // instead, /guide should be moved to the "guide" group
         ensureGroup(page.pageName, '/').push(page)
         return false
       }
