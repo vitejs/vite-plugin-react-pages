@@ -92,12 +92,28 @@ export function createTheme(themeConfig: ThemeConfig) {
 }
 
 export interface ThemeConfig {
+  /**
+   * Logo at top bar
+   */
   logo?: React.ReactNode
+  /**
+   * Logo link path
+   * @defaultValue "/"
+   */
   logoLink?: string | null
+  /**
+   * Navigation menu at top bar.
+   */
   topNavs?: ReadonlyArray<MenuConfig>
+  /**
+   * Side menu.
+   */
   sideNavs?:
     | ReadonlyArray<MenuConfig>
     | ((ctx: SideNavsContext) => ReadonlyArray<MenuConfig> | null | undefined)
+  /**
+   * Extra area at top bar.
+   */
   TopBarExtra?: React.ComponentType
 }
 

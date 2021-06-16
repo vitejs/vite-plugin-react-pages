@@ -104,6 +104,10 @@ export type MenuConfig =
        */
       readonly path: string
       readonly icon?: React.ReactNode
+      /**
+       * The menu item will show an "active" state
+       * if it matches with current browsing path.
+       */
       readonly activeIfMatch?: string | string[] | RouteProps
     }
   | {

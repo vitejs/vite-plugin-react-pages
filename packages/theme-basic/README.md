@@ -1,10 +1,3 @@
----
-title: Basic Theme
-order: 0.5
----
-
-import { Link } from 'react-router-dom'
-
 # Basic theme
 
 `vite-pages-theme-basic` provides a nice theme. It should satisfy most users' needs. This document site is powered by this theme.
@@ -123,6 +116,6 @@ export type TopNavData =
 
 ## Fully theme customization
 
-If the basic theme doesn't satisfy your need, you can <Link to="/theme-customization">create your own theme</Link>.
+If the basic theme doesn't satisfy your need, you can [create your own theme](https://vitejs.github.io/vite-plugin-react-pages/#/theme-customization).
 
 > Contributions to [the basic theme](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages/theme-basic) are always welcomed.

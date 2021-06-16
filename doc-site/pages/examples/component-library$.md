@@ -1,8 +1,11 @@
 ---
 title: Examples
 group: /
-order: 5.5
+order: 4
+subGroup: advanced
 ---
+
+import { Link } from 'react-router-dom'
 
 # Example: develop a component library
 
@@ -29,7 +32,7 @@ src
 └── index.ts
 ```
 
-You want to use vite as your local demo development environment (because it is blazingly fast). **How to collect all components and all demos from this project?** The file structure doesn't follow our "Basic Filesystem Routing Convention".
+You want to use vite as your local demo development environment (because it is blazingly fast). **How to collect all components and all demos from this project?** The file structure doesn't follow the <Link to="/fs-routing">Basic Filesystem Routing Convention</Link>.
 
 The answer: implement your own filesystem routing convention!
 
@@ -49,44 +52,46 @@ module.exports = {
       pagesDir: path.join(__dirname, 'pages'),
       pageStrategy: new DefaultPageStrategy({
         extraFindPages: async (pagesDir, helpers) => {
-          const demosBasePath = path.join(__dirname, 'src')
-          // find all component demos
-          helpers.watchFiles(
-            demosBasePath,
-            '*/demos/**/*.{[tj]sx,md?(x)}',
-            async function fileHandler(file, api) {
-              const { relative, path: absolute } = file
-              const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
-              if (!match) throw new Error('unexpected file: ' + absolute)
-              const [_, componentName, demoPath] = match
-              const pageId = `/${componentName}`
-              const runtimeDataPaths = api.getRuntimeData(pageId)
-              runtimeDataPaths[demoPath] = absolute
-              const staticData = api.getStaticData(pageId)
-              staticData[demoPath] = await helpers.extractStaticData(file)
-              if (!staticData.title)
-                staticData.title = `${componentName} Title`
-            }
-          )
+          const srcPath = path.join(__dirname, 'src')
+
+          if (process.env.NODE_ENV) {
+            // show all component demos during dev
+            // put them in page `/components/demos/${componentName}`
+            helpers.watchFiles(
+              srcPath,
+              '*/demos/**/*.{[tj]sx,md?(x)}',
+              async function fileHandler(file, api) {
+                const { relative, path: absolute } = file
+                const match = relative.match(
+                  /(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/
+                )
+                if (!match) throw new Error('unexpected file: ' + absolute)
+                const [_, componentName, demoName] = match
+                const pageId = `/components/demos/${componentName}`
+                // set page data
+                const runtimeDataPaths = api.getRuntimeData(pageId)
+                // the ?demo query will wrap the module with useful demoInfo
+                runtimeDataPaths[demoName] = `${absolute}?demo`
+              }
+            )
+          }
 
           // find all component README
           helpers.watchFiles(
-            demosBasePath,
+            srcPath,
             '*/README.md?(x)',
             async function fileHandler(file, api) {
               const { relative, path: absolute } = file
               const match = relative.match(/(.*)\/README\.mdx?$/)
               if (!match) throw new Error('unexpected file: ' + absolute)
               const [_, componentName] = match
-              const pageId = `/${componentName}`
+              const pageId = `/components/${componentName}`
+              // set page data
               const runtimeDataPaths = api.getRuntimeData(pageId)
-              runtimeDataPaths['README'] = absolute
+              runtimeDataPaths.main = absolute
+              // set page staticData
               const staticData = api.getStaticData(pageId)
-              staticData['README'] = await helpers.extractStaticData(file)
-              // make sure the title data is bound to this file
-              staticData.title = undefined
-              staticData.title =
-                staticData['README'].title ?? `${componentName} Title`
+              staticData.main = await helpers.extractStaticData(file)
             }
           )
         },
@@ -103,12 +108,12 @@ module.exports = {
 
 We use `api.getRuntimeData(pageId)` and `api.getStaticData(pageId)` inside fileHandlers to get the pageData object. We can mutate the data object, and vite-pages will update its pages accordingly.
 
-Checkout the complete example in [the custom-find-pages fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/playground/custom-find-pages).
-Or you can **initialize such a project in one command**: `npm init vite-pages library-demo --template lib`
+Checkout the complete example in [the library project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/create-project/template-lib/vite.config.ts).
+You can initialize this project with command: `npm init vite-pages library-demo --template lib`.
 
 ## Monorepo
 
-In some cases, we want to publish each component in their own package.
+In some cases, we want to publish each component in their own packages.
 
 > Monorepo has more advantages when components are complex and tend to evolve independently. If we use a single package to publish all these components like the above example, all components share a version number. If we need to introduce a breaking change in a component, we have to bump the major version of the whole package. But with the monorepo we only need to bump the major version of that sub-package. Users will be more confident to upgrade.
 
@@ -144,5 +149,5 @@ packages
 └── package.json
 ```
 
-Checkout the complete example in [the lib-monorepo fixture](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages/playground/lib-monorepo).
-Or you can **initialize such a project in one command**: `npm init vite-pages library-monorepo-demo --template lib-monorepo`.
+Checkout the complete example in [the lib-monorepo scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/create-project/template-lib-monorepo/packages/demos/vite.demos.ts).
+You can initialize this project with command: `npm init vite-pages library-monorepo-demo --template lib-monorepo`.

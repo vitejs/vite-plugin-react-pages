@@ -6,6 +6,7 @@ export default createTheme({
     {
       label: 'Github',
       href: 'https://github.com/vitejs/vite-plugin-react-pages',
+      icon: '⭐',
     },
   ],
   logo: <div style={{ marginLeft: 40, fontSize: '20px' }}>Vite Pages</div>,

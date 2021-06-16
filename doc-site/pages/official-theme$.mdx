@@ -1,0 +1,197 @@
+---
+order: 0.5
+---
+
+import { Link } from 'react-router-dom'
+
+# Official Theme
+
+`vite-pages-theme-doc` is an official theme of vite-pages. It should satisfy most users' needs. This document site is powered by this theme.
+
+## How to use
+
+You should config the theme in `_theme.tsx`:
+
+```tsx
+// _theme.tsx
+import React from 'react'
+import { createTheme } from 'vite-pages-theme-doc'
+
+export default createTheme({
+  topNavs: [
+    { label: 'index', path: '/' },
+    { label: 'Vite', href: 'https://github.com/vitejs/vite' },
+  ],
+  logo: 'Vite Pages',
+  // Other configs...
+})
+```
+
+[Here is a complete example](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages/playground/use-theme-doc).
+
+## Auto side menu generation
+
+Doc theme can generation a side menu automatically, based on the pages information.
+
+You can control the title/sorting/grouping of the side menu, by notating these <Link to="/page-data#static-data">page static data</Link>:
+
+- title
+- order (default order is 1)
+- group (explain later)
+- subGroup (explain later)
+
+### How side menu generation works
+
+For example, if your site has these pages:
+
+```
+/
+/playground
+/components
+/components/button
+/components/card
+/references/glossary
+/references/apis/api1
+/references/apis/api2
+/references/error-codes/code1
+/references/error-codes/code2
+```
+
+First, it will first divide them into `group`s:
+
+```
+group /:
+  /
+  /playground
+
+group components:
+  /components
+  /components/button
+  /components/card
+
+group references:
+  /references/glossary
+  /references/apis/api1
+  /references/apis/api2
+  /references/error-codes/code1
+  /references/error-codes/code2
+```
+
+The classification of `group`s is based on the **first segment** of pages' path. You can also customize it in page static data.
+
+Then, it will divide them into `subGroup`s:
+
+```
+group /:
+  subGroup /:
+    /
+    /playground
+
+group components:
+  subGroup /:
+    /components
+    /components/button
+    /components/card
+
+group references:
+  subGroup /:
+    /references/glossary
+  subGroup apis:
+    /references/apis/api1
+    /references/apis/api2
+  subGroup error-codes:
+    /references/error-codes/code1
+    /references/error-codes/code2
+```
+
+The classification of `subGroup`s is based on the **second segment** of pages' path. You can also customize it in page static data.
+
+What is the meanings of `group` and `subGroup`?
+
+- `group` is isolation boundary: we only display **one** `group` at a time. If a user open a page in group `references`, he/she will only see menu items from that group. He/She will not see menu items from `components` group.
+- `subGroup` is how we actual grouping menu items in sider. All pages with same `subGroup` will be displayed together. This document site is an example.
+
+## Theme configs
+
+The `createTheme` exported by `vite-pages-theme-doc` accepts [these options](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-doc/src/index.tsx):
+
+```ts
+interface ThemeConfig {
+  /**
+   * Logo at top bar
+   */
+  logo?: React.ReactNode
+  /**
+   * Logo link path
+   * @defaultValue "/"
+   */
+  logoLink?: string | null
+  /**
+   * Navigation menu at top bar.
+   */
+  topNavs?: ReadonlyArray<MenuConfig>
+  /**
+   * Side menu.
+   */
+  sideNavs?:
+    | ReadonlyArray<MenuConfig>
+    | ((ctx: SideNavsContext) => ReadonlyArray<MenuConfig> | null | undefined)
+  /**
+   * Extra area at top bar.
+   */
+  TopBarExtra?: React.ComponentType
+}
+
+interface SideNavsContext {
+  readonly loadState: LoadState
+  readonly loadedData: PagesLoaded
+  readonly staticData: Record<string, any>
+}
+
+type MenuConfig =
+  | {
+      readonly label: string
+      /**
+       * The url.
+       * @example 'https://www.google.com/'
+       */
+      readonly href: string
+      readonly icon?: React.ReactNode
+    }
+  | {
+      readonly label: string
+      /**
+       * The path in the current webapp.
+       * @example '/posts/hello-world'
+       */
+      readonly path: string
+      readonly icon?: React.ReactNode
+      /**
+       * The menu item will show an "active" state
+       * if it matches with current browsing path.
+       */
+      readonly activeIfMatch?: string | string[] | RouteProps
+    }
+  | {
+      /**
+       * The label of the subnav
+       */
+      readonly subMenu: string
+      readonly children: ReadonlyArray<MenuConfig>
+      readonly icon?: React.ReactNode
+      readonly activeIfMatch?: string | string[] | RouteProps
+    }
+  | {
+      /**
+       * The label of the nav group
+       */
+      readonly group: string
+      readonly children: ReadonlyArray<MenuConfig>
+    }
+```
+
+## Fully theme customization
+
+If the basic theme doesn't satisfy your need, you can <Link to="/theme-customization">create your own theme</Link>.
+
+> Contributions to [the theme](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages/theme-doc) are always welcomed.

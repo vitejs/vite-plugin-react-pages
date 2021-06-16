@@ -1,15 +1,16 @@
 ---
 title: Theme Customization
 order: 3
+subGroup: advanced
 ---
 
 import { Link } from 'react-router-dom'
 
 # Theme customization
 
-> This is an advance guide about how to make a theme by yourself. If there is already themes that meet your needs(.e.g <Link to="/basic-theme">the basic theme</Link>), you don't need to read this guide now!
+> This is an advance guide about how to make a theme by yourself. If there is already themes that meet your needs(.e.g <Link to="/official-theme">the official theme</Link>), you don't need to read this guide now!
 
-Vite-pages itself doesn't render any concrete DOM node. Users can customize **anything** on the page with theme. That's why theme is so powerful.
+Vite-pages itself doesn't render any concrete DOM node. Users can customize **anything** with a theme. That's why theme is so powerful.
 
 To use a theme, users should export their theme from `_theme.tsx`. It should export a React compoent. It will be rendered by vite-pages core, and get useful info from props:
 
@@ -52,7 +53,7 @@ const Theme: Theme = ({ staticData, loadedData, loadState }) => {
 export default Theme
 ```
 
-> Here is a more useful theme: [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/playground/use-theme/pages/_theme.tsx) demonstrate how to use it.
+> Here is a more useful theme: [vite-pages-theme-doc](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-doc/src/index.tsx). Learn more about it in <Link to="/official-theme">this guide</Link>.
 
 You can customize every bits of UI with theme. Welcome to share your theme with a npm package!
 
@@ -104,7 +105,7 @@ As you can see, the theme is easier to use because **theme consumers don't need 
 
 For this reason, we encourage theme providers to export config function like the `createTheme` above.
 
-> You can refer to [vite-pages-theme-basic](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx)
+> You can refer to [vite-pages-theme-doc](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-doc/src/index.tsx)
 
 #### Release the power of Typescript
 
