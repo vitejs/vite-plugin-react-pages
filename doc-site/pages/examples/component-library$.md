@@ -1,6 +1,7 @@
 ---
 title: Examples
-sort: 5.5
+group: /
+order: 5.5
 ---
 
 # Example: develop a component library
