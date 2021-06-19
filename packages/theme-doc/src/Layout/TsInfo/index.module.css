@@ -1,0 +1,8 @@
+.table.table.table {
+  margin-top: 24px;
+  display: table;
+}
+
+.table :global(th) {
+  text-align: left;
+}

@@ -8,9 +8,14 @@ import type { Language } from 'prism-react-renderer'
 interface Props {
   readonly className?: string
   readonly children?: string
+  readonly style?: React.CSSProperties
 }
 
-const CodeBlock = ({ children = '', className = '' }: Props) => {
+const CodeBlock = ({
+  children = '',
+  className = '',
+  style: propStyle,
+}: Props) => {
   const language = className?.replace(/language-/, '') as Language
   return (
     <Highlight
@@ -20,7 +25,10 @@ const CodeBlock = ({ children = '', className = '' }: Props) => {
       language={language}
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
-        <pre className={className} style={style}>
+        <pre
+          className={className}
+          style={propStyle ? { ...style, ...propStyle } : style}
+        >
           {tokens.map((line, i) => (
             <div key={i} {...getLineProps({ line, key: i })}>
               {line.map((token, key) => (

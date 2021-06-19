@@ -1,13 +1,18 @@
 ---
 title: Card title
+subGroup: data-display
 ---
 
 # Card
 
-This is a **markdown** description of the `Card` component.
+This is a **markdown** document of the `Card` component.
 
-This is a composed page with data from three files:
+You can put this page in a subGroup of the side menu using `staticData.subGroup`.
 
-- `README.md`
-- `demos/demo1.tsx`
-- `demos/demo2.tsx`
+## demos
+
+You can import demos like this:
+
+<Demo src="./demos/demo1.tsx" />
+
+<Demo src="./demos/demo2.tsx" />

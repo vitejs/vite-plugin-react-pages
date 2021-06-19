@@ -1,9 +1,9 @@
-## vite-pages library starter
+# vite-pages library starter
 
 This is a demo project for [vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages).
 This project demonstrate how to develop a library using vite as your local develop envirenment.
 
-# How to use
+## How to use
 
 `npm install` or `yarn`
 

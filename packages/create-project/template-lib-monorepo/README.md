@@ -1,9 +1,9 @@
-## vite-pages library-monorepo starter
+# vite-pages library-monorepo starter
 
 This is a demo project for [vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages).
 This project demonstrate how to develop libraries **in monorepo** using vite as your local develop envirenment.
 
-# How to use
+## How to use
 
 `yarn` (require yarn 1.x)
 

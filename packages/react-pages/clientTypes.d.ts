@@ -67,3 +67,22 @@ export interface PagesInternal {
     readonly staticData: any
   }
 }
+
+// the result of tsInfo extraction
+export interface TsInterfaceInfo {
+  name: string
+  // commentText: string
+  description: string
+  // fullText: string
+  properties: TsInterfacePropertyInfo[]
+}
+
+export interface TsInterfacePropertyInfo {
+  name: string
+  // commentText: string
+  type: string
+  description: string
+  defaultValue: string | undefined
+  // fullText: string
+  optional: boolean
+}

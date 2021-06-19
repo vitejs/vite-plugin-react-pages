@@ -5,14 +5,16 @@ export default createTheme({
   logo: <div style={{ marginLeft: 40, fontWeight: 'bold' }}>Vite Pages</div>,
   topNavs: [
     { label: 'Home', path: '/' },
-    { label: 'Users', path: '/users' },
+    { label: 'Users', path: '/users', activeIfMatch: '/users' },
     {
       label: 'Guide',
       path: '/guide/introduce',
+      activeIfMatch: '/guide',
     },
     {
       label: 'Reference',
       path: '/reference/glossary',
+      activeIfMatch: '/reference',
     },
     { label: 'Vite', href: 'https://github.com/vitejs/vite' },
     {
@@ -26,7 +28,7 @@ export default createTheme({
     }
     return defaultSideNavs(ctx, {
       groupConfig: {
-        '/reference': {
+        reference: {
           concepts: {
             label: 'Concepts',
             order: 1,

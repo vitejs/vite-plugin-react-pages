@@ -23,14 +23,12 @@ module.exports = {
               const { relative, path: absolute } = file
               const match = relative.match(/(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/)
               if (!match) throw new Error('unexpected file: ' + absolute)
-              const [_, componentName, demoPath] = match
-              const pageId = `/${componentName}`
+              const [_, componentName, demoName] = match
+              const pageId = `/components/demos/${componentName}`
+              // set page data
               const runtimeDataPaths = api.getRuntimeData(pageId)
-              runtimeDataPaths[demoPath] = absolute
-              const staticData = api.getStaticData(pageId)
-              staticData[demoPath] = await helpers.extractStaticData(file)
-              if (!staticData.title)
-                staticData.title = `${componentName} Title`
+              // the ?demo query will wrap the module with useful demoInfo
+              runtimeDataPaths[demoName] = `${absolute}?demo`
             }
           )
 
@@ -43,15 +41,13 @@ module.exports = {
               const match = relative.match(/(.*)\/README\.mdx?$/)
               if (!match) throw new Error('unexpected file: ' + absolute)
               const [_, componentName] = match
-              const pageId = `/${componentName}`
+              const pageId = `/components/${componentName}`
+              // set page data
               const runtimeDataPaths = api.getRuntimeData(pageId)
-              runtimeDataPaths['README'] = absolute
+              runtimeDataPaths.main = absolute
+              // set page staticData
               const staticData = api.getStaticData(pageId)
-              staticData['README'] = await helpers.extractStaticData(file)
-              // make sure the title data is bound to this file
-              staticData.title = undefined
-              staticData.title =
-                staticData['README'].title ?? `${componentName} Title`
+              staticData.main = await helpers.extractStaticData(file)
             }
           )
         },
@@ -68,7 +64,7 @@ module.exports = {
     // should not external them in ssr build,
     // otherwise the ssr bundle will contains `require("my-button")`
     // which will result in error
-    noExternal: ["my-button", "my-card"],
+    noExternal: ['my-button', 'my-card'],
   },
   minify: false,
 } as UserConfig

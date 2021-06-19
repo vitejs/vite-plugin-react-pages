@@ -61,7 +61,7 @@ export default createTheme({
     }
     return defaultSideNavs(ctx, {
       groupConfig: {
-        '/reference': {
+        reference: {
           concepts: {
             label: 'Concepts',
             order: 1,
@@ -75,7 +75,6 @@ export default createTheme({
             order: 3,
           },
         },
-        '/components': {},
       },
     })
   },
