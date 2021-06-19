@@ -6,7 +6,7 @@ export class PagesDataKeeper {
   private pages: PagesDataInternal = {}
 
   /**
-   * If the page page does not come from local file,
+   * If the page comes from local file,
    * then we create this api to track the source of page data.
    * When a file is unlinked,
    * the data associated with it will automatically get deleted.
