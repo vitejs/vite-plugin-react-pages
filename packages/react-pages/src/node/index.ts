@@ -1,4 +1,5 @@
 import * as path from 'path'
+import fs from 'fs-extra'
 import type { Plugin, IndexHtmlTransformContext } from 'vite'
 import type { MdxPlugin } from 'vite-plugin-mdx/dist/types'
 import {
@@ -212,11 +213,13 @@ export { DefaultPageStrategy, defaultFileHandler }
 
 function getRemarkPlugins(root: string) {
   const result: any[] = [demoTransform, tsInfoTransform]
+  const pkgJsonPath = path.join(root, 'package.json')
+  const hasPkgJson = fs.pathExistsSync(pkgJsonPath)
+
   // Inject frontmatter parser if missing
-  const { devDependencies = {}, dependencies = {} } = require(path.join(
-    root,
-    'package.json'
-  ))
+  const { devDependencies = {}, dependencies = {} } = hasPkgJson
+    ? require(pkgJsonPath)
+    : {}
   if (
     !devDependencies['remark-frontmatter'] &&
     !dependencies['remark-frontmatter']
