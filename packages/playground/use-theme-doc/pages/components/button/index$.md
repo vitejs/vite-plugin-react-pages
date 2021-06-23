@@ -10,3 +10,9 @@ demo1:
 
 ButtonProps:
 <TsInfo src="./types.ts" name="ButtonProps" />
+
+ButtonProps with all inherited props:
+<TsInfo src="./types.ts" name="ButtonProps:*" />
+
+ButtonProps with only specific inherited props:
+<TsInfo src="./types.ts" name="ButtonProps:AsProp" />
