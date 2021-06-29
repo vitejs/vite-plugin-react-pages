@@ -1,8 +1,3 @@
-import * as fs from 'fs-extra'
-import * as path from 'path'
-import chokidar, { FSWatcher } from 'chokidar'
-import slash from 'slash'
-
 export class VirtualModuleGraph {
   /**
    * the module inside this graph may be virtule module or real fs module
@@ -22,6 +17,10 @@ export class VirtualModuleGraph {
    */
   private updateQueue = new UpdateQueue()
 
+  getModuleIds(): string[] {
+    return Array.from(this.modules.keys()).map((moduleId) => moduleId)
+  }
+
   getModuleData(moduleId: string): any[] {
     const module = this.modules.get(moduleId)
     if (!module) return []
@@ -30,105 +29,128 @@ export class VirtualModuleGraph {
 
   scheduleUpdate(updaterId: string, updater: Update['updater']) {
     this.updateQueue.push(updaterId, updater)
+    setTimeout(() => {
+      this.executeUpdates()
+    }, 0)
   }
 
-  watchModules() {}
+  private moduleUpdateListeners: ModuleUpdateListener[] = []
+  /**
+   * listen to virtule module updates.
+   * users can scheduleUpdate in these listeners, creating dependency chain of
+   * virtule modules.
+   * (.i.e when a virtule module changes, it will update another virtule module)
+   *
+   * return unsubscribe function
+   */
+  subscribeModuleUpdate(cb: ModuleUpdateListener) {
+    this.moduleUpdateListeners.push(cb)
+    return () => {
+      const index = this.moduleUpdateListeners.indexOf(cb)
+      if (index === -1) return
+      this.moduleUpdateListeners.splice(index, 1)
+    }
+  }
+  private callModuleUpdateListeners(updatedModules: Set<Module>) {
+    updatedModules.forEach((m) => {
+      const data = m.getData()
+      this.moduleUpdateListeners.forEach((moduleUpdateListener) => {
+        moduleUpdateListener(m.id, data)
+      })
+    })
+  }
 
-  onRenderModule() {}
+  private executing = false
+  private async executeUpdates() {
+    if (this.executing) return
+    // record the updatedModules so that we can call moduleUpdateListeners in the end
+    // only virtule modules can be updated and recorded
+    const updatedModules = new Set<Module>()
+    this.executing = true
+    while (true) {
+      const update = this.updateQueue.pop()
+      if (!update) break
+      this.cleanUpdateEffects(update.updaterId)
+      const { disableAPIs, ...apis } = this.createUpdateAPIs(
+        update.updaterId,
+        updatedModules
+      )
+      await update.updater(apis)
+      disableAPIs()
+    }
+    this.executing = false
+    this.callModuleUpdateListeners(updatedModules)
+  }
 
-  onModuleUpdate() {}
+  private createUpdateAPIs(
+    updaterId: string,
+    updatedModules: Set<Module>
+  ): UpdaterAPIs & { disableAPIs(): void } {
+    let outdated = false
+    const _this = this
+    const OUTDATED_ERROR_MSG = `Update APIs is outdated. You should call them during the updater async function.`
+    return {
+      addModuleData(moduleId: string, data: any, upstreamModuleId: string) {
+        if (outdated) throw new Error(OUTDATED_ERROR_MSG)
+        // It should be noted that the moduleId and upstreamModuleId
+        // may be real files in fs
+        const fromModule = _this.ensureModule(upstreamModuleId)
+        const toModule = _this.ensureModule(moduleId)
+        updatedModules.add(toModule)
+        Edge.addEdge(fromModule, toModule, data, updaterId)
+      },
+      getModuleData(moduleId: string) {
+        if (outdated) throw new Error(OUTDATED_ERROR_MSG)
+        return _this.getModuleData(moduleId)
+      },
+      deleteModule(moduleId: string) {
+        if (outdated) throw new Error(OUTDATED_ERROR_MSG)
+        const module = _this.modules.get(moduleId)
+        if (!module) return
+        module.unlink()
+        _this.modules.delete(moduleId)
+      },
+      disableAPIs() {
+        outdated = true
+      },
+    }
+  }
 
-  private ensureModule(
-    moduleId: string,
-    newModuleType: Module['moduleType']
-  ): Module {
+  private ensureModule(moduleId: string): Module {
     let result = this.modules.get(moduleId)
     if (!result) {
-      result = new Module(moduleId, newModuleType)
+      result = new Module(moduleId)
       this.modules.set(moduleId, result)
     }
     return result
   }
 
-  private createUpdateAPIs(updaterId: string): UpdaterAPIs {
-    const _this = this
-    return {
-      updateModule(moduleId: string, data: any, upstreamModuleId: string) {
-        // fromModule must be a fs module if it doesn't exist before
-        const fromModule = _this.ensureModule(upstreamModuleId, 'fs')
-        // target module must be a virtule module
-        const toModule = _this.ensureModule(moduleId, 'virtule')
-        Edge.addEdge(fromModule, toModule, data, updaterId)
-      },
-      getModuleData(moduleId: string) {
-        return _this.getModuleData(moduleId)
-      },
-      deleteFsModule(moduleId: string) {
-        const module = _this.modules.get(moduleId)
-        if (!module) return
-        
-      },
-    }
-  }
-
   private cleanUpdateEffects(updaterId: string) {
     deleteAllEdgesWithUpdaterId(updaterId)
   }
-  public async executeUpdates() {
-    while (true) {
-      const update = this.updateQueue.pop()
-      if (!update) return
-
-      this.cleanUpdateEffects(update.updaterId)
-      const apis = this.createUpdateAPIs(update.updaterId)
-      await update.updater(apis)
-    }
-  }
 }
 
-class Update {
-  constructor(
-    public updaterId: string,
-    public updater: (apis: UpdaterAPIs) => void
-  ) {}
-}
-
-class UpdateQueue {
-  private queue: Update[] = []
-  private map = new Map<string, Update>()
-
-  get size() {
-    return this.queue.length
-  }
-
-  push(updaterId: string, updater: Update['updater']) {
-    if (this.map.has(updaterId)) return
-    const update = new Update(updaterId, updater)
-    this.queue.push(update)
-    this.map.set(updaterId, update)
-  }
-
-  pop() {
-    const update = this.queue.shift()
-    if (!update) return null
-    const { updaterId } = update
-    this.map.delete(updaterId)
-    return update
-  }
-}
+type ModuleUpdateListener = (moduleId: string, data: any[]) => void
 
 /**
- * Module may be fs module or virtule module
- * - fs modules must not have data. But they can have downstreams.
- *    In other words, fs modules can only be data source.
- * - virtule modules can have both data and downstreams.
- *    If a virtule module doesn't have any incoming edge (.i.e data), it doesn't exists.
+ * Modules are nodes in the graph
  */
 class Module {
-  constructor(public id: string, public moduleType: 'fs' | 'virtule') {}
+  constructor(public id: string) {}
 
-  /** has updated, need to update it's downstream */
-  // dirty: boolean
+  public getData() {
+    return Array.from(this.data).map(({ data }) => data)
+  }
+
+  /** unlink this module */
+  public unlink() {
+    this.data.forEach((edge) => {
+      edge.unlink()
+    })
+    this.downstream.forEach((edge) => {
+      edge.unlink()
+    })
+  }
 
   /**
    * incoming edges of the node
@@ -146,24 +168,38 @@ class Module {
    * when a fs module is deleted
    */
   private downstream: Set<Edge> = new Set()
+}
+interface ModuleInternal {
+  data: Set<Edge>
+  downstream: Set<Edge>
+}
 
-  /** bind incoming edge */
-  public addData(edge: Edge) {
-    this.data.add(edge)
-  }
-  public removeData(edge: Edge) {
-    this.data.delete(edge)
-  }
-  public getData() {
-    return Array.from(this.data).map(({ data }) => data)
+class Edge {
+  static addEdge(from: Module, to: Module, data: any, updaterId: string) {
+    const edge = new Edge(from, to, data, updaterId)
+    // set private fields of modules
+    ;(from as unknown as ModuleInternal).downstream.add(edge)
+    ;(to as unknown as ModuleInternal).data.add(edge)
+    bindEdgeWithUpdaterId(edge)
   }
 
-  /** bind outcoming edge */
-  public addDownStream(edge: Edge) {
-    this.downstream.add(edge)
-  }
-  public removeDownStream(edge: Edge) {
-    this.downstream.delete(edge)
+  private constructor(
+    public from: Module,
+    public to: Module,
+    public data: any,
+    public updaterId: string
+  ) {}
+
+  private hasUnlinked = false
+  public unlink() {
+    if (this.hasUnlinked) {
+      return
+    }
+    // set private fields of modules
+    ;(this.from as unknown as ModuleInternal).downstream.delete(this)
+    ;(this.to as unknown as ModuleInternal).data.delete(this)
+    unbindEdgeWithUpdaterId(this)
+    this.hasUnlinked = true
   }
 }
 
@@ -193,35 +229,37 @@ function deleteAllEdgesWithUpdaterId(updaterId: string) {
   edges.clear()
 }
 
-class Edge {
-  static addEdge(from: Module, to: Module, data: any, updaterId: string) {
-    const edge = new Edge(from, to, data, updaterId)
-    if (to.moduleType === 'fs')
-      throw new Error(`target module must be a virtule module`)
-    from.addDownStream(edge)
-    to.addData(edge)
-    bindEdgeWithUpdaterId(edge)
-  }
-
-  private constructor(
-    public from: Module,
-    public to: Module,
-    public data: any,
-    public updaterId: string
-  ) {}
-
-  private hasUnlinked = false
-  public unlink() {
-    if (this.hasUnlinked) return
-    this.from.removeDownStream(this)
-    this.to.removeData(this)
-    unbindEdgeWithUpdaterId(this)
-    this.hasUnlinked = true
-  }
+export interface UpdaterAPIs {
+  addModuleData(moduleId: string, data: any, upstreamModuleId: string): void
+  getModuleData(moduleId: string): any[]
+  deleteModule(moduleId: string): void
 }
 
-interface UpdaterAPIs {
-  updateModule(moduleId: string, data: any, upstreamModuleId: string): void
-  getModuleData(moduleId: string): any[]
-  deleteFsModule(moduleId: string): void
+class Update {
+  constructor(
+    public updaterId: string,
+    public updater: (apis: UpdaterAPIs) => void
+  ) {}
+}
+
+class UpdateQueue {
+  private queue: Update[] = []
+  private map = new Map<string, Update>()
+  get size() {
+    return this.queue.length
+  }
+  push(updaterId: string, updater: Update['updater']) {
+    // ignore it if the updaterId is already in the queue
+    if (this.map.has(updaterId)) return
+    const update = new Update(updaterId, updater)
+    this.queue.push(update)
+    this.map.set(updaterId, update)
+  }
+  pop() {
+    const update = this.queue.shift()
+    if (!update) return null
+    const { updaterId } = update
+    this.map.delete(updaterId)
+    return update
+  }
 }
