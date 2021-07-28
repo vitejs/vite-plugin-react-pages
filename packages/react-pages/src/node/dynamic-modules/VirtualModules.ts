@@ -11,7 +11,8 @@ export class VirtualModuleGraph {
    * If there is already a queuing update with same updaterId,
    * it won't schedule a new one.
    *
-   * Before executing an updater, it will clean the effects of previous execution of same updaterId. This will be convenience for users,
+   * Before executing an updater, it will automatically clean the effects of
+   * previous update with same updaterId. This will be convenience for users,
    * because they don't need to manually clean the previous effects of a file
    * when a file updates.
    */
@@ -88,7 +89,7 @@ export class VirtualModuleGraph {
   ): UpdaterAPIs & { disableAPIs(): void } {
     let outdated = false
     const _this = this
-    const OUTDATED_ERROR_MSG = `Update APIs is outdated. You should call them during the updater async function.`
+    const OUTDATED_ERROR_MSG = `You should not call update APIs after the updater async function.`
     return {
       addModuleData(moduleId: string, data: any, upstreamModuleId: string) {
         if (outdated) throw new Error(OUTDATED_ERROR_MSG)
@@ -226,6 +227,10 @@ function deleteAllEdgesWithUpdaterId(updaterId: string) {
   edges.forEach((edge) => {
     edge.unlink()
   })
+  if (edges.size > 0)
+    throw new Error(
+      `assertion fail: all edges with updaterId should already be unlinked`
+    )
   edges.clear()
 }
 
@@ -249,7 +254,7 @@ class UpdateQueue {
     return this.queue.length
   }
   push(updaterId: string, updater: Update['updater']) {
-    // ignore it if the updaterId is already in the queue
+    // ignore it if the updaterId already exists in the queue
     if (this.map.has(updaterId)) return
     const update = new Update(updaterId, updater)
     this.queue.push(update)
