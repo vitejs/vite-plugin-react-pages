@@ -117,7 +117,7 @@ export class VirtualModuleGraph {
         if (outdated) throw new Error(OUTDATED_ERROR_MSG)
         const module = _this.modules.get(moduleId)
         if (!module) return
-        module.unlink()
+        module.delete()
         _this.modules.delete(moduleId)
       },
       disableAPIs() {
@@ -149,7 +149,7 @@ class Module {
   }
 
   /** unlink this module */
-  public unlink() {
+  public delete() {
     this.data.forEach((edge) => {
       edge.unlink()
     })
