@@ -12,9 +12,7 @@ export class VirtualModuleGraph {
    * it won't schedule a new one.
    *
    * Before executing an updater, it will automatically cleanup the effects of
-   * previous update with same updaterId. This will be convenience for users,
-   * because they don't need to manually clean the previous effects of a file
-   * when a file updates.
+   * previous update with same updaterId.
    */
   private updateQueue = new UpdateQueue()
 
@@ -30,9 +28,12 @@ export class VirtualModuleGraph {
 
   scheduleUpdate(updaterId: string, updater: Update['updater']) {
     this.updateQueue.push(updaterId, updater)
-    setTimeout(() => {
-      this.executeUpdates()
-    }, 0)
+    // don't schedule setTimeout if there is already one
+    if (this.updateQueue.size === 1) {
+      setTimeout(() => {
+        this.executeUpdates()
+      }, 0)
+    }
   }
 
   private moduleUpdateListeners: ModuleUpdateListener[] = []
@@ -62,8 +63,12 @@ export class VirtualModuleGraph {
   }
 
   private executing = false
-  private async executeUpdates() {
+  private async executeUpdates(depth = 1) {
     if (this.executing) return
+    if (depth > MAX_CASCADE_UPDATE_DEPTH)
+      throw new Error(
+        `Cascaded updates exceed max depth ${MAX_CASCADE_UPDATE_DEPTH}. Probably because the depth of the virtule module tree is too high, or there is a cycle in the virtule module graph.`
+      )
     // record the updatedModules so that we can call moduleUpdateListeners in the end
     // only virtule modules can be updated and recorded
     const updatedModules = new Set<Module>()
@@ -82,6 +87,9 @@ export class VirtualModuleGraph {
     }
     this.executing = false
     this.callModuleUpdateListeners(updatedModules)
+    // if the ModuleUpdateListeners schedule updates,
+    // execute them synchronously and recursively
+    this.executeUpdates(depth + 1)
   }
 
   private createUpdateAPIs(
@@ -269,3 +277,6 @@ class UpdateQueue {
     return update
   }
 }
+
+// it indicates the depth of virtule modules
+const MAX_CASCADE_UPDATE_DEPTH = 10
