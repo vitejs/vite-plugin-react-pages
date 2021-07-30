@@ -11,7 +11,7 @@ export class VirtualModuleGraph {
    * If there is already a queuing update with same updaterId,
    * it won't schedule a new one.
    *
-   * Before executing an updater, it will automatically clean the effects of
+   * Before executing an updater, it will automatically cleanup the effects of
    * previous update with same updaterId. This will be convenience for users,
    * because they don't need to manually clean the previous effects of a file
    * when a file updates.
@@ -71,7 +71,8 @@ export class VirtualModuleGraph {
     while (true) {
       const update = this.updateQueue.pop()
       if (!update) break
-      this.cleanUpdateEffects(update.updaterId)
+      // cleanup the effects of previous update with same updaterId
+      cleanupEdgesWithUpdaterId(update.updaterId, updatedModules)
       const { disableAPIs, ...apis } = this.createUpdateAPIs(
         update.updaterId,
         updatedModules
@@ -124,10 +125,6 @@ export class VirtualModuleGraph {
       this.modules.set(moduleId, result)
     }
     return result
-  }
-
-  private cleanUpdateEffects(updaterId: string) {
-    deleteAllEdgesWithUpdaterId(updaterId)
   }
 }
 
@@ -221,10 +218,14 @@ function unbindEdgeWithUpdaterId(edge: Edge) {
     throw new Error(`assertion fail: unlinkEdgeWithUpdaterId`)
   edges.delete(edge)
 }
-function deleteAllEdgesWithUpdaterId(updaterId: string) {
+function cleanupEdgesWithUpdaterId(
+  updaterId: string,
+  affectedModules: Set<Module>
+) {
   const edges = mapUpdaterIdToEdges.get(updaterId)
   if (!edges) return
   edges.forEach((edge) => {
+    affectedModules.add(edge.to)
     edge.unlink()
   })
   if (edges.size > 0)
