@@ -4,6 +4,7 @@ import chokidar, { FSWatcher } from 'chokidar'
 import slash from 'slash'
 
 import { VirtualModuleGraph } from './VirtualModules'
+import { PendingTaskCounter } from './utils'
 
 let nextWatcherId = 0
 
@@ -14,6 +15,14 @@ export class VirtualModulesManager {
   private watchers = new Set<FSWatcher>()
   private virtuleModules = new VirtualModuleGraph()
   private fileCache: { [path: string]: File } = {}
+  /**
+   * don't return half-finished data when there are pending tasks
+   */
+  private pendingTaskCounter = new PendingTaskCounter()
+
+  constructor() {
+    this.pendingTaskCounter.countVolatileTask(this.virtuleModules.executeState)
+  }
 
   public addFSWatcher(
     globs: string[],
@@ -21,6 +30,10 @@ export class VirtualModulesManager {
     fileHandler: FileHandler
   ) {
     const watcherId = String(nextWatcherId++)
+
+    // should wait for a complete fs scan
+    // before returning the page data
+    const fsScanFinish = this.pendingTaskCounter.countTask()
 
     this.watchers.add(
       chokidar
@@ -31,7 +44,33 @@ export class VirtualModulesManager {
         .on('add', this.handleFileChange(baseDir, fileHandler, watcherId))
         .on('change', this.handleFileChange.bind(this))
         .on('unlink', this.handleFileUnLink(baseDir, watcherId))
-      // .on('ready', () => fsScanFinish())
+        .on('ready', () => fsScanFinish())
+    )
+  }
+
+  public async getModules(filter?: (moduleId: string) => boolean) {
+    return new Promise<{ [id: string]: any[] }>((resolve) => {
+      this.pendingTaskCounter.callOnceWhenEmpty(() => {
+        let ids = this.virtuleModules.getModuleIds()
+        if (filter) ids = ids.filter(filter)
+        const modules: { [id: string]: any[] } = {}
+        ids.forEach((id) => {
+          modules[id] = this.virtuleModules.getModuleData(id)
+        })
+        resolve(modules)
+      })
+    })
+  }
+
+  public addVirtuleModuleWatcher(
+    handler: (moduleId: string, data: any[]) => void,
+    filter?: (moduleId: string) => boolean
+  ) {
+    return this.virtuleModules.subscribeModuleUpdate(
+      (moduleId: string, data: any[]) => {
+        if (filter && !filter(moduleId)) return
+        handler(moduleId, data)
+      }
     )
   }
 

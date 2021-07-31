@@ -59,3 +59,53 @@ function extractMarkdownTitle(code: string) {
   const match = code.match(/^# (.*)$/m)
   return match?.[1]
 }
+
+// theoretically, PendingTaskCounter can implement VolatileTask interface
+// (the whole PendingTaskCounter is a busy task when count > 0)
+// but currently it is not needed
+export class PendingTaskCounter {
+  private count = 0
+  private callbacks: (() => void)[] = []
+
+  public countTask() {
+    this.count++
+    let ended = false
+    return () => {
+      if (ended) return
+      ended = true
+      this.count--
+      if (this.count === 0) {
+        this.callbacks.forEach((cb) => cb())
+        this.callbacks.length = 0
+      }
+    }
+  }
+
+  public callOnceWhenEmpty(cb: () => void) {
+    if (this.count === 0) {
+      cb()
+    } else {
+      this.callbacks.push(cb)
+    }
+  }
+
+  public countVolatileTask(volatileTaskState: VolatileTaskState) {
+    let stopCounting: undefined | (() => void)
+    volatileTaskState.onStateChange((isBusy) => {
+      if (isBusy) {
+        // if this task is already counting, don't count again
+        if (stopCounting) return
+        stopCounting = this.countTask()
+      } else {
+        stopCounting?.()
+      }
+    })
+  }
+}
+
+/**
+ * VolatileTask has state that change between "busy" and "free"
+ */
+export interface VolatileTaskState {
+  onStateChange: (cb: (isBusy: boolean) => void) => void
+}
