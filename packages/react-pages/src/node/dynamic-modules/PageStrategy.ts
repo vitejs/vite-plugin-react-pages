@@ -203,9 +203,7 @@ export interface PageHelpers extends HandlerAPI {
   /**
    * Read the static data from a file.
    */
-  readonly extractStaticData: (
-    file: File
-  ) => Promise<{
+  readonly extractStaticData: (file: File) => Promise<{
     readonly [key: string]: any
     readonly sourceType: string
   }>

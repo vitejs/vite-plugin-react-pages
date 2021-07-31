@@ -72,14 +72,15 @@ export class VirtualModuleGraph {
   private executing = false
   private async executeUpdates(depth = 1) {
     if (this.executing) return
+    if (this.updateQueue.size === 0) return
     if (depth > MAX_CASCADE_UPDATE_DEPTH)
       throw new Error(
         `Cascaded updates exceed max depth ${MAX_CASCADE_UPDATE_DEPTH}. Probably because the depth of the virtule module tree is too high, or there is a cycle in the virtule module graph.`
       )
+    this.executing = true
     // record the updatedModules so that we can call moduleUpdateListeners in the end
     // only virtule modules can be updated and recorded
     const updatedModules = new Set<Module>()
-    this.executing = true
     while (true) {
       const update = this.updateQueue.pop()
       if (!update) break
@@ -109,6 +110,10 @@ export class VirtualModuleGraph {
     return {
       addModuleData(moduleId: string, data: any, upstreamModuleId: string) {
         if (outdated) throw new Error(OUTDATED_ERROR_MSG)
+        if (moduleId === upstreamModuleId)
+          throw new Error(
+            `addModuleData param error: source and target modules are the same`
+          )
         // upstreamModuleId may be real file in fs
         const fromModule = _this.ensureModule(upstreamModuleId)
         const toModule = _this.ensureModule(moduleId)
@@ -123,7 +128,7 @@ export class VirtualModuleGraph {
         if (outdated) throw new Error(OUTDATED_ERROR_MSG)
         const module = _this.modules.get(moduleId)
         if (!module) return
-        module.delete()
+        module.delete(updatedModules)
         _this.modules.delete(moduleId)
       },
       disableAPIs() {
@@ -155,11 +160,15 @@ class Module {
   }
 
   /** unlink this module */
-  public delete() {
-    this.data.forEach((edge) => {
-      edge.unlink()
-    })
+  public delete(updatedModules: Set<Module>) {
+    if (this.data.size > 0) {
+      // there are upstream modules that are "piping" data to this module
+      throw new Error(
+        `This module has upstream modules. You should delete modules in topological order. moduleID: ${this.id}`
+      )
+    }
     this.downstream.forEach((edge) => {
+      updatedModules.add(edge.to)
       edge.unlink()
     })
   }
