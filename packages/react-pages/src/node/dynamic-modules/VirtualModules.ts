@@ -1,3 +1,5 @@
+import type { VolatileTaskState } from './utils'
+
 export class VirtualModuleGraph {
   /**
    * the module inside this graph may be virtule module or real fs module
@@ -69,15 +71,25 @@ export class VirtualModuleGraph {
     })
   }
 
-  private executing = false
-  private async executeUpdates(depth = 1) {
-    if (this.executing) return
+  public executeState = new ExecuteState()
+  // private executing = false
+  // executeUpdates_Inner is not reentrant
+  private async executeUpdates() {
+    if (this.executeState.executing) return
+    this.executeState.executing = true
+    try {
+      await this.executeUpdates_Inner()
+    } finally {
+      this.executeState.executing = false
+    }
+  }
+  private async executeUpdates_Inner(depth = 1) {
     if (this.updateQueue.size === 0) return
     if (depth > MAX_CASCADE_UPDATE_DEPTH)
       throw new Error(
         `Cascaded updates exceed max depth ${MAX_CASCADE_UPDATE_DEPTH}. Probably because the depth of the virtule module tree is too high, or there is a cycle in the virtule module graph.`
       )
-    this.executing = true
+
     // record the updatedModules so that we can call moduleUpdateListeners in the end
     // only virtule modules can be updated and recorded
     const updatedModules = new Set<Module>()
@@ -93,11 +105,10 @@ export class VirtualModuleGraph {
       await update.updater(apis)
       disableAPIs()
     }
-    this.executing = false
     this.callModuleUpdateListeners(updatedModules)
     // if the ModuleUpdateListeners schedule updates,
     // execute them synchronously and recursively
-    this.executeUpdates(depth + 1)
+    await this.executeUpdates_Inner(depth + 1)
   }
 
   private createUpdateAPIs(
@@ -295,3 +306,23 @@ class UpdateQueue {
 
 // it indicates the depth of virtule modules
 const MAX_CASCADE_UPDATE_DEPTH = 10
+
+class ExecuteState implements VolatileTaskState {
+  private _executing = false
+  get executing() {
+    return this._executing
+  }
+  set executing(value: boolean) {
+    if (this._executing === value) return
+    this._executing = value
+    this.cbs.forEach((cb) => cb(value))
+  }
+
+  private cbs: Array<(isBusy: boolean) => void> = []
+  onStateChange(cb: (isBusy: boolean) => void) {
+    this.cbs.push(cb)
+    return () => {
+      this.cbs = this.cbs.filter((v) => v !== cb)
+    }
+  }
+}
