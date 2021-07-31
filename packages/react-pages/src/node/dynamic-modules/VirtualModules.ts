@@ -13,6 +13,13 @@ export class VirtualModuleGraph {
    *
    * Before executing an updater, it will automatically cleanup the effects of
    * previous update with same updaterId.
+   * Example:
+   * Find module1 for the first time:
+   *   the updater set data for module2 and module3 (upstreamModule is module1)
+   * Observe that module1 is updated:
+   *   the updater set data for module2 (upstreamModule is module1)
+   * At this time, the data in module3 should be automatically cleanup!
+   * So the updater don't need to manually delete the old data in module3.
    */
   private updateQueue = new UpdateQueue()
 
@@ -102,8 +109,7 @@ export class VirtualModuleGraph {
     return {
       addModuleData(moduleId: string, data: any, upstreamModuleId: string) {
         if (outdated) throw new Error(OUTDATED_ERROR_MSG)
-        // It should be noted that the moduleId and upstreamModuleId
-        // may be real files in fs
+        // upstreamModuleId may be real file in fs
         const fromModule = _this.ensureModule(upstreamModuleId)
         const toModule = _this.ensureModule(moduleId)
         updatedModules.add(toModule)
