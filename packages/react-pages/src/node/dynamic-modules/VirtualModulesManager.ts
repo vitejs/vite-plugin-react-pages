@@ -45,7 +45,7 @@ export class VirtualModulesManager {
           ignored: ['**/node_modules/**/*', '**/.git/**'],
         })
         .on('add', this.handleFileChange(baseDir, fileHandler, watcherId))
-        .on('change', this.handleFileChange.bind(this))
+        .on('change', this.handleFileChange(baseDir, fileHandler, watcherId))
         .on('unlink', this.handleFileUnLink(baseDir, watcherId))
         .on('ready', () => fsScanFinish())
     )
