@@ -3,8 +3,11 @@ import * as path from 'path'
 import chokidar, { FSWatcher } from 'chokidar'
 import slash from 'slash'
 
-import { ModuleUpdateListener, VirtualModuleGraph } from './VirtualModules'
-import { PendingTaskCounter } from './utils'
+import {
+  ModuleUpdateListener,
+  VirtualModuleGraph,
+  VolatileTaskState,
+} from './VirtualModules'
 
 let nextWatcherId = 0
 
@@ -144,5 +147,45 @@ export class File {
 
   read() {
     return this.content || (this.content = fs.readFile(this.path, 'utf-8'))
+  }
+}
+
+class PendingTaskCounter {
+  private count = 0
+  private callbacks: (() => void)[] = []
+
+  public countTask() {
+    this.count++
+    let ended = false
+    return () => {
+      if (ended) return
+      ended = true
+      this.count--
+      if (this.count === 0) {
+        this.callbacks.forEach((cb) => cb())
+        this.callbacks.length = 0
+      }
+    }
+  }
+
+  public callOnceWhenEmpty(cb: () => void) {
+    if (this.count === 0) {
+      cb()
+    } else {
+      this.callbacks.push(cb)
+    }
+  }
+
+  public countVolatileTask(volatileTaskState: VolatileTaskState) {
+    let stopCounting: undefined | (() => void)
+    volatileTaskState.onStateChange((isBusy) => {
+      if (isBusy) {
+        // if this task has already been counted, don't count again
+        if (stopCounting) return
+        stopCounting = this.countTask()
+      } else {
+        stopCounting?.()
+      }
+    })
   }
 }
