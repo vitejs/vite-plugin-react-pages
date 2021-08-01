@@ -1,5 +1,3 @@
-import type { VolatileTaskState } from './utils'
-
 export class VirtualModuleGraph {
   /**
    * the module inside this graph may be virtule module or real fs module
@@ -122,7 +120,7 @@ export class VirtualModuleGraph {
       disableAPIs()
     }
     this.callModuleUpdateListeners(updatedModules)
-    // if the ModuleUpdateListeners schedule updates,
+    // if the listeners schedule more updates,
     // execute them synchronously and recursively
     await this.executeUpdates_Inner(depth + 1)
   }
@@ -346,4 +344,11 @@ class ExecuteState implements VolatileTaskState {
       this.cbs = this.cbs.filter((v) => v !== cb)
     }
   }
+}
+
+/**
+ * VolatileTask has an observable state "isBusy"
+ */
+export interface VolatileTaskState {
+  onStateChange: (cb: (isBusy: boolean) => void) => void
 }
