@@ -18,6 +18,7 @@ import { demoTransform } from './mdx-plugins/demo'
 import { tsInfoModule } from './ts-info-module'
 import { tsInfoTransform } from './mdx-plugins/tsInfo'
 import { injectHTMLTag } from './utils'
+import { VirtualModulesManager } from './dynamic-modules/VirtualModulesManager'
 
 /**
  * This is a public API that users use in their index.html.
@@ -50,6 +51,7 @@ export default function pluginFactory(
   let isBuild: boolean
   let pagesDir: string
   let pageStrategy: PageStrategy
+  let virtualModulesManager = new VirtualModulesManager()
 
   return {
     name: 'vite-plugin-react-pages',
@@ -122,7 +124,7 @@ export default function pluginFactory(
 
       // pageStrategy.start can't be put in configResolved
       // because vite's resolveConfig will call configResolved without calling close hook
-      pageStrategy.start(pagesDir)
+      pageStrategy.start(pagesDir, virtualModulesManager)
     },
     async resolveId(id, importer) {
       if (id === appEntryId) return id

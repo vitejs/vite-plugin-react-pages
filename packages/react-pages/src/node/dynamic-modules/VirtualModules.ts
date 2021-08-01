@@ -35,6 +35,9 @@ export class VirtualModuleGraph {
     return module.getData()
   }
 
+  /**
+   * This is the only way to update virtule modules
+   */
   scheduleUpdate(updaterId: string, updater: Update['updater']) {
     this.updateQueue.push(updaterId, updater)
     // don't schedule setTimeout if there is already one
@@ -45,14 +48,18 @@ export class VirtualModuleGraph {
     }
   }
 
-  private moduleUpdateListeners: ModuleUpdateListener[] = []
   /**
    * listen to virtule module updates.
    * users can scheduleUpdate in these listeners, creating dependency chain of
    * virtule modules.
    * (.i.e when a virtule module changes, it will update another virtule module)
    *
-   * return unsubscribe function
+   * users will reveive new module data and previous module data,
+   * so users can diff them to decide whether the module has "really" changed.
+   * if users think they are the same, the can skip updating other virtule modules.
+   * VirtualModuleGraph works on a very low level. It don't know what module data means. So it send updates event to users very often and let users to interpret module data.
+   *
+   * @return unsubscribe function
    */
   subscribeModuleUpdate(cb: ModuleUpdateListener) {
     this.moduleUpdateListeners.push(cb)
@@ -62,11 +69,14 @@ export class VirtualModuleGraph {
       this.moduleUpdateListeners.splice(index, 1)
     }
   }
-  private callModuleUpdateListeners(updatedModules: Set<Module>) {
-    updatedModules.forEach((m) => {
-      const data = m.getData()
+  private moduleUpdateListeners: ModuleUpdateListener[] = []
+  private callModuleUpdateListeners(
+    updatedModules: Map<Module, { prevData: any[] }>
+  ) {
+    updatedModules.forEach(({ prevData }, module) => {
+      const data = module.getData()
       this.moduleUpdateListeners.forEach((moduleUpdateListener) => {
-        moduleUpdateListener(m.id, data)
+        moduleUpdateListener(module.id, data, prevData)
       })
     })
   }
@@ -90,17 +100,23 @@ export class VirtualModuleGraph {
         `Cascaded updates exceed max depth ${MAX_CASCADE_UPDATE_DEPTH}. Probably because the depth of the virtule module tree is too high, or there is a cycle in the virtule module graph.`
       )
 
-    // record the updatedModules so that we can call moduleUpdateListeners in the end
-    // only virtule modules can be updated and recorded
-    const updatedModules = new Set<Module>()
+    // record the updatedModules so that we can notify listeners in the end
+    // also store prevData so users can diff it with new data
+    const updatedModules = new Map<Module, { prevData: any[] }>()
+    /** it must be called before updating data so that it can record prevData */
+    const recordAffectedModule = (module: Module) => {
+      if (updatedModules.has(module)) return
+      updatedModules.set(module, { prevData: module.getData() })
+    }
+
     while (true) {
       const update = this.updateQueue.pop()
       if (!update) break
       // cleanup the effects of previous update with same updaterId
-      cleanupEdgesWithUpdaterId(update.updaterId, updatedModules)
+      cleanupEdgesWithUpdaterId(update.updaterId, recordAffectedModule)
       const { disableAPIs, ...apis } = this.createUpdateAPIs(
         update.updaterId,
-        updatedModules
+        recordAffectedModule
       )
       await update.updater(apis)
       disableAPIs()
@@ -113,7 +129,7 @@ export class VirtualModuleGraph {
 
   private createUpdateAPIs(
     updaterId: string,
-    updatedModules: Set<Module>
+    recordAffectedModule: (module: Module) => void
   ): UpdaterAPIs & { disableAPIs(): void } {
     let outdated = false
     const _this = this
@@ -128,7 +144,7 @@ export class VirtualModuleGraph {
         // upstreamModuleId may be real file in fs
         const fromModule = _this.ensureModule(upstreamModuleId)
         const toModule = _this.ensureModule(moduleId)
-        updatedModules.add(toModule)
+        recordAffectedModule(toModule)
         Edge.addEdge(fromModule, toModule, data, updaterId)
       },
       getModuleData(moduleId: string) {
@@ -139,7 +155,7 @@ export class VirtualModuleGraph {
         if (outdated) throw new Error(OUTDATED_ERROR_MSG)
         const module = _this.modules.get(moduleId)
         if (!module) return
-        module.delete(updatedModules)
+        module.delete(recordAffectedModule)
         _this.modules.delete(moduleId)
       },
       disableAPIs() {
@@ -158,7 +174,11 @@ export class VirtualModuleGraph {
   }
 }
 
-type ModuleUpdateListener = (moduleId: string, data: any[]) => void
+export type ModuleUpdateListener = (
+  moduleId: string,
+  data: any[],
+  prevData: any[]
+) => void
 
 /**
  * Modules are nodes in the graph
@@ -171,15 +191,16 @@ class Module {
   }
 
   /** unlink this module */
-  public delete(updatedModules: Set<Module>) {
+  public delete(recordAffectedModule: (module: Module) => void) {
     if (this.data.size > 0) {
       // there are upstream modules that are "piping" data to this module
       throw new Error(
         `This module has upstream modules. You should delete modules in topological order. moduleID: ${this.id}`
       )
     }
+    recordAffectedModule(this)
     this.downstream.forEach((edge) => {
-      updatedModules.add(edge.to)
+      recordAffectedModule(edge.to)
       edge.unlink()
     })
   }
@@ -254,12 +275,12 @@ function unbindEdgeWithUpdaterId(edge: Edge) {
 }
 function cleanupEdgesWithUpdaterId(
   updaterId: string,
-  affectedModules: Set<Module>
+  recordAffectedModule: (module: Module) => void
 ) {
   const edges = mapUpdaterIdToEdges.get(updaterId)
   if (!edges) return
   edges.forEach((edge) => {
-    affectedModules.add(edge.to)
+    recordAffectedModule(edge.to)
     edge.unlink()
   })
   if (edges.size > 0)
