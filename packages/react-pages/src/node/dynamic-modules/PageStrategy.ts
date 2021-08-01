@@ -11,32 +11,52 @@ import {
   HandlerAPI,
 } from './PagesData'
 import { UpdateBuffer } from './UpdateBuffer'
+import { VirtualModulesManager } from './VirtualModulesManager'
 
 // TODO: support generating virtual modules according to fs
 
+const PAGE_MODULE_PREFIX = '/@vp-page-one'
+const PAGE_LIIST_MODULE = '/@vp-page-list'
+
 export class PageStrategy extends EventEmitter {
   protected pagesDir: string = '/pagesDir_not_initialized'
-  private fileCache: FileCache = {}
-  private watchers = new Set<FSWatcher>()
-  private pagesDataKeeper = new PagesDataKeeper()
+  private virtualModulesManager: VirtualModulesManager = null as any
+  // private fileCache: FileCache = {}
+  // private watchers = new Set<FSWatcher>()
+  // private pagesDataKeeper = new PagesDataKeeper()
   private updateBuffer = new UpdateBuffer()
   /**
    * track how many works are pending
    * to avoid returning half-finished page data
    */
-  private pendingList = new PendingList()
+  // private pendingList = new PendingList()
   private started = false
 
   constructor(private findPages: FindPages) {
     super()
   }
 
-  public start(pagesDir: string) {
-    // buildStart may be called multiple times
+  /**
+   * start() will be called by the vite buildStart hook,
+   * which may be called multiple times
+   */
+  public start(pagesDir: string, virtualModulesManager: VirtualModulesManager) {
     if (this.started) return
     this.started = true
     this.pagesDir = pagesDir
+
+    this.virtualModulesManager = virtualModulesManager
     const { updateBuffer } = this
+
+    virtualModulesManager.addVirtuleModuleWatcher(
+      (moduleId, data, prevData) => {
+        // 需要解释data的含义（runtime or static）
+        const pageId = moduleId.slice(PAGE_MODULE_PREFIX.length)
+        // this.emit('page', [pageId])
+      },
+      (moduleId) => moduleId.startsWith(PAGE_MODULE_PREFIX)
+    )
+
     updateBuffer.on('page', (updates: string[]) => {
       this.emit('page', updates)
     })

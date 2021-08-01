@@ -3,7 +3,7 @@ import * as path from 'path'
 import chokidar, { FSWatcher } from 'chokidar'
 import slash from 'slash'
 
-import { VirtualModuleGraph } from './VirtualModules'
+import { ModuleUpdateListener, VirtualModuleGraph } from './VirtualModules'
 import { PendingTaskCounter } from './utils'
 
 let nextWatcherId = 0
@@ -63,13 +63,13 @@ export class VirtualModulesManager {
   }
 
   public addVirtuleModuleWatcher(
-    handler: (moduleId: string, data: any[]) => void,
+    handler: ModuleUpdateListener,
     filter?: (moduleId: string) => boolean
   ) {
     return this.virtuleModules.subscribeModuleUpdate(
-      (moduleId: string, data: any[]) => {
+      (moduleId, data, prevData) => {
         if (filter && !filter(moduleId)) return
-        handler(moduleId, data)
+        handler(moduleId, data, prevData)
       }
     )
   }
