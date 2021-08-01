@@ -54,27 +54,16 @@ export class VirtualModulesManager {
   public async getModules(filter?: (moduleId: string) => boolean) {
     return new Promise<{ [id: string]: any[] }>((resolve) => {
       this.pendingTaskCounter.callOnceWhenEmpty(() => {
-        let ids = this.virtuleModules.getModuleIds()
-        if (filter) ids = ids.filter(filter)
-        const modules: { [id: string]: any[] } = {}
-        ids.forEach((id) => {
-          modules[id] = this.virtuleModules.getModuleData(id)
-        })
-        resolve(modules)
+        resolve(this.virtuleModules.getModules(filter))
       })
     })
   }
 
-  public addVirtuleModuleWatcher(
+  public addModuleListener(
     handler: ModuleUpdateListener,
     filter?: (moduleId: string) => boolean
   ) {
-    return this.virtuleModules.subscribeModuleUpdate(
-      (moduleId, data, prevData) => {
-        if (filter && !filter(moduleId)) return
-        handler(moduleId, data, prevData)
-      }
-    )
+    return this.virtuleModules.addModuleListener(handler, filter)
   }
 
   public close() {
@@ -168,6 +157,11 @@ class PendingTaskCounter {
     }
   }
 
+  /**
+   * the callback style is preferred over the promise style
+   * because cb will be called **synchronously** when count turn 0
+   * while promise-then-cb would be called in next microtask (at that time the state may have changed)
+   */
   public callOnceWhenEmpty(cb: () => void) {
     if (this.count === 0) {
       cb()

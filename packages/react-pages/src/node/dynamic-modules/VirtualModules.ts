@@ -23,20 +23,32 @@ export class VirtualModuleGraph {
    */
   private updateQueue = new UpdateQueue()
 
-  getModuleIds(): string[] {
-    return Array.from(this.modules.keys()).map((moduleId) => moduleId)
+  public getModuleIds(filter?: (moduleId: string) => boolean): string[] {
+    const ids = Array.from(this.modules.keys())
+    if (filter) return ids.filter(filter)
+    return ids
   }
 
-  getModuleData(moduleId: string): any[] {
+  public getModuleData(moduleId: string): any[] {
     const module = this.modules.get(moduleId)
     if (!module) return []
     return module.getData()
   }
 
+  public getModules(filter?: (moduleId: string) => boolean) {
+    let entries = Array.from(this.modules.entries())
+    if (filter) entries = entries.filter(([moduleId]) => filter(moduleId))
+    const modules: { [id: string]: any[] } = {}
+    entries.forEach(([moduleId, module]) => {
+      modules[moduleId] = module.getData()
+    })
+    return modules
+  }
+
   /**
    * This is the only way to update virtule modules
    */
-  scheduleUpdate(updaterId: string, updater: Update['updater']) {
+  public scheduleUpdate(updaterId: string, updater: Update['updater']) {
     this.updateQueue.push(updaterId, updater)
     // don't schedule setTimeout if there is already one
     if (this.updateQueue.size === 1) {
@@ -46,6 +58,15 @@ export class VirtualModuleGraph {
     }
   }
 
+  public addModuleListener(
+    handler: ModuleListener,
+    filter?: (moduleId: string) => boolean
+  ) {
+    return this._addModuleListener((moduleId, data, prevData) => {
+      if (filter && !filter(moduleId)) return
+      handler(moduleId, data, prevData)
+    })
+  }
   /**
    * listen to virtule module updates.
    * users can scheduleUpdate in these listeners, creating dependency chain of
@@ -59,7 +80,7 @@ export class VirtualModuleGraph {
    *
    * @return unsubscribe function
    */
-  subscribeModuleUpdate(cb: ModuleUpdateListener) {
+  private _addModuleListener(cb: ModuleListener) {
     this.moduleUpdateListeners.push(cb)
     return () => {
       const index = this.moduleUpdateListeners.indexOf(cb)
@@ -67,7 +88,7 @@ export class VirtualModuleGraph {
       this.moduleUpdateListeners.splice(index, 1)
     }
   }
-  private moduleUpdateListeners: ModuleUpdateListener[] = []
+  private moduleUpdateListeners: ModuleListener[] = []
   private callModuleUpdateListeners(
     updatedModules: Map<Module, { prevData: any[] }>
   ) {
@@ -172,7 +193,7 @@ export class VirtualModuleGraph {
   }
 }
 
-export type ModuleUpdateListener = (
+export type ModuleListener = (
   moduleId: string,
   data: any[],
   prevData: any[]
