@@ -4,7 +4,7 @@ import chokidar, { FSWatcher } from 'chokidar'
 import slash from 'slash'
 
 import {
-  ModuleUpdateListener,
+  ModuleListener,
   VirtualModuleGraph,
   VolatileTaskState,
 } from './VirtualModules'
@@ -60,7 +60,7 @@ export class VirtualModulesManager {
   }
 
   public addModuleListener(
-    handler: ModuleUpdateListener,
+    handler: ModuleListener,
     filter?: (moduleId: string) => boolean
   ) {
     return this.virtuleModules.addModuleListener(handler, filter)
