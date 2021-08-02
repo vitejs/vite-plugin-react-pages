@@ -4,26 +4,17 @@ import { EventEmitter } from 'events'
 import chokidar, { FSWatcher } from 'chokidar'
 import slash from 'slash'
 import { extractStaticData, PendingList } from './utils'
-import {
-  PagesDataKeeper,
-  PagesData,
-  Association,
-  HandlerAPI,
-} from './PagesData'
+import { PagesData, Association, HandlerAPI } from './PagesData'
 import { UpdateBuffer } from './UpdateBuffer'
 import { VirtualModulesManager } from './VirtualModulesManager'
-
-// TODO: support generating virtual modules according to fs
-
-const PAGE_MODULE_PREFIX = '/@vp-page-one'
-const PAGE_LIIST_MODULE = '/@vp-page-list'
+import { PagesDataKeeper } from './PageData2'
 
 export class PageStrategy extends EventEmitter {
   protected pagesDir: string = '/pagesDir_not_initialized'
   private virtualModulesManager: VirtualModulesManager = null as any
   // private fileCache: FileCache = {}
   // private watchers = new Set<FSWatcher>()
-  // private pagesDataKeeper = new PagesDataKeeper()
+  private pagesDataKeeper: PagesDataKeeper = null as any
   private updateBuffer = new UpdateBuffer()
   /**
    * track how many works are pending
@@ -46,21 +37,11 @@ export class PageStrategy extends EventEmitter {
     this.pagesDir = pagesDir
 
     this.virtualModulesManager = virtualModulesManager
-    const { updateBuffer } = this
-
-    virtualModulesManager.addVirtuleModuleWatcher(
-      (moduleId, data, prevData) => {
-        // 需要解释data的含义（runtime or static）
-        const pageId = moduleId.slice(PAGE_MODULE_PREFIX.length)
-        // this.emit('page', [pageId])
-      },
-      (moduleId) => moduleId.startsWith(PAGE_MODULE_PREFIX)
-    )
-
-    updateBuffer.on('page', (updates: string[]) => {
+    this.pagesDataKeeper = new PagesDataKeeper(virtualModulesManager)
+    this.pagesDataKeeper.on('page', (updates: string[]) => {
       this.emit('page', updates)
     })
-    updateBuffer.on('page-list', () => {
+    this.pagesDataKeeper.on('page-list', () => {
       this.emit('page-list')
     })
     const helpers = this.createHelpers(() => {
@@ -104,11 +85,12 @@ export class PageStrategy extends EventEmitter {
     ) {
       const {
         pagesDir,
-        pendingList,
-        watchers,
-        fileCache,
+        // pendingList,
+        // watchers,
+        // fileCache,
         updateBuffer,
         pagesDataKeeper,
+        virtualModulesManager
       } = _this
 
       // Strip trailing slash and make absolute
@@ -122,6 +104,8 @@ export class PageStrategy extends EventEmitter {
         globs = Array.isArray(arg2) ? arg2 : [arg2 || '**/*']
         fileHandler = arg3 || defaultFileHandler
       }
+
+      // virtualModulesManager
 
       // should wait for a complete fs scan
       // before returning the page data
