@@ -28,8 +28,8 @@ export class VirtualModulesManager {
   }
 
   public addFSWatcher(
-    globs: string[],
     baseDir: string,
+    globs: string[],
     fileHandler: FileHandler
   ) {
     const watcherId = String(nextWatcherId++)
@@ -51,11 +51,12 @@ export class VirtualModulesManager {
     )
   }
 
-  public async getModules(filter?: (moduleId: string) => boolean) {
-    return new Promise<{ [id: string]: any[] }>((resolve) => {
-      this.pendingTaskCounter.callOnceWhenEmpty(() => {
-        resolve(this.virtuleModules.getModules(filter))
-      })
+  public getModules(
+    cb: (modules: { [id: string]: any[] }) => void,
+    filter?: (moduleId: string) => boolean
+  ) {
+    this.pendingTaskCounter.callOnceWhenEmpty(() => {
+      cb(this.virtuleModules.getModules(filter))
     })
   }
 
@@ -75,7 +76,7 @@ export class VirtualModulesManager {
     fileHandler: FileHandler,
     watcherId: string
   ) {
-    return async (filePath: string) => {
+    return (filePath: string) => {
       filePath = slash(path.join(baseDir, filePath))
 
       const file =
