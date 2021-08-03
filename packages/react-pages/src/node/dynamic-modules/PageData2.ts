@@ -2,16 +2,22 @@ import equal from 'fast-deep-equal'
 import { FileHandler } from './PageStrategy'
 
 import { UpdateBuffer } from './UpdateBuffer'
-import { VirtualModulesManager } from './VirtualModulesManager'
+import { FileHandlerAPI, VirtualModulesManager } from './VirtualModulesManager'
 
 const PAGE_MODULE_PREFIX = '/@vp-page-one'
 const ensurePageId = (moduleId: string) =>
   moduleId.startsWith(PAGE_MODULE_PREFIX)
     ? moduleId.slice(PAGE_MODULE_PREFIX.length)
     : moduleId
+const ensureModuleId = (pageId: string) =>
+  pageId.startsWith(PAGE_MODULE_PREFIX) ? pageId : PAGE_MODULE_PREFIX + pageId
 const PAGE_LIIST_MODULE = '/@vp-page-list'
 
 export class PagesDataKeeper extends UpdateBuffer {
+  /**
+   * this.pages is a cache of this.virtualModulesManager.getModules
+   * which is updated in batch
+   */
   private readonly pages: PagesDataInternal = {}
 
   constructor(private readonly virtualModulesManager: VirtualModulesManager) {
@@ -106,11 +112,99 @@ export class PagesDataKeeper extends UpdateBuffer {
     this.virtualModulesManager.addFSWatcher(
       baseDir,
       globs,
-      async (file, lowerAPI) => {}
+      async (file, lowerAPI) => {
+        this.createPageAPI(lowerAPI)
+      }
     )
   }
 
-  createPageUpdateAPI() {}
+  private createPageAPI(lowerAPI: FileHandlerAPI): HandlerAPI {
+    const getRuntimeData = (pageId: string) => {
+      const moduleId = ensureModuleId(pageId)
+      // don't use pages as data source because it is a cache
+      // of this.virtualModulesManager.getModules
+      // which is not updated synchronously
+      const getDataObject = () => {
+        const rawData = this.virtualModulesManager._getModuleDataNow(moduleId)
+        const pageData = this.createPageDataFromRaw(rawData)
+        return pageData.runtimeData
+      }
+      const setData = (key: string, value: any) => {
+        lowerAPI.addModuleData(moduleId, {
+          key,
+          dataPath: value,
+        } as DataPiece)
+      }
+      const getData = (key: string) => {
+        const existValue = getDataObject()[key]
+        return existValue?.dataPath
+      }
+      return createProxy({ getDataObject, setData, getData })
+    }
+
+    const getStaticData = (pageId: string) => {
+      const moduleId = ensureModuleId(pageId)
+      const getDataObject = () => {
+        const rawData = this.virtualModulesManager._getModuleDataNow(moduleId)
+        const pageData = this.createPageDataFromRaw(rawData)
+        return pageData.staticData
+      }
+      const setData = (key: string, value: any) => {
+        lowerAPI.addModuleData(moduleId, {
+          key,
+          staticData: value,
+        } as DataPiece)
+      }
+      const getData = (key: string) => {
+        const existValue = getDataObject()[key]
+        return existValue?.staticData
+      }
+      return createProxy({ getDataObject, setData, getData })
+    }
+
+    const addPageData = (dataPiece: DataPiece) => {
+      const moduleId = ensureModuleId(dataPiece.pageId)
+      lowerAPI.addModuleData(moduleId, dataPiece)
+    }
+
+    return {
+      getRuntimeData,
+      getStaticData,
+      addPageData,
+    }
+
+    function createProxy({
+      getDataObject,
+      setData,
+      getData,
+    }: {
+      getDataObject: () => object
+      setData: (key: string, value: any) => void
+      getData: (key: string) => any
+    }) {
+      return new Proxy(
+        {} as {
+          [key: string]: string
+        },
+        {
+          ...defaultProxyTraps,
+          set(target, key: string, value) {
+            setData(key, value)
+            return true
+          },
+          get(target, key: string) {
+            return getData(key)
+          },
+          has(target, key) {
+            return Reflect.has(getDataObject(), key)
+          },
+          ownKeys: function (target) {
+            return Reflect.ownKeys(getDataObject())
+          },
+        }
+      )
+    }
+  }
 }
 
 export interface DataPiece {
@@ -206,3 +300,12 @@ export interface HandlerAPI {
    */
   addPageData: (pageData: DataPiece) => void
 }
+
+const defaultProxyTraps = Object.fromEntries(
+  Object.getOwnPropertyNames(Reflect).map((fnName) => [
+    fnName,
+    () => {
+      throw new Error(`unsupported operation on page data obejct proxy`)
+    },
+  ])
+)
