@@ -60,6 +60,23 @@ export class VirtualModulesManager {
     })
   }
 
+  /**
+   * return the current state of modules.
+   * it doesn't wait for current task to finish.
+   * use it carefully.
+   */
+  public _getModulesNow(filter?: (moduleId: string) => boolean) {
+    return this.virtuleModules.getModules(filter)
+  }
+  /**
+   * return the current state of module.
+   * it doesn't wait for current task to finish.
+   * use it carefully.
+   */
+  public _getModuleDataNow(moduleId: string) {
+    return this.virtuleModules.getModuleData(moduleId)
+  }
+
   public addModuleListener(
     handler: ModuleListener,
     filter?: (moduleId: string) => boolean
@@ -117,7 +134,7 @@ export class VirtualModulesManager {
 
 type FileHandler = (file: File, api: FileHandlerAPI) => void | Promise<void>
 
-interface FileHandlerAPI {
+export interface FileHandlerAPI {
   addModuleData(moduleId: string, data: any): void
   getModuleData(moduleId: string): any[]
 }
