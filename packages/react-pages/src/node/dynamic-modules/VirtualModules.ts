@@ -318,7 +318,7 @@ export interface UpdaterAPIs {
 class Update {
   constructor(
     public updaterId: string,
-    public updater: (apis: UpdaterAPIs) => void
+    public updater: (apis: UpdaterAPIs) => void | Promise<void>
   ) {}
 }
 

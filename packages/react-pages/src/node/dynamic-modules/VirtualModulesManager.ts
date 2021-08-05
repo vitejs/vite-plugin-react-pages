@@ -5,6 +5,7 @@ import slash from 'slash'
 
 import {
   ModuleListener,
+  UpdaterAPIs,
   VirtualModuleGraph,
   VolatileTaskState,
 } from './VirtualModules'
@@ -61,6 +62,14 @@ export class VirtualModulesManager {
   }
 
   /**
+   * Idel means: fs watcher is ready and no update is executing
+   * TODO: and update queue is empty
+   */
+  public callOneceWhenIdle(cb: () => void) {
+    this.pendingTaskCounter.callOnceWhenEmpty(cb)
+  }
+
+  /**
    * return the current state of modules.
    * it doesn't wait for current task to finish.
    * use it carefully.
@@ -88,6 +97,13 @@ export class VirtualModulesManager {
     this.watchers.forEach((w) => w.close())
   }
 
+  public scheduleUpdate(
+    updaterId: string,
+    updater: (apis: UpdaterAPIs) => void | Promise<void>
+  ): void {
+    return this.virtuleModules.scheduleUpdate(updaterId, updater)
+  }
+
   private handleFileChange(
     baseDir: string,
     fileHandler: FileHandler,
@@ -106,7 +122,7 @@ export class VirtualModulesManager {
       this.virtuleModules.scheduleUpdate(
         `${watcherId}-${filePath}`,
         async (apis) => {
-          const handlerAPI = {
+          const handlerAPI: FileHandlerAPI = {
             addModuleData(moduleId: string, data: any) {
               apis.addModuleData(moduleId, data, filePath)
             },
