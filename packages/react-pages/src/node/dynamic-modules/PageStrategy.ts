@@ -6,8 +6,8 @@ import slash from 'slash'
 import { extractStaticData, PendingList } from './utils'
 import { PagesData, Association, HandlerAPI } from './PagesData'
 import { UpdateBuffer } from './UpdateBuffer'
-import { VirtualModulesManager } from './VirtualModulesManager'
-import { PagesDataKeeper } from './PageData2'
+import { FileHandlerAPI, VirtualModulesManager } from './VirtualModulesManager'
+import { FileHandler, PagesDataKeeper } from './PageData2'
 
 export class PageStrategy extends EventEmitter {
   protected pagesDir: string = '/pagesDir_not_initialized'
@@ -49,15 +49,35 @@ export class PageStrategy extends EventEmitter {
         `No defaultFileHandler found. You should pass fileHandler argument when calling watchFiles`
       )
     })
-    const { findPages, pendingList } = this
-    pendingList.addPending(Promise.resolve(findPages(pagesDir, helpers)))
+    const { findPages } = this
+    // this.pagesDataKeeper.addModuleListener()
+    // pendingList.addPending(Promise.resolve(findPages(pagesDir, helpers)))
+
+    this.virtualModulesManager.scheduleUpdate(
+      'pages-init',
+      async (updaterAPIs) => {
+        const apis = this.pagesDataKeeper.createOneTimePageAPIs(updaterAPIs)
+        this.oneTimePageAPIs = apis
+        const helpers = this.createHelpers(() => {
+          throw new Error(
+            `No defaultFileHandler found. You should pass fileHandler argument when calling watchFiles`
+          )
+        })
+        await findPages(pagesDir, helpers)
+      }
+    )
   }
+
+  private oneTimePageAPIs: HandlerAPI = null as any
 
   public getPages(): Promise<Readonly<PagesData>> {
     if (!this.started) throw new Error(`PageStrategy not started yet`)
-    return this.pendingList
-      .subscribe()
-      .then(() => this.pagesDataKeeper.toPagesData())
+    return new Promise((resolve) => {
+      // this.pagesDataKeeper
+      return this.pendingList
+        .subscribe()
+        .then(() => this.pagesDataKeeper.toPagesData())
+    })
   }
   public close() {
     if (!this.started) throw new Error(`PageStrategy not started yet`)
@@ -67,13 +87,10 @@ export class PageStrategy extends EventEmitter {
    * Custom PageStrategy can use it to create helpers with custom defaultFileHandler
    */
   protected createHelpers(defaultFileHandler: FileHandler): PageHelpers {
-    const apiForCustomSource = this.pagesDataKeeper.createAPIForCustomSource(
-      this.updateBuffer.scheduleUpdate.bind(this.updateBuffer)
-    )
     const helpers: PageHelpers = {
       extractStaticData,
       watchFiles,
-      ...apiForCustomSource,
+      ...this.oneTimePageAPIs,
     }
     const _this = this
     return helpers
@@ -90,7 +107,7 @@ export class PageStrategy extends EventEmitter {
         // fileCache,
         updateBuffer,
         pagesDataKeeper,
-        virtualModulesManager
+        virtualModulesManager,
       } = _this
 
       // Strip trailing slash and make absolute
@@ -104,6 +121,8 @@ export class PageStrategy extends EventEmitter {
         globs = Array.isArray(arg2) ? arg2 : [arg2 || '**/*']
         fileHandler = arg3 || defaultFileHandler
       }
+
+      pagesDataKeeper.addModuleListener(baseDir, globs, fileHandler)
 
       // virtualModulesManager
 
@@ -240,11 +259,6 @@ export class File {
     return this.content || (this.content = fs.readFile(this.path, 'utf-8'))
   }
 }
-
-export type FileHandler = (
-  file: File,
-  api: HandlerAPI
-) => void | Promise<void> | PageData | Promise<PageData>
 
 export interface WatchFilesHelper {
   /** Watch all files within a directory (except node_modules and .git) */

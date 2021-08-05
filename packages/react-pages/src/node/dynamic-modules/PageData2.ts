@@ -1,8 +1,12 @@
 import equal from 'fast-deep-equal'
-import { FileHandler } from './PageStrategy'
 
 import { UpdateBuffer } from './UpdateBuffer'
-import { FileHandlerAPI, VirtualModulesManager } from './VirtualModulesManager'
+import { UpdaterAPIs } from './VirtualModules'
+import {
+  File,
+  FileHandlerAPI,
+  VirtualModulesManager,
+} from './VirtualModulesManager'
 
 const PAGE_MODULE_PREFIX = '/@vp-page-one'
 const ensurePageId = (moduleId: string) =>
@@ -37,7 +41,7 @@ export class PagesDataKeeper extends UpdateBuffer {
     })
   }
 
-  isEmptyPage(pageId: string) {
+  private isEmptyPage(pageId: string) {
     const page = this.pages[pageId]
     if (!page) return true
     const { runtimeData, staticData } = page
@@ -108,22 +112,35 @@ export class PagesDataKeeper extends UpdateBuffer {
     globs: string[],
     fileHandler: FileHandler
   ) {
-    // return this.virtuleModules.addModuleListener(handler, filter)
     this.virtualModulesManager.addFSWatcher(
       baseDir,
       globs,
       async (file, lowerAPI) => {
-        this.createPageAPI(lowerAPI)
+        const pageAPIs = this.createPageAPIs(lowerAPI)
+        const res = await fileHandler(file, pageAPIs)
+        if (res) {
+          pageAPIs.addPageData(res)
+        }
       }
     )
   }
 
-  private createPageAPI(lowerAPI: FileHandlerAPI): HandlerAPI {
+  public createOneTimePageAPIs(updaterAPIs: UpdaterAPIs): HandlerAPI {
+    const handlerAPI: FileHandlerAPI = {
+      addModuleData(moduleId: string, data: any) {
+        updaterAPIs.addModuleData(moduleId, data, 'VP_ANONYMOUS_MODULE')
+      },
+      getModuleData: updaterAPIs.getModuleData,
+    }
+    return this.createPageAPIs(handlerAPI)
+  }
+
+  private createPageAPIs(lowerAPI: FileHandlerAPI): HandlerAPI {
     const getRuntimeData = (pageId: string) => {
       const moduleId = ensureModuleId(pageId)
-      // don't use pages as data source because it is a cache
-      // of this.virtualModulesManager.getModules
-      // which is not updated synchronously
+      // don't use pages as data source.
+      // instead, get data by virtualModulesManager._getModuleDataNow
+      // which is updated synchronously
       const getDataObject = () => {
         const rawData = this.virtualModulesManager._getModuleDataNow(moduleId)
         const pageData = this.createPageDataFromRaw(rawData)
@@ -300,6 +317,11 @@ export interface HandlerAPI {
    */
   addPageData: (pageData: DataPiece) => void
 }
+
+export type FileHandler = (
+  file: File,
+  api: HandlerAPI
+) => void | Promise<void> | DataPiece | Promise<DataPiece>
 
 const defaultProxyTraps = Object.fromEntries(
   Object.getOwnPropertyNames(Reflect).map((fnName) => [
