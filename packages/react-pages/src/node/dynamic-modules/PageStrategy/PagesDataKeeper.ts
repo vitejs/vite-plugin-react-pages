@@ -1,12 +1,12 @@
 import equal from 'fast-deep-equal'
 
-import { UpdateBuffer } from './UpdateBuffer'
-import { UpdaterAPIs } from './VirtualModules'
-import {
+import { PageUpdateBuffer } from './UpdateBuffer'
+import { UpdaterAPIs } from '../VirtualModules'
+import type {
   File,
   FileHandlerAPI,
   VirtualModulesManager,
-} from './VirtualModulesManager'
+} from '../VirtualModulesManager'
 
 const PAGE_MODULE_PREFIX = '/@vp-page-one'
 const ensurePageId = (moduleId: string) =>
@@ -17,7 +17,11 @@ const ensureModuleId = (pageId: string) =>
   pageId.startsWith(PAGE_MODULE_PREFIX) ? pageId : PAGE_MODULE_PREFIX + pageId
 const PAGE_LIIST_MODULE = '/@vp-page-list'
 
-export class PagesDataKeeper extends UpdateBuffer {
+const isPageRelatedModule = (moduleId: string) =>
+  moduleId.startsWith(PAGE_MODULE_PREFIX) ||
+  moduleId.startsWith(PAGE_LIIST_MODULE)
+
+export class PagesDataKeeper extends PageUpdateBuffer {
   /**
    * this.pages is a cache of this.virtualModulesManager.getModules
    * which is updated in batch
@@ -30,15 +34,33 @@ export class PagesDataKeeper extends UpdateBuffer {
       Object.entries(modules).forEach(([moduleId, data]) => {
         this.setPageData(moduleId, data)
       })
-      virtualModulesManager.addModuleListener(
-        (moduleId, data) => {
-          this.setPageData(moduleId, data)
-        },
-        (moduleId) =>
-          moduleId.startsWith(PAGE_MODULE_PREFIX) ||
-          moduleId.startsWith(PAGE_LIIST_MODULE)
+      virtualModulesManager.addModuleListener((moduleId, data) => {
+        this.setPageData(moduleId, data)
+      }, isPageRelatedModule)
+    }, isPageRelatedModule)
+  }
+
+  /** turn PagesDataInternal to PagesData */
+  public getPages(): PagesData {
+    return Object.fromEntries(
+      Object.entries(this.pages).map(
+        ([pageId, { runtimeData: _runtimeData, staticData: _staticData }]) => {
+          const runtimeData = Object.fromEntries(
+            Object.entries(_runtimeData).map(([key, { dataPath }]) => [
+              key,
+              dataPath,
+            ])
+          )
+          const staticData = Object.fromEntries(
+            Object.entries(_staticData).map(([key, { staticData }]) => [
+              key,
+              staticData,
+            ])
+          )
+          return [pageId, { data: runtimeData, staticData }]
+        }
       )
-    })
+    )
   }
 
   private isEmptyPage(pageId: string) {
@@ -51,8 +73,8 @@ export class PagesDataKeeper extends UpdateBuffer {
     )
   }
 
-  private setPageData(pageId: string, rawData: any[]) {
-    pageId = ensurePageId(pageId)
+  private setPageData(moduleId: string, rawData: any[]) {
+    const pageId = ensurePageId(moduleId)
     const pageData = this.createPageDataFromRaw(rawData)
     if (this.isEmptyPage(pageId)) {
       this.pages[pageId] = pageData
@@ -89,9 +111,9 @@ export class PagesDataKeeper extends UpdateBuffer {
     rawData.forEach((data: DataPiece) => {
       if (!data) return
       const { key, dataPath, staticData } = data
-      const priority = data.priority ?? 1
       if (!key) return
       if (!dataPath && !staticData) return
+      const priority = data.priority ?? 1
       if (dataPath) {
         if (!dataMap[key] || priority > dataMap[key].priority) {
           dataMap[key] = { dataPath, priority }
@@ -107,7 +129,7 @@ export class PagesDataKeeper extends UpdateBuffer {
     return pageData
   }
 
-  public addModuleListener(
+  public addFileListener(
     baseDir: string,
     globs: string[],
     fileHandler: FileHandler
@@ -128,6 +150,7 @@ export class PagesDataKeeper extends UpdateBuffer {
   public createOneTimePageAPIs(updaterAPIs: UpdaterAPIs): HandlerAPI {
     const handlerAPI: FileHandlerAPI = {
       addModuleData(moduleId: string, data: any) {
+        // if the update has no upstream, use a constant name
         updaterAPIs.addModuleData(moduleId, data, 'VP_ANONYMOUS_MODULE')
       },
       getModuleData: updaterAPIs.getModuleData,

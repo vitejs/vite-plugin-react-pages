@@ -1,5 +1,5 @@
 import slash from 'slash'
-import type { PagesData } from './PagesData'
+import type { PagesData } from './PagesDataKeeper'
 
 export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
   const addPagesData = Object.entries(pagesData).map(
