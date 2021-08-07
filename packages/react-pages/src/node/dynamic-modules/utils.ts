@@ -1,6 +1,6 @@
 import { extract, parse } from 'jest-docblock'
 import grayMatter from 'gray-matter'
-import { File } from './PageStrategy'
+import type { File } from './VirtualModulesManager'
 
 export async function extractStaticData(
   file: File

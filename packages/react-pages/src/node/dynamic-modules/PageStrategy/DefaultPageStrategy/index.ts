@@ -1,5 +1,7 @@
-import { File, FileHandler, FindPages, PageStrategy } from '../PageStrategy'
-import { extractStaticData } from '../utils'
+import { FindPages, PageStrategy } from '../'
+import { extractStaticData } from '../../utils'
+import type { File } from '../../VirtualModulesManager'
+import type { FileHandler } from '../PagesDataKeeper'
 
 export class DefaultPageStrategy extends PageStrategy {
   constructor(

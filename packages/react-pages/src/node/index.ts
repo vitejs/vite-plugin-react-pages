@@ -5,12 +5,12 @@ import type { MdxPlugin } from 'vite-plugin-mdx/dist/types'
 import {
   DefaultPageStrategy,
   defaultFileHandler,
-} from './dynamic-modules/DefaultPageStrategy'
+} from './dynamic-modules/PageStrategy/DefaultPageStrategy'
 import {
   renderPageList,
   renderPageListInSSR,
   renderOnePageData,
-} from './dynamic-modules/pages'
+} from './dynamic-modules/PageStrategy/pageUtils'
 import { PageStrategy } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 import { demoModule } from './demo-modules'
@@ -191,7 +191,7 @@ export default function pluginFactory(
     // @ts-expect-error
     vitePagesStaticSiteGeneration: staticSiteGeneration,
     closeBundle() {
-      pageStrategy.close()
+      virtualModulesManager.close()
     },
     transformIndexHtml(html, ctx) {
       return moveScriptTagToBodyEnd(html, ctx)
@@ -208,7 +208,8 @@ export type {
   TsInterfacePropertyInfo,
 } from '../../clientTypes'
 
-export { File, FileHandler } from './dynamic-modules/PageStrategy'
+export type { FileHandler } from './dynamic-modules/PageStrategy/PagesDataKeeper'
+export { File } from './dynamic-modules/VirtualModulesManager'
 export { extractStaticData } from './dynamic-modules/utils'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }

@@ -34,7 +34,7 @@ export type ScheduleUpdate = (update: Update) => void
  * Can flush a batch of updates together
  * and cancle unnecessary updates
  */
-export class UpdateBuffer extends EventEmitter {
+export class PageUpdateBuffer extends EventEmitter {
   /**
    * which pages should be updated
    */
