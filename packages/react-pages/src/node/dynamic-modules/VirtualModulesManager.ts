@@ -7,7 +7,7 @@ import {
   ModuleListener,
   VirtuleModuleAPIs,
   VirtualModuleGraph,
-  VolatileTaskState,
+  PendingState,
 } from './VirtualModules'
 
 let nextWatcherId = 0
@@ -25,7 +25,12 @@ export class VirtualModulesManager {
   private pendingTaskCounter = new PendingTaskCounter()
 
   constructor() {
-    this.pendingTaskCounter.countVolatileTask(this.virtuleModules.executeState)
+    this.pendingTaskCounter.countPendingState(
+      this.virtuleModules.updateExecutingState
+    )
+    this.pendingTaskCounter.countPendingState(
+      this.virtuleModules.updateQueueEmptyState
+    )
   }
 
   public addFSWatcher(
@@ -56,22 +61,25 @@ export class VirtualModulesManager {
     cb: (modules: { [id: string]: any[] }) => void,
     filter?: (moduleId: string) => boolean
   ) {
-    this.pendingTaskCounter.callOnceWhenEmpty(() => {
+    this.callOnceWhenIdle(() => {
       cb(this.virtuleModules.getModules(filter))
     })
   }
 
   /**
-   * Idel means: fs watcher is ready and no update is executing
-   * TODO: and update queue is empty
+   * Idel means:
+   * fs watcher is ready
+   * no update is executing
+   * update queue is empty
    */
-  public callOneceWhenIdle(cb: () => void) {
-    this.pendingTaskCounter.callOnceWhenEmpty(cb)
+  public callOnceWhenIdle(cb: () => void) {
+    this.pendingTaskCounter.callOnceWhenIdle(cb)
   }
 
   /**
    * return the current state of modules.
-   * it doesn't wait for current task to finish.
+   * it doesn't wait for update task to finish
+   * so it may see intermediate state.
    * use it carefully.
    */
   public _getModulesNow(filter?: (moduleId: string) => boolean) {
@@ -79,7 +87,8 @@ export class VirtualModulesManager {
   }
   /**
    * return the current state of module.
-   * it doesn't wait for current task to finish.
+   * it doesn't wait for update task to finish
+   * so it may see intermediate state.
    * use it carefully.
    */
   public _getModuleDataNow(moduleId: string) {
@@ -198,7 +207,7 @@ class PendingTaskCounter {
    * because cb will be called **synchronously** when count turn 0
    * while promise-then-cb would be called in next microtask (at that time the state may have changed)
    */
-  public callOnceWhenEmpty(cb: () => void) {
+  public callOnceWhenIdle(cb: () => void) {
     if (this.count === 0) {
       cb()
     } else {
@@ -206,10 +215,11 @@ class PendingTaskCounter {
     }
   }
 
-  public countVolatileTask(volatileTaskState: VolatileTaskState) {
+  /** track a changeable pending state */
+  public countPendingState(pendingState: PendingState) {
     let stopCounting: undefined | (() => void)
-    volatileTaskState.onStateChange((isBusy) => {
-      if (isBusy) {
+    pendingState.onStateChange((isPending) => {
+      if (isPending) {
         // if this task has already been counted, don't count again
         if (stopCounting) return
         stopCounting = this.countTask()
