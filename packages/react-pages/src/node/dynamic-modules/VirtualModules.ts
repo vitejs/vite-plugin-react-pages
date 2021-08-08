@@ -22,6 +22,8 @@ export class VirtualModuleGraph {
    * So the updater don't need to manually delete the old data in module3.
    */
   private updateQueue = new UpdateQueue()
+  /** track updateQueue empty state (isPending means not empty) */
+  public updateQueueEmptyState = new PendingState()
 
   public getModuleIds(filter?: (moduleId: string) => boolean): string[] {
     const ids = Array.from(this.modules.keys())
@@ -50,6 +52,7 @@ export class VirtualModuleGraph {
    */
   public scheduleUpdate(updaterId: string, updater: Update['updater']) {
     this.updateQueue.push(updaterId, updater)
+    this.updateQueueEmptyState.isPending = true
     // don't schedule setTimeout if there is already one
     if (this.updateQueue.size === 1) {
       setTimeout(() => {
@@ -100,16 +103,18 @@ export class VirtualModuleGraph {
     })
   }
 
-  public executeState = new ExecuteState()
-  // private executing = false
   // executeUpdates_Inner is not reentrant
+  // use a state(lock) to prevent concurrent execution
+  public updateExecutingState = new PendingState()
   private async executeUpdates() {
-    if (this.executeState.executing) return
-    this.executeState.executing = true
+    if (this.updateExecutingState.isPending) return
+    this.updateExecutingState.isPending = true
     try {
       await this.executeUpdates_Inner()
     } finally {
-      this.executeState.executing = false
+      this.updateExecutingState.isPending = false
+      if (this.updateQueue.size === 0)
+        this.updateQueueEmptyState.isPending = false
     }
   }
   private async executeUpdates_Inner(depth = 1) {
@@ -347,29 +352,22 @@ class UpdateQueue {
 // it indicates the depth of virtule modules
 const MAX_CASCADE_UPDATE_DEPTH = 10
 
-class ExecuteState implements VolatileTaskState {
-  private _executing = false
-  get executing() {
-    return this._executing
+export class PendingState {
+  private _isPending = false
+  get isPending() {
+    return this._isPending
   }
-  set executing(value: boolean) {
-    if (this._executing === value) return
-    this._executing = value
+  set isPending(value: boolean) {
+    if (this._isPending === value) return
+    this._isPending = value
     this.cbs.forEach((cb) => cb(value))
   }
 
-  private cbs: Array<(isBusy: boolean) => void> = []
-  onStateChange(cb: (isBusy: boolean) => void) {
+  private cbs: Array<(isPending: boolean) => void> = []
+  onStateChange(cb: (isPending: boolean) => void) {
     this.cbs.push(cb)
     return () => {
       this.cbs = this.cbs.filter((v) => v !== cb)
     }
   }
-}
-
-/**
- * VolatileTask has an observable state "isBusy"
- */
-export interface VolatileTaskState {
-  onStateChange: (cb: (isBusy: boolean) => void) => void
 }
