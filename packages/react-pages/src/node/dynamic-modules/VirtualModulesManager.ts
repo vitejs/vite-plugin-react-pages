@@ -5,7 +5,7 @@ import slash from 'slash'
 
 import {
   ModuleListener,
-  UpdaterAPIs,
+  VirtuleModuleAPIs,
   VirtualModuleGraph,
   VolatileTaskState,
 } from './VirtualModules'
@@ -99,7 +99,7 @@ export class VirtualModulesManager {
 
   public scheduleUpdate(
     updaterId: string,
-    updater: (apis: UpdaterAPIs) => void | Promise<void>
+    updater: (apis: VirtuleModuleAPIs) => void | Promise<void>
   ): void {
     return this.virtuleModules.scheduleUpdate(updaterId, updater)
   }
@@ -122,7 +122,7 @@ export class VirtualModulesManager {
       this.virtuleModules.scheduleUpdate(
         `${watcherId}-${filePath}`,
         async (apis) => {
-          const handlerAPI: FileHandlerAPI = {
+          const handlerAPI: FileHandlerAPIs = {
             addModuleData(moduleId: string, data: any) {
               apis.addModuleData(moduleId, data, filePath)
             },
@@ -141,6 +141,8 @@ export class VirtualModulesManager {
       this.virtuleModules.scheduleUpdate(
         `${watcherId}-${filePath}-unlink`,
         async (apis) => {
+          // delete the node that represent this fs file in the virtule modules graph
+          // also delete all outcome edges
           apis.deleteModule(filePath)
         }
       )
@@ -148,9 +150,9 @@ export class VirtualModulesManager {
   }
 }
 
-type FileHandler = (file: File, api: FileHandlerAPI) => void | Promise<void>
+type FileHandler = (file: File, api: FileHandlerAPIs) => void | Promise<void>
 
-export interface FileHandlerAPI {
+export interface FileHandlerAPIs {
   addModuleData(moduleId: string, data: any): void
   getModuleData(moduleId: string): any[]
 }

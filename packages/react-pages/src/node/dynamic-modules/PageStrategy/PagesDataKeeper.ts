@@ -1,30 +1,32 @@
 import equal from 'fast-deep-equal'
 
 import { PageUpdateBuffer } from './UpdateBuffer'
-import { UpdaterAPIs } from '../VirtualModules'
+import { VirtuleModuleAPIs } from '../VirtualModules'
 import type {
   File,
-  FileHandlerAPI,
+  FileHandlerAPIs,
   VirtualModulesManager,
 } from '../VirtualModulesManager'
 
-const PAGE_MODULE_PREFIX = '/@vp-page-one'
+const PAGE_MODULE_PREFIX = '/@vp-page'
 const ensurePageId = (moduleId: string) =>
   moduleId.startsWith(PAGE_MODULE_PREFIX)
     ? moduleId.slice(PAGE_MODULE_PREFIX.length)
     : moduleId
 const ensureModuleId = (pageId: string) =>
   pageId.startsWith(PAGE_MODULE_PREFIX) ? pageId : PAGE_MODULE_PREFIX + pageId
-const PAGE_LIIST_MODULE = '/@vp-page-list'
 
 const isPageRelatedModule = (moduleId: string) =>
-  moduleId.startsWith(PAGE_MODULE_PREFIX) ||
-  moduleId.startsWith(PAGE_LIIST_MODULE)
+  moduleId.startsWith(PAGE_MODULE_PREFIX)
 
+/**
+ * building upon VirtualModulesManager,
+ * PagesDataKeeper recognize and handle page modules.
+ */
 export class PagesDataKeeper extends PageUpdateBuffer {
   /**
    * this.pages is a cache of this.virtualModulesManager.getModules
-   * which is updated in batch
+   * which is updated in batch (may be outdated for a short time)
    */
   private readonly pages: PagesDataInternal = {}
 
@@ -63,20 +65,27 @@ export class PagesDataKeeper extends PageUpdateBuffer {
     )
   }
 
-  private isEmptyPage(pageId: string) {
-    const page = this.pages[pageId]
-    if (!page) return true
-    const { runtimeData, staticData } = page
-    return (
-      Object.keys(runtimeData).length === 0 &&
-      Object.keys(staticData).length === 0
-    )
-  }
-
+  /**
+   * when low-level page virtule modules has changed, update this.pages data
+   * and notify listeners
+   */
   private setPageData(moduleId: string, rawData: any[]) {
     const pageId = ensurePageId(moduleId)
+    const oldPageData: OnePageDataInternal | undefined = this.pages[pageId]
     const pageData = this.createPageDataFromRaw(rawData)
-    if (this.isEmptyPage(pageId)) {
+    if (this.isEmptyPage(pageData)) {
+      // Page is deleted
+      if (!this.isEmptyPage(oldPageData)) {
+        this.pages[pageId] = pageData
+        this.scheduleUpdate({
+          type: 'delete',
+          pageId,
+        })
+      }
+      return
+    }
+    // Page is added
+    if (this.isEmptyPage(oldPageData)) {
       this.pages[pageId] = pageData
       this.scheduleUpdate({
         type: 'add',
@@ -84,22 +93,30 @@ export class PagesDataKeeper extends PageUpdateBuffer {
       })
       return
     }
-    const prev = this.pages[pageId]
     this.pages[pageId] = pageData
-    if (!equal(pageData.runtimeData, prev.runtimeData)) {
+    if (!equal(pageData.runtimeData, oldPageData.runtimeData)) {
       this.scheduleUpdate({
         type: 'update',
         dataType: 'runtime',
         pageId,
       })
     }
-    if (!equal(pageData.staticData, prev.staticData)) {
+    if (!equal(pageData.staticData, oldPageData.staticData)) {
       this.scheduleUpdate({
         type: 'update',
         dataType: 'static',
         pageId,
       })
     }
+  }
+
+  private isEmptyPage(pageData: OnePageDataInternal | undefined) {
+    if (!pageData) return true
+    const { runtimeData, staticData } = pageData
+    return (
+      Object.keys(runtimeData).length === 0 &&
+      Object.keys(staticData).length === 0
+    )
   }
 
   private createPageDataFromRaw(rawData: any[]) {
@@ -115,21 +132,21 @@ export class PagesDataKeeper extends PageUpdateBuffer {
       if (!dataPath && !staticData) return
       const priority = data.priority ?? 1
       if (dataPath) {
-        if (!dataMap[key] || priority > dataMap[key].priority) {
+        if (!dataMap[key] || priority > dataMap[key].priority)
           dataMap[key] = { dataPath, priority }
-        }
       }
       if (staticData) {
-        if (!staticDataMap[key] || priority > staticDataMap[key].priority) {
+        if (!staticDataMap[key] || priority > staticDataMap[key].priority)
           staticDataMap[key] = { staticData, priority }
-        }
       }
     })
-
     return pageData
   }
 
-  public addFileListener(
+  /**
+   * update page virtule modules according to fs files
+   */
+  public addFSWatcher(
     baseDir: string,
     globs: string[],
     fileHandler: FileHandler
@@ -147,8 +164,8 @@ export class PagesDataKeeper extends PageUpdateBuffer {
     )
   }
 
-  public createOneTimePageAPIs(updaterAPIs: UpdaterAPIs): HandlerAPI {
-    const handlerAPI: FileHandlerAPI = {
+  public createOneTimePageAPIs(updaterAPIs: VirtuleModuleAPIs): PageAPIs {
+    const handlerAPI: FileHandlerAPIs = {
       addModuleData(moduleId: string, data: any) {
         // if the update has no upstream, use a constant name
         updaterAPIs.addModuleData(moduleId, data, 'VP_ANONYMOUS_MODULE')
@@ -158,12 +175,12 @@ export class PagesDataKeeper extends PageUpdateBuffer {
     return this.createPageAPIs(handlerAPI)
   }
 
-  private createPageAPIs(lowerAPI: FileHandlerAPI): HandlerAPI {
+  private createPageAPIs(lowerAPI: FileHandlerAPIs): PageAPIs {
     const getRuntimeData = (pageId: string) => {
       const moduleId = ensureModuleId(pageId)
-      // don't use pages as data source.
+      // don't use pages as data source because this is a cache updated in batch.
       // instead, get data by virtualModulesManager._getModuleDataNow
-      // which is updated synchronously
+      // which is updated immediately after updateing virtule modules
       const getDataObject = () => {
         const rawData = this.virtualModulesManager._getModuleDataNow(moduleId)
         const pageData = this.createPageDataFromRaw(rawData)
@@ -321,7 +338,7 @@ interface OnePageDataInternal {
   }
 }
 
-export interface HandlerAPI {
+export interface PageAPIs {
   /**
    * Get a mutable data object of runtimeData
    */
@@ -343,7 +360,7 @@ export interface HandlerAPI {
 
 export type FileHandler = (
   file: File,
-  api: HandlerAPI
+  api: PageAPIs
 ) => void | Promise<void> | DataPiece | Promise<DataPiece>
 
 const defaultProxyTraps = Object.fromEntries(
