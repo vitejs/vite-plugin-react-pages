@@ -242,7 +242,6 @@ function moveScriptTagToBodyEnd(
   ctx: IndexHtmlTransformContext
 ): string | undefined {
   if (ctx.chunk) {
-    console.log('!!!', ctx.chunk.fileName)
     const reg = new RegExp(
       `<script\\s[^>]*?${ctx.chunk.fileName}[^<]*?<\\/script>`
     )
