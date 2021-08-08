@@ -149,7 +149,7 @@ export class VirtualModuleGraph {
   private createUpdateAPIs(
     updaterId: string,
     recordAffectedModule: (module: Module) => void
-  ): UpdaterAPIs & { disableAPIs(): void } {
+  ): VirtuleModuleAPIs & { disableAPIs(): void } {
     let outdated = false
     const _this = this
     const OUTDATED_ERROR_MSG = `You should not call update APIs after the updater async function.`
@@ -309,7 +309,7 @@ function cleanupEdgesWithUpdaterId(
   edges.clear()
 }
 
-export interface UpdaterAPIs {
+export interface VirtuleModuleAPIs {
   addModuleData(moduleId: string, data: any, upstreamModuleId: string): void
   getModuleData(moduleId: string): any[]
   deleteModule(moduleId: string): void
@@ -318,7 +318,7 @@ export interface UpdaterAPIs {
 class Update {
   constructor(
     public updaterId: string,
-    public updater: (apis: UpdaterAPIs) => void | Promise<void>
+    public updater: (apis: VirtuleModuleAPIs) => void | Promise<void>
   ) {}
 }
 

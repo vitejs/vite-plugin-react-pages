@@ -7,7 +7,7 @@ import {
   FileHandler,
   PagesDataKeeper,
   PagesData,
-  HandlerAPI,
+  PageAPIs,
 } from './PagesDataKeeper'
 
 export class PageStrategy extends EventEmitter {
@@ -22,7 +22,8 @@ export class PageStrategy extends EventEmitter {
 
   /**
    * start() will be called by the vite buildStart hook,
-   * which may be called multiple times
+   * which may be called multiple times.
+   * we only execute it once
    */
   public start(pagesDir: string, virtualModulesManager: VirtualModulesManager) {
     if (this.started) return
@@ -40,9 +41,9 @@ export class PageStrategy extends EventEmitter {
 
     this.virtualModulesManager.scheduleUpdate(
       'pages-init',
-      async (updaterAPIs) => {
-        const apis = this.pagesDataKeeper.createOneTimePageAPIs(updaterAPIs)
-        this.oneTimePageAPIs = apis
+      async (virtuleModuleAPIs) => {
+        this.oneTimePageAPIs =
+          this.pagesDataKeeper.createOneTimePageAPIs(virtuleModuleAPIs)
         const helpers = this.createHelpers(() => {
           throw new Error(
             `No defaultFileHandler found. You should pass fileHandler argument when calling watchFiles`
@@ -53,7 +54,8 @@ export class PageStrategy extends EventEmitter {
     )
   }
 
-  private oneTimePageAPIs: HandlerAPI = null as any
+  // these are one-time api that are only used in "pages-init"
+  private oneTimePageAPIs: PageAPIs = null as any
 
   public getPages(): PagesData {
     if (!this.started) throw new Error(`PageStrategy not started yet`)
@@ -90,7 +92,7 @@ export class PageStrategy extends EventEmitter {
         fileHandler = arg3 || defaultFileHandler
       }
 
-      pagesDataKeeper.addFileListener(baseDir, globs, fileHandler)
+      pagesDataKeeper.addFSWatcher(baseDir, globs, fileHandler)
     }
   }
 }
@@ -100,7 +102,7 @@ export type FindPages = (
   helpers: PageHelpers
 ) => void | Promise<void>
 
-export interface PageHelpers extends HandlerAPI {
+export interface PageHelpers extends PageAPIs {
   /**
    * Read the static data from a file.
    */
