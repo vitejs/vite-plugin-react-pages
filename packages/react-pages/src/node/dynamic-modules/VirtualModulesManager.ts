@@ -67,7 +67,7 @@ export class VirtualModulesManager {
   }
 
   /**
-   * Idel means:
+   * Idle means:
    * fs watcher is ready
    * no update is executing
    * update queue is empty
