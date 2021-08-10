@@ -129,6 +129,7 @@ export default function pluginFactory(
     async resolveId(id, importer) {
       if (id === appEntryId) return id
       if (id.startsWith(modulePrefix)) return id
+      // TODO
       if (id.endsWith('?demo')) {
         const bareImport = id.slice(0, 0 - '?demo'.length)
         const resolved = await this.resolve(bareImport, importer)
@@ -162,8 +163,7 @@ export default function pluginFactory(
       if (id.startsWith(pagesModuleId + '/')) {
         let pageId = id.slice(pagesModuleId.length)
         if (pageId === '/index__') pageId = '/'
-        const pages = await pageStrategy.getPages()
-        const page = pages[pageId]
+        const page = await pageStrategy.getPage(pageId)
         if (!page) {
           throw Error(`Page not found: ${pageId}`)
         }

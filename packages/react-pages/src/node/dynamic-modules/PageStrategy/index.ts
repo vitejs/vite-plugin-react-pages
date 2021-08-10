@@ -8,6 +8,7 @@ import {
   PagesDataKeeper,
   PagesData,
   PageAPIs,
+  OnePageData,
 } from './PagesDataKeeper'
 
 export class PageStrategy extends EventEmitter {
@@ -60,6 +61,11 @@ export class PageStrategy extends EventEmitter {
   public getPages(): PagesData {
     if (!this.started) throw new Error(`PageStrategy not started yet`)
     return this.pagesDataKeeper.getPages()
+  }
+
+  public getPage(pageId: string): OnePageData | null {
+    if (!this.started) throw new Error(`PageStrategy not started yet`)
+    return this.pagesDataKeeper.getPage(pageId)
   }
 
   /**

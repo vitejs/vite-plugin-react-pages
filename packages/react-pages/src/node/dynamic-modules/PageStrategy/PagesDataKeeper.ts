@@ -45,24 +45,17 @@ export class PagesDataKeeper extends PageUpdateBuffer {
   /** turn PagesDataInternal to PagesData */
   public getPages(): PagesData {
     return Object.fromEntries(
-      Object.entries(this.pages).map(
-        ([pageId, { runtimeData: _runtimeData, staticData: _staticData }]) => {
-          const runtimeData = Object.fromEntries(
-            Object.entries(_runtimeData).map(([key, { dataPath }]) => [
-              key,
-              dataPath,
-            ])
-          )
-          const staticData = Object.fromEntries(
-            Object.entries(_staticData).map(([key, { staticData }]) => [
-              key,
-              staticData,
-            ])
-          )
-          return [pageId, { data: runtimeData, staticData }]
-        }
-      )
+      Object.entries(this.pages).map(([pageId, page]) => [
+        pageId,
+        transformOnePageDataInternal(page),
+      ])
     )
+  }
+
+  public getPage(pageId: string): OnePageData | null {
+    const page = this.pages[pageId]
+    if (!page) return null
+    return transformOnePageDataInternal(page)
   }
 
   /**
@@ -308,13 +301,15 @@ export interface PagesData {
    *
    * @example '/posts/hello-world'
    */
-  [pageId: string]: {
-    data: {
-      [key: string]: string
-    }
-    staticData: {
-      [key: string]: any
-    }
+  [pageId: string]: OnePageData
+}
+
+export interface OnePageData {
+  data: {
+    [key: string]: string
+  }
+  staticData: {
+    [key: string]: any
   }
 }
 
@@ -371,3 +366,19 @@ const defaultProxyTraps = Object.fromEntries(
     },
   ])
 )
+
+function transformOnePageDataInternal(page: OnePageDataInternal): OnePageData {
+  const runtimeData = Object.fromEntries(
+    Object.entries(page.runtimeData).map(([key, { dataPath }]) => [
+      key,
+      dataPath,
+    ])
+  )
+  const staticData = Object.fromEntries(
+    Object.entries(page.staticData).map(([key, { staticData }]) => [
+      key,
+      staticData,
+    ])
+  )
+  return { data: runtimeData, staticData }
+}
