@@ -120,9 +120,9 @@ export class PagesDataKeeper extends PageUpdateBuffer {
     const { runtimeData: dataMap, staticData: staticDataMap } = pageData
     rawData.forEach((data: DataPiece) => {
       if (!data) return
-      const { key, dataPath, staticData } = data
-      if (!key) return
+      const { dataPath, staticData } = data
       if (!dataPath && !staticData) return
+      const key = data.key ?? 'main'
       const priority = data.priority ?? 1
       if (dataPath) {
         if (!dataMap[key] || priority > dataMap[key].priority)
@@ -288,6 +288,7 @@ export interface DataPiece {
   /**
    * when multiple data pieces have same key (conflict),
    * the data piece with highest priority will win
+   * @default 1
    */
   readonly priority?: number
 }
