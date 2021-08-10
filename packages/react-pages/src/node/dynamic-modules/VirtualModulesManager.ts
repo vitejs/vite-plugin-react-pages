@@ -53,7 +53,14 @@ export class VirtualModulesManager {
         .on('add', this.handleFileChange(baseDir, fileHandler, watcherId))
         .on('change', this.handleFileChange(baseDir, fileHandler, watcherId))
         .on('unlink', this.handleFileUnLink(baseDir, watcherId))
-        .on('ready', () => fsScanFinish())
+        .on('ready', () => {
+          setTimeout(() => {
+            // ready event may be fired too early,
+            // before initial scan callbacks are called
+            // https://github.com/paulmillr/chokidar/issues/1011
+            fsScanFinish()
+          }, 10)
+        })
     )
   }
 
@@ -225,6 +232,7 @@ class PendingTaskCounter {
         stopCounting = this.countTask()
       } else {
         stopCounting?.()
+        stopCounting = undefined
       }
     })
   }
