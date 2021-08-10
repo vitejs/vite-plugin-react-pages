@@ -58,14 +58,22 @@ export class PageStrategy extends EventEmitter {
   // these are one-time api that are only used in "pages-init"
   private oneTimePageAPIs: PageAPIs = null as any
 
-  public getPages(): PagesData {
+  public getPages(): Promise<PagesData> {
     if (!this.started) throw new Error(`PageStrategy not started yet`)
-    return this.pagesDataKeeper.getPages()
+    return new Promise((resolve) => {
+      this.virtualModulesManager.callOnceWhenIdle(() => {
+        resolve(this.pagesDataKeeper.getPages())
+      })
+    })
   }
 
-  public getPage(pageId: string): OnePageData | null {
+  public getPage(pageId: string): Promise<OnePageData | null> {
     if (!this.started) throw new Error(`PageStrategy not started yet`)
-    return this.pagesDataKeeper.getPage(pageId)
+    return new Promise((resolve) => {
+      this.virtualModulesManager.callOnceWhenIdle(() => {
+        resolve(this.pagesDataKeeper.getPage(pageId))
+      })
+    })
   }
 
   /**
