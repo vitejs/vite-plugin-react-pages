@@ -66,10 +66,10 @@ export class PagesDataKeeper extends PageUpdateBuffer {
     const pageId = ensurePageId(moduleId)
     const oldPageData: OnePageDataInternal | undefined = this.pages[pageId]
     const pageData = this.createPageDataFromRaw(rawData)
-    if (this.isEmptyPage(pageData)) {
-      // Page is deleted
-      if (!this.isEmptyPage(oldPageData)) {
-        this.pages[pageId] = pageData
+    // Page is deleted
+    if (!pageData) {
+      if (oldPageData) {
+        delete this.pages[pageId]
         this.scheduleUpdate({
           type: 'delete',
           pageId,
@@ -78,7 +78,7 @@ export class PagesDataKeeper extends PageUpdateBuffer {
       return
     }
     // Page is added
-    if (this.isEmptyPage(oldPageData)) {
+    if (!oldPageData) {
       this.pages[pageId] = pageData
       this.scheduleUpdate({
         type: 'add',
@@ -86,6 +86,7 @@ export class PagesDataKeeper extends PageUpdateBuffer {
       })
       return
     }
+    // Page is updated
     this.pages[pageId] = pageData
     if (!equal(pageData.runtimeData, oldPageData.runtimeData)) {
       this.scheduleUpdate({
@@ -103,16 +104,7 @@ export class PagesDataKeeper extends PageUpdateBuffer {
     }
   }
 
-  private isEmptyPage(pageData: OnePageDataInternal | undefined) {
-    if (!pageData) return true
-    const { runtimeData, staticData } = pageData
-    return (
-      Object.keys(runtimeData).length === 0 &&
-      Object.keys(staticData).length === 0
-    )
-  }
-
-  private createPageDataFromRaw(rawData: any[]) {
+  private createPageDataFromRaw(rawData: any[]): OnePageDataInternal | null {
     const pageData: OnePageDataInternal = {
       runtimeData: {},
       staticData: {},
@@ -133,7 +125,16 @@ export class PagesDataKeeper extends PageUpdateBuffer {
           staticDataMap[key] = { staticData, priority }
       }
     })
+    if (isEmptyPage(pageData)) return null
     return pageData
+
+    function isEmptyPage(pageData: OnePageDataInternal) {
+      const { runtimeData, staticData } = pageData
+      return (
+        Object.keys(runtimeData).length === 0 &&
+        Object.keys(staticData).length === 0
+      )
+    }
   }
 
   /**
@@ -177,6 +178,7 @@ export class PagesDataKeeper extends PageUpdateBuffer {
       const getDataObject = () => {
         const rawData = this.virtualModulesManager._getModuleDataNow(moduleId)
         const pageData = this.createPageDataFromRaw(rawData)
+        if (!pageData) return {}
         return pageData.runtimeData
       }
       const setData = (key: string, value: any) => {
@@ -197,6 +199,7 @@ export class PagesDataKeeper extends PageUpdateBuffer {
       const getDataObject = () => {
         const rawData = this.virtualModulesManager._getModuleDataNow(moduleId)
         const pageData = this.createPageDataFromRaw(rawData)
+        if (!pageData) return {}
         return pageData.staticData
       }
       const setData = (key: string, value: any) => {
