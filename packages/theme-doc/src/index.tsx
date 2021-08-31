@@ -57,7 +57,7 @@ export function createTheme(themeConfig: ThemeConfig) {
     const pageStaticData = staticData[loadState.routePath]
     let body = Object.entries(pageData).map(([key, dataPart], idx) => {
       const ContentComp = (dataPart as any).default
-      const pageStaticDataPart = pageStaticData[key]
+      const pageStaticDataPart = pageStaticData?.[key]
       const content = (() => {
         if (pageStaticDataPart?.sourceType === 'md')
           return (
