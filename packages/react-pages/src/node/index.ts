@@ -18,7 +18,7 @@ import { demoTransform } from './mdx-plugins/demo'
 import { tsInfoModule } from './ts-info-module'
 import { tsInfoTransform } from './mdx-plugins/tsInfo'
 import { injectHTMLTag } from './utils'
-import { VirtualModulesManager } from './dynamic-modules/VirtualModulesManager'
+import { VirtualModulesManager } from './utils/virtual-module'
 
 /**
  * This is a public API that users use in their index.html.
@@ -209,8 +209,7 @@ export type {
 } from '../../clientTypes'
 
 export type { FileHandler } from './dynamic-modules/PageStrategy/PagesDataKeeper'
-export { File } from './dynamic-modules/VirtualModulesManager'
-export { extractStaticData } from './dynamic-modules/utils'
+export { extractStaticData, File } from './utils/virtual-module'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
 
