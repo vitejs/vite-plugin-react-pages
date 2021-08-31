@@ -1,12 +1,12 @@
 import equal from 'fast-deep-equal'
 
 import { PageUpdateBuffer } from './UpdateBuffer'
-import { VirtuleModuleAPIs } from '../VirtualModules'
-import type {
+import {
+  VirtuleModuleAPIs,
   File,
   FileHandlerAPIs,
   VirtualModulesManager,
-} from '../VirtualModulesManager'
+} from '../../utils/virtual-module'
 
 const PAGE_MODULE_PREFIX = '/@vp-page'
 const ensurePageId = (moduleId: string) =>

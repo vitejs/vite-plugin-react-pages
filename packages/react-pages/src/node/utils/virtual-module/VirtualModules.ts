@@ -1,3 +1,5 @@
+import { PendingState } from './utils'
+
 export class VirtualModuleGraph {
   /**
    * the module inside this graph may be virtule module or real fs module
@@ -14,12 +16,12 @@ export class VirtualModuleGraph {
    * Before executing an updater, it will automatically cleanup the effects of
    * previous update with same updaterId.
    * Example:
-   * Find module1 for the first time:
+   * When find module1 for the first time:
    *   the updater set data for module2 and module3 (upstreamModule is module1)
-   * Observe that module1 is updated:
+   * Then, when observe that module1 is updated:
    *   the updater set data for module2 (upstreamModule is module1)
    * At this time, the data in module3 should be automatically cleanup!
-   * So the updater don't need to manually delete the old data in module3.
+   * So the updater(users) don't need to manually delete the old data in module3.
    */
   private updateQueue = new UpdateQueue()
   /** track updateQueue empty state (isPending means not empty) */
@@ -351,23 +353,3 @@ class UpdateQueue {
 
 // it indicates the depth of virtule modules
 const MAX_CASCADE_UPDATE_DEPTH = 10
-
-export class PendingState {
-  private _isPending = false
-  get isPending() {
-    return this._isPending
-  }
-  set isPending(value: boolean) {
-    if (this._isPending === value) return
-    this._isPending = value
-    this.cbs.forEach((cb) => cb(value))
-  }
-
-  private cbs: Array<(isPending: boolean) => void> = []
-  onStateChange(cb: (isPending: boolean) => void) {
-    this.cbs.push(cb)
-    return () => {
-      this.cbs = this.cbs.filter((v) => v !== cb)
-    }
-  }
-}

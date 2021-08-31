@@ -1,8 +1,12 @@
 import * as path from 'path'
 import { EventEmitter } from 'events'
 import slash from 'slash'
-import { extractStaticData } from '../utils'
-import { File, VirtualModulesManager } from '../VirtualModulesManager'
+
+import {
+  extractStaticData,
+  File,
+  VirtualModulesManager,
+} from '../../utils/virtual-module'
 import {
   FileHandler,
   PagesDataKeeper,

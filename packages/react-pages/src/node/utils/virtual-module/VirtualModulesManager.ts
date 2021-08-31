@@ -1,4 +1,3 @@
-import * as fs from 'fs-extra'
 import * as path from 'path'
 import chokidar, { FSWatcher } from 'chokidar'
 import slash from 'slash'
@@ -7,8 +6,9 @@ import {
   ModuleListener,
   VirtuleModuleAPIs,
   VirtualModuleGraph,
-  PendingState,
 } from './VirtualModules'
+import { PendingTaskCounter } from "./utils";
+import { File } from "./utils";
 
 let nextWatcherId = 0
 
@@ -173,67 +173,3 @@ export interface FileHandlerAPIs {
   getModuleData(moduleId: string): any[]
 }
 
-export class File {
-  content: Promise<string> | null = null
-
-  constructor(readonly path: string, readonly base: string) {}
-
-  get relative() {
-    return path.posix.relative(this.base, this.path)
-  }
-
-  get extname() {
-    return path.posix.extname(this.path).slice(1)
-  }
-
-  read() {
-    return this.content || (this.content = fs.readFile(this.path, 'utf-8'))
-  }
-}
-
-class PendingTaskCounter {
-  private count = 0
-  private callbacks: (() => void)[] = []
-
-  public countTask() {
-    this.count++
-    let ended = false
-    return () => {
-      if (ended) return
-      ended = true
-      this.count--
-      if (this.count === 0) {
-        this.callbacks.forEach((cb) => cb())
-        this.callbacks.length = 0
-      }
-    }
-  }
-
-  /**
-   * the callback style is preferred over the promise style
-   * because cb will be called **synchronously** when count turn 0
-   * while promise-then-cb would be called in next microtask (at that time the state may have changed)
-   */
-  public callOnceWhenIdle(cb: () => void) {
-    if (this.count === 0) {
-      cb()
-    } else {
-      this.callbacks.push(cb)
-    }
-  }
-
-  /** track a changeable pending state */
-  public countPendingState(pendingState: PendingState) {
-    let stopCounting: undefined | (() => void)
-    pendingState.onStateChange((isPending) => {
-      if (isPending) {
-        // if this task has already been counted, don't count again
-        if (stopCounting) return
-        stopCounting = this.countTask()
-      } else {
-        stopCounting?.()
-        stopCounting = undefined
-      }
-    })
-  }
-}
