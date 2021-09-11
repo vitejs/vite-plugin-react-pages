@@ -110,6 +110,7 @@ export function createTheme({
     let body
     if (isComposedPage) {
       body = Object.entries(pageData)
+        .filter(([key]) => !!pageStaticData[key])
         .sort(([key1], [key2]) => {
           // README should be the first section
           if (key1 === 'README') return -1
@@ -138,18 +139,20 @@ export function createTheme({
           )
         })
     } else {
-      body = Object.entries(pageData).map(([key, dataPart], idx) => {
-        const ContentComp = (dataPart as any).default
-        const pageStaticDataPart = pageStaticData[key]
-        const MdWrap =
-          pageStaticDataPart.sourceType === 'md' ? MD : React.Fragment
-        const content = (
-          <MdWrap>
-            <ContentComp />
-          </MdWrap>
-        )
-        return <div key={idx}>{content}</div>
-      })
+      body = Object.entries(pageData)
+        .filter(([key]) => !!pageStaticData[key])
+        .map(([key, dataPart], idx) => {
+          const ContentComp = (dataPart as any).default
+          const pageStaticDataPart = pageStaticData[key]
+          const MdWrap =
+            pageStaticDataPart.sourceType === 'md' ? MD : React.Fragment
+          const content = (
+            <MdWrap>
+              <ContentComp />
+            </MdWrap>
+          )
+          return <div key={idx}>{content}</div>
+        })
     }
     return (
       <Layout

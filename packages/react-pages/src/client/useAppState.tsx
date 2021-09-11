@@ -27,9 +27,7 @@ export default function useAppState(routePath: string) {
     type: LoadState['type'],
     routePath: string,
     error?: any
-  ) =>
-    (type !== loadState.type || routePath !== loadState.routePath) &&
-    setLoadState({ type, routePath, error })
+  ) => setLoadState({ type, routePath, error })
 
   const loading = usePageModule(routePath)
   const loadingRef = useRef<Promise<any> | undefined>()
@@ -38,7 +36,9 @@ export default function useAppState(routePath: string) {
     if (!loading) {
       onLoadState('404', routePath)
     } else {
-      if (dataCache[routePath]) {
+      // notice that during hmr, dataCache[routePath] may exist
+      if (dataCache[routePath] && !import.meta.hot) {
+        // this is a ssr client render, not hmr
         onLoadState('loaded', routePath)
       } else {
         onLoadState('loading', routePath)
