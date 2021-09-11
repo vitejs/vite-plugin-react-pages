@@ -1,4 +1,4 @@
-import { ProxyModulesManager } from '../utils/virtual-module'
+import { ProxyModulesManager } from '../../utils/virtual-module'
 import { collectInterfaceInfo } from './extract'
 
 const PROXY_PREFIX = '/@react-pages/tsInfo'

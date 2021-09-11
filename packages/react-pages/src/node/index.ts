@@ -12,10 +12,10 @@ import {
   renderOnePageData,
 } from './dynamic-modules/PageStrategy/pageUtils'
 import { PageStrategy } from './dynamic-modules/PageStrategy'
-import { resolveTheme } from './dynamic-modules/resolveTheme'
-import { DemoModuleManager } from './demo-modules'
+import { resolveTheme } from './virtule-module-plugins/theme'
+import { DemoModuleManager } from './virtule-module-plugins/demo-modules'
 import { demoTransform } from './mdx-plugins/demo'
-import { TsInfoModuleManager } from './ts-info-module'
+import { TsInfoModuleManager } from './virtule-module-plugins/ts-info-module'
 import { tsInfoTransform } from './mdx-plugins/tsInfo'
 import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
@@ -33,7 +33,6 @@ const modulePrefix = '/@react-pages/'
 const pagesModuleId = modulePrefix + 'pages'
 const themeModuleId = modulePrefix + 'theme'
 const ssrDataModuleId = modulePrefix + 'ssrData'
-const tsInfoModuleId = modulePrefix + 'tsInfo'
 
 const tsInfoQueryReg = /\?tsInfo=(.*)$/
 
@@ -120,7 +119,7 @@ export default function pluginFactory(
           })
         })
 
-      demoModuleManager.onDemoUpdate(reloadVirtualModule)
+      demoModuleManager.onUpdate(reloadVirtualModule)
       tsInfoModuleManager.onUpdate(reloadVirtualModule)
     },
     buildStart() {
@@ -140,7 +139,7 @@ export default function pluginFactory(
         const resolved = await this.resolve(bareImport, importer)
         if (!resolved || resolved.external)
           throw new Error(`can not resolve demo: ${id}. importer: ${importer}`)
-        return demoModuleManager.registerDemoProxy(resolved.id)
+        return demoModuleManager.registerProxyModule(resolved.id)
       }
       const matchTsInfo = id.match(tsInfoQueryReg)
       if (matchTsInfo) {
@@ -180,8 +179,8 @@ export default function pluginFactory(
       if (id === ssrDataModuleId) {
         return renderPageListInSSR(await pageStrategy.getPages())
       }
-      if (demoModuleManager.isDemoProxyId(id)) {
-        return demoModuleManager.loadDemo(id)
+      if (demoModuleManager.isProxyModuleId(id)) {
+        return demoModuleManager.loadProxyModule(id)
       }
       if (tsInfoModuleManager.isProxyModuleId(id)) {
         return tsInfoModuleManager.loadProxyModule(id)

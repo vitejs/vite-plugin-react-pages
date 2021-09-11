@@ -1,13 +1,13 @@
 import { strip } from 'jest-docblock'
-import { ProxyModulesManager } from '../utils/virtual-module'
-import { extractStaticData } from '../utils/virtual-module/utils'
+import { ProxyModulesManager } from '../../utils/virtual-module'
+import { extractStaticData } from '../../utils/virtual-module/utils'
 
 const DEMO_PROXY_PREFIX = '/@react-pages/demos'
 
 export class DemoModuleManager {
   private pmm = new ProxyModulesManager(DEMO_PROXY_PREFIX)
 
-  registerDemoProxy(demoPath: string) {
+  registerProxyModule(demoPath: string) {
     return this.pmm.registerProxyModule(demoPath, async (file) => {
       const content = await file.read()
       const staticData = await extractStaticData(file)
@@ -21,11 +21,11 @@ export class DemoModuleManager {
     })
   }
 
-  isDemoProxyId(id: string) {
+  isProxyModuleId(id: string) {
     return this.pmm.isProxyModuleId(id)
   }
 
-  async loadDemo(demoProxyId: string) {
+  async loadProxyModule(demoProxyId: string) {
     const data = await this.pmm.getProxyModuleData(demoProxyId)
     const { demoPath, code, staticData } = data ?? {}
     if (!demoPath || !code || !staticData)
@@ -42,7 +42,7 @@ export class DemoModuleManager {
     export const isDemo = true;`
   }
 
-  onDemoUpdate(cb: (reloadPath: string) => void) {
+  onUpdate(cb: (reloadPath: string) => void) {
     this.pmm.onProxyModuleUpdate(cb)
   }
 
