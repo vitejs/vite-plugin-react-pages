@@ -5,11 +5,11 @@
   "scripts": {
     "clean": "rm -rf node_modules/.vite_opt_cache",
     "dev": "vite serve",
-    "debug": "node --inspect ./node_modules/vite/bin/vite serve --config ./vite.demos.ts",
-    "build": "rm -rf dist && vite build --config ./vite.demos.ts --outDir dist && serve -s dist",
-    "debug:build": "node --inspect node_modules/vite/bin/vite.js build -c ./vite.demos.ts --outDir dist",
-    "ssr": "rm -rf dist && vite-pages ssr -c ./vite.demos.ts && serve dist",
-    "debug:ssr": "rm -rf dist && node --inspect node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr -c ./vite.demos.ts"
+    "debug": "node --inspect ./node_modules/vite/bin/vite serve",
+    "build": "rm -rf dist && vite build --outDir dist && serve -s dist",
+    "debug:build": "node --inspect node_modules/vite/bin/vite.js build --outDir dist",
+    "ssr": "rm -rf dist && vite-pages ssr && serve dist",
+    "debug:ssr": "rm -rf dist && node --inspect node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr"
   },
   "keywords": [],
   "author": "",
