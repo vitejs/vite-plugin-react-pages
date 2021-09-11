@@ -6,7 +6,7 @@ import {
   File,
   FileHandlerAPIs,
   VirtualModulesManager,
-} from '../../utils/virtual-module'
+} from '../utils/virtual-module'
 
 const PAGE_MODULE_PREFIX = '/@vp-page'
 const ensurePageId = (moduleId: string) =>

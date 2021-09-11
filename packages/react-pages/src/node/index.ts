@@ -5,18 +5,22 @@ import type { MdxPlugin } from 'vite-plugin-mdx/dist/types'
 import {
   DefaultPageStrategy,
   defaultFileHandler,
-} from './dynamic-modules/PageStrategy/DefaultPageStrategy'
+} from './page-strategy/DefaultPageStrategy'
 import {
   renderPageList,
   renderPageListInSSR,
   renderOnePageData,
-} from './dynamic-modules/PageStrategy/pageUtils'
-import { PageStrategy } from './dynamic-modules/PageStrategy'
+} from './page-strategy/pageUtils'
+import { PageStrategy } from './page-strategy'
 import { resolveTheme } from './virtule-module-plugins/theme'
-import { DemoModuleManager } from './virtule-module-plugins/demo-modules'
-import { demoTransform } from './mdx-plugins/demo'
-import { TsInfoModuleManager } from './virtule-module-plugins/ts-info-module'
-import { tsInfoTransform } from './mdx-plugins/tsInfo'
+import {
+  DemoModuleManager,
+  DemoMdxPlugin,
+} from './virtule-module-plugins/demo-modules'
+import {
+  TsInfoModuleManager,
+  TsInfoMdxPlugin,
+} from './virtule-module-plugins/ts-info-module'
 import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
 
@@ -208,13 +212,13 @@ export type {
   TsInterfacePropertyInfo,
 } from '../../clientTypes'
 
-export type { FileHandler } from './dynamic-modules/PageStrategy/PagesDataKeeper'
+export type { FileHandler } from './page-strategy/PagesDataKeeper'
 export { extractStaticData, File } from './utils/virtual-module'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
 
 function getRemarkPlugins(root: string) {
-  const result: any[] = [demoTransform, tsInfoTransform]
+  const result: any[] = [DemoMdxPlugin, TsInfoMdxPlugin]
   const pkgJsonPath = path.join(root, 'package.json')
   const hasPkgJson = fs.pathExistsSync(pkgJsonPath)
 

@@ -1,6 +1,6 @@
 import type { Root } from 'mdast'
 
-export function demoTransform() {
+export function DemoMdxPlugin() {
   return transformer
 
   function transformer(tree: Root, file: any) {

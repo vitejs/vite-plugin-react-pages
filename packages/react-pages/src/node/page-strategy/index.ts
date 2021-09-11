@@ -6,7 +6,7 @@ import {
   extractStaticData,
   File,
   VirtualModulesManager,
-} from '../../utils/virtual-module'
+} from '../utils/virtual-module'
 import {
   FileHandler,
   PagesDataKeeper,

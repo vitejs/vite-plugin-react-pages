@@ -50,3 +50,5 @@ export class DemoModuleManager {
     this.pmm.close()
   }
 }
+
+export * from './mdx-plugin'
