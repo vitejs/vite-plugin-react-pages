@@ -25,8 +25,8 @@
     "globby": "^11.0.2",
     "my-button": "*",
     "my-card": "*",
-    "serve": "^11.3.2",
-    "vite": "^2.3.5",
+    "serve": "^12.0.1",
+    "vite": "^2.5.6",
     "vite-pages-theme-doc": "^3.0.0",
     "vite-plugin-mdx": "^3.5.6",
     "vite-plugin-react-pages": "^3.0.0"
