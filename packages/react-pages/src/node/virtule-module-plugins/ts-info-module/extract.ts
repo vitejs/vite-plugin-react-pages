@@ -1,6 +1,9 @@
 import * as ts from 'typescript'
 
-import { TsInterfaceInfo, TsInterfacePropertyInfo } from '../../../clientTypes'
+import {
+  TsInterfaceInfo,
+  TsInterfacePropertyInfo,
+} from '../../../../clientTypes'
 
 const defaultTsConfig: ts.CompilerOptions = {
   moduleResolution: ts.ModuleResolutionKind.NodeJs,
