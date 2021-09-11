@@ -8,7 +8,7 @@ export function DemoMdxPlugin() {
 
     const addImports: string[] = []
 
-    children.forEach((child) => {
+    children.forEach((child: any) => {
       if ((child.type as string) === 'jsx') {
         const regexp = /<Demo\s+src=["'](.*?)["']/
         const match = (child.value as string).match(regexp)

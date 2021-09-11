@@ -43,7 +43,6 @@ const SiteSearch = ({ pagesStaticData }: Props) => {
       filterLocal={false}
       className={s.search}
       value={searchVal}
-      // @ts-expect-error
       onChange={onChange}
     >
       {filteredData.map(({ label, path }) => (
