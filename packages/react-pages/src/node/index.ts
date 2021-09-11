@@ -13,7 +13,7 @@ import {
 } from './dynamic-modules/PageStrategy/pageUtils'
 import { PageStrategy } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
-import { demoModule } from './demo-modules'
+import { DemoModuleManager } from './demo-modules'
 import { demoTransform } from './mdx-plugins/demo'
 import { tsInfoModule } from './ts-info-module'
 import { tsInfoTransform } from './mdx-plugins/tsInfo'
@@ -33,7 +33,6 @@ const modulePrefix = '/@react-pages/'
 const pagesModuleId = modulePrefix + 'pages'
 const themeModuleId = modulePrefix + 'theme'
 const ssrDataModuleId = modulePrefix + 'ssrData'
-const demosModuleId = modulePrefix + 'demos'
 const tsInfoModuleId = modulePrefix + 'tsInfo'
 
 const tsInfoQueryReg = /\?tsInfo=(.*)$/
@@ -52,7 +51,8 @@ export default function pluginFactory(
   let pagesDir: string
   let pageStrategy: PageStrategy
   /** used as data source for PageStrategy and other dynamic-modules */
-  let virtualModulesManager = new VirtualModulesManager()
+  const virtualModulesManager = new VirtualModulesManager()
+  const demoModuleManager = new DemoModuleManager()
 
   return {
     name: 'vite-plugin-react-pages',
@@ -118,6 +118,8 @@ export default function pluginFactory(
             reloadVirtualModule(pagesModuleId + pageId)
           })
         })
+
+      demoModuleManager.onDemoUpdate(reloadVirtualModule)
     },
     buildStart() {
       // buildStart may be called multiple times
@@ -136,7 +138,7 @@ export default function pluginFactory(
         const resolved = await this.resolve(bareImport, importer)
         if (!resolved || resolved.external)
           throw new Error(`can not resolve demo: ${id}. importer: ${importer}`)
-        return demosModuleId + resolved.id
+        return demoModuleManager.registerDemoProxy(resolved.id)
       }
       const matchTsInfo = id.match(tsInfoQueryReg)
       if (matchTsInfo) {
@@ -176,12 +178,11 @@ export default function pluginFactory(
       if (id === ssrDataModuleId) {
         return renderPageListInSSR(await pageStrategy.getPages())
       }
-      if (id.startsWith(demosModuleId)) {
-        const demoPath = id.slice(demosModuleId.length)
-        return demoModule(demoPath)
+      if (demoModuleManager.isDemoProxyId(id)) {
+        return demoModuleManager.loadDemo(id)
       }
       if (id.startsWith(tsInfoModuleId)) {
-        let sourcePath = id.slice(demosModuleId.length)
+        let sourcePath = id.slice(tsInfoModuleId.length)
         const match = sourcePath.match(/--(.*?)--(.*)$/)
         if (!match) throw new Error('assertion fail')
         const exportName = match[1]
@@ -193,6 +194,7 @@ export default function pluginFactory(
     vitePagesStaticSiteGeneration: staticSiteGeneration,
     closeBundle() {
       virtualModulesManager.close()
+      demoModuleManager.close()
     },
     transformIndexHtml(html, ctx) {
       return moveScriptTagToBodyEnd(html, ctx)

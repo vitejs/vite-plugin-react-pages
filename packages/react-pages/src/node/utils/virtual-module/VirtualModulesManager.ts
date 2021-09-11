@@ -7,8 +7,8 @@ import {
   VirtuleModuleAPIs,
   VirtualModuleGraph,
 } from './VirtualModules'
-import { PendingTaskCounter } from "./utils";
-import { File } from "./utils";
+import { PendingTaskCounter } from './utils'
+import { File } from './utils'
 
 let nextWatcherId = 0
 
@@ -70,6 +70,12 @@ export class VirtualModulesManager {
   ) {
     this.callOnceWhenIdle(() => {
       cb(this.virtuleModules.getModules(filter))
+    })
+  }
+
+  public getModule(moduleId: string, cb: (moduleData: any[]) => void) {
+    this.callOnceWhenIdle(() => {
+      cb(this.virtuleModules.getModuleData(moduleId))
     })
   }
 
@@ -172,4 +178,3 @@ export interface FileHandlerAPIs {
   addModuleData(moduleId: string, data: any): void
   getModuleData(moduleId: string): any[]
 }
-
