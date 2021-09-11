@@ -1,6 +1,6 @@
 import type { Root } from 'mdast'
 
-export function tsInfoTransform() {
+export function TsInfoMdxPlugin() {
   return transformer
 
   function transformer(tree: Root, file: any) {
@@ -17,7 +17,9 @@ export function tsInfoTransform() {
           const name = match[2]
           const nextIndex = addImports.length
           const varName = `_tsInfo${nextIndex}`
-          addImports.push(`import * as ${varName} from "${src}?tsInfo=${name}";`)
+          addImports.push(
+            `import * as ${varName} from "${src}?tsInfo=${name}";`
+          )
           child.value = `<TsInfo {...${varName}} />`
         }
       }

@@ -41,3 +41,5 @@ export class TsInfoModuleManager {
     this.pmm.close()
   }
 }
+
+export * from './mdx-plugin'
