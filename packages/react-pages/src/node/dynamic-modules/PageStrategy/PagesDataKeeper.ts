@@ -169,6 +169,11 @@ export class PagesDataKeeper extends PageUpdateBuffer {
     return this.createPageAPIs(handlerAPI)
   }
 
+  /**
+   * TODO:
+   * getRuntimeData and getStaticData are very inefficient to implement,
+   * redesign them in the next verion
+   */
   private createPageAPIs(lowerAPI: FileHandlerAPIs): PageAPIs {
     const getRuntimeData = (pageId: string) => {
       const moduleId = ensureModuleId(pageId)
@@ -176,6 +181,7 @@ export class PagesDataKeeper extends PageUpdateBuffer {
       // instead, get data by virtualModulesManager._getModuleDataNow
       // which is updated immediately after updateing virtule modules
       const getDataObject = () => {
+        // reconstruct the data object, which is inefficient
         const rawData = this.virtualModulesManager._getModuleDataNow(moduleId)
         const pageData = this.createPageDataFromRaw(rawData)
         if (!pageData) return {}

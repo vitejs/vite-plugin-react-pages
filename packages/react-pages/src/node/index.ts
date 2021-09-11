@@ -17,7 +17,7 @@ import { demoModule } from './demo-modules'
 import { demoTransform } from './mdx-plugins/demo'
 import { tsInfoModule } from './ts-info-module'
 import { tsInfoTransform } from './mdx-plugins/tsInfo'
-import { injectHTMLTag } from './utils'
+import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
 
 /**
@@ -51,6 +51,7 @@ export default function pluginFactory(
   let isBuild: boolean
   let pagesDir: string
   let pageStrategy: PageStrategy
+  /** used as data source for PageStrategy and other dynamic-modules */
   let virtualModulesManager = new VirtualModulesManager()
 
   return {
