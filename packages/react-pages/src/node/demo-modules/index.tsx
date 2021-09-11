@@ -14,6 +14,7 @@ export class DemoModuleManager {
       // strip staticData notation
       const code = strip(content)
       return {
+        demoPath,
         code,
         staticData,
       }
@@ -25,11 +26,9 @@ export class DemoModuleManager {
   }
 
   async loadDemo(demoProxyId: string) {
-    const { sourceFilePath: demoPath, data } = await this.pmm.getProxyModule(
-      demoProxyId
-    )
-    const { code, staticData } = data ?? {}
-    if (!code || !staticData)
+    const data = await this.pmm.getProxyModuleData(demoProxyId)
+    const { demoPath, code, staticData } = data ?? {}
+    if (!demoPath || !code || !staticData)
       throw new Error(`assertion fail: invalid demo data: ${demoProxyId}`)
 
     return `export * from "${demoPath}";
