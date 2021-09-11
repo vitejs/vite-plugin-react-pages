@@ -15,7 +15,7 @@ import { PageStrategy } from './dynamic-modules/PageStrategy'
 import { resolveTheme } from './dynamic-modules/resolveTheme'
 import { DemoModuleManager } from './demo-modules'
 import { demoTransform } from './mdx-plugins/demo'
-import { tsInfoModule } from './ts-info-module'
+import { TsInfoModuleManager } from './ts-info-module'
 import { tsInfoTransform } from './mdx-plugins/tsInfo'
 import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
@@ -53,6 +53,7 @@ export default function pluginFactory(
   /** used as data source for PageStrategy and other dynamic-modules */
   const virtualModulesManager = new VirtualModulesManager()
   const demoModuleManager = new DemoModuleManager()
+  const tsInfoModuleManager = new TsInfoModuleManager()
 
   return {
     name: 'vite-plugin-react-pages',
@@ -120,6 +121,7 @@ export default function pluginFactory(
         })
 
       demoModuleManager.onDemoUpdate(reloadVirtualModule)
+      tsInfoModuleManager.onUpdate(reloadVirtualModule)
     },
     buildStart() {
       // buildStart may be called multiple times
@@ -149,7 +151,7 @@ export default function pluginFactory(
             `can not resolve tsInfo: ${id}. importer: ${importer}`
           )
         const exportName = matchTsInfo[1]
-        return `${tsInfoModuleId}--${exportName}--${resolved.id}`
+        return tsInfoModuleManager.registerProxyModule(resolved.id, exportName)
       }
       return undefined
     },
@@ -181,13 +183,8 @@ export default function pluginFactory(
       if (demoModuleManager.isDemoProxyId(id)) {
         return demoModuleManager.loadDemo(id)
       }
-      if (id.startsWith(tsInfoModuleId)) {
-        let sourcePath = id.slice(tsInfoModuleId.length)
-        const match = sourcePath.match(/--(.*?)--(.*)$/)
-        if (!match) throw new Error('assertion fail')
-        const exportName = match[1]
-        sourcePath = match[2]
-        return tsInfoModule(sourcePath, exportName)
+      if (tsInfoModuleManager.isProxyModuleId(id)) {
+        return tsInfoModuleManager.loadProxyModule(id)
       }
     },
     // @ts-expect-error
@@ -195,6 +192,7 @@ export default function pluginFactory(
     closeBundle() {
       virtualModulesManager.close()
       demoModuleManager.close()
+      tsInfoModuleManager.close()
     },
     transformIndexHtml(html, ctx) {
       return moveScriptTagToBodyEnd(html, ctx)
