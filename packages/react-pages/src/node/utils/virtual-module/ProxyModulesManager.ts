@@ -18,12 +18,16 @@ export class ProxyModulesManager {
    * register a source file to watch,
    * map its data into a proxy module,
    * return the proxyModuleId
+   *
+   * to create multiple proxy modules for one sourceFilePath,
+   * you can pass in keys to differentiate between them.
    */
   registerProxyModule(
     sourceFilePath: string,
-    getProxyModuleData: (sourceFile: File) => any
+    getProxyModuleData: (sourceFile: File) => any,
+    key?: string
   ) {
-    const proxyModuleId = this.getProxyModuleId(sourceFilePath)
+    const proxyModuleId = this.getProxyModuleId(sourceFilePath, key)
     if (this.register[proxyModuleId]) return proxyModuleId
     this.vmm.addFSWatcher('', [sourceFilePath], async (file, api) => {
       const proxyModuleData = await getProxyModuleData(file)
@@ -34,11 +38,10 @@ export class ProxyModulesManager {
   }
 
   /**
-   * get proxy module by proxyModuleId
+   * get proxy module data by proxyModuleId
    */
-  async getProxyModule(proxyModuleId: string) {
-    const sourceFilePath = this.getSourceFilePath(proxyModuleId)
-    return new Promise<{ sourceFilePath: string; data: any }>((res, rej) => {
+  async getProxyModuleData(proxyModuleId: string) {
+    return new Promise<any>((res, rej) => {
       this.vmm.getModule(proxyModuleId, (moduleData) => {
         if (!Array.isArray(moduleData) || moduleData.length === 0)
           return rej(
@@ -50,7 +53,7 @@ export class ProxyModulesManager {
               `assertion fail: proxy module has multiple data: ${proxyModuleId}`
             )
           )
-        res({ sourceFilePath, data: moduleData[0] })
+        res(moduleData[0])
       })
     })
   }
@@ -68,14 +71,10 @@ export class ProxyModulesManager {
     this.vmm.close()
   }
 
-  getProxyModuleId(sourceFilePath: string) {
-    return this.proxyModulePrefix + sourceFilePath
-  }
-
-  getSourceFilePath(proxyModuleId: string) {
-    if (!this.isProxyModuleId(proxyModuleId))
-      throw new Error(`assertion fail: not a proxyModuleId: ${proxyModuleId}`)
-    return proxyModuleId.slice(this.proxyModulePrefix.length)
+  getProxyModuleId(sourceFilePath: string, key?: string) {
+    let prefix = this.proxyModulePrefix
+    if (key) prefix += `--${key}--`
+    return prefix + sourceFilePath
   }
 
   isProxyModuleId(id: string) {
