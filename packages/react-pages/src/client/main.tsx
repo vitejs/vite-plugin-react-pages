@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider as Jotai } from 'jotai'
+import { Provider as Jotai } from './jotai'
 import SSRContextProvider from './SSRContextProvider'
 import App from './App'
 

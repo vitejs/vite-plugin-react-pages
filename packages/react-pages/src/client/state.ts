@@ -1,8 +1,8 @@
 import { useMemo, createContext } from 'react'
 import { dequal } from 'dequal'
 import type { SetAtom } from 'jotai/core/types'
-import { atom, useAtom } from 'jotai'
-import { atomFamily, useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atom, useAtom } from './jotai'
+import { atomFamily, useAtomValue, useUpdateAtom } from './jotai/utils'
 import type { PageLoaded, UseStaticData, Theme } from '../../clientTypes'
 
 export let useTheme: () => Theme
