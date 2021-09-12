@@ -1,5 +1,5 @@
 import { useContext, useCallback, useMemo } from 'react';
-import { SECRET_INTERNAL_getStoreContext, useAtom, atom } from './jotai';
+import { SECRET_INTERNAL_getStoreContext, useAtom, atom } from '.';
 
 function useUpdateAtom(anAtom) {
   const StoreContext = SECRET_INTERNAL_getStoreContext(anAtom.scope);
