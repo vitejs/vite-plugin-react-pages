@@ -1,5 +1,5 @@
 /**
- * @title dynamic route page
+ * @title posts - dynamic page
  */
 
 import React from 'react'

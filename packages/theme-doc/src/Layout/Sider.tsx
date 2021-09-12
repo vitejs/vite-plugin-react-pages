@@ -61,11 +61,12 @@ export function defaultSideNavs(
   )
 
   const groups = getGroups(staticData)
+  // groupKey of the current page
   const groupKey = (() => {
-    // infer the group of the current page
+    // infer the group of the current page.
     // currentGroupInfo.group may be wrong because:
-    // if there is also pages like /guide/start
-    // then /guide should not be grouped with /faq
+    // if there is also pages like /guide/start ,
+    // then /guide should not be grouped with /faq .
     // instead, /guide should be moved to the "guide" group
     if (currentGroupInfo.group === '/' && groups[currentGroupInfo.pageName]) {
       return currentGroupInfo.pageName
@@ -98,6 +99,8 @@ export function defaultSideNavs(
               pageB.pagePath
             )
           )
+          // pages with path params should not be showed in sideNav
+          .filter((page) => !page.pagePath.includes('/:'))
           .forEach((page) => {
             const label =
               getStaticDataValue(page.pageStaticData, 'title') ?? page.pageName
@@ -110,26 +113,31 @@ export function defaultSideNavs(
       }
       const groupLabel =
         getGroupConfig(groupKey, subGroupKey)?.label ?? subGroupKey
-      result.push({
-        group: groupLabel,
-        children: pages
-          .sort((pageA, pageB) =>
-            sortPages(
-              pageA.pageStaticData,
-              pageB.pageStaticData,
-              pageA.pagePath,
-              pageB.pagePath
-            )
+
+      const subGroupItems = pages
+        .sort((pageA, pageB) =>
+          sortPages(
+            pageA.pageStaticData,
+            pageB.pageStaticData,
+            pageA.pagePath,
+            pageB.pagePath
           )
-          .map((page) => {
-            const label =
-              getStaticDataValue(page.pageStaticData, 'title') ?? page.pageName
-            return {
-              label,
-              path: page.pagePath,
-            }
-          }),
-      })
+        )
+        // pages with path params should not be showed in sideNav
+        .filter((page) => !page.pagePath.includes('/:'))
+        .map((page) => {
+          const label =
+            getStaticDataValue(page.pageStaticData, 'title') ?? page.pageName
+          return {
+            label,
+            path: page.pagePath,
+          }
+        })
+      if (subGroupItems.length > 0)
+        result.push({
+          group: groupLabel,
+          children: subGroupItems,
+        })
     })
   return result
 

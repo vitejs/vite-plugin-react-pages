@@ -1,5 +1,5 @@
 /**
- * @title dynamic route page
+ * @title user - dynamic route page
  */
 
 import React from 'react'

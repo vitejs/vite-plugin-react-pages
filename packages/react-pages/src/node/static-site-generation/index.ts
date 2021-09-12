@@ -125,7 +125,7 @@ export async function ssrBuild(
 
   await Promise.all(
     pagePaths.map(async (pagePath) => {
-      // currently not support pages with path param
+      // currently not support pages with path params
       // .e.g /users/:userId
       if (pagePath.match(/\/:\w/)) return
       const ssrContent = renderToString(pagePath)

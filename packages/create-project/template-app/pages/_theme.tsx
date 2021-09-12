@@ -23,9 +23,6 @@ export default createTheme({
     },
   ],
   sideNavs: (ctx) => {
-    if (ctx.loadState.routePath.startsWith('/users')) {
-      return null
-    }
     return defaultSideNavs(ctx, {
       groupConfig: {
         reference: {
