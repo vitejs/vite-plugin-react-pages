@@ -7,7 +7,7 @@ export class VirtualModuleGraph {
   private readonly modules: Map<string, Module> = new Map()
 
   /**
-   * Serialize the update works (instead of do them concurrently)
+   * Serialize the update works (instead of doing them concurrently)
    * to make the result more predictable.
    *
    * If there is already a queuing update with same updaterId,
@@ -41,6 +41,8 @@ export class VirtualModuleGraph {
 
   public getModules(filter?: (moduleId: string) => boolean) {
     let entries = Array.from(this.modules.entries())
+    // filter is a performance optimization:
+    // don't call module.getData() for filtered-out modules
     if (filter) entries = entries.filter(([moduleId]) => filter(moduleId))
     const modules: { [id: string]: any[] } = {}
     entries.forEach(([moduleId, module]) => {
