@@ -74,11 +74,15 @@ export function collectInterfaceInfo(
             ts.isMethodSignature(declaration))
         )
       ) {
-        throw new Error(
+        // known member in interface symbol
+        // that we don't handle
+        if (symbol.getFlags() & ts.SymbolFlags.TypeParameter) return
+        console.warn(
           `unexpected declaration type in interface. name: ${name}, kind: ${
             ts.SyntaxKind[declaration?.kind as any]
           }`
         )
+        return
       }
       const commentText =
         getComment(declaration, declaration.getSourceFile().getFullText()) ?? ''

@@ -1,7 +1,7 @@
 /**
  * This is the description of the Button component's props
  */
-export interface ButtonProps {
+export interface ButtonProps<TestGenerics extends string> {
   /**
    * the type of button
    * @defaultValue 'default'
@@ -11,7 +11,7 @@ export interface ButtonProps {
    * the size of button
    * @defaultValue 'middle'
    */
-  size?: 'large' | 'middle' | 'small'
+  size?: 'large' | 'middle' | 'small' | TestGenerics
   /**
    * loading state of button
    * @defaultValue false
