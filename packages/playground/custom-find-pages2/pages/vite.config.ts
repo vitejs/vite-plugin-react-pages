@@ -14,7 +14,7 @@ export default defineConfig({
     reactRefresh(),
     mdx(),
     pages({
-      pagesDir: path.join(__dirname, 'pages'),
+      pagesDir: __dirname,
       // custom pageStrategy
       pageStrategy: new PageStrategy(function findPages(pagesDir, helpers) {
         helpers.watchFiles(
