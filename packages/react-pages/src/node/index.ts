@@ -23,6 +23,7 @@ import {
 } from './virtule-module-plugins/ts-info-module'
 import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
+import { ImageMdxPlugin } from './utils/mdx-plugin-image'
 
 /**
  * This is a public API that users use in their index.html.
@@ -211,7 +212,7 @@ export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
 
 function getRemarkPlugins(root: string) {
-  const result: any[] = [DemoMdxPlugin, TsInfoMdxPlugin]
+  const result: any[] = [DemoMdxPlugin, TsInfoMdxPlugin, ImageMdxPlugin]
   const pkgJsonPath = path.join(root, 'package.json')
   // TODO: user may put the whole vite-pages project
   // under a sub folder (which is the root here),
