@@ -213,12 +213,20 @@ export { DefaultPageStrategy, defaultFileHandler }
 function getRemarkPlugins(root: string) {
   const result: any[] = [DemoMdxPlugin, TsInfoMdxPlugin]
   const pkgJsonPath = path.join(root, 'package.json')
+  // TODO: user may put the whole vite-pages project
+  // under a sub folder (which is the root here),
+  // so the package.json will be located at the upper folder.
+  // checkout playground/custom-find-pages2.
   const hasPkgJson = fs.pathExistsSync(pkgJsonPath)
 
   // Inject frontmatter parser if missing
   const { devDependencies = {}, dependencies = {} } = hasPkgJson
     ? require(pkgJsonPath)
     : {}
+  // By default we add remark-frontmatter automatically.
+  // But if user install their own remark-frontmatter,
+  // they are responsible to add the plugin manually
+  // (they may provide some config to it)
   if (
     !devDependencies['remark-frontmatter'] &&
     !dependencies['remark-frontmatter']
