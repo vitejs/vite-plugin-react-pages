@@ -4,9 +4,9 @@
   "private": true,
   "version": "0.0.3",
   "scripts": {
-    "dev": "NODE_ENV=dev vite serve --config ./vite.config.ts",
-    "build": "rm -rf docs-dist && vite build --config ./vite.config.ts && serve -s dist",
-    "ssr": "rm -rf dist && vite-pages ssr && serve dist"
+    "dev": "SHOW_ALL_COMPONENT_DEMOS=true vite serve docs",
+    "build": "rm -rf docs/dist && vite build docs && serve -s docs/dist",
+    "ssr": "rm -rf docs/dist && vite-pages ssr docs && serve docs/dist"
   },
   "dependencies": {
     "react": "^17.0.1",

@@ -13,9 +13,8 @@ module.exports = {
       pagesDir: path.join(__dirname, 'pages'),
       pageStrategy: new DefaultPageStrategy({
         extraFindPages: async (pagesDir, helpers) => {
-          const srcPath = path.join(__dirname, 'src')
-
-          if (process.env.NODE_ENV) {
+          const srcPath = path.join(__dirname, '../src')
+          if (String(process.env.SHOW_ALL_COMPONENT_DEMOS) === 'true') {
             // show all component demos during dev
             // put them in page `/components/demos/${componentName}`
             helpers.watchFiles(
@@ -61,7 +60,7 @@ module.exports = {
   ],
   resolve: {
     alias: {
-      'my-lib': '/src',
+      'my-lib': path.join(__dirname, '../src'),
     },
   },
 } as UserConfig
