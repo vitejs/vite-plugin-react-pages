@@ -3,9 +3,9 @@
   "version": "1.0.2",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=dev vite serve --config ./vite.demos.ts",
-    "build": "rm -rf dist && vite build --config ./vite.demos.ts --outDir dist && serve -s dist",
-    "ssr": "rm -rf dist && vite-pages ssr --configFile ./vite.demos.ts && serve dist"
+    "dev": "SHOW_ALL_COMPONENT_DEMOS=true vite serve",
+    "build": "rm -rf dist && vite build && serve -s dist",
+    "ssr": "rm -rf dist && vite-pages ssr && serve dist"
   },
   "keywords": [],
   "author": "",
