@@ -10,14 +10,16 @@ export function ImageMdxPlugin() {
     const addImports: string[] = []
 
     visit(tree, 'image', (node, index, parent) => {
-      const {url = '', alt, title} = node as any
-      if (url.startsWith('./')||url.startsWith('../')) {
+      const { url = '', alt, title } = node as any
+      if (url.startsWith('./') || url.startsWith('../')) {
         const nextIndex = addImports.length
         const varName = `_img${nextIndex}`
         addImports.push(`import ${varName} from "${url}";`)
+        const altAttr = alt ? `alt="${alt}"` : ''
+        const titleAttr = title ? `title="${title}"` : ''
         parent?.children.splice(index, 1, {
-          type:'jsx',
-          value: `<img src={${varName}} alt="${alt}" />`
+          type: 'jsx',
+          value: `<img src={${varName}} ${altAttr} ${titleAttr} />`,
         } as any)
       }
     })
