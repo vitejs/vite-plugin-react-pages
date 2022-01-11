@@ -1,5 +1,7 @@
 # Basic theme
 
+**This theme is deprecated. Please use vite-pages-theme-doc instead.**
+
 `vite-pages-theme-basic` provides a nice theme. It should satisfy most users' needs. This document site is powered by this theme.
 
 ## How to use
