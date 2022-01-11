@@ -4,7 +4,7 @@
 
 - blog site
 - documentation site for your library or product
-- stories(demos) development for your React components(like [storybook](https://storybook.js.org/))
+- stories/demos/playgrounds for your React components or libraries (like [storybook](https://storybook.js.org/))
 
 It provides many features that help developers **build a React App quickly**:
 
