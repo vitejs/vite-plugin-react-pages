@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-react-pages",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "main": "dist/node/index.js",
   "bin": {
     "vite-pages": "bin/vite-pages.js"
