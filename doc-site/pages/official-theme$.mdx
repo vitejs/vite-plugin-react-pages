@@ -57,7 +57,7 @@ For example, if your site has these pages:
 /references/error-codes/code2
 ```
 
-First, it will first divide them into `group`s:
+Firstly, the theme will divide pages into `group`s based on the **first segment** of page path:
 
 ```
 group /:
@@ -77,9 +77,19 @@ group references:
   /references/error-codes/code2
 ```
 
-The classification of `group`s is based on the **first segment** of pages' path. You can also customize it in page static data.
+You can customize `group` in page static data. For example:
+```
+Put this at top of a markdown page:
+---
+group: references
+---
+Or put this at top of a tsx/jsx page:
+/**
+ * @group references
+ */
+```
 
-Then, it will divide them into `subGroup`s:
+Then, the theme will divide pages into `subGroup`s based on the **second segment** of pages' path:
 
 ```
 group /:
@@ -104,12 +114,12 @@ group references:
     /references/error-codes/code2
 ```
 
-The classification of `subGroup`s is based on the **second segment** of pages' path. You can also customize it in page static data.
+`subGroup` can also be customized in page static data, just like `group` does.
 
 What is the meanings of `group` and `subGroup`?
 
-- `group` is isolation boundary: we only display **one** `group` at a time. If a user open a page in group `references`, he/she will only see menu items from that group. He/She will not see menu items from `components` group.
-- `subGroup` is how we actual grouping menu items in sider. All pages with same `subGroup` will be displayed together. This document site is an example.
+- `group` is a site isolation boundary: we only display **one** `group` at a time. If a user open a page in group `references`, he/she will **only see side menu items from that group**. He/She will not see menu items from `components` group.
+- `subGroup` decide how the theme sort side menu items. All side menu items with same `subGroup` will be rendered adjacently. This document site is an example.
 
 ## Theme configs
 
@@ -140,6 +150,11 @@ interface ThemeConfig {
    * Extra area at top bar.
    */
   TopBarExtra?: React.ComponentType
+  /**
+   * view to be rendered when app in 404 state
+   * (url not matching any page)
+   */
+  NotFoundComponent?: React.ComponentType
 }
 
 interface SideNavsContext {
