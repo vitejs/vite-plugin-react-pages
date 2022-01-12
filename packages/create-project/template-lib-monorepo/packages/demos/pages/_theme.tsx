@@ -1,6 +1,8 @@
 import React from 'react'
 import { createTheme, defaultSideNavs } from 'vite-pages-theme-doc'
 
+import Component404 from './404'
+
 export default createTheme({
   logo: <div style={{ marginLeft: 40, fontWeight: 'bold' }}>Vite Pages</div>,
   topNavs: [
@@ -46,4 +48,5 @@ export default createTheme({
       },
     })
   },
+  Component404,
 })

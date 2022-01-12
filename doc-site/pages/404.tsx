@@ -1,8 +1,8 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 
-const Page404 = () => {
+const Component404 = () => {
   return <Redirect to="/" />
 }
 
-export default Page404
+export default Component404
