@@ -16,7 +16,6 @@ If you use it in markdown, you should use it exactly like "<TsInfo src="./path/t
 `}</pre>
     )
   }
-  console.log('data', data)
   return (
     <table className={s.table}>
       <thead>
