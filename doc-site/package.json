@@ -7,7 +7,7 @@
     "dev": "vite serve",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
     "build": "rm -rf dist && vite build --outDir dist && serve -s dist",
-    "ssr": "rm -rf dist && vite-pages ssr",
+    "ssr": "rm -rf dist && vite-pages ssr && serve dist",
     "ssr-for-deploy": "rm -rf dist && GITHUB_PAGES_DEPLOY=true vite-pages ssr",
     "deploy": "npm run ssr-for-deploy && touch ./dist/.nojekyll && gh-pages -d dist -t"
   },

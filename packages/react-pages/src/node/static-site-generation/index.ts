@@ -128,30 +128,7 @@ export async function ssrBuild(
       // currently not support pages with path params
       // .e.g /users/:userId
       if (pagePath.match(/\/:\w/)) return
-      const ssrContent = renderToString(pagePath)
-      const ssrInfo = {
-        routePath: pagePath,
-      }
-      let html = htmlCode.replace(
-        RootElementInjectPoint,
-        // let client know the current ssr page
-        `<script>window._vitePagesSSR=${JSON.stringify(ssrInfo)};</script>
-<div id="root">${ssrContent}</div>`
-      )
-      const cssInject = cssChunks
-        .map((cssChunk) => {
-          return `<link rel="stylesheet" href="${basePath}${cssChunk.fileName}" />`
-        })
-        .join('\n')
-      html = html.replace(
-        CSSInjectPoint,
-        `${cssInject}
-${CSSInjectPoint}`
-      )
-      html = html.replace(
-        EntryModuleInjectPoint,
-        `<script type="module" src="${basePath}${entryChunk.fileName}"></script>`
-      )
+      const html = renderHTML(pagePath)
       // TODO: injectPreload
       // preload data module for this page
       // html = injectPreload(html, "path/to/page/data")
@@ -162,19 +139,61 @@ ${CSSInjectPoint}`
       )
       await fs.ensureDir(path.dirname(writePath))
       await fs.writeFile(writePath, html)
+      if (pagePath !== '/') {
+        // should write to both /pagePath/index.html and /pagePath.html
+        const writePath2 = path.join(
+          clientOutDir,
+          pagePath.replace(/^\//, '') + '.html'
+        )
+        await fs.ensureDir(path.dirname(writePath2))
+        await fs.writeFile(writePath2, html)
+      }
     })
   )
 
+  const html404Path = path.join(clientOutDir, '404.html')
+  // pass in a pagePath that won't match any defined page
+  // so the render result will be 404 page
+  const html404 = renderHTML('/internal-404-page')
+  await fs.writeFile(html404Path, html404)
   // move 404 page to `/` if `/` doesn't exists
-  const html404 = path.join(clientOutDir, '404', 'index.html')
-  if (!pagePaths.includes('/') && (await fs.pathExists(html404))) {
-    await fs.copy(html404, path.join(clientOutDir, 'index.html'))
+  if (!pagePaths.includes('/')) {
+    await fs.copy(html404Path, path.join(clientOutDir, 'index.html'))
   }
 
   await fs.copy(clientOutDir, outDir)
   await fs.remove(clientOutDir)
   await fs.remove(ssrOutDir)
   console.log('vite pages ssr build finished successfully.')
+  return
+
+  function renderHTML(pagePath: string) {
+    const ssrContent = renderToString(pagePath)
+    const ssrInfo = {
+      routePath: pagePath,
+    }
+    let html = htmlCode.replace(
+      RootElementInjectPoint,
+      // let client know the current ssr page
+      `<script>window._vitePagesSSR=${JSON.stringify(ssrInfo)};</script>
+<div id="root">${ssrContent}</div>`
+    )
+    const cssInject = cssChunks
+      .map((cssChunk) => {
+        return `<link rel="stylesheet" href="${basePath}${cssChunk.fileName}" />`
+      })
+      .join('\n')
+    html = html.replace(
+      CSSInjectPoint,
+      `${cssInject}
+${CSSInjectPoint}`
+    )
+    html = html.replace(
+      EntryModuleInjectPoint,
+      `<script type="module" src="${basePath}${entryChunk.fileName}"></script>`
+    )
+    return html
+  }
 }
 
 const injectPreload = (html: string, filePath: string) => {

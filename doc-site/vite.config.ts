@@ -6,13 +6,7 @@ import pages from 'vite-plugin-react-pages'
 
 module.exports = {
   jsx: 'react',
-  plugins: [
-    reactRefresh(),
-    mdx(),
-    pages({
-      useHashRouter: true,
-    }),
-  ],
+  plugins: [reactRefresh(), mdx(), pages()],
   base:
     process.env.GITHUB_PAGES_DEPLOY === 'true'
       ? '/vite-plugin-react-pages'

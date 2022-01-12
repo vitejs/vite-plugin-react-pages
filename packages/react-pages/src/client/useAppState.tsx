@@ -17,6 +17,14 @@ export default function useAppState(routePath: string) {
         routePath,
       }
     }
+    if (routePath === '/internal-404-page') {
+      // this is a ssr or hydration
+      // for the 404 page
+      return {
+        type: '404',
+        routePath,
+      }
+    }
     return {
       type: 'loading',
       routePath,
