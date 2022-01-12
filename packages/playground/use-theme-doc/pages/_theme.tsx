@@ -5,6 +5,7 @@ import {
 } from 'vite-pages-theme-doc/src/index.dev'
 // from 'vite-pages-theme-doc'
 import { Button } from 'antd'
+import Component404 from './404'
 
 export default createTheme({
   logo: <div style={{ marginLeft: 40, fontWeight: 'bold' }}>Vite Pages</div>,
@@ -78,4 +79,5 @@ export default createTheme({
       },
     })
   },
+  Component404,
 })

@@ -19,7 +19,7 @@ export function createTheme(themeConfig: ThemeConfig) {
   const ThemeComp = (props: ThemeProps) => {
     const { loadState, loadedData } = props
     const staticData = useStaticData()
-    console.log('theme', loadState, loadedData, staticData)
+    // console.log('theme', loadState, loadedData, staticData)
 
     const location = useLocation()
     useEffect(() => {
@@ -48,7 +48,7 @@ export function createTheme(themeConfig: ThemeConfig) {
     const pageData = loadedData[loadState.routePath]
 
     if (loadState.type === '404' || !pageData) {
-      const Comp404 = loadedData['/404']?.main?.default
+      const Comp404 = themeConfig.Component404
       return (
         <AppLayout>{Comp404 ? <Comp404 /> : <p>Page not found.</p>}</AppLayout>
       )
@@ -115,6 +115,11 @@ export interface ThemeConfig {
    * Extra area at top bar.
    */
   TopBarExtra?: React.ComponentType
+  /**
+   * view to be rendered when app in 404 state
+   * (url not matching any page)
+   */
+  Component404?: React.ComponentType
 }
 
 export interface SideNavsContext {
