@@ -41,7 +41,7 @@ const AppLayout: React.FC<Props> = ({ children }) => {
             .filter(Boolean)
             .join(' ')}
         >
-          {sideNavsData && (
+          {sideNavsData && sideNavsData.length > 0 && (
             <Col xxl={4} xl={5} lg={6} md={6}>
               <AppSider sideNavsData={sideNavsData} />
             </Col>

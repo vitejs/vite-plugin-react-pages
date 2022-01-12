@@ -49,6 +49,12 @@ export interface DefaultSideNavsOpts {
       }
     }
   }
+  /**
+   * force defaultSideNavs to treat it as curent page group.
+   * for example, user can use this to
+   * force side nav to display a group during 404 state
+   */
+  forceGroup?: string
 }
 
 export function defaultSideNavs(
@@ -59,10 +65,12 @@ export function defaultSideNavs(
     loadState.routePath,
     staticData[loadState.routePath]
   )
-
   const groups = getGroups(staticData)
+  // console.log('defaultSideNavs', currentGroupInfo, groups)
+
   // groupKey of the current page
   const groupKey = (() => {
+    if (opts?.forceGroup) return opts.forceGroup
     // infer the group of the current page.
     // currentGroupInfo.group may be wrong because:
     // if there is also pages like /guide/start ,
