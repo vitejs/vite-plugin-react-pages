@@ -1,6 +1,9 @@
 import type { Root } from 'mdast'
 import visit from 'unist-util-visit'
 
+// After we migrating to mdx@2.x, we should probably use:
+// https://github.com/remcohaszing/remark-mdx-images
+
 export function ImageMdxPlugin() {
   return transformer
 
