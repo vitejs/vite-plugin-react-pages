@@ -3,8 +3,6 @@ title: Page data
 order: 2
 ---
 
-import { Link } from 'react-router-dom'
-
 # Page data
 
 **Essentially, vite-pages is a React app framework that collect your pages data and pass them to your theme.** So what kinds of data does it collect?
@@ -16,7 +14,7 @@ Each page consists of two kinds of data:
 
 Both of these page data are passed to the theme so that it can render the app.
 
-> Fun fact: vite-pages itself doesn't render any concrete DOM node. All DOM nodes are rendered by <Link to="/theme-customization">theme</Link>.
+> Fun fact: vite-pages itself doesn't render any concrete DOM node. All DOM nodes are rendered by [theme](/theme-customization).
 
 ## Static data
 
@@ -62,7 +60,7 @@ This will be collected as:
 
 Runtime page data is whatever value you export from a page file. It contains the actual content of the page.
 
-Most themes(.e.g <Link to="/official-theme">the official theme</Link>) ask users to `export default` a React component from each page file. But that is not a requirement from vite-pages core. We will talk about this later.
+Most themes(.e.g [the official theme](/official-theme)) ask users to `export default` a React component from each page file. But that is not a requirement from vite-pages core. We will talk about this later.
 
 ## Difference
 
@@ -76,7 +74,7 @@ Difference:
 
 ## How theme consume these data
 
-As stated in <Link to="/theme-customization">the theme customization doc</Link>, a theme is a React component. It will be rendered by vite-pages core, and get useful info from props:
+As stated in [the theme customization doc](/theme-customization), a theme is a React component. It will be rendered by vite-pages core, and get useful info from props:
 
 - All pages' static data
 - All runtime data that is already loaded
@@ -92,9 +90,9 @@ import ThemeInterface from './theme-interface.mdx'
 
 ## Vite-pages core doesn't care what your page data looks like
 
-Vite-pages itself doesn't care what the page data looks like. How to interpret the page data and render the view, is totally decided by <Link to="/theme-customization">the theme</Link>. Vite-pages just collect your pages data and pass them to the theme. This design make the vite-pages core more "simple" and make themes more powerful.
+Vite-pages itself doesn't care what the page data looks like. How to interpret the page data and render the view, is totally decided by [the theme](/theme-customization). Vite-pages just collect your pages data and pass them to the theme. This design make the vite-pages core more "simple" and make themes more powerful.
 
-Most themes(.e.g <Link to="/official-theme">the official theme</Link>) ask users to `export default` a React component from each page file. But that is not a requirement from vite-pages core.
+Most themes(.e.g [the official theme](/official-theme)) ask users to `export default` a React component from each page file. But that is not a requirement from vite-pages core.
 
 ## Advanced topic: how vite-pages represent page data internally
 
@@ -125,4 +123,4 @@ You may wonder why runtimeData and staticData are maps and we use a `key` to ind
 
 Most filesystem routing mechanism out there assume that each page map to only one file. But vite-pages doesn't enforce that rule! This make page data more flexible and programable.
 
-Checkout <Link to="/advanced-fs-routing">the advanced-fs-routing doc</Link> or <Link to="/examples/component-library">"Example: develop a component library"</Link> to learn more about how to create a page with multiple data pieces that originate from multiple files.
+Checkout [the advanced-fs-routing doc](/advanced-fs-routing) or ["Example: develop a component library"](/examples/component-library) to learn more about how to create a page with multiple data pieces that originate from multiple files.

@@ -5,8 +5,6 @@ order: 4
 subGroup: advanced
 ---
 
-import { Link } from 'react-router-dom'
-
 # Example: develop a component library
 
 This is an example of using "Advanced Filesystem Routing" inside a component library project.
@@ -32,7 +30,7 @@ src
 └── index.ts
 ```
 
-You want to use vite as your local demo development environment (because it is blazingly fast). **How to collect all components and all demos from this project?** The file structure doesn't follow the <Link to="/fs-routing">Basic Filesystem Routing Convention</Link>.
+You want to use vite as your local demo development environment (because it is blazingly fast). **How to collect all components and all demos from this project?** The file structure doesn't follow the [Basic Filesystem Routing Convention](/fs-routing).
 
 The answer: implement your own filesystem routing convention!
 

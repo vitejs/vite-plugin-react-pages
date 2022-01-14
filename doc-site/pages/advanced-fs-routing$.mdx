@@ -4,8 +4,6 @@ order: 0
 subGroup: advanced
 ---
 
-import { Link } from 'react-router-dom'
-
 ## Advanced Filesystem Routing: pageStrategy API
 
 > The "Basic Filesystem Routing Convention" should satisfy most users' needs. **You probably don't need to read this advanced guide**.
@@ -139,7 +137,7 @@ In most cases, `dataPath` is the path of the currently handled file. And `static
 
 Checkout [the custom-find-pages2 fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/playground/custom-find-pages2/vite.config.ts) for an example.
 
-> Checkout <Link to="/page-data">the page data doc</Link> for more explanation of `key`.
+> Checkout [the page data doc](/page-data) for more explanation of `key`.
 
 #### fileHandlerAPI.getRuntimeData(pageId)
 
@@ -189,11 +187,11 @@ export class DefaultPageStrategy extends PageStrategy {
 }
 ```
 
-[Here is the complete definition of DefaultPageStrategy](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/react-pages/src/node/dynamic-modules/DefaultPageStrategy/index.ts). And <Link to="/examples/component-library">here is an example of using it</Link>.
+[Here is the complete definition of DefaultPageStrategy](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/react-pages/src/node/dynamic-modules/DefaultPageStrategy/index.ts). And [here is an example of using it](/examples/component-library).
 
 #### Examples
 
-For real-life examples of customizing pageStrategy, checkout <Link to="/examples/component-library">"Example: develop a component library"</Link>.
+For real-life examples of customizing pageStrategy, checkout ["Example: develop a component library"](/examples/component-library).
 
 #### Types
 

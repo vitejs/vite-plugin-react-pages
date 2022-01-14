@@ -4,11 +4,9 @@ order: 3
 subGroup: advanced
 ---
 
-import { Link } from 'react-router-dom'
-
 # Theme customization
 
-> This is an advance guide about how to make a theme by yourself. If there is already themes that meet your needs(.e.g <Link to="/official-theme">the official theme</Link>), you don't need to read this guide now!
+> This is an advance guide about how to make a theme by yourself. If there is already themes that meet your needs(.e.g [the official theme](/official-theme)), you don't need to read this guide now!
 
 Vite-pages itself doesn't render any concrete DOM node. Users can customize **anything** with a theme. That's why theme is so powerful.
 
@@ -24,7 +22,7 @@ import ThemeInterface from './theme-interface.mdx'
 
 <ThemeInterface />
 
-You can learn more about the "data" received by the render functions in <Link to="/page-data">the page data doc</Link>.
+You can learn more about the "data" received by the render functions in [the page data doc](/page-data).
 
 This is probably [the simplest theme](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/playground/basic/pages/_theme.tsx):
 
@@ -53,7 +51,7 @@ const Theme: Theme = ({ staticData, loadedData, loadState }) => {
 export default Theme
 ```
 
-> Here is a more useful theme: [vite-pages-theme-doc](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-doc/src/index.tsx). Learn more about it in <Link to="/official-theme">this guide</Link>.
+> Here is a more useful theme: [vite-pages-theme-doc](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-doc/src/index.tsx). Learn more about it in [this guide](/official-theme).
 
 You can customize every bits of UI with theme. Welcome to share your theme with a npm package!
 
