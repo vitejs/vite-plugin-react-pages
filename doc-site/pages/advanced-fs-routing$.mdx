@@ -10,7 +10,7 @@ subGroup: advanced
 
 For advanced users, vite-pages let you implement your own filesystem routing convention: you can **teach vite-pages how to collect page data from your project**.
 
-When [configuring vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/create-project/template-lib/vite.config.ts), you can pass the `pageStrategy` option. It should be an instance of `PageStrategy` class. Here is an example of customizing pageStrategy:
+When [configuring vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/create-project/template-lib/docs/vite.config.ts), you can pass the `pageStrategy` option. It should be an instance of `PageStrategy` class. Here is an example of customizing pageStrategy:
 
 ```ts
 // vite.config.ts
@@ -71,7 +71,7 @@ function getPagePublicPath(relativePageFilePath: string) {
 
 With this custom pageStrategy, page files don't need to ends with `$`. Instead, they need to match the pattern `**/index.{md,mdx,js,jsx,ts,tsx}`.
 
-> Checkout complete examples in [the custom-find-pages2 fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/playground/custom-find-pages2/vite.config.ts) or [the project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/create-project/template-lib/vite.config.ts).
+> Checkout complete examples in [the custom-find-pages2 fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/playground/custom-find-pages2/vite.config.ts) or [the project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/create-project/template-lib/docs/vite.config.ts).
 
 ### Steps of customizing pageStrategy
 

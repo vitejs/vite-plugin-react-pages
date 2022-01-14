@@ -119,7 +119,7 @@ interface PagesData {
 
 You may wonder why runtimeData and staticData are maps and we use a `key` to index into them. This is because **vite-pages let users create a page with multiple data pieces that originate from multiple files.**
 
-> We use this feature in [the project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/69a9a847813d677869d079c03ce6f08aa6167d69/packages/create-project/template-lib/vite.config.ts#L35). We use this feature to display demos from multiple files in one page. You can init this project with a command `npm init vite-pages library-demo --template lib`.
+> We use this feature in [the project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/create-project/template-lib/docs/vite.config.ts). We use this feature to display demos from multiple files in one page. You can init this sample project [with one command](/) (choose `lib` template).
 
 Most filesystem routing mechanism out there assume that each page map to only one file. But vite-pages doesn't enforce that rule! This make page data more flexible and programable.
 
