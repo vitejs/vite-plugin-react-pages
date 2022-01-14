@@ -25,7 +25,7 @@ const components = {
     if (href?.startsWith('/')) {
       return <Link {...rest} to={href} />
     }
-    return <a {...props} />
+    return <a target="_blank" rel="noopener" {...props} />
   },
 }
 
