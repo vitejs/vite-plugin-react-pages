@@ -1,6 +1,8 @@
 import React, { useContext, useMemo, useState } from 'react'
 import GithubSlugger from 'github-slugger'
 import { MDXProvider } from '@mdx-js/react'
+import { Link } from 'react-router-dom'
+import type { LinkProps } from 'react-router-dom'
 
 import CodeBlock from './CodeBlock'
 import { themePropsCtx } from '../../ctx'
@@ -18,6 +20,13 @@ const components = {
   code: CodeBlock,
   Demo,
   TsInfo,
+  a: (props: LinkProps) => {
+    const { href, ...rest } = props
+    if (href?.startsWith('/')) {
+      return <Link {...rest} to={href} />
+    }
+    return <a {...props} />
+  },
 }
 
 const MDX: React.FC = ({ children }) => {
