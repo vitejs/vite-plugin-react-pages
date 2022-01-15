@@ -21,6 +21,12 @@ It provides many features that help developers **build a React App quickly**:
 
 ## Getting stated
 
+### Play with demo projects in your browser
+
+Thanks to [StackBlitz WebContainers](https://blog.stackblitz.com/posts/introducing-webcontainers/), you can run vite-pages projects entirely in your browser! Checkout [vite-pages app demo](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/master/packages/create-project/template-app?file=README.md&terminal=dev) or [vite-pages library demo](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/master/packages/create-project/template-lib?file=README.md&terminal=dev).
+
+### Initialize a demo project locally
+
 1. Initialize a vite-pages project (with npm 7+):
    - execute `npm init vite-pages app-demo -- --template app` to initialize an app project, or
    - execute `npm init vite-pages library-demo -- --template lib` to initialize a library project, or
@@ -30,3 +36,7 @@ It provides many features that help developers **build a React App quickly**:
 3. `npm run dev` and play with the local dev envirenment.
 4. `npm run build`.
 5. `npm run ssr`. You can [disable javascript in your browser](https://developers.google.com/web/tools/chrome-devtools/javascript/disable), to verify if it can still render.
+
+### Read the documentation
+
+Read [the documentation of vite-plugin-react-pages](https://vitejs.github.io/vite-plugin-react-pages/).
