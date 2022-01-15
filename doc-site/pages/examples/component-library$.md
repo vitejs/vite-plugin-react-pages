@@ -106,7 +106,7 @@ module.exports = {
 
 We use `api.getRuntimeData(pageId)` and `api.getStaticData(pageId)` inside fileHandlers to get the pageData object. We can mutate the data object, and vite-pages will update its pages accordingly.
 
-Checkout the complete example in [the library project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/create-project/template-lib/docs/vite.config.ts).
+Checkout the complete example in [the library project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib/docs/vite.config.ts).
 You can initialize this project [with one command](/) (choose `lib` template).
 
 ## Monorepo
@@ -147,5 +147,5 @@ packages
 └── package.json
 ```
 
-Checkout the complete example in [the lib-monorepo scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/create-project/template-lib-monorepo/packages/demos/vite.config.ts).
+Checkout the complete example in [the lib-monorepo scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib-monorepo/packages/demos/vite.config.ts).
 You can initialize this project [with one command](/) (choose `lib-monorepo` template).

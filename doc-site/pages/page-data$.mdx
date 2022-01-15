@@ -86,7 +86,7 @@ import ThemeInterface from './theme-interface.mdx'
 
 <ThemeInterface />
 
-> Here is an example implementation of vite-pages theme: [vite-pages-theme-doc](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-doc/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/playground/use-theme-doc/pages/_theme.tsx) demonstrate how to use it.
+> Here is an example implementation of vite-pages theme: [vite-pages-theme-doc](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/theme-doc/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/playground/use-theme-doc/pages/_theme.tsx) demonstrate how to use it.
 
 ## Vite-pages core doesn't care what your page data looks like
 
@@ -119,7 +119,7 @@ interface PagesData {
 
 You may wonder why runtimeData and staticData are maps and we use a `key` to index into them. This is because **vite-pages let users create a page with multiple data pieces that originate from multiple files.**
 
-> We use this feature in [the project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/create-project/template-lib/docs/vite.config.ts). We use this feature to display demos from multiple files in one page. You can init this sample project [with one command](/) (choose `lib` template).
+> We use this feature in [the project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib/docs/vite.config.ts). We use this feature to display demos from multiple files in one page. You can init this sample project [with one command](/) (choose `lib` template).
 
 Most filesystem routing mechanism out there assume that each page map to only one file. But vite-pages doesn't enforce that rule! This make page data more flexible and programable.
 

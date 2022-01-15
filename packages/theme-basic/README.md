@@ -23,7 +23,7 @@ export default createTheme({
 })
 ```
 
-[Here is a complete example](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages/playground/use-theme).
+[Here is a complete example](https://github.com/vitejs/vite-plugin-react-pages/tree/main/packages/playground/use-theme).
 
 ## Auto menu generation
 
@@ -64,7 +64,7 @@ Basic theme also generate a search box automatically. It help readers to filter 
 
 ## Theme configs
 
-The `createTheme` exported by `vite-pages-theme-basic` accepts [these options](https://github.com/vitejs/vite-plugin-react-pages/blob/master/packages/theme-basic/src/index.tsx):
+The `createTheme` exported by `vite-pages-theme-basic` accepts [these options](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/theme-basic/src/index.tsx):
 
 ```ts
 interface Option {
@@ -120,4 +120,4 @@ export type TopNavData =
 
 If the basic theme doesn't satisfy your need, you can [create your own theme](https://vitejs.github.io/vite-plugin-react-pages/#/theme-customization).
 
-> Contributions to [the basic theme](https://github.com/vitejs/vite-plugin-react-pages/tree/master/packages/theme-basic) are always welcomed.
+> Contributions to [the basic theme](https://github.com/vitejs/vite-plugin-react-pages/tree/main/packages/theme-basic) are always welcomed.

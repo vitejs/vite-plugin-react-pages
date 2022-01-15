@@ -3,7 +3,7 @@
 This is a demo project for [vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages).
 This project demonstrate how to develop a React app using [vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages) as framework.
 
-You can run this demo in [StackBlitz](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/master/packages/create-project/template-app?file=README.md&terminal=dev), entirely in your browser!
+You can run this demo in [StackBlitz](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/main/packages/create-project/template-app?file=README.md&terminal=dev), entirely in your browser!
 
 # How to use
 
