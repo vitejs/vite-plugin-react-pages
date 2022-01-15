@@ -8,18 +8,19 @@
   "keywords": [
     "vite",
     "react",
-    "vite-plugin-react-pages",
-    "theme"
+    "vite-pages",
+    "react-pages",
+    "vite-plugin-react-pages"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/csr632/vite-plugin-react-pages.git"
+    "url": "git+https://github.com/vitejs/vite-plugin-react-pages.git"
   },
   "bugs": {
-    "url": "https://github.com/csr632/vite-plugin-react-pages/issues"
+    "url": "https://github.com/vitejs/vite-plugin-react-pages/issues"
   },
-  "homepage": "https://github.com/csr632/vite-plugin-react-pages",
+  "homepage": "https://github.com/vitejs/vite-plugin-react-pages",
   "scripts": {
     "clean": "rm -rf ./dist ./lib ./dist-cjs",
     "build": "npm run clean && concurrently \"npm:build-*\"",

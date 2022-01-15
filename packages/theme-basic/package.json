@@ -7,10 +7,19 @@
   "keywords": [
     "vite",
     "react",
-    "vite-plugin-react-pages",
-    "theme"
+    "vite-pages",
+    "react-pages",
+    "vite-plugin-react-pages"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vitejs/vite-plugin-react-pages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vitejs/vite-plugin-react-pages/issues"
+  },
+  "homepage": "https://github.com/vitejs/vite-plugin-react-pages",
   "scripts": {
     "build": "rm -rf ./dist ./lib && tsc && rollup -c && node scripts/add-css-import.js && node ./scripts/fix-css-charset.js",
     "dev": "rm -rf ./dist && concurrently \"npm:dev-*\"",
