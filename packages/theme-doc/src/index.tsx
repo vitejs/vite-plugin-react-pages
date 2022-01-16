@@ -133,3 +133,4 @@ export type { DefaultSideNavsOpts } from './Layout/Sider'
 
 export { Demo } from './Layout/Demo'
 export { TsInfo } from './Layout/TsInfo'
+export { FileText } from './Layout/FileText'

@@ -10,3 +10,6 @@ demo1:
 
 ButtonProps:
 <TsInfo src="./types.ts" name="ButtonProps" />
+
+ButtonProps by FileText:
+<FileText src="./types.ts" syntax="ts" />

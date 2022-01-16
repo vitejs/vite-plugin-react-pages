@@ -8,6 +8,7 @@ import CodeBlock from './CodeBlock'
 import { themePropsCtx } from '../../ctx'
 import { Demo } from '../Demo'
 import { TsInfo } from '../TsInfo'
+import { FileText } from '../FileText'
 import AnchorLink from '../../components/AnchorLink'
 
 const components = {
@@ -18,8 +19,10 @@ const components = {
     >
   ) => <div {...props} />,
   code: CodeBlock,
+  CodeBlock,
   Demo,
   TsInfo,
+  FileText,
   a: (props: LinkProps) => {
     const { href, ...rest } = props
     if (href?.startsWith('/')) {

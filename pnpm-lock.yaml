@@ -86,9 +86,9 @@ importers:
       react-router-dom: ^5.2.0
       serve: ^12.0.1
       vite: ^2.5.6
-      vite-pages-theme-doc: workspace:^3.0.0
+      vite-pages-theme-doc: ^3.1.4
       vite-plugin-mdx: ^3.5.6
-      vite-plugin-react-pages: workspace:^3.0.9
+      vite-plugin-react-pages: ^3.1.8
     dependencies:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -119,9 +119,9 @@ importers:
       react-router-dom: ^5.2.0
       serve: ^12.0.1
       vite: ^2.5.6
-      vite-pages-theme-doc: workspace:^3.0.0
+      vite-pages-theme-doc: ^3.1.4
       vite-plugin-mdx: ^3.5.6
-      vite-plugin-react-pages: workspace:^3.0.0
+      vite-plugin-react-pages: ^3.1.8
     dependencies:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
