@@ -4,7 +4,7 @@ import { createTheme, defaultSideNavs } from 'vite-pages-theme-doc'
 import Component404 from './404'
 
 export default createTheme({
-  logo: <div style={{ marginLeft: 40, fontWeight: 'bold' }}>Vite Pages</div>,
+  logo: <div style={{ marginLeft: 40, fontSize: '20px' }}>📘 Vite Pages</div>,
   topNavs: [
     {
       label: 'Index',
