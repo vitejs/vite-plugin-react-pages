@@ -1,19 +1,15 @@
 import React, { useEffect } from 'react'
-import type {
-  LoadState,
-  PagesLoaded,
-  ThemeProps,
-} from 'vite-plugin-react-pages/clientTypes'
+import type { ThemeProps } from 'vite-plugin-react-pages/clientTypes'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 import { useLocation } from 'react-router-dom'
 
 import AppLayout, { MDX } from './Layout'
 import { themeConfigCtx, themePropsCtx } from './ctx'
-import { MenuConfig } from './Layout/renderMenu'
 
 import './style.less'
 import { Demo } from './Layout/Demo'
 import AnchorLink from './components/AnchorLink'
+import type { ThemeConfig } from './ThemeConfig.doc'
 
 export function createTheme(themeConfig: ThemeConfig) {
   const ThemeComp = (props: ThemeProps) => {
@@ -91,46 +87,10 @@ export function createTheme(themeConfig: ThemeConfig) {
   }
 }
 
-export interface ThemeConfig {
-  /**
-   * Logo at top bar
-   */
-  logo?: React.ReactNode
-  /**
-   * Logo link path
-   * @defaultValue "/"
-   */
-  logoLink?: string | null
-  /**
-   * Navigation menu at top bar.
-   */
-  topNavs?: ReadonlyArray<MenuConfig>
-  /**
-   * Side menu.
-   */
-  sideNavs?:
-    | ReadonlyArray<MenuConfig>
-    | ((ctx: SideNavsContext) => ReadonlyArray<MenuConfig> | null | undefined)
-  /**
-   * Extra area at top bar.
-   */
-  TopBarExtra?: React.ComponentType
-  /**
-   * view to be rendered when app in 404 state
-   * (url not matching any page)
-   */
-  Component404?: React.ComponentType
-}
-
-export interface SideNavsContext {
-  readonly loadState: LoadState
-  readonly loadedData: PagesLoaded
-  readonly staticData: Record<string, any>
-}
-
 export { defaultSideNavs } from './Layout/Sider'
 export type { DefaultSideNavsOpts } from './Layout/Sider'
 
 export { Demo } from './Layout/Demo'
 export { TsInfo } from './Layout/TsInfo'
 export { FileText } from './Layout/FileText'
+export * from './ThemeConfig.doc'

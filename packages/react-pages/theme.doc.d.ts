@@ -1,4 +1,5 @@
-```ts
+import React from 'react'
+
 /** The type of a theme. */
 export type Theme = React.ComponentType<ThemeProps>
 
@@ -9,11 +10,12 @@ export interface ThemeProps {
 
 /**
  * A react hook to get static data.
- * import { useStaticData } from 'vite-plugin-react-pages/client'
  */
 export interface UseStaticData {
   (): PagesStaticData
   (path: string): Record<string, any>
+  /** users should not rely on this. we may drop jotai in the future */
+  <T>(path: string, selector: (staticData: Record<string, any>) => T): T
 }
 
 /**
@@ -56,4 +58,3 @@ export type LoadState =
       readonly routePath: string
       readonly error?: any
     }
-```

@@ -76,6 +76,7 @@ group references:
 ```
 
 You can customize `group` in page static data. For example:
+
 ```
 Put this at top of a markdown page:
 ---
@@ -123,85 +124,7 @@ What is the meanings of `group` and `subGroup`?
 
 The `createTheme` exported by `vite-pages-theme-doc` accepts [these options](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/theme-doc/src/index.tsx):
 
-```ts
-interface ThemeConfig {
-  /**
-   * Logo at top bar
-   */
-  logo?: React.ReactNode
-  /**
-   * Logo link path
-   * @defaultValue "/"
-   */
-  logoLink?: string | null
-  /**
-   * Navigation menu at top bar.
-   */
-  topNavs?: ReadonlyArray<MenuConfig>
-  /**
-   * Side menu.
-   */
-  sideNavs?:
-    | ReadonlyArray<MenuConfig>
-    | ((ctx: SideNavsContext) => ReadonlyArray<MenuConfig> | null | undefined)
-  /**
-   * Extra area at top bar.
-   */
-  TopBarExtra?: React.ComponentType
-  /**
-   * view to be rendered when app in 404 state
-   * (url not matching any page)
-   */
-  Component404?: React.ComponentType
-}
-
-interface SideNavsContext {
-  readonly loadState: LoadState
-  readonly loadedData: PagesLoaded
-  readonly staticData: Record<string, any>
-}
-
-type MenuConfig =
-  | {
-      readonly label: string
-      /**
-       * The url.
-       * @example 'https://www.google.com/'
-       */
-      readonly href: string
-      readonly icon?: React.ReactNode
-    }
-  | {
-      readonly label: string
-      /**
-       * The path in the current webapp.
-       * @example '/posts/hello-world'
-       */
-      readonly path: string
-      readonly icon?: React.ReactNode
-      /**
-       * The menu item will show an "active" state
-       * if it matches with current browsing path.
-       */
-      readonly activeIfMatch?: string | string[] | RouteProps
-    }
-  | {
-      /**
-       * The label of the subnav
-       */
-      readonly subMenu: string
-      readonly children: ReadonlyArray<MenuConfig>
-      readonly icon?: React.ReactNode
-      readonly activeIfMatch?: string | string[] | RouteProps
-    }
-  | {
-      /**
-       * The label of the nav group
-       */
-      readonly group: string
-      readonly children: ReadonlyArray<MenuConfig>
-    }
-```
+<FileText src="../../packages/theme-doc/src/ThemeConfig.type.ts" syntax="ts" />
 
 ## Fully theme customization
 

@@ -72,7 +72,7 @@ Difference:
 - Runtime data is loaded **lazily** when user navigate to that page.
 - The value type of static data is limited (string or simple object/array), while the value of runtime data can be any javascript value (.e.g a React component).
 
-## How theme consume these data
+## How themes consume these data
 
 As stated in [the theme customization doc](/theme-customization), a theme is a React component. It will be rendered by vite-pages core, and get useful info from props:
 
@@ -82,9 +82,7 @@ As stated in [the theme customization doc](/theme-customization), a theme is a R
 
 Here is the interface of a theme:
 
-import ThemeInterface from './theme-interface.mdx'
-
-<ThemeInterface />
+<FileText src="../../packages/react-pages/theme.doc.d.ts" syntax="ts">
 
 > Here is an example implementation of vite-pages theme: [vite-pages-theme-doc](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/theme-doc/src/index.tsx). [This fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/playground/use-theme-doc/pages/_theme.tsx) demonstrate how to use it.
 
@@ -117,9 +115,9 @@ interface PagesData {
 
 ### Composed page data
 
-You may wonder why runtimeData and staticData are maps and we use a `key` to index into them. This is because **vite-pages let users create a page with multiple data pieces that originate from multiple files.**
+You may wonder why runtimeData and staticData are maps and we use a `key` to index into them (instead of just one data for a page). This is because **vite-pages let users create a page with multiple data pieces that originate from multiple files.**
 
-> We use this feature in [the project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib/docs/vite.config.ts). We use this feature to display demos from multiple files in one page. You can init this sample project [with one command](/) (choose `lib` template).
+> We use this feature in [the project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib/docs/vite.config.ts). We use it to display demos from multiple files in one page. You can init this sample project [with one command](/) (choose `lib` template).
 
 Most filesystem routing mechanism out there assume that each page map to only one file. But vite-pages doesn't enforce that rule! This make page data more flexible and programable.
 

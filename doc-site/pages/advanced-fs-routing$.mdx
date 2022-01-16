@@ -12,62 +12,12 @@ For advanced users, vite-pages let you implement your own filesystem routing con
 
 When [configuring vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib/docs/vite.config.ts), you can pass the `pageStrategy` option. It should be an instance of `PageStrategy` class. Here is an example of customizing pageStrategy:
 
-```ts
-// vite.config.ts
-import { defineConfig } from 'vite'
-import * as path from 'path'
-import reactRefresh from '@vitejs/plugin-react-refresh'
-import mdx from 'vite-plugin-mdx'
-import pages, {
-  PageStrategy,
-  FileHandler,
-  File,
-  extractStaticData,
-} from 'vite-plugin-react-pages'
+vite.config.ts:
 
-export default defineConfig({
-  plugins: [
-    reactRefresh(),
-    mdx(),
-    pages({
-      pagesDir: path.join(__dirname, 'pages'),
-      // custom pageStrategy
-      pageStrategy: new PageStrategy(function findPages(pagesDir, helpers) {
-        helpers.watchFiles(
-          pagesDir,
-          '**/index.{md,mdx,js,jsx,ts,tsx}',
-          fileHandler
-        )
-      }),
-    }),
-  ],
-})
-
-const fileHandler: FileHandler = async (file: File, fileHandlerAPI) => {
-  const pagePublicPath = getPagePublicPath(file.relative)
-  fileHandlerAPI.addPageData({
-    pageId: pagePublicPath,
-    dataPath: file.path,
-    staticData: await extractStaticData(file),
-  })
-}
-
-/**
- * turn `sub-path/page2/index.tsx` into `/sub-path/page2`
- */
-function getPagePublicPath(relativePageFilePath: string) {
-  console.log('getPagePublicPath', relativePageFilePath)
-  let pagePublicPath = relativePageFilePath.replace(
-    /index\.(md|mdx|js|jsx|ts|tsx)$/,
-    ''
-  )
-  // remove ending slash
-  pagePublicPath = pagePublicPath.replace(/\/$/, '')
-  // add starting slash
-  pagePublicPath = `/${pagePublicPath}`
-  return pagePublicPath
-}
-```
+<FileText
+  src="../../packages/playground/custom-find-pages2/pages/vite.config.ts"
+  syntax="ts"
+/>
 
 With this custom pageStrategy, page files don't need to ends with `$`. Instead, they need to match the pattern `**/index.{md,mdx,js,jsx,ts,tsx}`.
 
@@ -91,18 +41,18 @@ The `fileHandler` should conform to this interface:
 ```ts
 type FileHandler = (
   file: File,
-  api: HandlerAPI
-) => void | Promise<void> | PageData | Promise<PageData>
+  api: PageAPIs
+) => void | Promise<void> | DataPiece | Promise<DataPiece>
 ```
 
 The `HandlerAPI` contains a set of helpers that help you to update page data.
 
-#### fileHandlerAPI.addPageData(pageData)
+#### fileHandlerAPI.addPageData(dataPiece)
 
-The pageData should conform to this interface:
+The dataPiece should conform to this interface:
 
 ```ts
-interface PageData {
+interface DataPiece {
   /**
    * The page route path.
    * User can register multiple page data with same pageId,
@@ -130,6 +80,12 @@ interface PageData {
    * It will be registered with the `key`.
    */
   readonly staticData?: any
+  /**
+   * when multiple data pieces have same key (conflict),
+   * the data piece with highest priority will win
+   * @default 1
+   */
+  readonly priority?: number
 }
 ```
 
@@ -187,7 +143,9 @@ export class DefaultPageStrategy extends PageStrategy {
 }
 ```
 
-[Here is the complete definition of DefaultPageStrategy](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/react-pages/src/node/dynamic-modules/DefaultPageStrategy/index.ts). And [here is an example of using it](/examples/component-library).
+> [Source code of DefaultPageStrategy](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/react-pages/src/node/page-strategy/DefaultPageStrategy/index.ts).
+
+[here is an example of using it](/examples/component-library).
 
 #### Examples
 
@@ -197,89 +155,9 @@ For real-life examples of customizing pageStrategy, checkout ["Example: develop 
 
 Here is the relavent types:
 
-```ts
-type FindPages = (
-  pagesDir: string,
-  helpers: PageHelpers
-) => void | Promise<void>
+<FileText
+  src="../../packages/react-pages/src/node/page-strategy/types.doc.ts"
+  syntax="ts"
+/>
 
-interface PageHelpers extends HandlerAPI {
-  /**
-   * Read the static data from a file.
-   */
-  readonly extractStaticData: (file: File) => Promise<{
-    readonly [key: string]: any
-    readonly sourceType: string
-  }>
-  /**
-   * Scan the fileSystem and
-   * set page data in the file handler.
-   * File deletion will be handled automatically
-   */
-  readonly watchFiles: WatchFilesHelper
-}
-
-interface WatchFilesHelper {
-  /** Watch all files within a directory (except node_modules and .git) */
-  (baseDir: string, fileHandler?: FileHandler): void
-  /** Watch files matching the given glob */
-  (baseDir: string, glob: string, fileHandler?: FileHandler): void
-  /** Watch files matching one of the given globs */
-  (baseDir: string, globs: string[], fileHandler?: FileHandler): void
-}
-
-type FileHandler = (
-  file: File,
-  api: HandlerAPI
-) => void | Promise<void> | PageData | Promise<PageData>
-
-interface HandlerAPI {
-  /**
-   * Get a mutable data object of runtimeData
-   */
-  getRuntimeData: (pageId: string) => {
-    [key: string]: string
-  }
-  /**
-   * Get a mutable data object of staticData
-   */
-  getStaticData: (pageId: string) => {
-    [key: string]: any
-  }
-  /**
-   * Add page data.
-   * If the data already exists, overwrite it.
-   */
-  addPageData: (pageData: PageData) => void
-}
-
-interface PageData {
-  /**
-   * The page route path.
-   * User can register multiple page data with same pageId,
-   * as long as they have different keys.
-   * Page data with same pageId will be merged.
-   *
-   * @example '/posts/hello-world'
-   */
-  readonly pageId: string
-  /**
-   * The data key.
-   * For a same page, users can register multiple data pieces,
-   * each with its own key. (Composed Page Data)
-   *
-   * @default 'main'
-   */
-  readonly key?: string
-  /**
-   * The path to the runtime data module.
-   * It will be registered with the `key`.
-   */
-  readonly dataPath?: string
-  /**
-   * The value of static data.
-   * It will be registered with the `key`.
-   */
-  readonly staticData?: any
-}
-```
+> [Source code](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/react-pages/src/node/page-strategy/types.document.d.ts).

@@ -18,38 +18,13 @@ To use a theme, users should export their theme from `_theme.tsx`. It should exp
 
 Here is the interface of a theme:
 
-import ThemeInterface from './theme-interface.mdx'
-
-<ThemeInterface />
+<FileText src="../../packages/react-pages/theme.doc.d.ts" syntax="ts" />
 
 You can learn more about the "data" received by the render functions in [the page data doc](/page-data).
 
 This is probably [the simplest theme](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/playground/basic/pages/_theme.tsx):
 
-```tsx
-import React, { useMemo } from 'react'
-import type { Theme } from 'vite-plugin-react-pages'
-
-const Theme: Theme = ({ staticData, loadedData, loadState }) => {
-  console.log('#Theme', staticData, loadedData, loadState)
-
-  // You can generate side nav menu from staticData
-  // const sideMenuData = useMemo(() => generateSideMenu(staticData), [staticData])
-
-  if (loadState.type === '404') return <p>Page not found.</p>
-  if (loadState.type === 'load-error') return <p>Load error!</p>
-  if (loadState.type === 'loading') return <p>Loading...</p>
-
-  // loadState.type === 'loaded'
-  // Runtime page data for current page
-  const pageData = loadedData[loadState.routePath]
-  // the default export of the main module
-  const Component = pageData.main.default
-  return <Component />
-}
-
-export default Theme
-```
+<FileText src="../../packages/playground/basic/pages/_theme.tsx" syntax="tsx" />
 
 > Here is a more useful theme: [vite-pages-theme-doc](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/theme-doc/src/index.tsx). Learn more about it in [this guide](/official-theme).
 

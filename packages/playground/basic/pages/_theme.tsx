@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import type { Theme } from 'vite-plugin-react-pages'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 

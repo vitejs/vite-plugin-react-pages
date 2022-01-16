@@ -207,7 +207,7 @@ export type {
   TsInterfacePropertyInfo,
 } from '../../clientTypes'
 
-export type { FileHandler } from './page-strategy/PagesDataKeeper'
+export type { FileHandler } from './page-strategy/types.doc'
 export { extractStaticData, File } from './utils/virtual-module'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }

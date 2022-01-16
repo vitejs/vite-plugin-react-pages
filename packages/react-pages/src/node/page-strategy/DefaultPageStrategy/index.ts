@@ -1,6 +1,6 @@
-import { FindPages, PageStrategy } from '..'
+import { PageStrategy } from '..'
 import { extractStaticData, File } from '../../utils/virtual-module'
-import type { FileHandler } from '../PagesDataKeeper'
+import type { FileHandler, FindPages } from '../types.doc'
 
 export class DefaultPageStrategy extends PageStrategy {
   constructor(
@@ -25,10 +25,7 @@ export class DefaultPageStrategy extends PageStrategy {
  * instead of directly setting the pageData object.
  * so that it is more useful to users.
  */
-export const defaultFileHandler: FileHandler = async (
-  file: File,
-  fileHandlerAPI
-) => {
+export const defaultFileHandler: FileHandler = async (file: File, api) => {
   const pagePublicPath = getPagePublicPath(file.relative)
   return {
     pageId: pagePublicPath,

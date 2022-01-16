@@ -3,10 +3,10 @@ import equal from 'fast-deep-equal'
 import { PageUpdateBuffer } from './UpdateBuffer'
 import {
   VirtuleModuleAPIs,
-  File,
   FileHandlerAPIs,
   VirtualModulesManager,
 } from '../utils/virtual-module'
+import type { FileHandler, PageAPIs, DataPiece } from './types.doc'
 
 const PAGE_MODULE_PREFIX = '/@vp-page'
 const ensurePageId = (moduleId: string) =>
@@ -266,42 +266,6 @@ export class PagesDataKeeper extends PageUpdateBuffer {
   }
 }
 
-export interface DataPiece {
-  /**
-   * The page route path.
-   * User can register multiple page data with same pageId,
-   * as long as they have different keys.
-   * Page data with same pageId will be merged.
-   *
-   * @example '/posts/hello-world'
-   */
-  readonly pageId: string
-  /**
-   * The data key.
-   * For a same page, users can register multiple data pieces,
-   * each with its own key. (Composed Page Data)
-   *
-   * @default 'main'
-   */
-  readonly key?: string
-  /**
-   * The path to the runtime data module.
-   * It will be registered with the `key`.
-   */
-  readonly dataPath?: string
-  /**
-   * The value of static data.
-   * It will be registered with the `key`.
-   */
-  readonly staticData?: any
-  /**
-   * when multiple data pieces have same key (conflict),
-   * the data piece with highest priority will win
-   * @default 1
-   */
-  readonly priority?: number
-}
-
 export interface PagesData {
   /**
    * pageId: The page route path.
@@ -342,31 +306,6 @@ interface OnePageDataInternal {
     [key: string]: { staticData: any; priority: number }
   }
 }
-
-export interface PageAPIs {
-  /**
-   * Get a mutable data object of runtimeData
-   */
-  getRuntimeData: (pageId: string) => {
-    [key: string]: string
-  }
-  /**
-   * Get a mutable data object of staticData
-   */
-  getStaticData: (pageId: string) => {
-    [key: string]: any
-  }
-  /**
-   * Add page data.
-   * If the data already exists, overwrite it.
-   */
-  addPageData: (pageData: DataPiece) => void
-}
-
-export type FileHandler = (
-  file: File,
-  api: PageAPIs
-) => void | Promise<void> | DataPiece | Promise<DataPiece>
 
 const defaultProxyTraps = Object.fromEntries(
   Object.getOwnPropertyNames(Reflect).map((fnName) => [

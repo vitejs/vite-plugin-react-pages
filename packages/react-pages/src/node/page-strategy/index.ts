@@ -4,16 +4,10 @@ import slash from 'slash'
 
 import {
   extractStaticData,
-  File,
   VirtualModulesManager,
 } from '../utils/virtual-module'
-import {
-  FileHandler,
-  PagesDataKeeper,
-  PagesData,
-  PageAPIs,
-  OnePageData,
-} from './PagesDataKeeper'
+import { PagesDataKeeper, PagesData, OnePageData } from './PagesDataKeeper'
+import type { FindPages, PageHelpers, FileHandler, PageAPIs } from './types.doc'
 
 export class PageStrategy extends EventEmitter {
   protected pagesDir: string = '/pagesDir_not_initialized'
@@ -115,32 +109,4 @@ export class PageStrategy extends EventEmitter {
   }
 }
 
-export type FindPages = (
-  pagesDir: string,
-  helpers: PageHelpers
-) => void | Promise<void>
-
-export interface PageHelpers extends PageAPIs {
-  /**
-   * Read the static data from a file.
-   */
-  readonly extractStaticData: (file: File) => Promise<{
-    readonly [key: string]: any
-    readonly sourceType: string
-  }>
-  /**
-   * Scan the fileSystem and
-   * set page data in the file handler.
-   * File deletion will be handled automatically
-   */
-  readonly watchFiles: WatchFilesHelper
-}
-
-export interface WatchFilesHelper {
-  /** Watch all files within a directory (except node_modules and .git) */
-  (baseDir: string, fileHandler?: FileHandler): void
-  /** Watch files matching the given glob */
-  (baseDir: string, glob: string, fileHandler?: FileHandler): void
-  /** Watch files matching one of the given globs */
-  (baseDir: string, globs: string[], fileHandler?: FileHandler): void
-}
+export * from './types.doc'
