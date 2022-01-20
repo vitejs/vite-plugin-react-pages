@@ -1,53 +1,126 @@
 .layout {
   background: #fff;
+  position: relative;
   .header {
-    padding: 0;
-    padding-right: 24px;
-    background: #fff;
-    box-shadow: 0 2px 8px #f0f1f2;
-    z-index: 10;
+    position: fixed;
+    top: 0px;
+    z-index: 1001;
+    width: 100%;
+    height: 64px;
+    padding: 0px 24px 0px 0px;
+    .media-width-md({
+      & {
+        padding: 0px 40px;
+      }
+    });
 
-    .logoLink {
-      color: #080e29;
-      &:hover {
-        color: #40a9ff;
+    display: flex;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    background: #fff;
+    border-bottom: 1px solid rgba(60, 60, 67, 0.12);
+
+    > * {
+      flex: 0 0 auto;
+    }
+
+    .triggerCtn {
+      display: block;
+      .media-width-md({
+        & {
+          display: none;
+        }
+      });
+      .trigger {
+        padding: 4px;
+        margin: 0 20px;
+        font-size: 20px;
+        line-height: 64px;
+        cursor: pointer;
+        transition: color 0.3s;
+        &:hover {
+          color: #1890ff;
+        }
+      }
+    }
+    .logoArea {
+      display: flex;
+      align-items: center;
+
+      .logoLink {
+        display: inline-block;
+        vertical-align: text-bottom;
+        color: #080e29;
+        &:hover {
+          color: #40a9ff;
+        }
       }
     }
 
-    .nav.nav {
-      border: 0;
+    .flexSpace {
+      flex: 1 1 auto;
+    }
 
-      :global(.vp-antd-menu-item),
-      :global(.vp-antd-menu-submenu) {
-        height: 64px;
-        line-height: 60px;
-        margin-left: 12px;
-        margin-right: 12px;
-        min-width: 40px;
-        text-align: center;
+    .navCtn {
+      display: none;
+
+      .media-width-md({
+        & {
+          display: block;
+        }
+      });
+
+      .nav.nav {
+        height: 100%;
+        border: 0;
+
+        :global(.vp-antd-menu-item),
+        :global(.vp-antd-menu-submenu) {
+          height: 64px;
+          line-height: 64px;
+          margin-left: 12px;
+          margin-right: 12px;
+          min-width: 40px;
+          text-align: center;
+        }
       }
+    }
+
+    .extraCtn {
+      display: flex;
+      align-items: center;
     }
   }
 
   .body {
-    flex: 1 1 auto;
+    min-height: 100vh;
+    padding-top: 64px;
     display: flex;
+    align-items: stretch;
     flex-wrap: nowrap;
 
+    .siderCtn {
+      display: none;
+      flex: 0 0 auto;
+      .media-width-md({
+        display: block;
+      });
+    }
     .sider {
-      margin-top: 40px;
+      padding: 40px 0px;
+      width: 300px;
       height: 100%;
-      max-height: 100vh;
+      max-height: calc(100vh - 64px);
       overflow: hidden;
       &:hover {
         overflow-y: auto;
       }
       position: sticky;
-      top: 0;
+      top: 64px;
 
       :global {
         :local(.sideMenu) {
-          min-height: 100vh;
+          min-height: 100%;
           // copied from https://github.com/ant-design/ant-design/blob/acbeb0b4f18de5ca4d2c9a12329328c89afea662/site/theme/static/common.less#L61
           &.vp-antd-menu-inline {
             .vp-antd-menu-submenu-title h4,
@@ -125,7 +198,9 @@
 
     .content {
       // padding: 0 170px 32px 64px;
-      min-height: 280;
+      flex: 1 1 0px;
+      min-height: 280px;
+      min-width: 0px;
 
       img {
         max-height: 100%;
@@ -138,10 +213,12 @@
 :global {
   .markdown-body {
     box-sizing: border-box;
-    min-width: 480px;
     max-width: 1080px;
     margin: 0 auto 0 0;
-    padding: 40px 45px 45px;
+    padding: 24px;
+    .media-width-md({
+      padding: 40px 45px 45px;
+    });
     .anchor.anchor {
       float: left;
       line-height: 1;
@@ -149,5 +226,12 @@
       width: 24px;
       text-align: center;
     }
+  }
+}
+
+.media-width-md(@rules) {
+  // antd Grid breakpoint `md`
+  @media screen and (min-width: 768px) {
+    @rules();
   }
 }

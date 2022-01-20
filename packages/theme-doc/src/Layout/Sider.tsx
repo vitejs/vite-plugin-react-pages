@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
-import { Menu } from 'antd'
+import { Menu, Drawer } from 'antd'
 import { useLocation } from 'react-router-dom'
 
 import { MenuConfig, renderMenuHelper } from './renderMenu'
 import { themePropsCtx } from '../ctx'
 import s from './index.module.less'
 import type { SideNavsContext } from '..'
+import { LayoutContext } from './ctx'
 
 interface Props {
   sideNavsData: readonly MenuConfig[] | null | undefined
@@ -18,21 +19,57 @@ const AppSider: React.FC<Props> = ({ sideNavsData }) => {
   const location = useLocation()
   const subMenuKeys: string[] = []
   const menu = sideNavsData && renderMenu(sideNavsData, true, subMenuKeys)
+  const layoutCtxVal = useContext(LayoutContext)
+
+  const isSmallScreen = !layoutCtxVal.screenWidth?.md
 
   return (
     <div className={s.sider}>
       {sideNavsData && (
-        <Menu
-          className={s.sideMenu}
-          // clear menu state when path change
-          key={themeProps.loadState.routePath}
-          mode="inline"
-          selectedKeys={[location.pathname]}
-          defaultOpenKeys={subMenuKeys}
-          inlineIndent={30}
+        <>
+          <Menu
+            className={s.sideMenu}
+            // clear menu state when path change
+            key={themeProps.loadState.routePath}
+            mode="inline"
+            selectedKeys={[location.pathname]}
+            defaultOpenKeys={subMenuKeys}
+            inlineIndent={30}
+          >
+            {menu}
+          </Menu>
+        </>
+      )}
+      {isSmallScreen && (
+        <Drawer
+          placement="left"
+          closable={false}
+          visible={layoutCtxVal.isSlideSiderOpen}
+          onClose={() => {
+            layoutCtxVal.setIsSlideSiderOpen(false)
+          }}
+          style={{
+            top: 64,
+            height: 'calc(100vh - 64px)',
+          }}
+          bodyStyle={{
+            padding: '12px 0px',
+          }}
+          getContainer=".vp-local-layout"
+          width={280}
         >
-          {menu}
-        </Menu>
+          <Menu
+            className={s.sideMenu}
+            // clear menu state when path change
+            key={themeProps.loadState.routePath}
+            mode="inline"
+            selectedKeys={[location.pathname]}
+            defaultOpenKeys={subMenuKeys}
+            inlineIndent={30}
+          >
+            {menu}
+          </Menu>
+        </Drawer>
       )}
     </div>
   )

@@ -1,13 +1,18 @@
 import React, { useContext, useMemo } from 'react'
-import { Layout, Menu, Row, Col } from 'antd'
+import { Menu, Dropdown } from 'antd'
 import { useLocation, Link, matchPath } from 'react-router-dom'
 import { useStaticData } from 'vite-plugin-react-pages/client'
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons'
 
-const { Header } = Layout
 import s from './index.module.less'
 import { themeConfigCtx } from '../ctx'
 import { renderMenuHelper } from './renderMenu'
 import type { MenuConfig } from './renderMenu'
+import { LayoutContext } from './ctx'
 
 const renderMenu = renderMenuHelper(true)
 
@@ -18,6 +23,7 @@ const AppHeader: React.FC<Props> = (props) => {
   const { TopBarExtra, topNavs } = themeConfig
   const location = useLocation()
   const indexPagestaticData = useStaticData('/')
+  const layoutCtxVal = useContext(LayoutContext)
 
   const logoLink = (() => {
     if (themeConfig.logoLink !== undefined) return themeConfig.logoLink
@@ -63,31 +69,60 @@ const AppHeader: React.FC<Props> = (props) => {
   }, [location.pathname, topNavs])
 
   return (
-    <Header className={s.header}>
-      <Row align="stretch" style={{ height: '100%' }}>
-        <Col flex="0 0 auto">
-          <Row justify="center" align="middle" style={{ height: '100%' }}>
-            <Col>{renderLogo}</Col>
-          </Row>
-        </Col>
-        <Col flex="auto">
-          <Row justify="end">
-            <Col>
-              {topNavs && (
-                <Menu
-                  className={s.nav}
-                  mode="horizontal"
-                  selectedKeys={activeKeys}
-                >
+    <header className={s.header}>
+      <div className={s.triggerCtn}>
+        <span
+          className={s.trigger}
+          onClick={() => {
+            layoutCtxVal.setIsSlideSiderOpen((v) => !v)
+          }}
+        >
+          {React.createElement(
+            layoutCtxVal.isSlideSiderOpen
+              ? MenuUnfoldOutlined
+              : MenuFoldOutlined
+          )}
+        </span>
+      </div>
+      <div className={s.logoArea}>{renderLogo}</div>
+
+      <div className={s.flexSpace}></div>
+
+      {topNavs && (
+        <>
+          <div className={s.navCtn}>
+            <Menu
+              className={s.nav}
+              mode="horizontal"
+              selectedKeys={activeKeys}
+              disabledOverflow
+            >
+              {renderMenu(topNavs, true)}
+            </Menu>
+          </div>
+          <div className={s.triggerCtn}>
+            <Dropdown
+              placement="bottomRight"
+              overlay={
+                <Menu selectedKeys={activeKeys} disabledOverflow>
                   {renderMenu(topNavs, true)}
                 </Menu>
-              )}
-            </Col>
-            <Col>{TopBarExtra && <TopBarExtra />}</Col>
-          </Row>
-        </Col>
-      </Row>
-    </Header>
+              }
+            >
+              <span className={s.trigger}>
+                <UnorderedListOutlined />
+              </span>
+            </Dropdown>
+          </div>
+        </>
+      )}
+
+      {TopBarExtra && (
+        <div className={s.extraCtn}>
+          <TopBarExtra />
+        </div>
+      )}
+    </header>
   )
 }
 

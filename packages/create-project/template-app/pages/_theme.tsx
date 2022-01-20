@@ -2,7 +2,7 @@ import React from 'react'
 import { createTheme, defaultSideNavs } from 'vite-pages-theme-doc'
 
 export default createTheme({
-  logo: <div style={{ marginLeft: 40, fontSize: '20px' }}>📘 Vite Pages</div>,
+  logo: <div style={{ fontSize: '20px' }}>📘 Vite Pages</div>,
   topNavs: [
     { label: 'Home', path: '/' },
     { label: 'Users', path: '/users', activeIfMatch: '/users' },

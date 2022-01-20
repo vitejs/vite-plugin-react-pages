@@ -11,7 +11,7 @@ export default createTheme({
       icon: '⭐',
     },
   ],
-  logo: <div style={{ marginLeft: 40, fontSize: '20px' }}>📘 Vite Pages</div>,
+  logo: <div style={{ fontSize: '20px' }}>📘 Vite Pages</div>,
   sideNavs(ctx) {
     return defaultSideNavs(ctx, {
       groupConfig: {
