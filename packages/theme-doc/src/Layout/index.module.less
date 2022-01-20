@@ -74,14 +74,24 @@
         height: 100%;
         border: 0;
 
-        :global(.vp-antd-menu-item),
-        :global(.vp-antd-menu-submenu) {
-          height: 64px;
-          line-height: 64px;
-          margin-left: 12px;
-          margin-right: 12px;
-          min-width: 40px;
-          text-align: center;
+        & > :global(.vp-antd-menu-item::after),
+        & > :global(.vp-antd-menu-submenu::after) {
+          left: 12px;
+          right: 12px;
+        }
+
+        :global {
+          :global(.vp-antd-menu-item),
+          :global(.vp-antd-menu-submenu) {
+            height: 64px;
+            line-height: 64px;
+            margin-left: 4px;
+            margin-right: 4px;
+            padding-right: 12px;
+            padding-left: 12px;
+            min-width: 64px;
+            text-align: center;
+          }
         }
       }
     }
@@ -89,6 +99,14 @@
     .extraCtn {
       display: flex;
       align-items: center;
+    }
+
+    .alignNavWithContent {
+      flex: 0 0 0px;
+      margin-left: -20px;
+      .media-width-md({
+        margin-left: -16px;
+      });
     }
   }
 
@@ -217,7 +235,7 @@
     margin: 0 auto 0 0;
     padding: 24px;
     .media-width-md({
-      padding: 40px 45px 45px;
+      padding: 40px;
     });
     .anchor.anchor {
       float: left;

@@ -117,10 +117,12 @@ const AppHeader: React.FC<Props> = (props) => {
         </>
       )}
 
-      {TopBarExtra && (
+      {TopBarExtra ? (
         <div className={s.extraCtn}>
           <TopBarExtra />
         </div>
+      ) : (
+        <div className={s.alignNavWithContent}></div>
       )}
     </header>
   )
