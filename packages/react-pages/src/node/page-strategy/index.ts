@@ -40,9 +40,9 @@ export class PageStrategy extends EventEmitter {
 
     this.virtualModulesManager.scheduleUpdate(
       'pages-init',
-      async (virtuleModuleAPIs) => {
+      async (virtualModuleAPIs) => {
         this.oneTimePageAPIs =
-          this.pagesDataKeeper.createOneTimePageAPIs(virtuleModuleAPIs)
+          this.pagesDataKeeper.createOneTimePageAPIs(virtualModuleAPIs)
         const helpers = this.createHelpers(() => {
           throw new Error(
             `No defaultFileHandler found. You should pass fileHandler argument when calling watchFiles`

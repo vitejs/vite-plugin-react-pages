@@ -4,7 +4,7 @@ import slash from 'slash'
 
 import {
   ModuleListener,
-  VirtuleModuleAPIs,
+  VirtualModuleAPIs,
   VirtualModuleGraph,
 } from './VirtualModules'
 import { PendingTaskCounter } from './utils'
@@ -13,11 +13,11 @@ import { File } from './utils'
 let nextWatcherId = 0
 
 /**
- * watch fs and update corresponding virtule module when a file changed
+ * watch fs and update corresponding virtual module when a file changed
  */
 export class VirtualModulesManager {
   private watchers = new Set<FSWatcher>()
-  private virtuleModules = new VirtualModuleGraph()
+  private virtualModules = new VirtualModuleGraph()
   private fileCache: { [path: string]: File } = {}
   /**
    * don't return half-finished data when there are pending tasks
@@ -26,10 +26,10 @@ export class VirtualModulesManager {
 
   constructor() {
     this.pendingTaskCounter.countPendingState(
-      this.virtuleModules.updateExecutingState
+      this.virtualModules.updateExecutingState
     )
     this.pendingTaskCounter.countPendingState(
-      this.virtuleModules.updateQueueEmptyState
+      this.virtualModules.updateQueueEmptyState
     )
   }
 
@@ -69,13 +69,13 @@ export class VirtualModulesManager {
     filter?: (moduleId: string) => boolean
   ) {
     this.callOnceWhenIdle(() => {
-      cb(this.virtuleModules.getModules(filter))
+      cb(this.virtualModules.getModules(filter))
     })
   }
 
   public getModule(moduleId: string, cb: (moduleData: any[]) => void) {
     this.callOnceWhenIdle(() => {
-      cb(this.virtuleModules.getModuleData(moduleId))
+      cb(this.virtualModules.getModuleData(moduleId))
     })
   }
 
@@ -96,7 +96,7 @@ export class VirtualModulesManager {
    * use it carefully.
    */
   public _getModulesNow(filter?: (moduleId: string) => boolean) {
-    return this.virtuleModules.getModules(filter)
+    return this.virtualModules.getModules(filter)
   }
   /**
    * return the current state of module.
@@ -105,14 +105,14 @@ export class VirtualModulesManager {
    * use it carefully.
    */
   public _getModuleDataNow(moduleId: string) {
-    return this.virtuleModules.getModuleData(moduleId)
+    return this.virtualModules.getModuleData(moduleId)
   }
 
   public addModuleListener(
     handler: ModuleListener,
     filter?: (moduleId: string) => boolean
   ) {
-    return this.virtuleModules.addModuleListener(handler, filter)
+    return this.virtualModules.addModuleListener(handler, filter)
   }
 
   public close() {
@@ -121,9 +121,9 @@ export class VirtualModulesManager {
 
   public scheduleUpdate(
     updaterId: string,
-    updater: (apis: VirtuleModuleAPIs) => void | Promise<void>
+    updater: (apis: VirtualModuleAPIs) => void | Promise<void>
   ): void {
-    return this.virtuleModules.scheduleUpdate(updaterId, updater)
+    return this.virtualModules.scheduleUpdate(updaterId, updater)
   }
 
   private handleFileChange(
@@ -141,7 +141,7 @@ export class VirtualModulesManager {
       file.content = null
       file.read()
 
-      this.virtuleModules.scheduleUpdate(
+      this.virtualModules.scheduleUpdate(
         `${watcherId}-${filePath}`,
         async (apis) => {
           const handlerAPI: FileHandlerAPIs = {
@@ -160,10 +160,10 @@ export class VirtualModulesManager {
     return (filePath: string) => {
       filePath = slash(path.join(baseDir, filePath))
 
-      this.virtuleModules.scheduleUpdate(
+      this.virtualModules.scheduleUpdate(
         `${watcherId}-${filePath}-unlink`,
         async (apis) => {
-          // delete the node that represent this fs file in the virtule modules graph
+          // delete the node that represent this fs file in the virtual modules graph
           // also delete all outcome edges
           apis.deleteModule(filePath)
         }

@@ -2,7 +2,7 @@ import { PendingState } from './utils'
 
 export class VirtualModuleGraph {
   /**
-   * the module inside this graph may be virtule module or real fs module
+   * the module inside this graph may be virtual module or real fs module
    */
   private readonly modules: Map<string, Module> = new Map()
 
@@ -52,7 +52,7 @@ export class VirtualModuleGraph {
   }
 
   /**
-   * This is the only way to update virtule modules
+   * This is the only way to update virtual modules
    */
   public scheduleUpdate(updaterId: string, updater: Update['updater']) {
     this.updateQueue.push(updaterId, updater)
@@ -75,14 +75,14 @@ export class VirtualModuleGraph {
     })
   }
   /**
-   * listen to virtule module updates.
+   * listen to virtual module updates.
    * users can scheduleUpdate in these listeners, creating dependency chain of
-   * virtule modules.
-   * (.i.e when a virtule module changes, it will update another virtule module)
+   * virtual modules.
+   * (.i.e when a virtual module changes, it will update another virtual module)
    *
    * users will reveive new module data and previous module data,
    * so users can diff them to decide whether the module has "really" changed.
-   * if users think they are the same, the can skip updating other virtule modules.
+   * if users think they are the same, the can skip updating other virtual modules.
    * VirtualModuleGraph works on a very low level. It don't know what module data means. So it send updates event to users very often and let users to interpret module data.
    *
    * @return unsubscribe function
@@ -125,7 +125,7 @@ export class VirtualModuleGraph {
     if (this.updateQueue.size === 0) return
     if (depth > MAX_CASCADE_UPDATE_DEPTH)
       throw new Error(
-        `Cascaded updates exceed max depth ${MAX_CASCADE_UPDATE_DEPTH}. Probably because the depth of the virtule module tree is too high, or there is a cycle in the virtule module graph.`
+        `Cascaded updates exceed max depth ${MAX_CASCADE_UPDATE_DEPTH}. Probably because the depth of the virtual module tree is too high, or there is a cycle in the virtual module graph.`
       )
 
     // record the updatedModules so that we can notify listeners in the end
@@ -158,7 +158,7 @@ export class VirtualModuleGraph {
   private createUpdateAPIs(
     updaterId: string,
     recordAffectedModule: (module: Module) => void
-  ): VirtuleModuleAPIs & { disableAPIs(): void } {
+  ): VirtualModuleAPIs & { disableAPIs(): void } {
     let outdated = false
     const _this = this
     const OUTDATED_ERROR_MSG = `You should not call update APIs after the updater async function.`
@@ -235,7 +235,7 @@ class Module {
 
   /**
    * incoming edges of the node
-   * indicating the data of this virtule module
+   * indicating the data of this virtual module
    *
    * real fs module won't need this
    */
@@ -318,7 +318,7 @@ function cleanupEdgesWithUpdaterId(
   edges.clear()
 }
 
-export interface VirtuleModuleAPIs {
+export interface VirtualModuleAPIs {
   addModuleData(moduleId: string, data: any, upstreamModuleId: string): void
   getModuleData(moduleId: string): any[]
   deleteModule(moduleId: string): void
@@ -327,7 +327,7 @@ export interface VirtuleModuleAPIs {
 class Update {
   constructor(
     public updaterId: string,
-    public updater: (apis: VirtuleModuleAPIs) => void | Promise<void>
+    public updater: (apis: VirtualModuleAPIs) => void | Promise<void>
   ) {}
 }
 
@@ -353,5 +353,5 @@ class UpdateQueue {
   }
 }
 
-// it indicates the depth of virtule modules
+// it indicates the depth of virtual modules
 const MAX_CASCADE_UPDATE_DEPTH = 10

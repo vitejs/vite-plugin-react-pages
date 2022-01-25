@@ -2,7 +2,7 @@ import equal from 'fast-deep-equal'
 
 import { PageUpdateBuffer } from './UpdateBuffer'
 import {
-  VirtuleModuleAPIs,
+  VirtualModuleAPIs,
   FileHandlerAPIs,
   VirtualModulesManager,
 } from '../utils/virtual-module'
@@ -59,7 +59,7 @@ export class PagesDataKeeper extends PageUpdateBuffer {
   }
 
   /**
-   * when low-level page virtule modules has changed, update this.pages data
+   * when low-level page virtual modules has changed, update this.pages data
    * and notify listeners
    */
   private setPageData(moduleId: string, rawData: any[]) {
@@ -138,7 +138,7 @@ export class PagesDataKeeper extends PageUpdateBuffer {
   }
 
   /**
-   * update page virtule modules according to fs files
+   * update page virtual modules according to fs files
    */
   public addFSWatcher(
     baseDir: string,
@@ -158,7 +158,7 @@ export class PagesDataKeeper extends PageUpdateBuffer {
     )
   }
 
-  public createOneTimePageAPIs(updaterAPIs: VirtuleModuleAPIs): PageAPIs {
+  public createOneTimePageAPIs(updaterAPIs: VirtualModuleAPIs): PageAPIs {
     const handlerAPI: FileHandlerAPIs = {
       addModuleData(moduleId: string, data: any) {
         // if the update has no upstream, use a constant name
@@ -179,7 +179,7 @@ export class PagesDataKeeper extends PageUpdateBuffer {
       const moduleId = ensureModuleId(pageId)
       // don't use pages as data source because this is a cache updated in batch.
       // instead, get data by virtualModulesManager._getModuleDataNow
-      // which is updated immediately after updateing virtule modules
+      // which is updated immediately after updateing virtual modules
       const getDataObject = () => {
         // reconstruct the data object, which is inefficient
         const rawData = this.virtualModulesManager._getModuleDataNow(moduleId)
