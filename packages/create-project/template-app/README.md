@@ -9,7 +9,7 @@ You can run this demo in [StackBlitz](https://stackblitz.com/fork/github/vitejs/
 
 `npm install` or `yarn`
 
-`npm run dev` You can now play with the local develop envirenment.
+`npm run dev` You can now play with the local develop environment.
 
 Edit `pages/page1$.tsx` or other souce files, the playground will inflect your change instantly.
 
