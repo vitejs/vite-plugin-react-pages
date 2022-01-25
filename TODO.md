@@ -25,6 +25,6 @@ DATA node, graph, lazy/eager node
       - file2.1
       - file2.2 (lazy)
       - fetched data
-      - virtul module (lazy)
+      - virtual module (lazy)
         - file 2.3
         - file 2.4 (lazy)

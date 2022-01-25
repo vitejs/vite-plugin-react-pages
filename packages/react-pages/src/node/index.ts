@@ -12,15 +12,15 @@ import {
   renderOnePageData,
 } from './page-strategy/pageUtils'
 import { PageStrategy } from './page-strategy'
-import { resolveTheme } from './virtule-module-plugins/theme'
+import { resolveTheme } from './virtual-module-plugins/theme'
 import {
   DemoModuleManager,
   DemoMdxPlugin,
-} from './virtule-module-plugins/demo-modules'
+} from './virtual-module-plugins/demo-modules'
 import {
   TsInfoModuleManager,
   TsInfoMdxPlugin,
-} from './virtule-module-plugins/ts-info-module'
+} from './virtual-module-plugins/ts-info-module'
 import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
 import { ImageMdxPlugin } from './utils/mdx-plugin-image'

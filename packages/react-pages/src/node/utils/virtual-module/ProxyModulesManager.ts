@@ -2,7 +2,7 @@ import { File, VirtualModulesManager } from '.'
 
 /**
  * built upon VirtualModulesManager.
- * map each sourceFile into a proxyModule, which is a virtule module.
+ * map each sourceFile into a proxyModule, which is a virtual module.
  * when the sourceFile is updated, it will emit update event for the proxyModule.
  */
 export class ProxyModulesManager {
