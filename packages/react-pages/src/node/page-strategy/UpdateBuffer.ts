@@ -14,7 +14,7 @@ import { debounce } from 'mini-debounce'
  * delete:
  *  A page is deleted.
  *  The page list module will be updated.
- *  Buffered update of the deleted page will be cancled.
+ *  Buffered update of the deleted page will be canceled.
  */
 type Update =
   | {
@@ -32,7 +32,7 @@ export type ScheduleUpdate = (update: Update) => void
 /**
  * Buffer page data updates.
  * Can flush a batch of updates together
- * and cancle unnecessary updates
+ * and cancel unnecessary updates
  */
 export class PageUpdateBuffer extends EventEmitter {
   /**

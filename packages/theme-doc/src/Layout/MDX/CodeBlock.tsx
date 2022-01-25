@@ -16,7 +16,7 @@ const CodeBlock = ({
   className = '',
   style: propStyle,
 }: Props) => {
-  // with ```langualge\n``` md syntax, mdx will pass language in className
+  // with ```language\n``` md syntax, mdx will pass language in className
   const language = className?.replace(/language-/, '') as Language
   return (
     <Highlight

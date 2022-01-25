@@ -1,5 +1,5 @@
 /**
- * Use top-of-file commonet to define static data for this page.
+ * Use top-of-file comment to define static data for this page.
  *
  * @title page1 title
  */

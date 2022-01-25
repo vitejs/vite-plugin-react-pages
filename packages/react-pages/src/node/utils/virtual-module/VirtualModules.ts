@@ -80,7 +80,7 @@ export class VirtualModuleGraph {
    * virtual modules.
    * (.i.e when a virtual module changes, it will update another virtual module)
    *
-   * users will reveive new module data and previous module data,
+   * users will retrieve new module data and previous module data,
    * so users can diff them to decide whether the module has "really" changed.
    * if users think they are the same, the can skip updating other virtual modules.
    * VirtualModuleGraph works on a very low level. It don't know what module data means. So it send updates event to users very often and let users to interpret module data.

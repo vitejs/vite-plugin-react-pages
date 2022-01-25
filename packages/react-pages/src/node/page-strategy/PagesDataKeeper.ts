@@ -172,14 +172,14 @@ export class PagesDataKeeper extends PageUpdateBuffer {
   /**
    * TODO:
    * getRuntimeData and getStaticData are very inefficient to implement,
-   * redesign them in the next verion
+   * redesign them in the next version
    */
   private createPageAPIs(lowerAPI: FileHandlerAPIs): PageAPIs {
     const getRuntimeData = (pageId: string) => {
       const moduleId = ensureModuleId(pageId)
       // don't use pages as data source because this is a cache updated in batch.
       // instead, get data by virtualModulesManager._getModuleDataNow
-      // which is updated immediately after updateing virtual modules
+      // which is updated immediately after updating virtual modules
       const getDataObject = () => {
         // reconstruct the data object, which is inefficient
         const rawData = this.virtualModulesManager._getModuleDataNow(moduleId)
@@ -294,7 +294,7 @@ interface PagesDataInternal {
 interface OnePageDataInternal {
   runtimeData: {
     /**
-     * The value of runtimeData shoule be a path to module
+     * The value of runtimeData should be a path to module
      * (to be evaluated at runtime)
      */
     [key: string]: { dataPath: string; priority: number }
@@ -311,7 +311,7 @@ const defaultProxyTraps = Object.fromEntries(
   Object.getOwnPropertyNames(Reflect).map((fnName) => [
     fnName,
     () => {
-      throw new Error(`unsupported operation on page data obejct proxy`)
+      throw new Error(`unsupported operation on page data object proxy`)
     },
   ])
 )
