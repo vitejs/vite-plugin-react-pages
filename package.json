@@ -18,13 +18,13 @@
     "postinstall": "node ./scripts/linkBins.js"
   },
   "devDependencies": {
-    "@pnpm/link-bins": "^6.0.8",
+    "@pnpm/link-bins": "^7.1.1",
     "@pnpm/logger": "^4.0.0",
     "@types/jest": "^26.0.19",
-    "@types/node": "^14.14.34",
+    "@types/node": "^17.0.36",
     "cross-env": "^7.0.3",
     "jest": "^26.6.3",
-    "playwright-chromium": "~1.9.2",
+    "playwright-chromium": "~1.22.2",
     "sirv": "^1.0.10",
     "slash": "^3.0.0",
     "ts-jest": "^26.4.4",

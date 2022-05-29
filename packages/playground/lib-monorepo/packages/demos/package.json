@@ -22,7 +22,7 @@
     "globby": "^11.0.2",
     "playground-button": "*",
     "playground-card": "*",
-    "serve": "^12.0.1",
+    "serve": "^13.0.2",
     "vite": "^2.5.6",
     "vite-pages-theme-basic": "workspace:*",
     "vite-plugin-mdx": "^3.5.6",
