@@ -1,6 +1,6 @@
 # TODO
 
-- 🔧 Polish basic theme
+- ✅ Polish basic theme
 - ✅ Let theme to decide how to render loading or loadError view
   - vite-pages core should not render any dom node. It should be done by theme
 - ✅ Let user/theme implement their own fs routing convention
@@ -28,3 +28,6 @@ DATA node, graph, lazy/eager node
       - virtual module (lazy)
         - file 2.3
         - file 2.4 (lazy)
+
+- [upgrade to mdx v2](https://github.com/brillout/vite-plugin-mdx#vite-plugin-mdx)
+- upgrade to React 18 and react-router-dom 6.x
