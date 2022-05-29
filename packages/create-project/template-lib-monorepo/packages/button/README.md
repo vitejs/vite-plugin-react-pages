@@ -51,18 +51,18 @@ You can also render text from any files. So that these files can be both "code" 
 The following markdown
 
 ```tsx
-<FileText src="./types.ts" syntax="ts" />
+<FileText src="./src/types.ts" syntax="ts" />
 ```
 
 will result in:
 
-<FileText src="./types.ts" syntax="ts" />
+<FileText src="./src/types.ts" syntax="ts" />
 
 In jsx page, You can render file text like this:
 
 ```tsx
 // https://vitejs.dev/guide/assets.html#importing-asset-as-string
-import text from './types.ts?raw'
+import text from './src/types.ts?raw'
 import { FileText } from 'vite-pages-theme-doc'
 
 export default function Page() {
