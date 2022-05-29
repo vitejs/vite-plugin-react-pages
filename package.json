@@ -11,7 +11,7 @@
     "ver:major": "npm run ver -- major",
     "pub": "pnpm -r publish --filter create-vite-pages --filter vite-plugin-react-pages --filter vite-pages-theme-basic --filter vite-pages-theme-doc",
     "update-deps": "pnpm -r update -i -L",
-    "update-local-deps": "pnpm update -r vite-plugin-mdx vite-plugin-react-pages vite-pages-theme-basic --workspace",
+    "update-local-deps": "pnpm update -r vite-plugin-react-pages vite-pages-theme-basic vite-pages-theme-doc --workspace --filter \"!./packages/create-project/**\"",
     "test-serve": "jest",
     "test-build": "cross-env VITE_TEST_BUILD=1 jest",
     "debug-build": "cross-env VITE_TEST_BUILD=1 VITE_PRESERVE_BUILD_ARTIFACTS=1 jest",
