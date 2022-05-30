@@ -9,6 +9,6 @@ module.exports = {
   plugins: [react(), mdx(), pages()],
   base:
     process.env.GITHUB_PAGES_DEPLOY === 'true'
-      ? '/vite-plugin-react-pages'
+      ? '/vite-plugin-react-pages/'
       : '/',
 } as UserConfig
