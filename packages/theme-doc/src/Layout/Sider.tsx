@@ -18,7 +18,7 @@ const AppSider: React.FC<Props> = ({ sideNavsData }) => {
   const themeProps = useContext(themePropsCtx)
   const location = useLocation()
   const subMenuKeys: string[] = []
-  const menu = sideNavsData && renderMenu(sideNavsData, true, subMenuKeys)
+  const menuItems = sideNavsData ? renderMenu(sideNavsData, true, subMenuKeys) : []
   const layoutCtxVal = useContext(LayoutContext)
 
   const isSmallScreen = !layoutCtxVal.screenWidth?.md
@@ -35,9 +35,8 @@ const AppSider: React.FC<Props> = ({ sideNavsData }) => {
             selectedKeys={[location.pathname]}
             defaultOpenKeys={subMenuKeys}
             inlineIndent={30}
-          >
-            {menu}
-          </Menu>
+            items={menuItems}
+          />
         </>
       )}
       {isSmallScreen && (
@@ -66,9 +65,8 @@ const AppSider: React.FC<Props> = ({ sideNavsData }) => {
             selectedKeys={[location.pathname]}
             defaultOpenKeys={subMenuKeys}
             inlineIndent={30}
-          >
-            {menu}
-          </Menu>
+            items={menuItems}
+          />
         </Drawer>
       )}
     </div>
