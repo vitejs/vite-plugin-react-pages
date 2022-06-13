@@ -72,7 +72,7 @@ export const renderMenuHelper = (isTopNav: boolean) =>
         return {
           key: item.subMenu,
           icon: leftIcon,
-          title: (
+          label: (
             <>
               {item.subMenu}
               {rightIcon}
@@ -86,7 +86,7 @@ export const renderMenuHelper = (isTopNav: boolean) =>
         return {
           type: 'group',
           key: item.group,
-          title: item.group,
+          label: item.group,
           children: renderMenu(item.children),
         }
       }
