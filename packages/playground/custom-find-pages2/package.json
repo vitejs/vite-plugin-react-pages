@@ -24,7 +24,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@vitejs/plugin-react": "^1.1.4",
     "serve": "^13.0.2",
-    "vite": "^2.5.6",
+    "vite": "^2.9.12",
     "vite-pages-theme-basic": "workspace:*",
     "vite-plugin-mdx": "^3.5.6",
     "vite-plugin-react-pages": "workspace:*"
