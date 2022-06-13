@@ -1,17 +1,17 @@
 import React from 'react'
-import { Menu } from 'antd'
+import type { MenuProps } from 'antd'
 import { Link } from 'react-router-dom'
 import type { RouteProps } from 'react-router-dom'
 import { CaretDownOutlined } from '@ant-design/icons'
 
-const { SubMenu } = Menu
+type ItemTypes = NonNullable<MenuProps['items']>
 
 export const renderMenuHelper = (isTopNav: boolean) =>
   function renderMenu(
     menuConfig: ReadonlyArray<MenuConfig>,
     isFirstLevel: boolean = false,
     collectMenuKeys: string[] = []
-  ) {
+  ): ItemTypes {
     function getIcon(item: MenuConfig, defaultIcon?: React.ReactNode) {
       const actualIcon = 'icon' in item ? item.icon : defaultIcon
       if (isTopNav) {
@@ -34,54 +34,63 @@ export const renderMenuHelper = (isTopNav: boolean) =>
             <ExternalLinkIcon />
           ) : undefined
         )
-        return (
-          <Menu.Item key={item.href} icon={leftIcon}>
+
+        return {
+          key: item.href,
+          icon: leftIcon,
+          label: (
             <a href={item.href} target="_blank" rel="noopener noreferrer">
               {item.label}
               {rightIcon}
             </a>
-          </Menu.Item>
-        )
+          )
+        }
       }
+
       if ('path' in item) {
         const { leftIcon, rightIcon } = getIcon(item)
-        return (
-          <Menu.Item key={item.path} icon={leftIcon}>
+
+        return {
+          key: item.path,
+          icon: leftIcon,
+          label: (
             <Link to={item.path}>
               {item.label}
               {rightIcon}
             </Link>
-          </Menu.Item>
-        )
+          )
+        }
       }
+
       if ('subMenu' in item) {
         const { leftIcon, rightIcon } = getIcon(
           item,
           isTopNav ? <SubMenuIcon /> : undefined
         )
         collectMenuKeys.push(item.subMenu)
-        return (
-          <SubMenu
-            key={item.subMenu}
-            title={
-              <>
-                {item.subMenu}
-                {rightIcon}
-              </>
-            }
-            icon={leftIcon}
-          >
-            {renderMenu(item.children)}
-          </SubMenu>
-        )
+
+        return {
+          key: item.subMenu,
+          icon: leftIcon,
+          title: (
+            <>
+              {item.subMenu}
+              {rightIcon}
+            </>
+          ),
+          children: renderMenu(item.children),
+        }
       }
+
       if ('group' in item) {
-        return (
-          <Menu.ItemGroup key={item.group} title={item.group}>
-            {renderMenu(item.children)}
-          </Menu.ItemGroup>
-        )
+        return {
+          type: 'group',
+          key: item.group,
+          title: item.group,
+          children: renderMenu(item.children),
+        }
       }
+
       throw new Error(`invalid menu config`)
     })
   }

@@ -96,17 +96,14 @@ const AppHeader: React.FC<Props> = (props) => {
               mode="horizontal"
               selectedKeys={activeKeys}
               disabledOverflow
-            >
-              {renderMenu(topNavs, true)}
-            </Menu>
+              items={renderMenu(topNavs, true)}
+            />
           </div>
           <div className={s.triggerCtn}>
             <Dropdown
               placement="bottomRight"
               overlay={
-                <Menu selectedKeys={activeKeys} disabledOverflow>
-                  {renderMenu(topNavs, true)}
-                </Menu>
+                <Menu selectedKeys={activeKeys} disabledOverflow items={renderMenu(topNavs, true)} />
               }
             >
               <span className={s.trigger}>
