@@ -40,7 +40,9 @@
     "peerDependencyRules": {
       "ignoreMissing": [
         "react",
-        "react-dom"
+        "react-dom",
+        "@mdx-js/mdx",
+        "@alifd/meet-react"
       ]
     }
   }

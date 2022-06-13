@@ -55,7 +55,10 @@
     "rollup-plugin-postcss": "^4.0.0",
     "sass": "^1.52.3",
     "typescript": "^4.7.3",
-    "vite-plugin-react-pages": "workspace:*"
+    "vite-plugin-react-pages": "workspace:*",
+    "@babel/core": ">=7.0.0 <8.0.0",
+    "moment": "^2.22.1",
+    "postcss": "^8.4.14"
   },
   "dependencies": {
     "github-markdown-css": "^4.0.0"
