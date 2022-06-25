@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "clean": "rm -rf ./pages/dist",
+    "clean": "rimraf ./pages/dist",
     "dev": "vite pages",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve pages",
     "build": "npm run clean && vite build pages --outDir dist && serve -s pages/dist",
@@ -23,6 +23,7 @@
     "@types/react": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
     "@vitejs/plugin-react": "^1.1.4",
+    "rimraf": "^3.0.2",
     "serve": "^13.0.2",
     "vite": "^2.9.12",
     "vite-pages-theme-basic": "workspace:*",

@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "vite serve",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
-    "build": "rm -rf dist && vite build --outDir dist && serve -s dist",
+    "build": "rimraf dist && vite build --outDir dist && serve -s dist",
     "debug:build": "node --inspect ./node_modules/vite/bin/vite build --outDir dist",
-    "ssr": "rm -rf dist && vite-pages ssr",
-    "debug:ssr": "rm -rf dist && node --inspect-brk ./node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr"
+    "ssr": "rimraf dist && vite-pages ssr",
+    "debug:ssr": "rimraf dist && node --inspect-brk ./node_modules/vite-plugin-react-pages/bin/vite-pages.js ssr"
   },
   "dependencies": {
     "react": "^17.0.1",
@@ -21,6 +21,7 @@
     "@types/react": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
     "@vitejs/plugin-react": "^1.1.4",
+    "rimraf": "^3.0.2",
     "serve": "^13.0.2",
     "vite": "^2.9.12",
     "vite-plugin-mdx": "^3.5.6",

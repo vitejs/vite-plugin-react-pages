@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "rm -rf ./lib && tsc -p src && node ../../script/copy.js"
+    "build": "rimraf ./lib && tsc -p src && node ../../script/copy.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/react": "^17.0.3",
+    "rimraf": "^3.0.2",
     "react": "^17.0.1",
     "typescript": "^4.7.3"
   }
