@@ -5,8 +5,8 @@
   "version": "0.0.3",
   "scripts": {
     "dev": "SHOW_ALL_COMPONENT_DEMOS=true vite serve docs",
-    "build": "rm -rf docs/dist && vite build docs && serve -s docs/dist",
-    "ssr": "rm -rf docs/dist && vite-pages ssr docs && serve docs/dist"
+    "build": "rimraf docs/dist && vite build docs && serve -s docs/dist",
+    "ssr": "rimraf docs/dist && vite-pages ssr docs && serve docs/dist"
   },
   "dependencies": {
     "react": "^17.0.1",
@@ -20,6 +20,7 @@
     "@types/react": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
     "@vitejs/plugin-react": "^1.1.4",
+    "rimraf": "^3.0.2",
     "serve": "^13.0.2",
     "vite": "^2.9.12",
     "vite-pages-theme-doc": "^3.1.4",

@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "SHOW_ALL_COMPONENT_DEMOS=true vite serve",
-    "build": "rm -rf dist && vite build && serve -s dist",
-    "ssr": "rm -rf dist && vite-pages ssr && serve dist"
+    "build": "rimraf dist && vite build && serve -s dist",
+    "ssr": "rimraf dist && vite-pages ssr && serve dist"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +25,7 @@
     "globby": "^11.0.2",
     "my-button": "*",
     "my-card": "*",
+    "rimraf": "^3.0.2",
     "serve": "^13.0.2",
     "vite": "^2.9.12",
     "vite-pages-theme-doc": "^3.0.0",

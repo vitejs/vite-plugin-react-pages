@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite serve --config ./vite.demos.ts",
-    "build": "rm -rf dist && vite build --config ./vite.demos.ts --outDir dist && serve -s dist",
-    "ssr": "rm -rf dist && vite-pages ssr --configFile ./vite.demos.ts && serve dist"
+    "build": "rimraf dist && vite build --config ./vite.demos.ts --outDir dist && serve -s dist",
+    "ssr": "rimraf dist && vite-pages ssr --configFile ./vite.demos.ts && serve dist"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +22,7 @@
     "globby": "^11.0.2",
     "playground-button": "*",
     "playground-card": "*",
+    "rimraf": "^3.0.2",
     "serve": "^13.0.2",
     "vite": "^2.9.12",
     "vite-pages-theme-basic": "workspace:*",
