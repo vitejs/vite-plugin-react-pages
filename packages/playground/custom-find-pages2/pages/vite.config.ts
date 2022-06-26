@@ -19,7 +19,7 @@ export default defineConfig({
       pageStrategy: new PageStrategy(function findPages(pagesDir, helpers) {
         helpers.watchFiles(
           pagesDir,
-          '**/index.{md,mdx,js,jsx,ts,tsx}',
+          '**/index.{md,mdx,js,jsx,mjs,mts,ts,tsx}',
           fileHandler
         )
       }),
@@ -42,7 +42,7 @@ const fileHandler: FileHandler = async (file: File, fileHandlerAPI) => {
 function getPagePublicPath(relativePageFilePath: string) {
   console.log('getPagePublicPath', relativePageFilePath)
   let pagePublicPath = relativePageFilePath.replace(
-    /index\.(md|mdx|js|jsx|ts|tsx)$/,
+    /index\.(md|mdx|mjs|mts|js|jsx|ts|tsx)$/,
     ''
   )
   // remove ending slash

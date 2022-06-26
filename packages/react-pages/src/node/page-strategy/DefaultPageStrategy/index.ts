@@ -12,7 +12,7 @@ export class DefaultPageStrategy extends PageStrategy {
       // we can create our own helpers, providing a default fileHandler
       // and not using helpersFromParent
       const helpers = this.createHelpers(fileHandler)
-      helpers.watchFiles(pagesDir, '**/*$.{md,mdx,js,jsx,ts,tsx}')
+      helpers.watchFiles(pagesDir, '**/*$.{md,mdx,js,jsx,mjs,mts,ts,tsx}')
       if (typeof extraFindPages === 'function') {
         extraFindPages(pagesDir, helpers)
       }
@@ -39,7 +39,7 @@ export const defaultFileHandler: FileHandler = async (file: File, api) => {
  */
 export function getPagePublicPath(relativePageFilePath: string) {
   let pagePublicPath = relativePageFilePath.replace(
-    /\$\.(md|mdx|js|jsx|ts|tsx)$/,
+    /\$\.(md|mdx|mjs|mts|js|jsx|ts|tsx)$/,
     ''
   )
   pagePublicPath = pagePublicPath.replace(/index$/, '')

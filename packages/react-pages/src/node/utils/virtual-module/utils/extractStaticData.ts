@@ -17,6 +17,8 @@ export async function extractStaticData(
       return staticData
     case 'js':
     case 'jsx':
+    case 'mjs':
+    case 'mts':
     case 'ts':
     case 'tsx':
       return { ...parse(extract(code)), sourceType: 'js' }

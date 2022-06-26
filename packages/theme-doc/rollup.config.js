@@ -3,7 +3,7 @@ import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 
-const extensions = ['.js', '.jsx', '.ts', '.tsx']
+const extensions = ['.js', '.jsx', 'mjs', 'mts', '.ts', '.tsx']
 
 export default {
   input: 'src/index.tsx',
