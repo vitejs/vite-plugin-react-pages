@@ -1,12 +1,13 @@
 import React from 'react'
+import type { Language } from 'prism-react-renderer'
 import CodeBlock from '../MDX/CodeBlock'
 
 export interface Props {
-  syntax: string
+  language: Language
   text: string
 }
 
-export function FileText({ syntax, text }: Props) {
+export function FileText({ language, text }: Props) {
   if (typeof text !== 'string') {
     return (
       <pre>{`FileText Error: <FileText> component receives invalid props.
@@ -15,5 +16,5 @@ If you use it in markdown, you should use it exactly like "<FileText src="./file
 `}</pre>
     )
   }
-  return <CodeBlock className={`language-${syntax}`} children={text} />
+  return <CodeBlock className={`language-${language}`} children={text} />
 }
