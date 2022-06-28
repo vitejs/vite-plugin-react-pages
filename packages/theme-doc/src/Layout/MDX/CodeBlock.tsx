@@ -6,7 +6,7 @@ import type { Language } from 'prism-react-renderer'
 // copied from https://mdxjs.com/guides/syntax-highlighting
 
 interface Props {
-  readonly className?: string
+  readonly className?: `language-${Language}` | ''
   readonly children?: string
   readonly style?: React.CSSProperties
 }
