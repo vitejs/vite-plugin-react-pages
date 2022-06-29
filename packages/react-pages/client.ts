@@ -8,11 +8,9 @@
 
 import type { UseStaticData } from './clientTypes'
 
-const globalObject: any = typeof window !== 'undefined' ? window : global
-
-// access globalObject['__vite_pages_use_static_data'] lazily
+// access globalThis['__vite_pages_use_static_data'] lazily
 export const useStaticData: UseStaticData = (...params: any[]) => {
-  const actualUseStaticData: any = globalObject['__vite_pages_use_static_data']
+  const actualUseStaticData = (globalThis as any)['__vite_pages_use_static_data']
   return actualUseStaticData(...params)
 }
 
