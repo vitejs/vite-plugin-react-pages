@@ -158,12 +158,11 @@ function toStaticData(pages: Record<string, any>) {
   return staticData
 }
 
-const globalObject: any = typeof window !== 'undefined' ? window : global
-if (globalObject['__vite_pages_use_static_data']) {
+if ((globalThis as any)['__vite_pages_use_static_data']) {
   throw new Error(
     `[vite-pages] useStaticData already exists on window. There are multiple vite-pages apps in this page. Please report this to vite-pages.`
   )
 } else {
   // make it available to vite-plugin-react-pages/client
-  globalObject['__vite_pages_use_static_data'] = useStaticData
+  (globalThis as any)['__vite_pages_use_static_data'] = useStaticData
 }
