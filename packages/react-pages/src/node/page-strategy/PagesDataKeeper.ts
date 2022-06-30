@@ -1,4 +1,4 @@
-import equal from 'fast-deep-equal'
+import { dequal } from 'dequal'
 
 import { PageUpdateBuffer } from './UpdateBuffer'
 import {
@@ -88,14 +88,14 @@ export class PagesDataKeeper extends PageUpdateBuffer {
     }
     // Page is updated
     this.pages[pageId] = pageData
-    if (!equal(pageData.runtimeData, oldPageData.runtimeData)) {
+    if (!dequal(pageData.runtimeData, oldPageData.runtimeData)) {
       this.scheduleUpdate({
         type: 'update',
         dataType: 'runtime',
         pageId,
       })
     }
-    if (!equal(pageData.staticData, oldPageData.staticData)) {
+    if (!dequal(pageData.staticData, oldPageData.staticData)) {
       this.scheduleUpdate({
         type: 'update',
         dataType: 'static',
