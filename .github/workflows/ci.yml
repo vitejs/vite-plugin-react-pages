@@ -28,7 +28,7 @@ jobs:
         run: pnpm install
 
       - name: Build 
-        run: pnpm build
+        run: pnpm build:pages
 
       - name: Deploy to GitHub Pages
         if: success()
