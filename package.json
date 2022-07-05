@@ -15,6 +15,7 @@
     "test-serve": "jest",
     "test-build": "cross-env VITE_TEST_BUILD=1 jest",
     "debug-build": "cross-env VITE_TEST_BUILD=1 VITE_PRESERVE_BUILD_ARTIFACTS=1 jest",
+    "build:docs": "pnpm --filter doc-site run ssr-for-deploy",
     "postinstall": "node ./scripts/linkBins.js"
   },
   "devDependencies": {
