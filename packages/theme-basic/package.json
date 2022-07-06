@@ -29,7 +29,7 @@
     "db": "node --inspect ./node_modules/rollup/dist/bin/rollup -c"
   },
   "peerDependencies": {
-    "@mdx-js/react": "^1.6.11"
+    "@mdx-js/react": ">=1.6.11"
   },
   "devDependencies": {
     "@alifd/next": "^1.25.41",
