@@ -52,4 +52,14 @@ export const test = base.extend<{}, { server: { port: number } }>({
     },
     { scope: 'worker', auto: true },
   ],
+  baseURL: async ({ baseURL, server }, use) => {
+    await use(`http://localhost:${server.port}`)
+  },
+  page: async ({ baseURL, page, server }, use) => {
+    // double check if this fixture works
+    if (baseURL !== `http://localhost:${server.port}`)
+      throw new Error('unexpected baseURL')
+    await page.goto(baseURL)
+    await use(page)
+  },
 })
