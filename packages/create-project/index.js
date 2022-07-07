@@ -9,6 +9,8 @@ async function init() {
   const root = path.join(cwd, targetDir)
   const renameFiles = {
     _gitignore: '.gitignore',
+    _npmrc: '.npmrc',
+    '_pnpm-workspace.yaml': 'pnpm-workspace.yaml',
   }
   console.log(`Scaffolding project in ${root}...`)
 
