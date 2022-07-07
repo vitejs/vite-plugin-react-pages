@@ -9,7 +9,7 @@ You can run this demo in [StackBlitz](https://stackblitz.com/fork/github/vitejs/
 
 ## How to use
 
-`npm install` or `yarn`
+`npm install` or `pnpm install` or `yarn`
 
 `npm run dev` You can play with docs and demos of your packages in local develop environment.
 
