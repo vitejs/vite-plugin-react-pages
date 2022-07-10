@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '~utils'
+import { userPages } from './snapshots'
 
 test('index page', async ({ page }) => {
   await testIndexPageSider(page)
@@ -14,17 +15,17 @@ test('navigate', async ({ page }) => {
   await page.waitForURL('/page1')
   await testIndexPageSider(page)
   await testHeader(page)
-  await expect(page.locator('.vp-local-content')).toContainText([
-    'This is page1.',
-  ])
+  await expect(page.locator('.vp-local-content')).toContainText(
+    'This is page1.'
+  )
 
   await page.locator('.vp-local-sider >> text="page2 title"').click()
   await page.waitForURL('/page2')
   await testIndexPageSider(page)
   await testHeader(page)
-  await expect(page.locator('.vp-local-content')).toContainText([
-    'This is page2.',
-  ])
+  await expect(page.locator('.vp-local-content')).toContainText(
+    'This is page2.'
+  )
 
   await page.locator('.vp-local-header >> text="Users"').click()
   await page.waitForURL('/users')
@@ -40,9 +41,9 @@ test('navigate', async ({ page }) => {
       page.waitForNavigation(),
       page.locator('.vp-local-content a').nth(i).click(),
     ])
-    await expect(
-      await page.locator('.vp-local-content').innerText()
-    ).toMatchSnapshot()
+    await expect(page.locator('.vp-local-content')).toContainText(
+      userPages[i].split('\n')
+    )
     i++
     await page.goBack()
   }

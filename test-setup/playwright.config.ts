@@ -69,7 +69,10 @@ function testProjectConfig(
 ): Project<PlaywrightTestOptions, PlaywrightWorkerOptions & TestOptions>[] {
   const testDir = resolvePlaygrould(playgroundName)
   // for each project, test in serve mode, build mode, and ssr mode
-  return [
+  const result: Project<
+    PlaywrightTestOptions,
+    PlaywrightWorkerOptions & TestOptions
+  >[] = [
     {
       name: `${playgroundName}:serve`,
       use: {
@@ -97,6 +100,12 @@ function testProjectConfig(
       testIgnore: /hmr\.spec\.ts/,
     },
   ]
+
+  const vitePagesModeFilter = process.env['VITE_PAGES_MODE']
+  if (!vitePagesModeFilter) return result
+  return result.filter((project) => {
+    return project.use?.vitePagesMode === vitePagesModeFilter
+  })
 }
 
 function resolvePlaygrould(folder: string) {
