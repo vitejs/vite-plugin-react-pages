@@ -21,6 +21,9 @@ jobs:
     # ref: https://playwright.dev/docs/ci#github-actions
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: '7'
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
