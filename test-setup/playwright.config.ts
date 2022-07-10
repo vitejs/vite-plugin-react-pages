@@ -85,6 +85,7 @@ function testProjectConfig(
         vitePagesMode: 'build',
       },
       testDir,
+      testIgnore: /hmr\.spec\.ts/,
     },
     {
       name: `${playgroundName}:ssr`,
@@ -93,6 +94,7 @@ function testProjectConfig(
         vitePagesMode: 'ssr',
       },
       testDir,
+      testIgnore: /hmr\.spec\.ts/,
     },
   ]
 }
