@@ -1,3 +1,3 @@
 import { declareTests } from './navigate-tests'
 
-declareTests(true)
+declareTests(false)

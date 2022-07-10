@@ -68,6 +68,12 @@ function testProjectConfig(
   playgroundName: string
 ): Project<PlaywrightTestOptions, PlaywrightWorkerOptions & TestOptions>[] {
   const testDir = resolvePlaygrould(playgroundName)
+
+  const matchers = {
+    hmr: /hmr\.spec\.ts/,
+    disableJS: /\.disableJS\.spec\.ts/,
+  }
+
   // for each project, test in serve mode, build mode, and ssr mode
   const result: Project<
     PlaywrightTestOptions,
@@ -80,6 +86,7 @@ function testProjectConfig(
         vitePagesMode: 'serve',
       },
       testDir,
+      testIgnore: [matchers.disableJS],
     },
     {
       name: `${playgroundName}:build`,
@@ -88,7 +95,7 @@ function testProjectConfig(
         vitePagesMode: 'build',
       },
       testDir,
-      testIgnore: /hmr\.spec\.ts/,
+      testIgnore: [matchers.disableJS, matchers.hmr],
     },
     {
       name: `${playgroundName}:ssr`,
@@ -97,7 +104,17 @@ function testProjectConfig(
         vitePagesMode: 'ssr',
       },
       testDir,
-      testIgnore: /hmr\.spec\.ts/,
+      testIgnore: [matchers.disableJS, matchers.hmr],
+    },
+    {
+      name: `${playgroundName}:ssr:disableJS`,
+      use: {
+        ...devices['Desktop Chrome'],
+        vitePagesMode: 'ssr',
+        javaScriptEnabled: false,
+      },
+      testDir,
+      testMatch: matchers.disableJS,
     },
   ]
 
