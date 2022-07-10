@@ -1,6 +1,12 @@
-import { resolve, dirname } from 'path'
-import type { PlaywrightTestConfig } from '@playwright/test'
+import { resolve } from 'path'
+import type {
+  PlaywrightTestConfig,
+  Project,
+  PlaywrightTestOptions,
+  PlaywrightWorkerOptions,
+} from '@playwright/test'
 import { devices } from '@playwright/test'
+import { TestOptions } from './utils'
 
 /**
  * Read environment variables from file.
@@ -13,7 +19,7 @@ import { devices } from '@playwright/test'
  */
 const config: PlaywrightTestConfig = {
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -29,10 +35,11 @@ const config: PlaywrightTestConfig = {
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: process.env.CI ? 'github' : 'list',
+  reporter: process.env.CI
+    ? [['dot'], ['github']]
+    : [['list'], ['html', { open: 'never' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    ...devices['Desktop Chrome'],
     /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
     actionTimeout: 0,
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -43,15 +50,7 @@ const config: PlaywrightTestConfig = {
   },
 
   /* Configure projects for major browsers */
-  projects: [
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-      },
-      testDir: resolvePlaygrould('use-theme-doc'),
-    },
-  ],
+  projects: [...testProjectConfig('use-theme-doc')],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
   // outputDir: 'test-results/',
@@ -64,6 +63,39 @@ const config: PlaywrightTestConfig = {
 }
 
 export default config
+
+function testProjectConfig(
+  playgroundName: string
+): Project<PlaywrightTestOptions, PlaywrightWorkerOptions & TestOptions>[] {
+  const testDir = resolvePlaygrould(playgroundName)
+  // for each project, test in serve mode, build mode, and ssr mode
+  return [
+    {
+      name: `${playgroundName}:serve`,
+      use: {
+        ...devices['Desktop Chrome'],
+        vitePagesMode: 'serve',
+      },
+      testDir,
+    },
+    {
+      name: `${playgroundName}:build`,
+      use: {
+        ...devices['Desktop Chrome'],
+        vitePagesMode: 'build',
+      },
+      testDir,
+    },
+    // {
+    //   name: `${playgroundName}:ssr`,
+    //   use: {
+    // ...devices['Desktop Chrome'],
+    //     vitePagesMode: 'ssr',
+    //   },
+    //   testDir,
+    // },
+  ]
+}
 
 function resolvePlaygrould(folder: string) {
   return resolve(__dirname, '../packages/playground', folder)

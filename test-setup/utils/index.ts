@@ -1,11 +1,13 @@
 import { test as base } from '@playwright/test'
-import getPort from 'get-port'
-import execa from 'execa'
-import waitOn from 'wait-on'
 import path from 'node:path'
 import fs from 'fs-extra'
 import { getFsUtils, setupActualTestPlayground } from './fsUtils'
+import { startBuildServer, startViteDevServer } from './startServer'
 export * from '@playwright/test'
+
+export type TestOptions = {
+  vitePagesMode: 'serve' | 'build' | 'ssr'
+}
 
 export const test = base.extend<
   {},
@@ -17,8 +19,9 @@ export const test = base.extend<
     }
     server: { port: number }
     fsUtils: ReturnType<typeof getFsUtils>
-  }
+  } & TestOptions
 >({
+  vitePagesMode: ['serve', { option: true, scope: 'worker' }],
   testPlayground: [
     async ({}, use, workerInfo) => {
       const testDir = workerInfo.project.testDir
@@ -38,47 +41,23 @@ export const test = base.extend<
     { scope: 'worker', auto: true },
   ],
   server: [
-    async ({ testPlayground }, use, workerInfo) => {
-      // console.log('@@@@project', workerInfo.project)
-      const port = await getPort()
-      let subprocess
+    async ({ testPlayground, vitePagesMode }, use, workerInfo) => {
+      const vars: { port?: number; subprocess?: any } = {}
       try {
-        // Start vite server.
-        subprocess = execa(
-          'pnpm',
-          ['dev', '--strictPort', '--port', String(port)],
-          {
-            cwd: testPlayground.path,
-            detached: true,
-          }
-        )
-        // subprocess.stdout?.pipe(fs.createWriteStream('vite-stdout.txt'))
-        subprocess.stdout?.pipe(process.stdout)
-        subprocess.stderr?.pipe(process.stderr)
-
-        // wait for the vite server to be available
-        await Promise.race([
-          // if subprocess faill, should throw early
-          subprocess,
-          waitOn({
-            resources: [`http-get://localhost:${port}`],
-            // should ignore http_proxy env variable from my shell...
-            proxy: false as any,
-            headers: { Accept: 'text/html' },
-            timeout: 10 * 1000,
-          }),
-        ])
-
-        console.log('vite serve is ready.')
-
-        await use({ port })
+        if (vitePagesMode === 'serve') {
+          await startViteDevServer(testPlayground.path, vars)
+        } else {
+          await startBuildServer(testPlayground.path, vars)
+        }
+        if (!vars.port || !vars.subprocess) throw new Error('assertion fail')
+        await use({ port: vars.port })
       } finally {
-        if (subprocess?.pid) {
+        if (vars.subprocess?.pid) {
           // https://stackoverflow.com/a/49842576
           // TODO: should check if it works on windows...
-          process.kill(-subprocess?.pid)
+          process.kill(-vars.subprocess?.pid)
         } else {
-          subprocess?.kill()
+          vars.subprocess?.kill()
         }
       }
     },
