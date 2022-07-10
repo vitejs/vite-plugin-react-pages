@@ -19,7 +19,7 @@ import { TestOptions } from './utils'
  */
 const config: PlaywrightTestConfig = {
   /* Maximum time one test can run for. */
-  timeout: 60 * 1000,
+  timeout: process.env.CI ? 180 * 1000 : 60 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -36,7 +36,7 @@ const config: PlaywrightTestConfig = {
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: process.env.CI
-    ? [['dot'], ['github']]
+    ? [['dot'], ['html', { open: 'never' }], ['github']]
     : [['list'], ['html', { open: 'never' }]],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
