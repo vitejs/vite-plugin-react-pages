@@ -9,31 +9,11 @@ export async function startViteDevServer(
   const port = await getPort()
   returnValues.port = port
 
-  // Start vite dev server.
-  const subprocess = execa(
-    'pnpm',
-    ['dev', '--strictPort', '--port', String(port)],
-    {
-      cwd: playgroundPath,
-      detached: true,
-    }
-  )
-  subprocess.stdout?.pipe(process.stdout)
-  subprocess.stderr?.pipe(process.stderr)
-  // return values early so caller can handler error
-  returnValues.subprocess = subprocess
-
-  // wait for the server to be available
-  await Promise.race([
-    waitOn({
-      resources: [`http-get://localhost:${port}`],
-      // should ignore http_proxy env variable from my shell...
-      proxy: false as any,
-      headers: { Accept: 'text/html' },
-      timeout: 10 * 1000,
-    }),
-    // if subprocess faill, it should throw too
-    subprocess,
+  await startServer(playgroundPath, returnValues, [
+    'dev',
+    '--strictPort',
+    '--port',
+    port.toString(),
   ])
 
   console.log('vite dev server is ready.')
@@ -46,15 +26,45 @@ export async function startBuildServer(
   const port = await getPort()
   returnValues.port = port
 
-  // build and start http server
-  const subprocess = execa(
-    'pnpm',
-    ['build', '--no-port-switching', '-p', String(port)],
-    {
-      cwd: playgroundPath,
-      detached: true,
-    }
-  )
+  await startServer(playgroundPath, returnValues, [
+    'build',
+    '--no-port-switching',
+    '-p',
+    port.toString(),
+  ])
+
+  console.log('build server is ready.')
+}
+
+export async function startSSRServer(
+  playgroundPath: string,
+  returnValues: { port?: number; subprocess?: any }
+) {
+  const port = await getPort()
+  returnValues.port = port
+
+  await startServer(playgroundPath, returnValues, [
+    'ssr',
+    '--no-port-switching',
+    '-p',
+    port.toString(),
+  ])
+
+  console.log('ssr server is ready.')
+}
+
+export async function startServer(
+  playgroundPath: string,
+  returnValues: { port?: number; subprocess?: any },
+  args: string[]
+) {
+  if (!returnValues.port || returnValues.subprocess)
+    throw new Error('assertion fail')
+
+  const subprocess = execa('pnpm', args, {
+    cwd: playgroundPath,
+    detached: true,
+  })
   subprocess.stdout?.pipe(process.stdout)
   subprocess.stderr?.pipe(process.stderr)
   // return values early so caller can handler error
@@ -63,15 +73,13 @@ export async function startBuildServer(
   // wait for the server to be available
   await Promise.race([
     waitOn({
-      resources: [`http-get://localhost:${port}`],
+      resources: [`http-get://localhost:${returnValues.port}`],
       // should ignore http_proxy env variable from my shell...
       proxy: false as any,
       headers: { Accept: 'text/html' },
       timeout: 30 * 1000,
     }),
-    // if subprocess faill, it should throw too
+    // if the subprocess faill, it should throw too
     subprocess,
   ])
-
-  console.log('build server is ready.')
 }

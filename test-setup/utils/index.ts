@@ -2,7 +2,11 @@ import { test as base } from '@playwright/test'
 import path from 'node:path'
 import fs from 'fs-extra'
 import { getFsUtils, setupActualTestPlayground } from './fsUtils'
-import { startBuildServer, startViteDevServer } from './startServer'
+import {
+  startBuildServer,
+  startSSRServer,
+  startViteDevServer,
+} from './startServer'
 export * from '@playwright/test'
 
 export type TestOptions = {
@@ -46,8 +50,10 @@ export const test = base.extend<
       try {
         if (vitePagesMode === 'serve') {
           await startViteDevServer(testPlayground.path, vars)
-        } else {
+        } else if (vitePagesMode === 'build') {
           await startBuildServer(testPlayground.path, vars)
+        } else if (vitePagesMode === 'ssr') {
+          await startSSRServer(testPlayground.path, vars)
         }
         if (!vars.port || !vars.subprocess) throw new Error('assertion fail')
         await use({ port: vars.port })

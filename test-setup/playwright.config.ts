@@ -86,14 +86,14 @@ function testProjectConfig(
       },
       testDir,
     },
-    // {
-    //   name: `${playgroundName}:ssr`,
-    //   use: {
-    // ...devices['Desktop Chrome'],
-    //     vitePagesMode: 'ssr',
-    //   },
-    //   testDir,
-    // },
+    {
+      name: `${playgroundName}:ssr`,
+      use: {
+        ...devices['Desktop Chrome'],
+        vitePagesMode: 'ssr',
+      },
+      testDir,
+    },
   ]
 }
 
