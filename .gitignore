@@ -6,3 +6,4 @@ temp
 /test-results/
 **/playwright-report/
 /playwright/.cache/
+playground-temp

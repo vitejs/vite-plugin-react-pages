@@ -2,11 +2,43 @@ import { test as base } from '@playwright/test'
 import getPort from 'get-port'
 import execa from 'execa'
 import waitOn from 'wait-on'
+import path from 'node:path'
+import fs from 'fs-extra'
+import { getFsUtils, setupActualTestPlayground } from './fsUtils'
 export * from '@playwright/test'
 
-export const test = base.extend<{}, { server: { port: number } }>({
-  server: [
+export const test = base.extend<
+  {},
+  {
+    testPlayground: {
+      name: string
+      path: string
+      restore: (subPath?: string) => Promise<void>
+    }
+    server: { port: number }
+    fsUtils: ReturnType<typeof getFsUtils>
+  }
+>({
+  testPlayground: [
     async ({}, use, workerInfo) => {
+      const testDir = workerInfo.project.testDir
+      if (!(await fs.pathExists(testDir)))
+        throw new Error(`testDir not exists: ${testDir}`)
+      const playgroundName = path.basename(testDir)
+      const { playgroundPath, restore } = await setupActualTestPlayground(
+        playgroundName,
+        workerInfo.workerIndex.toString()
+      )
+      await use({
+        name: playgroundName,
+        path: playgroundPath,
+        restore,
+      })
+    },
+    { scope: 'worker', auto: true },
+  ],
+  server: [
+    async ({ testPlayground }, use, workerInfo) => {
       // console.log('@@@@project', workerInfo.project)
       const port = await getPort()
       let subprocess
@@ -16,7 +48,7 @@ export const test = base.extend<{}, { server: { port: number } }>({
           'pnpm',
           ['dev', '--strictPort', '--port', String(port)],
           {
-            cwd: workerInfo.project.testDir,
+            cwd: testPlayground.path,
             detached: true,
           }
         )
@@ -62,4 +94,10 @@ export const test = base.extend<{}, { server: { port: number } }>({
     await page.goto(baseURL)
     await use(page)
   },
+  fsUtils: [
+    async ({ testPlayground }, use, workerInfo) => {
+      await use(getFsUtils(testPlayground.path))
+    },
+    { scope: 'worker' },
+  ],
 })
