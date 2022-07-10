@@ -1,3 +1,0 @@
-User Post Page
-userId: userA
-postId: 2
