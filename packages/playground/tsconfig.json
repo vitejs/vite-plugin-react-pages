@@ -1,5 +1,5 @@
 {
-  "include": ["."],
+  "include": [".", "../../test-setup"],
   "exclude": ["**/dist/**"],
   "compilerOptions": {
     "target": "es2019",
@@ -10,6 +10,9 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "jsx": "preserve",
-    "types": ["vite/client", "jest", "node"]
+    "types": ["vite/client", "node"],
+    "paths": {
+      "~utils": ["../../test-setup/utils/index"]
+    }
   }
 }
