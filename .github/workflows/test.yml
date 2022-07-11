@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         browser: [chromium]
-        os: [ubuntu-18.04]
+        os: [ubuntu-20.04, ubuntu-22.04, macos-latest, windows-latest]
         node-version: [16.x]
     runs-on: ${{ matrix.os }}
     # ref: https://playwright.dev/docs/ci#github-actions
@@ -39,5 +39,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v2
         with:
-          name: playwright-report
+          name: ${{ matrix.browser }}-${{ matrix.os }}-playwright-report
           path: playwright-report
