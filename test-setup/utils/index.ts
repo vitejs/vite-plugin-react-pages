@@ -58,18 +58,12 @@ export const test = base.extend<
         if (!vars.port || !vars.subprocess) throw new Error('assertion fail')
         await use({ port: vars.port })
       } finally {
-        if (vars.subprocess?.pid) {
-          // https://stackoverflow.com/a/49842576
-          // TODO: should check if it works on windows...
-          process.kill(-vars.subprocess?.pid)
-        } else {
-          vars.subprocess?.kill()
-        }
+        if (vars.subprocess) killProcess(vars.subprocess)
       }
     },
     { scope: 'worker', auto: true },
   ],
-  baseURL: async ({ baseURL, server }, use) => {
+  baseURL: async ({ server }, use) => {
     await use(`http://localhost:${server.port}`)
   },
   page: async ({ baseURL, page, server }, use) => {
@@ -86,3 +80,18 @@ export const test = base.extend<
     { scope: 'worker' },
   ],
 })
+
+const isWindows = process.platform === 'win32'
+import { commandSync, type ExecaChildProcess } from 'execa'
+
+export async function killProcess(subprocess: ExecaChildProcess) {
+  if (isWindows) {
+    // ref: https://github.com/vitejs/vite/blob/f9b5c14c42bf0a5c7d4ca4b53160047306fb07c5/playground/test-utils.ts#L281
+    commandSync(`taskkill /pid ${subprocess.pid} /T /F`)
+  } else if (subprocess.pid) {
+    // https://stackoverflow.com/a/49842576
+    process.kill(-subprocess.pid)
+  } else {
+    subprocess.kill()
+  }
+}
