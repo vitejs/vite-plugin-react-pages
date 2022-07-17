@@ -56,10 +56,13 @@ export async function ssrBuild(
 
   console.log('\n\nrendering html...')
 
-  const { renderToString, ssrData } = require(path.join(
-    ssrOutDir,
-    'serverRender.js'
-  ))
+  const {
+    renderToString,
+    ssrData,
+    __callbacksRunBeforeSSR,
+  } = require(path.join(ssrOutDir, 'serverRender.js'))
+
+  await Promise.all(__callbacksRunBeforeSSR.map((cb: any) => cb()))
 
   const pagePaths = Object.keys(ssrData)
 

@@ -63,22 +63,32 @@ export default function pluginFactory(
   return {
     name: 'vite-plugin-react-pages',
     enforce: 'pre',
-    config: () => ({
-      optimizeDeps: {
-        include: ['react', 'react-dom', 'react-router-dom', '@mdx-js/react'],
-        exclude: ['vite-plugin-react-pages'],
-      },
-      define: {
-        __HASH_ROUTER__: !!useHashRouter,
-      },
-      build: {
-        rollupOptions: {
-          output: {
-            manualChunks: undefined,
+    config: (config, env) => {
+      const isSSR = !!config.build?.ssr
+      // console.log('isSSR', config.build?.ssr, env)
+      return {
+        optimizeDeps: {
+          include: ['react', 'react-dom', 'react-router-dom', '@mdx-js/react'],
+          exclude: ['vite-plugin-react-pages'],
+        },
+        define: {
+          __HASH_ROUTER__: !!useHashRouter,
+        },
+        build: {
+          rollupOptions: {
+            output: {
+              manualChunks: undefined,
+            },
           },
         },
-      },
-    }),
+        resolve: {
+          alias: {
+            'virtual:ssrUtils':
+              'vite-plugin-react-pages/dist/client/ssr/ssrUtils.js',
+          },
+        },
+      }
+    },
     configResolved({ root, plugins, logger, command }) {
       isBuild = command === 'build'
       pagesDir = opts.pagesDir ?? path.resolve(root, 'pages')

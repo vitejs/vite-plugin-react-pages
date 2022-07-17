@@ -7,6 +7,17 @@ import {
 import { Button } from 'antd'
 import Component404 from './404'
 
+import { messages } from './i18n'
+
+import { runBeforeSSR } from 'virtual:ssrUtils'
+
+console.log('messages1', messages)
+runBeforeSSR(async (ctx) => {
+  const res = await messages['./zh/index.ts']()
+  console.log('messages2', messages, res)
+  // messages
+})
+
 export default createTheme({
   logo: <div style={{ fontSize: '20px' }}>📘 Vite Pages</div>,
   topNavs: [
@@ -80,4 +91,18 @@ export default createTheme({
     })
   },
   Component404,
+  // i18n: {
+  //   locales: {
+  //     zh: {
+  //       topNavs: [
+  //         { text: '首页', path: '/' },
+  //         { text: 'Vite', href: 'https://github.com/vitejs/vite' },
+  //         {
+  //           text: 'Vite Pages',
+  //           href: 'https://github.com/vitejs/vite-plugin-react-pages',
+  //         },
+  //       ],
+  //     }
+  //   }
+  // }
 })
