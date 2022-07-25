@@ -8,7 +8,7 @@ const { useBreakpoint } = Grid
 import s from './index.module.less'
 import AppHeader from './Header'
 import AppSider, { defaultSideNavs } from './Sider'
-import { themeConfigCtx, themePropsCtx } from '../ctx'
+import { themeConfigCtx, themePropsCtx, useLocaleCtx } from '../ctx'
 export { default as MDX } from './MDX'
 import type { SideNavsContext } from '..'
 import { LayoutContext } from './ctx'
@@ -20,20 +20,21 @@ ConfigProvider.config({
 interface Props {}
 
 const AppLayout: React.FC<Props> = ({ children }) => {
-  const { sideNavs } = useContext(themeConfigCtx)
+  const { sideNavs, i18n } = useContext(themeConfigCtx)
   const themeProps = useContext(themePropsCtx)
   const staticData = useStaticData()
+  const locale = useLocaleCtx()
 
   const [isSlideSiderOpen, setIsSlideSiderOpen] = useState(false)
 
   const sideNavsData = useMemo(() => {
-    const themeContext: SideNavsContext = { ...themeProps, staticData }
+    const themeContext: SideNavsContext = { ...themeProps, staticData, i18n }
     if (typeof sideNavs === 'function') {
       return sideNavs(themeContext)
     }
     if (Array.isArray(sideNavs)) return sideNavs
     return defaultSideNavs(themeContext)
-  }, [themeProps])
+  }, [themeProps, locale])
 
   const screenWidth = useBreakpoint()
 

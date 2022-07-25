@@ -8,6 +8,19 @@ import { Button } from 'antd'
 import Component404 from './404'
 
 export default createTheme({
+  i18n: {
+    defaultLocale: 'en',
+    locales: {
+      en: {
+        lang: 'en', // this will be set as the lang attribute on <html>
+        routePrefix: '/',
+      },
+      zh: {
+        lang: 'zh-CN',
+        routePrefix: '/zh',
+      },
+    },
+  },
   logo: <div style={{ fontSize: '20px' }}>📘 Vite Pages</div>,
   topNavs: [
     { label: 'Home', path: '/' },

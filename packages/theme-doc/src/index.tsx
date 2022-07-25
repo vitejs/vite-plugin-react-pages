@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import type { ThemeProps } from 'vite-plugin-react-pages/clientTypes'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 import { useLocation } from 'react-router-dom'
 
 import AppLayout, { MDX } from './Layout'
-import { themeConfigCtx, themePropsCtx } from './ctx'
+import { themeConfigCtx, themePropsCtx, localeCtx } from './ctx'
 
 import './style.less'
 import { Demo } from './Layout/Demo'
 import AnchorLink from './components/AnchorLink'
 import type { ThemeConfig } from './ThemeConfig.doc'
+import { matchPagePathLocalePrefix } from './Layout/Sider'
 
-export function createTheme(themeConfig: ThemeConfig) {
+export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
   const ThemeComp = (props: ThemeProps) => {
     const { loadState, loadedData } = props
     const staticData = useStaticData()
@@ -75,10 +76,22 @@ export function createTheme(themeConfig: ThemeConfig) {
 
   function withThemeProvider(Component: React.FC<ThemeProps>) {
     const HOC: React.FC<ThemeProps> = (props) => {
+      const { loadState } = props
+      const locale = useMemo(() => {
+        if (!themeConfig.i18n?.locales) return
+        const { locale } = matchPagePathLocalePrefix(
+          loadState.routePath,
+          themeConfig.i18n
+        )
+        return locale
+      }, [loadState.routePath])
+
       return (
         <themeConfigCtx.Provider value={themeConfig}>
           <themePropsCtx.Provider value={props}>
-            <Component {...props} />
+            <localeCtx.Provider value={locale}>
+              <Component {...props} />
+            </localeCtx.Provider>
           </themePropsCtx.Provider>
         </themeConfigCtx.Provider>
       )
@@ -89,8 +102,13 @@ export function createTheme(themeConfig: ThemeConfig) {
 
 export { defaultSideNavs } from './Layout/Sider'
 export type { DefaultSideNavsOpts } from './Layout/Sider'
-
 export { Demo } from './Layout/Demo'
 export { TsInfo } from './Layout/TsInfo'
 export { FileText } from './Layout/FileText'
-export * from './ThemeConfig.doc'
+export type {
+  ThemeConfig,
+  LocalConfig,
+  SideNavsContext,
+  I18nConfig,
+} from './ThemeConfig.doc'
+export { useLocaleCtx } from './ctx'

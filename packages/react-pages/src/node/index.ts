@@ -42,14 +42,28 @@ const ssrDataModuleId = modulePrefix + 'ssrData'
 
 const tsInfoQueryReg = /\?tsInfo=(.*)$/
 
-export default function pluginFactory(
-  opts: {
-    pagesDir?: string
-    pageStrategy?: PageStrategy
-    useHashRouter?: boolean
-    staticSiteGeneration?: {}
-  } = {}
-): Plugin {
+export interface PluginConfig {
+  pagesDir?: string
+  pageStrategy?: PageStrategy
+  useHashRouter?: boolean
+  staticSiteGeneration?: {}
+  i18n?: {
+    defaultLocale: string
+    locales: Record<string, LocalConfig>
+  }
+}
+export interface LocalConfig {
+  /** this will be set as the lang attribute on <html> */
+  lang?: string
+  /**
+   * this label will be used when rendering the locale
+   * in the locale selector
+   */
+  label?: string
+  routePrefix?: string
+}
+
+export default function pluginFactory(opts: PluginConfig = {}): Plugin {
   const { useHashRouter = false, staticSiteGeneration } = opts
 
   let isBuild: boolean

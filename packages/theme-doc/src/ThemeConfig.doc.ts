@@ -33,10 +33,28 @@ export interface ThemeConfig {
    * (url not matching any page)
    */
   Component404?: React.ComponentType
+  i18n?: I18nConfig
+}
+
+export interface I18nConfig {
+  defaultLocale: string
+  locales: Record<string, LocalConfig>
 }
 
 export interface SideNavsContext {
   readonly loadState: LoadState
   readonly loadedData: PagesLoaded
   readonly staticData: Record<string, any>
+  readonly i18n: I18nConfig | undefined
+}
+
+export interface LocalConfig {
+  /** this will be set as the lang attribute on <html> */
+  lang?: string
+  /**
+   * this label will be used when rendering the locale
+   * in the locale selector
+   */
+  label?: string
+  routePrefix?: string
 }
