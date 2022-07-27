@@ -1,29 +1,35 @@
 import type { MenuConfig } from './Layout/renderMenu'
 import type {
-  LoadState,
-  PagesLoaded,
+  PagesStaticData,
+  ThemeProps,
 } from 'vite-plugin-react-pages/clientTypes'
 
 export interface ThemeConfig {
   /**
    * Logo at top bar
    */
-  logo?: React.ReactNode
+  logo?: React.ReactNode | ((ctx: ThemeContextValue) => React.ReactNode)
   /**
    * Logo link path
    * @defaultValue "/"
    */
-  logoLink?: string | null
+  logoLink?:
+    | string
+    | null
+    | undefined
+    | ((ctx: ThemeContextValue) => string | null | undefined)
   /**
    * Navigation menu at top bar.
    */
-  topNavs?: ReadonlyArray<MenuConfig>
+  topNavs?:
+    | ReadonlyArray<MenuConfig>
+    | ((ctx: ThemeContextValue) => ReadonlyArray<MenuConfig> | null | undefined)
   /**
    * Side menu.
    */
   sideNavs?:
     | ReadonlyArray<MenuConfig>
-    | ((ctx: SideNavsContext) => ReadonlyArray<MenuConfig> | null | undefined)
+    | ((ctx: ThemeContextValue) => ReadonlyArray<MenuConfig> | null | undefined)
   /**
    * Extra area at top bar.
    */
@@ -38,14 +44,8 @@ export interface ThemeConfig {
 
 export interface I18nConfig {
   defaultLocale: string
+  topBarLocaleSelector?: boolean
   locales: Record<string, LocalConfig>
-}
-
-export interface SideNavsContext {
-  readonly loadState: LoadState
-  readonly loadedData: PagesLoaded
-  readonly staticData: Record<string, any>
-  readonly i18n: I18nConfig | undefined
 }
 
 export interface LocalConfig {
@@ -57,4 +57,14 @@ export interface LocalConfig {
    */
   label?: string
   routePrefix?: string
+}
+
+export type ThemeContextValue = ThemeProps & {
+  themeConfig: ThemeConfig
+  staticData: PagesStaticData
+  resolvedLocale: {
+    locale?: LocalConfig
+    localeKey?: string
+    pagePathWithoutLocalePrefix?: string
+  }
 }

@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { Menu, Drawer } from 'antd'
-import { useLocation } from 'react-router-dom'
 
 import { MenuConfig, renderMenuHelper } from './renderMenu'
 import { themePropsCtx } from '../ctx'
 import s from './index.module.less'
-import type { SideNavsContext, I18nConfig, LocalConfig } from '..'
+import type { ThemeContextValue, I18nConfig, LocalConfig } from '..'
 import { LayoutContext } from './ctx'
+import { ensureStartSlash, removeStartSlash } from '../utils'
 
 interface Props {
   sideNavsData: readonly MenuConfig[] | null | undefined
@@ -16,7 +16,6 @@ const renderMenu = renderMenuHelper(false)
 
 const AppSider: React.FC<Props> = ({ sideNavsData }) => {
   const themeProps = useContext(themePropsCtx)
-  const location = useLocation()
   const subMenuKeys: string[] = []
   const menuItems = sideNavsData
     ? renderMenu(sideNavsData, true, subMenuKeys)
@@ -34,7 +33,9 @@ const AppSider: React.FC<Props> = ({ sideNavsData }) => {
             // clear menu state when path change
             key={themeProps.loadState.routePath}
             mode="inline"
-            selectedKeys={[location.pathname]}
+            // use loadState.routePath instead of location.pathname
+            // because location.pathname may contain trailing slash
+            selectedKeys={[themeProps.loadState.routePath]}
             defaultOpenKeys={subMenuKeys}
             inlineIndent={30}
             items={menuItems}
@@ -64,7 +65,9 @@ const AppSider: React.FC<Props> = ({ sideNavsData }) => {
             // clear menu state when path change
             key={themeProps.loadState.routePath}
             mode="inline"
-            selectedKeys={[location.pathname]}
+            // use loadState.routePath instead of location.pathname
+            // because location.pathname may contain trailing slash
+            selectedKeys={[themeProps.loadState.routePath]}
             defaultOpenKeys={subMenuKeys}
             inlineIndent={30}
             items={menuItems}
@@ -95,9 +98,10 @@ export interface DefaultSideNavsOpts {
 }
 
 export function defaultSideNavs(
-  { loadState, staticData, i18n }: SideNavsContext,
+  { loadState, staticData, themeConfig }: ThemeContextValue,
   opts?: DefaultSideNavsOpts
 ): MenuConfig[] | null {
+  const { i18n } = themeConfig
   const currentGroupInfo = getPageGroupInfo(
     loadState.routePath,
     staticData[loadState.routePath],
@@ -199,10 +203,6 @@ export function defaultSideNavs(
   function getGroupConfig(groupKey: string, subGroupKey: string) {
     return opts?.groupConfig?.[groupKey]?.[subGroupKey]
   }
-}
-
-function removeStartSlash(pagePath: string) {
-  return pagePath.replace(/^\//, '')
 }
 
 function getStaticDataValue(pageStaticData: any, key: string) {
@@ -334,16 +334,16 @@ export function matchPagePathLocalePrefix(
 
   Object.entries(i18n.locales).forEach(([localeKey, locale]) => {
     let prefix = locale.routePrefix
-    if (!prefix) prefix = `/${localeKey}`
+    if (!prefix) prefix = localeKey
+    prefix = ensureStartSlash(prefix)
     if (
       pagePath.startsWith(prefix) &&
       // routePrefix '/' has lower priority than '/any-prefix'
       (!result.locale || result.locale.routePrefix === '/')
     ) {
       // ensure starting slash
-      result.pagePathWithoutLocalePrefix = `/${removeStartSlash(
-        pagePath.slice(prefix.length)
-      )}`
+      result.pagePathWithoutLocalePrefix =
+        '/' + removeStartSlash(pagePath.slice(prefix.length))
       result.localeKey = localeKey
       result.locale = locale
     }

@@ -4,12 +4,12 @@ import { useStaticData } from 'vite-plugin-react-pages/client'
 import { useLocation } from 'react-router-dom'
 
 import AppLayout, { MDX } from './Layout'
-import { themeConfigCtx, themePropsCtx, localeCtx } from './ctx'
+import { themeConfigCtx, themePropsCtx, themeCtx } from './ctx'
 
 import './style.less'
 import { Demo } from './Layout/Demo'
 import AnchorLink from './components/AnchorLink'
-import type { ThemeConfig } from './ThemeConfig.doc'
+import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
 import { matchPagePathLocalePrefix } from './Layout/Sider'
 
 export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
@@ -77,21 +77,31 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
   function withThemeProvider(Component: React.FC<ThemeProps>) {
     const HOC: React.FC<ThemeProps> = (props) => {
       const { loadState } = props
-      const locale = useMemo(() => {
-        if (!themeConfig.i18n?.locales) return
-        const { locale } = matchPagePathLocalePrefix(
-          loadState.routePath,
-          themeConfig.i18n
-        )
-        return locale
+      const staticData = useStaticData()
+      const themeCtxValue: ThemeContextValue = useMemo(() => {
+        const result: ThemeContextValue = {
+          ...props,
+          themeConfig,
+          staticData,
+          resolvedLocale: {},
+        }
+        if (!themeConfig.i18n?.locales) return result
+        const { locale, localeKey, pagePathWithoutLocalePrefix } =
+          matchPagePathLocalePrefix(loadState.routePath, themeConfig.i18n)
+        Object.assign(result.resolvedLocale, {
+          locale,
+          localeKey,
+          pagePathWithoutLocalePrefix,
+        })
+        return result
       }, [loadState.routePath])
 
       return (
         <themeConfigCtx.Provider value={themeConfig}>
           <themePropsCtx.Provider value={props}>
-            <localeCtx.Provider value={locale}>
+            <themeCtx.Provider value={themeCtxValue}>
               <Component {...props} />
-            </localeCtx.Provider>
+            </themeCtx.Provider>
           </themePropsCtx.Provider>
         </themeConfigCtx.Provider>
       )
@@ -108,7 +118,7 @@ export { FileText } from './Layout/FileText'
 export type {
   ThemeConfig,
   LocalConfig,
-  SideNavsContext,
   I18nConfig,
+  ThemeContextValue,
 } from './ThemeConfig.doc'
-export { useLocaleCtx } from './ctx'
+export { useThemeCtx } from './ctx'

@@ -1,6 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react'
 import { ConfigProvider, Grid } from 'antd'
-import { useStaticData } from 'vite-plugin-react-pages/client'
 import 'github-markdown-css/github-markdown.css'
 
 const { useBreakpoint } = Grid
@@ -8,9 +7,9 @@ const { useBreakpoint } = Grid
 import s from './index.module.less'
 import AppHeader from './Header'
 import AppSider, { defaultSideNavs } from './Sider'
-import { themeConfigCtx, themePropsCtx, useLocaleCtx } from '../ctx'
+import { themeConfigCtx } from '../ctx'
 export { default as MDX } from './MDX'
-import type { SideNavsContext } from '..'
+import { useThemeCtx } from '..'
 import { LayoutContext } from './ctx'
 
 ConfigProvider.config({
@@ -20,21 +19,16 @@ ConfigProvider.config({
 interface Props {}
 
 const AppLayout: React.FC<Props> = ({ children }) => {
-  const { sideNavs, i18n } = useContext(themeConfigCtx)
-  const themeProps = useContext(themePropsCtx)
-  const staticData = useStaticData()
-  const locale = useLocaleCtx()
+  const { sideNavs } = useContext(themeConfigCtx)
+  const themeCtxValue = useThemeCtx()
 
   const [isSlideSiderOpen, setIsSlideSiderOpen] = useState(false)
 
   const sideNavsData = useMemo(() => {
-    const themeContext: SideNavsContext = { ...themeProps, staticData, i18n }
-    if (typeof sideNavs === 'function') {
-      return sideNavs(themeContext)
-    }
+    if (typeof sideNavs === 'function') return sideNavs(themeCtxValue)
     if (Array.isArray(sideNavs)) return sideNavs
-    return defaultSideNavs(themeContext)
-  }, [themeProps, locale])
+    return defaultSideNavs(themeCtxValue)
+  }, [themeCtxValue])
 
   const screenWidth = useBreakpoint()
 

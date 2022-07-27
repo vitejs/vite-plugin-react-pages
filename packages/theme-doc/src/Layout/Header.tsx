@@ -1,7 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { Menu, Dropdown } from 'antd'
-import { useLocation, Link, matchPath } from 'react-router-dom'
-import { useStaticData } from 'vite-plugin-react-pages/client'
+import { Link, matchPath } from 'react-router-dom'
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -9,10 +8,12 @@ import {
 } from '@ant-design/icons'
 
 import s from './index.module.less'
-import { themeConfigCtx } from '../ctx'
 import { renderMenuHelper } from './renderMenu'
 import type { MenuConfig } from './renderMenu'
 import { LayoutContext } from './ctx'
+import { themeConfigCtx, useThemeCtx } from '../ctx'
+import { useLocaleSelector } from './useLocaleSelector'
+import { ensureStartSlash, removeTrailingSlash } from '../utils'
 
 const renderMenu = renderMenuHelper(true)
 
@@ -21,31 +22,57 @@ interface Props {}
 const AppHeader: React.FC<Props> = (props) => {
   const themeConfig = useContext(themeConfigCtx)
   const { TopBarExtra, topNavs } = themeConfig
-  const location = useLocation()
-  const indexPagestaticData = useStaticData('/')
   const layoutCtxVal = useContext(LayoutContext)
-
-  const logoLink = (() => {
-    if (themeConfig.logoLink !== undefined) return themeConfig.logoLink
-    if (indexPagestaticData) {
-      return '/'
-    }
-  })()
+  const { render: renderLocaleSelector } = useLocaleSelector()
+  const themeCtxValue = useThemeCtx()
+  const {
+    loadState: { routePath },
+    resolvedLocale: { locale, localeKey },
+    staticData,
+  } = themeCtxValue
 
   const renderLogo = (() => {
+    const logoLink = (() => {
+      let result: string | undefined | null
+      if (typeof themeConfig.logoLink === 'function') {
+        result = themeConfig.logoLink(themeCtxValue)
+      } else {
+        result = themeConfig.logoLink
+      }
+      if (result === undefined) {
+        result = locale?.routePrefix || localeKey || '/'
+        result = ensureStartSlash(removeTrailingSlash(result))
+        if (!staticData[result]) result = null
+      }
+      // if result is `null`
+      // then we won't render the logo link
+      return result
+    })()
+    const resolvedLogo = (() => {
+      if (typeof themeConfig.logo === 'function')
+        return themeConfig.logo(themeCtxValue)
+      return themeConfig.logo
+    })()
     if (logoLink) {
       return (
         <Link to={logoLink} className={s.logoLink}>
-          {themeConfig.logo}
+          {resolvedLogo}
         </Link>
       )
     }
-    return themeConfig.logo
+    return resolvedLogo
   })()
 
+  const resolvedTopNavs = useMemo(() => {
+    if (typeof topNavs === 'function') return topNavs(themeCtxValue)
+    return topNavs
+  }, [themeCtxValue])
+
   const activeKeys: string[] = useMemo(() => {
-    const result = (topNavs ?? []).map(getActiveKeyIfMatch).filter(Boolean)
-    if (!result.includes(location.pathname)) result.push(location.pathname)
+    const result = (resolvedTopNavs ?? [])
+      .map(getActiveKeyIfMatch)
+      .filter(Boolean)
+    if (!result.includes(routePath)) result.push(routePath)
     return result as string[]
 
     function getActiveKeyIfMatch(item: MenuConfig) {
@@ -54,11 +81,13 @@ const AppHeader: React.FC<Props> = (props) => {
           path: item.path,
           exact: true,
         }
-        const match = matchPath(location.pathname, matcher)
+        // use loadState.routePath instead of location.pathname
+        // because location.pathname may contain trailing slash
+        const match = matchPath(routePath, matcher)
         if (match) return item.path
       } else if ('subMenu' in item) {
         if (item.activeIfMatch) {
-          const match = matchPath(location.pathname, item.activeIfMatch)
+          const match = matchPath(routePath, item.activeIfMatch)
           if (match) return item.subMenu
         }
         const match = item.children.some(getActiveKeyIfMatch)
@@ -66,7 +95,7 @@ const AppHeader: React.FC<Props> = (props) => {
       }
       return false
     }
-  }, [location.pathname, topNavs])
+  }, [routePath, resolvedTopNavs])
 
   return (
     <header className={s.header}>
@@ -88,7 +117,7 @@ const AppHeader: React.FC<Props> = (props) => {
 
       <div className={s.flexSpace}></div>
 
-      {topNavs && (
+      {resolvedTopNavs && (
         <>
           <div className={s.navCtn}>
             <Menu
@@ -96,14 +125,18 @@ const AppHeader: React.FC<Props> = (props) => {
               mode="horizontal"
               selectedKeys={activeKeys}
               disabledOverflow
-              items={renderMenu(topNavs, true)}
+              items={renderMenu(resolvedTopNavs, true)}
             />
           </div>
           <div className={s.triggerCtn}>
             <Dropdown
               placement="bottomRight"
               overlay={
-                <Menu selectedKeys={activeKeys} disabledOverflow items={renderMenu(topNavs, true)} />
+                <Menu
+                  selectedKeys={activeKeys}
+                  disabledOverflow
+                  items={renderMenu(resolvedTopNavs, true)}
+                />
               }
             >
               <span className={s.trigger}>
@@ -113,6 +146,8 @@ const AppHeader: React.FC<Props> = (props) => {
           </div>
         </>
       )}
+
+      <div className={s.localeSelectorCtn}>{renderLocaleSelector()}</div>
 
       {TopBarExtra ? (
         <div className={s.extraCtn}>
