@@ -68,3 +68,5 @@ export type ThemeContextValue = ThemeProps & {
     pagePathWithoutLocalePrefix?: string
   }
 }
+
+export type { MenuConfig }

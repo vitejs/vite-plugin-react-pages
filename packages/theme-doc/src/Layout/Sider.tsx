@@ -341,9 +341,9 @@ export function matchPagePathLocalePrefix(
       // routePrefix '/' has lower priority than '/any-prefix'
       (!result.locale || result.locale.routePrefix === '/')
     ) {
-      // ensure starting slash
-      result.pagePathWithoutLocalePrefix =
-        '/' + removeStartSlash(pagePath.slice(prefix.length))
+      result.pagePathWithoutLocalePrefix = ensureStartSlash(
+        pagePath.slice(prefix.length)
+      )
       result.localeKey = localeKey
       result.locale = locale
     }

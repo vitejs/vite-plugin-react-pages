@@ -120,5 +120,6 @@ export type {
   LocalConfig,
   I18nConfig,
   ThemeContextValue,
+  MenuConfig,
 } from './ThemeConfig.doc'
 export { useThemeCtx } from './ctx'
