@@ -31,3 +31,6 @@ DATA node, graph, lazy/eager node
 
 - [upgrade to mdx v2](https://github.com/brillout/vite-plugin-mdx#vite-plugin-mdx)
 - upgrade to React 18 and react-router-dom 6.x
+
+bug: routePath don't change when route from a 404 page to another 404 page
+bug: hmr for static page data doesn't work
