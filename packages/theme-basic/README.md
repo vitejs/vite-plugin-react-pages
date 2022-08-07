@@ -118,6 +118,6 @@ export type TopNavData =
 
 ## Fully theme customization
 
-If the basic theme doesn't satisfy your need, you can [create your own theme](https://vitejs.github.io/vite-plugin-react-pages/#/theme-customization).
+If the basic theme doesn't satisfy your need, you can [create your own theme](https://vitejs.github.io/vite-plugin-react-pages/theme-customization).
 
 > Contributions to [the basic theme](https://github.com/vitejs/vite-plugin-react-pages/tree/main/packages/theme-basic) are always welcomed.
