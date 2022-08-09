@@ -136,6 +136,7 @@ export function defaultSideNavs(
       )
       return [subGroupKey, filtered] as const
     })
+    // if all pages of a subGroup are filtered out, drop it
     .filter(([subGroupKey, pages]) => pages.length > 0)
     // sort subGroup
     .sort(([subGroupKeyA], [subGroupKeyB]) => {

@@ -40,12 +40,14 @@ const AppHeader: React.FC<Props> = (props) => {
         result = themeConfig.logoLink
       }
       if (result === undefined) {
+        // infer home page path based on current matched locale
+        // for example, /page1 will infer home path to /
+        // /zh/page1 will infer home path to /zh
         result = locale?.routePrefix || localeKey || '/'
         result = ensureStartSlash(removeTrailingSlash(result))
+        // if the infered page path doesn't exist, drop it
         if (!staticData[result]) result = null
       }
-      // if result is `null`
-      // then we won't render the logo link
       return result
     })()
     const resolvedLogo = (() => {
