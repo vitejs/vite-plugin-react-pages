@@ -9,7 +9,7 @@ import { useIntl } from './themeConfig/i18nMessages'
 
 const Page = () => {
   const intl = useIntl()
-  return <p className={'page ' + s.box}>{intl['page1.content']}</p>
+  return <p className={'page ' + s.box}>{intl['page.page1.content']}</p>
 }
 
 export default Page

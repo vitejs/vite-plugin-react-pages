@@ -4,7 +4,7 @@ import { messages as en } from './en'
 
 export type MessagesType = typeof en
 
-// you can use any i18n message formatter such as react-intl
+// you can use any i18n library such as react-intl
 
 export function useIntl(): MessagesType {
   const {
