@@ -11,6 +11,7 @@ import { Demo } from './Layout/Demo'
 import AnchorLink from './components/AnchorLink'
 import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
 import { matchPagePathLocalePrefix } from './Layout/Sider'
+import { normalizeI18nConfig } from './utils'
 
 export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
   const ThemeComp = (props: ThemeProps) => {
@@ -81,13 +82,19 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
       const themeCtxValue: ThemeContextValue = useMemo(() => {
         const result: ThemeContextValue = {
           ...props,
-          themeConfig,
+          themeConfig: {
+            ...themeConfig,
+            i18n: normalizeI18nConfig(themeConfig.i18n),
+          },
           staticData,
           resolvedLocale: {},
         }
-        if (!themeConfig.i18n?.locales) return result
+        if (!result.themeConfig.i18n?.locales) return result
         const { locale, localeKey, pagePathWithoutLocalePrefix } =
-          matchPagePathLocalePrefix(loadState.routePath, themeConfig.i18n)
+          matchPagePathLocalePrefix(
+            loadState.routePath,
+            result.themeConfig.i18n
+          )
         Object.assign(result.resolvedLocale, {
           locale,
           localeKey,

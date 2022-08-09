@@ -334,9 +334,7 @@ export function matchPagePathLocalePrefix(
   if (!i18n?.locales) return result
 
   Object.entries(i18n.locales).forEach(([localeKey, locale]) => {
-    let prefix = locale.routePrefix
-    if (!prefix) prefix = localeKey
-    prefix = ensureStartSlash(prefix)
+    const prefix = locale.routePrefix || ensureStartSlash(localeKey)
     if (
       pagePath.startsWith(prefix) &&
       // routePrefix '/' has lower priority than '/any-prefix'

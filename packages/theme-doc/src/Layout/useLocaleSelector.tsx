@@ -44,16 +44,16 @@ export function useLocaleSelector() {
               })
               return
             }
-            let newRoutePath = ensureStartSlash(
-              removeTrailingSlash(newLocale.routePrefix) +
-                pagePathWithoutLocalePrefix
-            )
+            // infer the page path with selected locale
+            let newRoutePath =
+              newLocale.routePrefix + pagePathWithoutLocalePrefix
             if (!staticData[newRoutePath]) {
-              newRoutePath = ensureStartSlash(
-                removeTrailingSlash(newLocale.routePrefix)
-              )
+              // fallback to the index page of this locale
+              newRoutePath = newLocale.routePrefix
             }
-            history.push(newRoutePath)
+            if (staticData[newRoutePath]) {
+              history.push(newRoutePath)
+            }
           }
         }}
       />

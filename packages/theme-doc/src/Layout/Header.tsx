@@ -43,8 +43,7 @@ const AppHeader: React.FC<Props> = (props) => {
         // infer home page path based on current matched locale
         // for example, /page1 will infer home path to /
         // /zh/page1 will infer home path to /zh
-        result = locale?.routePrefix || localeKey || '/'
-        result = ensureStartSlash(removeTrailingSlash(result))
+        result = locale?.routePrefix || '/'
         // if the infered page path doesn't exist, drop it
         if (!staticData[result]) result = null
       }
