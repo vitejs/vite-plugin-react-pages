@@ -1,5 +1,5 @@
 import React from 'react'
-import { useIntl } from './themeConfig/i18nMessages'
+import { useIntl } from './themeConfig/i18n'
 
 interface Props {}
 

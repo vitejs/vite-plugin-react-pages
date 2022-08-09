@@ -1,8 +1,5 @@
 import React from 'react'
-import {
-  createTheme,
-  defaultSideNavs,
-} from './themeDev'
+import { createTheme, defaultSideNavs, useThemeCtx } from './themeDev'
 import { Button } from 'antd'
 import Component404 from './404'
 import { topNavsConfig } from './themeConfig/topNavs'
@@ -30,6 +27,9 @@ export default createTheme({
     return topNavsConfig[localeKey!]
   },
   TopBarExtra: () => {
+    // TopBarExtra is a component, you can call useThemeCtx hook in it
+    const themeCtx = useThemeCtx()
+    console.log('themeCtx', themeCtx)
     return (
       <Button size="small" style={{ verticalAlign: 'middle' }}>
         Extra

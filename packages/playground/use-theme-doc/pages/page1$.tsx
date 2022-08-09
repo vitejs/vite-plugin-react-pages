@@ -5,7 +5,7 @@
 
 import React from 'react'
 import s from './page1.module.css'
-import { useIntl } from './themeConfig/i18nMessages'
+import { useIntl } from './themeConfig/i18n'
 
 const Page = () => {
   const intl = useIntl()

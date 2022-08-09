@@ -15,19 +15,6 @@ module.exports = defineConfig({
     mdx(),
     pages({
       pagesDir: path.join(__dirname, 'pages'),
-      i18n: {
-        defaultLocale: 'en',
-        locales: {
-          en: {
-            lang: 'en', // this will be set as the lang attribute on <html>
-            routePrefix: '/',
-          },
-          zh: {
-            lang: 'zh-CN',
-            routePrefix: '/zh',
-          },
-        },
-      },
     }),
   ],
   // theme local dev
