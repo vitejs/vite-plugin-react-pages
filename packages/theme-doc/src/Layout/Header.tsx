@@ -13,7 +13,6 @@ import type { MenuConfig } from './renderMenu'
 import { LayoutContext } from './ctx'
 import { themeConfigCtx, useThemeCtx } from '../ctx'
 import { useLocaleSelector } from './useLocaleSelector'
-import { ensureStartSlash, removeTrailingSlash } from '../utils'
 
 const renderMenu = renderMenuHelper(true)
 

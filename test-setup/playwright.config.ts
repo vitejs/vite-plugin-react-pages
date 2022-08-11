@@ -27,6 +27,7 @@ const config: PlaywrightTestConfig = {
      */
     timeout: 5000,
   },
+  // maxFailures: 1,
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,

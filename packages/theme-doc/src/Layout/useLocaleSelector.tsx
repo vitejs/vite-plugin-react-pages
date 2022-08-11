@@ -4,7 +4,6 @@ import { CaretDownFilled } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 
 import { useThemeCtx } from '..'
-import { ensureStartSlash, removeTrailingSlash } from '../utils'
 
 export function useLocaleSelector() {
   const themeCtxValue = useThemeCtx()
