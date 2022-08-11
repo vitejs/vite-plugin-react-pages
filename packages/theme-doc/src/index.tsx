@@ -17,7 +17,6 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
   const ThemeComp = (props: ThemeProps) => {
     const { loadState, loadedData } = props
     const staticData = useStaticData()
-    // console.log('theme', loadState, loadedData, staticData)
 
     const location = useLocation()
     useEffect(() => {
@@ -77,7 +76,7 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
 
   function withThemeProvider(Component: React.FC<ThemeProps>) {
     const HOC: React.FC<ThemeProps> = (props) => {
-      const { loadState } = props
+      const { loadState, loadedData } = props
       const staticData = useStaticData()
       const themeCtxValue: ThemeContextValue = useMemo(() => {
         const result: ThemeContextValue = {
@@ -101,8 +100,12 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
           pagePathWithoutLocalePrefix,
         })
         return result
-      }, [loadState.routePath])
+      }, [themeConfig, loadState, loadedData, staticData])
 
+      // console.log('themeCtxValue', themeCtxValue)
+
+      // TODO: improve context usage
+      // use less context and make it more efficient
       return (
         <themeConfigCtx.Provider value={themeConfig}>
           <themePropsCtx.Provider value={props}>
