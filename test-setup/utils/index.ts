@@ -70,6 +70,13 @@ export const test = base.extend<
     // double check if this fixture works
     if (baseURL !== `http://localhost:${server.port}`)
       throw new Error('unexpected baseURL')
+
+    // const res = await axios.get(baseURL, {
+    //   timeout: 5000,
+    //   headers: { Accept: 'text/html' },
+    // })
+    // console.log('@@baseURL.data', res.data)
+
     await page.goto(baseURL)
     await use(page)
   },

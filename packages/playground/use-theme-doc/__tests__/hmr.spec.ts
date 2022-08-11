@@ -19,7 +19,7 @@ test('hmr: edit file (js)', async ({ page, fsUtils, testPlayground }) => {
   await expect(page.locator('text="Modified content!"')).toHaveCount(0)
 })
 
-test('hmr: edit file (js static data notation)', async ({
+test.fixme('hmr: edit file (js static data notation)', async ({
   page,
   fsUtils,
   testPlayground,
@@ -48,7 +48,7 @@ test('hmr: edit file (js static data notation)', async ({
   ).toHaveCount(0)
 })
 
-test('hmr: edit file (md static data notation)', async ({
+test.fixme('hmr: edit file (md static data notation)', async ({
   page,
   fsUtils,
   testPlayground,
@@ -77,7 +77,7 @@ test('hmr: edit file (md static data notation)', async ({
   ).toHaveCount(0)
 })
 
-test('hmr: delete file, add file', async ({ page, fsUtils }) => {
+test.fixme('hmr: delete file, add file', async ({ page, fsUtils }) => {
   const page2FileContent = fsUtils.readFile('pages/page2$.md')
   await expect(
     page.locator('.vp-local-sider >> text="page2 title"')
