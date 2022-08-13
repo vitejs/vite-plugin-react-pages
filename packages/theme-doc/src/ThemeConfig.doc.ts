@@ -43,19 +43,38 @@ export interface ThemeConfig {
 }
 
 export interface I18nConfig {
+  /**
+   * The localeKey of default locale
+   * If a page have pagePath that doesn't match any `LocalConfig.routePrefix`,
+   *  the `I18nConfig.defaultLocale` will apply to it
+   */
   defaultLocale: string
+  /**
+   * If true, this theme will render a locale selector at topbar
+   * Only matters when you have more than one locales
+   * @defaultValue true
+   */
   topBarLocaleSelector?: boolean
+  /**
+   * Define all locales that your site supports
+   * Map localeKey to locale config
+   */
   locales: Record<string, LocalConfig>
 }
 
 export interface LocalConfig {
-  /** this will be set as the lang attribute on <html> */
+  /** This will be set as the lang attribute on <html> */
   lang?: string
   /**
-   * this label will be used when rendering the locale
+   * This label will be used when rendering the locale
    * in the locale selector
    */
   label?: string
+  /**
+   * If a page have pagePath with this prefix, this locale will apply to it
+   * If a page have pagePath that doesn't match any routePrefix,
+   *  the `I18nConfig.defaultLocale` will apply to it
+   */
   routePrefix?: string
 }
 

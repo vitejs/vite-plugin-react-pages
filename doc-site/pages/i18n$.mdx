@@ -1,0 +1,264 @@
+---
+title: Internationalization
+order: -1
+subGroup: advanced
+---
+
+# Internationalization
+
+i18n support can be provided by theme. For example, [the official theme(vite-pages-theme-doc)](/official-theme) support i18n. This document shows how to create a multi-lingual site with it.
+
+## Define i18n metadata in the theme config
+
+The [the official theme(vite-pages-theme-doc)](/official-theme) accept 1i8n config like this:
+
+```tsx
+import { createTheme } from 'vite-pages-theme-doc'
+
+export default createTheme({
+  i18n: {
+    defaultLocale: 'en',
+    topBarLocaleSelector: true,
+    locales: {
+      en: {
+        label: 'English',
+        lang: 'en', // this will be set as the `lang` attribute on <html>
+        routePrefix: '/',
+      },
+      zh: {
+        label: '中文',
+        lang: 'zh-CN',
+        routePrefix: '/zh',
+      },
+    },
+  },
+  /** Other configs... */
+})
+```
+
+Here is the type definition of the `i18n` property (`I18nConfig`):
+
+```ts
+interface I18nConfig {
+  /**
+   * The localeKey of default locale
+   * If a page have pagePath that doesn't match any `LocalConfig.routePrefix`,
+   *  the `I18nConfig.defaultLocale` will apply to it
+   */
+  defaultLocale: string
+  /**
+   * If true, this theme will render a locale selector at topbar
+   * Only matters when you have more than one locales
+   * @defaultValue true
+   */
+  topBarLocaleSelector?: boolean
+  /**
+   * Define all locales that your site supports
+   * Map localeKey to locale config
+   */
+  locales: Record<string, LocalConfig>
+}
+
+interface LocalConfig {
+  /** This will be set as the lang attribute on <html> */
+  lang?: string
+  /**
+   * This label will be used when rendering the locale
+   * in the locale selector
+   */
+  label?: string
+  /**
+   * If a page have pagePath with this prefix, this locale will apply to it
+   * If a page have pagePath that doesn't match any routePrefix,
+   *  the `I18nConfig.defaultLocale` will apply to it
+   */
+  routePrefix?: string
+}
+```
+
+## Return theme config according to the current locale
+
+All theme config (`topNavs`, `sideNavs`, `logo`, etc.) **that accepts a value** can also accept a config function, so that you can know which locale is applied to current page. For example, here is type definition of the theme config `topNavs`:
+
+```ts
+interface ThemeConfig {
+  /** ... */
+  topNavs?:
+    | ReadonlyArray<MenuConfig>
+    | ((ctx: ThemeContextValue) => ReadonlyArray<MenuConfig> | null | undefined)
+}
+
+type ThemeContextValue = {
+  /** ... */
+  resolvedLocale: {
+    locale?: LocalConfig
+    localeKey?: string
+    pagePathWithoutLocalePrefix?: string
+  }
+}
+```
+
+To make topNavs support multi language, you can define `topNavs` like this:
+
+```ts
+import { createTheme } from 'vite-pages-theme-doc'
+import type { MenuConfig } from 'vite-pages-theme-doc'
+
+const topNavsConfig: { [locale: string]: MenuConfig[] } = {
+  en: [
+    { label: 'Home', path: '/' },
+    {
+      label: 'Guide',
+      path: '/guide/introduce',
+    },
+    {
+      subMenu: 'Links',
+      children: [
+        {
+          label: 'Resources',
+          path: '/resources',
+        },
+        {
+          label: 'Vite',
+          href: 'https://vitejs.dev/',
+        },
+      ],
+    },
+  ],
+  zh: [
+    { label: '首页', path: '/zh' },
+    {
+      label: '指南',
+      path: '/zh/guide/introduce',
+    },
+    {
+      subMenu: '链接',
+      children: [
+        {
+          label: '资源',
+          path: '/zh/resources',
+        },
+        {
+          label: 'Vite',
+          href: 'https://vitejs.dev/',
+        },
+      ],
+    },
+  ],
+}
+
+export default createTheme({
+  /** ... */
+  topNavs: ({ resolvedLocale: { localeKey } }) => {
+    // return config according to resolvedLocale
+    return topNavsConfig[localeKey!]
+  },
+})
+```
+
+> [Here is a complete example project](https://github.com/vitejs/vite-plugin-react-pages/blob/1a67c7c41f6fb488243183bf6814550d85ce5c23/packages/playground/use-theme-doc/pages/_theme.tsx#L27).
+
+## Create pages for other locales
+
+Your project file structure should be like this:
+
+```txt
+docs
+├─ foo$.md
+├─ bar$.tsx
+├─ nested
+│  └─ baz$.md
+└─ zh
+   ├─ foo$.md
+   ├─ bar$.tsx
+   └─ nested
+      └─ baz.md
+```
+
+Each page with default locale should have its translated version. For example, `/zh/foo$.md` should be the chinese-translated version of `/foo$.md`.
+
+### Markdown pages: translate them into each locale
+
+Here is a markdown page for default locale (`/foo$.md`):
+
+```md
+---
+title: This is the title written in default locale
+---
+
+This is the markdown content written in default locale.
+```
+
+Here is the translated markdown page (`/zh/foo$.md`):
+
+```md
+---
+title: This is the translated title
+---
+
+This is the translated markdown content.
+```
+
+### React Component pages: support all locales within them
+
+If you define a page with React Component (`.tsx`), it is recommended to make them support all locales, instead of defining a new React Component for each locale.
+
+For example, here is a react component page for default locale (`/bar$.tsx`):
+
+```tsx
+/**
+ * @title This is the title written in default locale
+ */
+
+import React from 'react'
+import { useThemeCtx } from 'vite-pages-theme-doc'
+
+const Page = () => {
+  const intl = useIntl()
+  return <p>{messages['page.page1.content']}</p>
+}
+
+// you can use any i18n library here, such as react-intl
+function useIntl() {
+  const {
+    resolvedLocale: { localeKey },
+  } = useThemeCtx()
+  return messages[localeKey]
+}
+
+const messages = {
+  en: {
+    'page.page1.content': 'This is Page1 content',
+  },
+  zh: {
+    'page.page1.content': 'This is translated Page1 content',
+  },
+}
+
+export default Page
+```
+
+When defining the page for other locale (`/zh/bar$.tsx`), you can **re-export the React Component**:
+
+```tsx
+/**
+ * @title This is the translated title
+ */
+
+export { default } from '../bar$'
+```
+
+### Get current locale in React Components or Hooks
+
+```tsx
+import { useThemeCtx } from 'vite-pages-theme-doc'
+
+function useI18nMeta() {
+  const {
+    resolvedLocale,
+    themeConfig: { i18n },
+  } = useThemeCtx()
+  // get resolvedLocale and i18nConfig from `useThemeCtx()`
+  return { resolvedLocale, i18nConfig: i18n }
+}
+```

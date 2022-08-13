@@ -14,11 +14,12 @@ export function useLocaleSelector() {
   function render() {
     const {
       staticData,
-      themeConfig: { i18n: { locales } = {} },
+      themeConfig: { i18n: { locales, topBarLocaleSelector = true } = {} },
       resolvedLocale: { locale, localeKey, pagePathWithoutLocalePrefix },
     } = themeCtxValue
 
-    if (!locales) return null
+    if (!locales || Object.keys(locales).length < 2 || !topBarLocaleSelector)
+      return null
 
     const localeOptions = Object.entries(locales).map(([key, locale]) => {
       return {
