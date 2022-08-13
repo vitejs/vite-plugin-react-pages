@@ -108,7 +108,7 @@ export function defaultSideNavs(
     i18n
   )
   const groups = getGroups(staticData, i18n)
-  console.log('defaultSideNavs', currentGroupInfo, groups)
+  // console.log('defaultSideNavs', currentGroupInfo, groups)
 
   // groupKey of the current page
   const groupKey = (() => {

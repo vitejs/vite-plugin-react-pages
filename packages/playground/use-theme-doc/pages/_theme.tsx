@@ -29,7 +29,7 @@ export default createTheme({
   TopBarExtra: () => {
     // TopBarExtra is a component, you can call useThemeCtx hook in it
     const themeCtx = useThemeCtx()
-    console.log('themeCtx', themeCtx)
+    // console.log('themeCtx', themeCtx)
     return (
       <Button size="small" style={{ verticalAlign: 'middle' }}>
         Extra

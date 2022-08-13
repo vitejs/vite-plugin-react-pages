@@ -33,7 +33,6 @@ test('hmr: edit file (js static data notation)', async ({
   fsUtils.editFile('pages/$.tsx', (str) => {
     return str.replace('@title index page title', '@title modified title')
   })
-  await page.pause();
   await expect(
     page.locator('.vp-local-sider >> text="index page title"')
   ).toHaveCount(0)
