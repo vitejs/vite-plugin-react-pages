@@ -4,7 +4,7 @@ order: 6
 subGroup: upgrade-guides
 ---
 
-# Upgrade from v2
+# Upgrade from vite-plugin-react-pages v2
 
 ## Upgrade package versions
 
@@ -13,14 +13,38 @@ Upgrade these package versions:
 ```json
 {
   "devDependencies": {
-    "@vitejs/plugin-react": "^1.1.4",
-    "vite": "^2.5.6",
-    "vite-plugin-mdx": "^3.3.1",
-    "vite-plugin-react-pages": "^3.0.0",
+    "@vitejs/plugin-react": "^2.0.1",
+    "vite": "^3.0.7",
+    "vite-plugin-mdx": "^3.5.6",
+    "vite-plugin-react-pages": "^3.2.1",
     "vite-pages-theme-basic": "^3.0.0"
   }
 }
 ```
+
+Notice that you need to [migrate your app to vite v3](https://vitejs.dev/guide/migration.html) with this setup.
+
+It is very recommended to migrate `vite-pages-theme-basic` to [vite-pages-theme-doc](/official-theme).
+
+### Stick with vite v2
+
+If you are not ready for vite v3 for some reason, you can stick with vite v2:
+
+```json
+{
+  "devDependencies": {
+    "@vitejs/plugin-react": "^1.1.4",
+    "vite": "^2.5.6",
+    "vite-plugin-mdx": "^3.5.6",
+    "vite-plugin-react-pages": "^3.2.1",
+    "vite-pages-theme-basic": "^3.0.0"
+  }
+}
+```
+
+Notice the version of `@vitejs/plugin-react` need to be changed together with `vite`.
+
+We also recommend you to migrate `vite-pages-theme-basic` to [vite-pages-theme-doc](/official-theme) with this setup (with vite v2).
 
 ## Install peerDependencies for mdx
 
