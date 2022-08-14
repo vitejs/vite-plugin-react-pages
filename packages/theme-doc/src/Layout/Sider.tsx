@@ -101,7 +101,7 @@ export function defaultSideNavs(
   { loadState, staticData, themeConfig }: ThemeContextValue,
   opts?: DefaultSideNavsOpts
 ): MenuConfig[] | null {
-  const { i18n } = themeConfig
+  const { i18n } = themeConfig || {}
   const currentGroupInfo = getPageGroupInfo(
     loadState.routePath,
     staticData[loadState.routePath],
