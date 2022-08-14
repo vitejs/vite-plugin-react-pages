@@ -22,17 +22,17 @@
     "install-test-deps": "playwright install --with-deps chromium"
   },
   "devDependencies": {
-    "@playwright/test": "^1.23.1",
-    "@pnpm/link-bins": "^7.1.2",
+    "@playwright/test": "^1.25.0",
+    "@pnpm/link-bins": "^7.2.4",
     "@pnpm/logger": "^4.0.0",
     "@types/node": "^17.0.42",
     "@types/wait-on": "^5.3.1",
     "cross-env": "^7.0.3",
     "execa": "^5.1.1",
     "get-port": "^5.1.1",
-    "sirv": "^1.0.10",
+    "sirv": "^2.0.2",
     "slash": "^3.0.0",
-    "typescript": "^4.7.3",
+    "typescript": "^4.7.4",
     "vite-pages-theme-basic": "workspace:*",
     "vite-plugin-react-pages": "workspace:*",
     "wait-on": "^6.0.1"
