@@ -43,6 +43,8 @@ export function getPagePublicPath(relativePageFilePath: string) {
     ''
   )
   pagePublicPath = pagePublicPath.replace(/index$/, '')
+  // remove trailing slash
+  pagePublicPath = pagePublicPath.replace(/\/$/, '')
   // ensure starting slash
   pagePublicPath = pagePublicPath.replace(/^\//, '')
   pagePublicPath = `/${pagePublicPath}`
