@@ -19,7 +19,7 @@ import { TestOptions } from './utils'
  */
 const config: PlaywrightTestConfig = {
   /* Maximum time one test can run for. */
-  timeout: process.env.CI ? 180 * 1000 : 60 * 1000,
+  timeout: process.env.CI ? 180 * 1000 : 90 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
