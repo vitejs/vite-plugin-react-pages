@@ -39,6 +39,11 @@ export const sideNavsConfig: { [locale: string]: DefaultSideNavsOpts } = {
   },
   zh: {
     groupConfig: {
+      '/': {
+        'sub-group': {
+          label: '小分组',
+        },
+      },
       components: {
         overview: {
           label: '概览',

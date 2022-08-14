@@ -4,6 +4,7 @@ import { CaretDownFilled } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 
 import { useThemeCtx } from '..'
+import { removeTrailingSlash } from '../utils'
 
 export function useLocaleSelector() {
   const themeCtxValue = useThemeCtx()
@@ -46,7 +47,8 @@ export function useLocaleSelector() {
             }
             // infer the page path with selected locale
             let newRoutePath =
-              newLocale.routePrefix + pagePathWithoutLocalePrefix
+              removeTrailingSlash(newLocale.routePrefix) +
+              pagePathWithoutLocalePrefix
             if (!staticData[newRoutePath]) {
               // fallback to the index page of this locale
               newRoutePath = newLocale.routePrefix
