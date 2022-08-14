@@ -29,6 +29,10 @@ const initialPagePaths = Object.keys(initialPages)
 if (import.meta.hot) {
   let setTheme: SetAtom<{ Theme: Theme }> | undefined
   import.meta.hot!.accept('/@react-pages/theme', (module) => {
+    if (!module) {
+      console.error('unexpected hot module', module)
+      return
+    }
     setTheme?.({ Theme: module.default })
   })
 
@@ -41,6 +45,10 @@ if (import.meta.hot) {
 
   let setPages: SetAtom<any> | undefined
   import.meta.hot!.accept('/@react-pages/pages', (module) => {
+    if (!module) {
+      console.error('unexpected hot module', module)
+      return
+    }
     setPages?.(module.default)
   })
 
@@ -164,5 +172,5 @@ if ((globalThis as any)['__vite_pages_use_static_data']) {
   )
 } else {
   // make it available to vite-plugin-react-pages/client
-  (globalThis as any)['__vite_pages_use_static_data'] = useStaticData
+  ;(globalThis as any)['__vite_pages_use_static_data'] = useStaticData
 }
