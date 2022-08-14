@@ -69,7 +69,6 @@ export async function startServer(
   subprocess.stderr?.pipe(process.stderr)
   // return values early so caller can handler error
   returnValues.subprocess = subprocess
-
   // wait for the server to be available
   await Promise.race([
     waitOn({
@@ -77,7 +76,7 @@ export async function startServer(
       // should ignore http_proxy env variable from my shell...
       proxy: false as any,
       headers: { Accept: 'text/html' },
-      timeout: process.env.CI ? 180 * 1000 : 30 * 1000,
+      timeout: process.env.CI ? 180 * 1000 : 90 * 1000,
     }),
     // if the subprocess faill, it should throw too
     subprocess,
