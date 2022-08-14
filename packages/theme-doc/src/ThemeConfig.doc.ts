@@ -91,9 +91,22 @@ export interface LocalConfig {
 export type ThemeContextValue = ThemeProps & {
   themeConfig: ThemeConfig
   staticData: PagesStaticData
+  /**
+   * The resolved locale data of the current page
+   */
   resolvedLocale: {
+    /**
+     * the locale config object that is currently activated
+     */
     locale?: LocalConfig
+    /**
+     * The key of the locale config object inside `I18nConfig.locales` object
+     */
     localeKey?: string
+    /**
+     * Current pagePath without locale routePrefix.
+     * For example, page `/zh/foo` will have pagePathWithoutLocalePrefix `/foo`
+     */
     pagePathWithoutLocalePrefix?: string
   }
 }

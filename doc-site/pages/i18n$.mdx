@@ -94,7 +94,7 @@ We will talk about these techniques in the following sections.
 
 ## Return theme config according to the current locale
 
-All theme config (`topNavs`, `sideNavs`, `logo`, etc.) **that accepts a value** can also accept a config function, so that you can know which locale is applied to the current page. For example, here is the type definition of the theme config `topNavs`:
+All [theme config](/official-theme#theme-configs) (`topNavs`, `sideNavs`, `logo`, etc.) **that accepts a value** can also accept a config function, so that you can get the current locale info from the function argument(`ThemeContextValue`). For example, here is the type definition of the theme config `topNavs`:
 
 ```ts
 interface ThemeConfig {
