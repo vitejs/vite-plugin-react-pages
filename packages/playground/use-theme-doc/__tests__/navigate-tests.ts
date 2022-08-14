@@ -73,7 +73,7 @@ export function declareTests(javaScriptEnabled: boolean) {
       page.goto('/zh')
     }
 
-    await page.waitForURL(/\/zh\/?$/)
+    await page.waitForURL('/zh')
     testIndexPageSider(page, { currentLocale: '中文' })
     await testHeader(page, { currentLocale: '中文' })
 
@@ -104,11 +104,30 @@ export function declareTests(javaScriptEnabled: boolean) {
     }
 
     await page.waitForURL('/page1')
-    testIndexPageSider(page)
+    testIndexPageSider(page, { currentLocale: 'English' })
     await testHeader(page, { currentLocale: 'English' })
     await expect(page.locator('.vp-local-content')).toContainText(
       'This is page1.'
     )
+
+    await page.locator('.vp-local-header >> text="Guide"').click()
+
+    await page.waitForURL('/guide/introduce')
+    // testGuideGroupSider(page, { currentLocale: 'English' })
+    await testHeader(page, { currentLocale: 'English' })
+
+    // switch locale
+    if (javaScriptEnabled) {
+      await page
+        .locator('.vp-local-header .vp-local-localeSelectorCtn button')
+        .hover()
+      await page.locator('.vp-antd-dropdown:visible >> text="中文"').click()
+      // translated page /zh/guide/introduce doesn't exists
+      // so should navigate to index page of the selected locale
+      await page.waitForURL('/zh')
+    } else {
+      await page.goto('/zh')
+    }
   })
 
   async function testIndexPageSider(
