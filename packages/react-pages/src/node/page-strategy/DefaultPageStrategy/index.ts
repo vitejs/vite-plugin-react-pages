@@ -44,7 +44,7 @@ export function getPagePublicPath(relativePageFilePath: string) {
   )
   pagePublicPath = pagePublicPath.replace(/index$/, '')
   // ensure starting slash
-  pagePublicPath = pagePublicPath.replace(/\/$/, '')
+  pagePublicPath = pagePublicPath.replace(/^\//, '')
   pagePublicPath = `/${pagePublicPath}`
 
   // turn [id] into :id

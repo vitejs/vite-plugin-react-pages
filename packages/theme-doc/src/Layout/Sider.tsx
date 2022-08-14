@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
 import { Menu, Drawer } from 'antd'
-import { useLocation } from 'react-router-dom'
 
 import { MenuConfig, renderMenuHelper } from './renderMenu'
 import { themePropsCtx } from '../ctx'
 import s from './index.module.less'
-import type { SideNavsContext } from '..'
+import type { ThemeContextValue, I18nConfig, LocalConfig } from '..'
 import { LayoutContext } from './ctx'
+import { ensureStartSlash, removeStartSlash } from '../utils'
 
 interface Props {
   sideNavsData: readonly MenuConfig[] | null | undefined
@@ -16,9 +16,10 @@ const renderMenu = renderMenuHelper(false)
 
 const AppSider: React.FC<Props> = ({ sideNavsData }) => {
   const themeProps = useContext(themePropsCtx)
-  const location = useLocation()
   const subMenuKeys: string[] = []
-  const menuItems = sideNavsData ? renderMenu(sideNavsData, true, subMenuKeys) : []
+  const menuItems = sideNavsData
+    ? renderMenu(sideNavsData, true, subMenuKeys)
+    : []
   const layoutCtxVal = useContext(LayoutContext)
 
   const isSmallScreen = !layoutCtxVal.screenWidth?.md
@@ -32,7 +33,9 @@ const AppSider: React.FC<Props> = ({ sideNavsData }) => {
             // clear menu state when path change
             key={themeProps.loadState.routePath}
             mode="inline"
-            selectedKeys={[location.pathname]}
+            // use loadState.routePath instead of location.pathname
+            // because location.pathname may contain trailing slash
+            selectedKeys={[themeProps.loadState.routePath]}
             defaultOpenKeys={subMenuKeys}
             inlineIndent={30}
             items={menuItems}
@@ -62,7 +65,9 @@ const AppSider: React.FC<Props> = ({ sideNavsData }) => {
             // clear menu state when path change
             key={themeProps.loadState.routePath}
             mode="inline"
-            selectedKeys={[location.pathname]}
+            // use loadState.routePath instead of location.pathname
+            // because location.pathname may contain trailing slash
+            selectedKeys={[themeProps.loadState.routePath]}
             defaultOpenKeys={subMenuKeys}
             inlineIndent={30}
             items={menuItems}
@@ -93,14 +98,16 @@ export interface DefaultSideNavsOpts {
 }
 
 export function defaultSideNavs(
-  { loadState, staticData }: SideNavsContext,
+  { loadState, staticData, themeConfig }: ThemeContextValue,
   opts?: DefaultSideNavsOpts
 ): MenuConfig[] | null {
+  const { i18n } = themeConfig || {}
   const currentGroupInfo = getPageGroupInfo(
     loadState.routePath,
-    staticData[loadState.routePath]
+    staticData[loadState.routePath],
+    i18n
   )
-  const groups = getGroups(staticData)
+  const groups = getGroups(staticData, i18n)
   // console.log('defaultSideNavs', currentGroupInfo, groups)
 
   // groupKey of the current page
@@ -122,6 +129,16 @@ export function defaultSideNavs(
   const result: MenuConfig[] = []
 
   Object.entries(subGroups)
+    // remove pages with different locale
+    .map(([subGroupKey, pages]) => {
+      const filtered = pages.filter(
+        ({ pageLocaleKey }) => currentGroupInfo.localeKey === pageLocaleKey
+      )
+      return [subGroupKey, filtered] as const
+    })
+    // if all pages of a subGroup are filtered out, drop it
+    .filter(([subGroupKey, pages]) => pages.length > 0)
+    // sort subGroup
     .sort(([subGroupKeyA], [subGroupKeyB]) => {
       // pages with '/' subGroup are put afront
       if (subGroupKeyA === '/') return -1
@@ -189,10 +206,6 @@ export function defaultSideNavs(
   }
 }
 
-function removeStartSlash(pagePath: string) {
-  return pagePath.replace(/^\//, '')
-}
-
 function getStaticDataValue(pageStaticData: any, key: string) {
   return pageStaticData?.[key] ?? pageStaticData?.main?.[key]
 }
@@ -213,26 +226,22 @@ function sortPages(
 // map groups -> subgroups -> pages
 type Groups = {
   [groupKey: string]: {
-    [subGroupKey: string]: {
-      pagePath: string
-      pageStaticData: any
-      pageName: string
-    }[]
+    [subGroupKey: string]: PageMeta[]
   }
 }
 
-function getGroups(staticData: any) {
+type PageMeta = {
+  pagePath: string
+  pageStaticData: any
+  pageName: string
+  pageLocale: LocalConfig | undefined
+  pageLocaleKey: string | undefined
+}
+
+function getGroups(staticData: any, i18n: I18nConfig | undefined) {
   const groups: Groups = {}
-  function ensureGroup(
-    group: string
-  ): Record<
-    string,
-    { pagePath: string; pageStaticData: any; pageName: string }[]
-  >
-  function ensureGroup(
-    group: string,
-    subGroup: string
-  ): { pagePath: string; pageStaticData: any; pageName: string }[]
+  function ensureGroup(group: string): Record<string, PageMeta[]>
+  function ensureGroup(group: string, subGroup: string): PageMeta[]
   function ensureGroup(group: string, subGroup?: string) {
     const subGroups = (groups[group] ||= {})
     if (!subGroup) return subGroups
@@ -241,11 +250,13 @@ function getGroups(staticData: any) {
 
   Object.entries(staticData).forEach(([pagePath, pageStaticData]) => {
     if (pagePath === '/404') return
-    const pageGroupInfo = getPageGroupInfo(pagePath, pageStaticData)
+    const pageGroupInfo = getPageGroupInfo(pagePath, pageStaticData, i18n)
     ensureGroup(pageGroupInfo.group, pageGroupInfo.subGroup).push({
       pagePath,
       pageStaticData,
       pageName: pageGroupInfo.pageName,
+      pageLocale: pageGroupInfo.locale,
+      pageLocaleKey: pageGroupInfo.localeKey,
     })
   })
 
@@ -272,14 +283,20 @@ function getGroups(staticData: any) {
 
 function getPageGroupInfo(
   pagePath: string,
-  pageStaticData: any
+  pageStaticData: any,
+  i18n: I18nConfig | undefined
 ): {
   group: string
   subGroup: string
   pageName: string
+  locale: LocalConfig | undefined
+  localeKey: string | undefined
 } {
-  if (!pagePath.startsWith('/')) throw new Error('getPageGroup assertion fail')
-  const seg = removeStartSlash(pagePath).split('/')
+  if (!pagePath.startsWith('/'))
+    throw new Error(`expect pagePath.startsWith('/'). pagePath: ${pagePath}`)
+  const { pagePathWithoutLocalePrefix, locale, localeKey } =
+    matchPagePathLocalePrefix(pagePath, i18n)
+  const seg = removeStartSlash(pagePathWithoutLocalePrefix).split('/')
   let group: string = getStaticDataValue(pageStaticData, 'group')
   let subGroup: string = getStaticDataValue(pageStaticData, 'subGroup')
   // used as default title
@@ -300,5 +317,44 @@ function getPageGroupInfo(
     group,
     subGroup,
     pageName,
+    locale,
+    localeKey,
   }
+}
+
+export function matchPagePathLocalePrefix(
+  pagePath: string,
+  i18n: I18nConfig | undefined
+) {
+  const result = {
+    pagePathWithoutLocalePrefix: pagePath,
+    localeKey: undefined as string | undefined,
+    locale: undefined as LocalConfig | undefined,
+  }
+  if (!i18n?.locales) return result
+
+  Object.entries(i18n.locales).forEach(([localeKey, locale]) => {
+    const prefix = locale.routePrefix || ensureStartSlash(localeKey)
+    if (
+      pagePath.startsWith(prefix) &&
+      // routePrefix '/' has lower priority than '/any-prefix'
+      (!result.locale || result.locale.routePrefix === '/')
+    ) {
+      result.pagePathWithoutLocalePrefix = ensureStartSlash(
+        pagePath.slice(prefix.length)
+      )
+      result.localeKey = localeKey
+      result.locale = locale
+    }
+  })
+  // fallback to defaultLocale
+  if (
+    !result.locale &&
+    i18n.defaultLocale &&
+    i18n.locales[i18n.defaultLocale]
+  ) {
+    result.localeKey = i18n.defaultLocale
+    result.locale = i18n.locales[i18n.defaultLocale]
+  }
+  return result
 }

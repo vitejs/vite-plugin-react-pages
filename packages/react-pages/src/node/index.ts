@@ -42,14 +42,14 @@ const ssrDataModuleId = modulePrefix + 'ssrData'
 
 const tsInfoQueryReg = /\?tsInfo=(.*)$/
 
-export default function pluginFactory(
-  opts: {
-    pagesDir?: string
-    pageStrategy?: PageStrategy
-    useHashRouter?: boolean
-    staticSiteGeneration?: {}
-  } = {}
-): Plugin {
+export interface PluginConfig {
+  pagesDir?: string
+  pageStrategy?: PageStrategy
+  useHashRouter?: boolean
+  staticSiteGeneration?: {}
+}
+
+export default function pluginFactory(opts: PluginConfig = {}): Plugin {
   const { useHashRouter = false, staticSiteGeneration } = opts
 
   let isBuild: boolean

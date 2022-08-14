@@ -1,21 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import type { ThemeProps } from 'vite-plugin-react-pages/clientTypes'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 import { useLocation } from 'react-router-dom'
 
 import AppLayout, { MDX } from './Layout'
-import { themeConfigCtx, themePropsCtx } from './ctx'
+import { themeConfigCtx, themePropsCtx, themeCtx } from './ctx'
 
 import './style.less'
 import { Demo } from './Layout/Demo'
 import AnchorLink from './components/AnchorLink'
-import type { ThemeConfig } from './ThemeConfig.doc'
+import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
+import { matchPagePathLocalePrefix } from './Layout/Sider'
+import { normalizeI18nConfig } from './utils'
 
-export function createTheme(themeConfig: ThemeConfig) {
+export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
   const ThemeComp = (props: ThemeProps) => {
     const { loadState, loadedData } = props
     const staticData = useStaticData()
-    // console.log('theme', loadState, loadedData, staticData)
 
     const location = useLocation()
     useEffect(() => {
@@ -51,7 +52,7 @@ export function createTheme(themeConfig: ThemeConfig) {
     }
 
     const pageStaticData = staticData[loadState.routePath]
-    let body = Object.entries(pageData).map(([key, dataPart], idx) => {
+    const body = Object.entries(pageData).map(([key, dataPart], idx) => {
       const ContentComp = (dataPart as any).default
       const pageStaticDataPart = pageStaticData?.[key]
       const content = (() => {
@@ -71,14 +72,49 @@ export function createTheme(themeConfig: ThemeConfig) {
     return <AppLayout>{body}</AppLayout>
   }
 
-  return withThemeProvider(ThemeComp)
+  return withThemeRootWrapper(ThemeComp)
 
-  function withThemeProvider(Component: React.FC<ThemeProps>) {
+  function withThemeRootWrapper(Component: React.FC<ThemeProps>) {
     const HOC: React.FC<ThemeProps> = (props) => {
+      const { loadState, loadedData } = props
+      const staticData = useStaticData()
+      const themeCtxValue: ThemeContextValue = useMemo(() => {
+        const result: ThemeContextValue = {
+          ...props,
+          themeConfig: {
+            ...themeConfig,
+            i18n: normalizeI18nConfig(themeConfig.i18n),
+          },
+          staticData,
+          resolvedLocale: {},
+        }
+        if (!result.themeConfig.i18n?.locales) return result
+        const { locale, localeKey, pagePathWithoutLocalePrefix } =
+          matchPagePathLocalePrefix(
+            loadState.routePath,
+            result.themeConfig.i18n
+          )
+        Object.assign(result.resolvedLocale, {
+          locale,
+          localeKey,
+          pagePathWithoutLocalePrefix,
+        })
+        return result
+      }, [themeConfig, loadState, loadedData, staticData])
+
+      let children = <Component {...props} />
+      if (themeConfig.AppWrapper) {
+        children = <themeConfig.AppWrapper>{children}</themeConfig.AppWrapper>
+      }
+
+      // TODO: improve context usage
+      // use less context and make it more efficient
       return (
         <themeConfigCtx.Provider value={themeConfig}>
           <themePropsCtx.Provider value={props}>
-            <Component {...props} />
+            <themeCtx.Provider value={themeCtxValue}>
+              {children}
+            </themeCtx.Provider>
           </themePropsCtx.Provider>
         </themeConfigCtx.Provider>
       )
@@ -89,8 +125,14 @@ export function createTheme(themeConfig: ThemeConfig) {
 
 export { defaultSideNavs } from './Layout/Sider'
 export type { DefaultSideNavsOpts } from './Layout/Sider'
-
 export { Demo } from './Layout/Demo'
 export { TsInfo } from './Layout/TsInfo'
 export { FileText } from './Layout/FileText'
-export * from './ThemeConfig.doc'
+export type {
+  ThemeConfig,
+  LocalConfig,
+  I18nConfig,
+  ThemeContextValue,
+  MenuConfig,
+} from './ThemeConfig.doc'
+export { useThemeCtx } from './ctx'

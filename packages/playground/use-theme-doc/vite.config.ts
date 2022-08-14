@@ -5,6 +5,11 @@ import mdx from 'vite-plugin-mdx'
 import pages from 'vite-plugin-react-pages'
 
 module.exports = defineConfig({
+  resolve: {
+    alias: {
+      '~pages/': `${path.join(__dirname, 'pages')}/`,
+    },
+  },
   plugins: [
     react(),
     mdx(),
