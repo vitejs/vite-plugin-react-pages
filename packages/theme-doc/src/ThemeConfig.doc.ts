@@ -39,6 +39,9 @@ export interface ThemeConfig {
    * (url not matching any page)
    */
   Component404?: React.ComponentType
+  /**
+   * i18n metadata
+   */
   i18n?: I18nConfig
 }
 
@@ -63,7 +66,9 @@ export interface I18nConfig {
 }
 
 export interface LocalConfig {
-  /** This will be set as the lang attribute on <html> */
+  /**
+   * This will be set as the lang attribute on <html>
+   */
   lang?: string
   /**
    * This label will be used when rendering the locale

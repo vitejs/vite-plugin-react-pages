@@ -10,7 +10,7 @@ i18n support can be provided by theme. For example, [the official theme(vite-pag
 
 ## Define i18n metadata in the theme config
 
-The [the official theme(vite-pages-theme-doc)](/official-theme) accept 1i8n config like this:
+The [the official theme(vite-pages-theme-doc)](/official-theme) accepts 1i8n config like this:
 
 ```tsx
 import { createTheme } from 'vite-pages-theme-doc'
@@ -60,7 +60,9 @@ interface I18nConfig {
 }
 
 interface LocalConfig {
-  /** This will be set as the lang attribute on <html> */
+  /**
+   * This will be set as the lang attribute on <html>
+   */
   lang?: string
   /**
    * This label will be used when rendering the locale
@@ -76,9 +78,23 @@ interface LocalConfig {
 }
 ```
 
+With this i18n metadata, the theme can decide which locale to apply. For any specific page, it match its pagePath with each `LocalConfig.routePrefix`:
+
+- If the pagePath match with a `LocalConfig.routePrefix`, this locale will apply to the page
+- If the pagePath doesn't match any routePrefix, the `I18nConfig.defaultLocale` will apply to the page
+
+With the example config above, page `/foo$.tsx` will have the locale keyed with `en`. Page `/zh/foo$.tsx` will have the locale keyed with `zh`.
+
+What does it mean when we say "the page P has locale L" (or "locale L applies to page P")? It means two things:
+
+- Most site-level theme configs can decide their value based on the current applied locale. So that you can render `topNavs` and `sideNavs` with the correct language.
+- In any React Component, you can get the current applied locale from `useThemeCtx()` so that you can decide which i18n translated message to render.
+
+We will talk about these techniques in the following sections.
+
 ## Return theme config according to the current locale
 
-All theme config (`topNavs`, `sideNavs`, `logo`, etc.) **that accepts a value** can also accept a config function, so that you can know which locale is applied to current page. For example, here is type definition of the theme config `topNavs`:
+All theme config (`topNavs`, `sideNavs`, `logo`, etc.) **that accepts a value** can also accept a config function, so that you can know which locale is applied to the current page. For example, here is the type definition of the theme config `topNavs`:
 
 ```ts
 interface ThemeConfig {
@@ -98,7 +114,7 @@ type ThemeContextValue = {
 }
 ```
 
-To make topNavs support multi language, you can define `topNavs` like this:
+To make topNavs support multiple languages, you can define `topNavs` like this:
 
 ```ts
 import { createTheme } from 'vite-pages-theme-doc'
@@ -158,7 +174,7 @@ export default createTheme({
 
 > [Here is a complete example project](https://github.com/vitejs/vite-plugin-react-pages/blob/1a67c7c41f6fb488243183bf6814550d85ce5c23/packages/playground/use-theme-doc/pages/_theme.tsx#L27).
 
-## Create pages for other locales
+## Create pages for each locale
 
 Your project file structure should be like this:
 
@@ -201,9 +217,9 @@ This is the translated markdown content.
 
 ### React Component pages: support all locales within them
 
-If you define a page with React Component (`.tsx`), it is recommended to make them support all locales, instead of defining a new React Component for each locale.
+If you define a page with React Component (`.tsx`), it is recommended to make it support all locales, instead of defining a new React Component for each locale.
 
-For example, here is a react component page for default locale (`/bar$.tsx`):
+For example, here is a React Component page for default locale (`/bar$.tsx`):
 
 ```tsx
 /**
@@ -231,7 +247,8 @@ const messages = {
     'page.page1.content': 'This is Page1 content',
   },
   zh: {
-    'page.page1.content': 'This is translated Page1 content',
+    'page.page1.content':
+      'This is translated Page1 content for the locale `zh`',
   },
 }
 
@@ -242,11 +259,13 @@ When defining the page for other locale (`/zh/bar$.tsx`), you can **re-export th
 
 ```tsx
 /**
- * @title This is the translated title
+ * @title This is the translated title for the locale `zh`
  */
 
 export { default } from '../bar$'
 ```
+
+Notice that we reuse the same React Component for multiple locales. And we define page static metadata(`@title`) with correct translation in each page file.
 
 ### Get current locale in React Components or Hooks
 
