@@ -22,6 +22,11 @@ export default createTheme({
       },
     },
   },
+  AppWrapper: ({ children }) => {
+    const themeCtx = useThemeCtx()
+    // console.log('themeCtx', themeCtx)
+    return <customCtx.Provider value={123}>{children}</customCtx.Provider>
+  },
   logo: <div style={{ fontSize: '20px' }}>📘 Vite Pages</div>,
   topNavs: ({ resolvedLocale: { localeKey } }) => {
     return topNavsConfig[localeKey!]
@@ -47,3 +52,5 @@ export default createTheme({
   },
   Component404,
 })
+
+const customCtx = React.createContext<any>({})

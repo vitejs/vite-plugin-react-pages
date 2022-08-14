@@ -52,7 +52,7 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
     }
 
     const pageStaticData = staticData[loadState.routePath]
-    let body = Object.entries(pageData).map(([key, dataPart], idx) => {
+    const body = Object.entries(pageData).map(([key, dataPart], idx) => {
       const ContentComp = (dataPart as any).default
       const pageStaticDataPart = pageStaticData?.[key]
       const content = (() => {
@@ -72,9 +72,9 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
     return <AppLayout>{body}</AppLayout>
   }
 
-  return withThemeProvider(ThemeComp)
+  return withThemeRootWrapper(ThemeComp)
 
-  function withThemeProvider(Component: React.FC<ThemeProps>) {
+  function withThemeRootWrapper(Component: React.FC<ThemeProps>) {
     const HOC: React.FC<ThemeProps> = (props) => {
       const { loadState, loadedData } = props
       const staticData = useStaticData()
@@ -102,7 +102,10 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
         return result
       }, [themeConfig, loadState, loadedData, staticData])
 
-      // console.log('themeCtxValue', themeCtxValue)
+      let children = <Component {...props} />
+      if (themeConfig.AppWrapper) {
+        children = <themeConfig.AppWrapper>{children}</themeConfig.AppWrapper>
+      }
 
       // TODO: improve context usage
       // use less context and make it more efficient
@@ -110,7 +113,7 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
         <themeConfigCtx.Provider value={themeConfig}>
           <themePropsCtx.Provider value={props}>
             <themeCtx.Provider value={themeCtxValue}>
-              <Component {...props} />
+              {children}
             </themeCtx.Provider>
           </themePropsCtx.Provider>
         </themeConfigCtx.Provider>

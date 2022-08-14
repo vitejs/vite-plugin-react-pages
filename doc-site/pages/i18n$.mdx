@@ -234,7 +234,10 @@ const Page = () => {
   return <p>{messages['page.page1.content']}</p>
 }
 
-// you can use any i18n library here, such as react-intl
+/**
+ * In a more complex app, you can use i18n library like `react-intl`
+ * to make a React Component support multiple languages
+ */
 function useIntl() {
   const {
     resolvedLocale: { localeKey },
@@ -266,6 +269,8 @@ export { default } from '../bar$'
 ```
 
 Notice that we reuse the same React Component for multiple locales. And we define page static metadata(`@title`) with correct translation in each page file.
+
+> When using i18n library like `react-intl`, and you need to wrap your App with some custom React Component, you can use `ThemeConfig.AppWrapper`.
 
 ### Get current locale in React Components or Hooks
 

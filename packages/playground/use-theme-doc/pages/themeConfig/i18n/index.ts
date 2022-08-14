@@ -4,8 +4,10 @@ import { messages as en } from './en'
 
 export type MessagesType = typeof en
 
-// you can use any i18n library here, such as react-intl
-
+/**
+ * In a more complex app, you can use i18n library like `react-intl`
+ * to make a React Component support multiple languages
+ */
 export function useIntl(): MessagesType {
   const {
     resolvedLocale: { localeKey },

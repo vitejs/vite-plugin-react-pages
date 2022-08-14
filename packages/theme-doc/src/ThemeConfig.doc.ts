@@ -35,10 +35,15 @@ export interface ThemeConfig {
    */
   TopBarExtra?: React.ComponentType
   /**
-   * view to be rendered when app in 404 state
+   * View to be rendered when app in 404 state
    * (url not matching any page)
    */
   Component404?: React.ComponentType
+  /**
+   * Wrap the App with custom Component.
+   * You can use `useThemeCtx()` in it to get context info
+   */
+  AppWrapper?: React.ComponentType
   /**
    * i18n metadata
    */
