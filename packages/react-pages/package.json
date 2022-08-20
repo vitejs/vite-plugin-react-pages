@@ -2,6 +2,15 @@
   "name": "vite-plugin-react-pages",
   "version": "3.2.1",
   "main": "dist/node/index.js",
+  "module": "dist/node-esm/index.mjs",
+  "type": "commonjs",
+  "exports": {
+    ".": {
+      "import": "./dist/node-esm/index.mjs",
+      "require": "./dist/node/index.js"
+    },
+    "./*": "./*"
+  },
   "bin": {
     "vite-pages": "bin/vite-pages.js"
   },
@@ -24,6 +33,8 @@
   "scripts": {
     "build": "rimraf ./dist && concurrently \"npm:build-*\"",
     "build-node": "tsc -p src/node",
+    "deprecated-build-node-esm": "tsc -p src/node --module ES2022 --outDir ./dist/node-esm && node ./scripts/addESMDeclare.mjs",
+    "build-node-esm": "rollup -c",
     "build-client": "tsc -p src/client",
     "dev": "rimraf ./dist && concurrently \"npm:dev-*\"",
     "dev-node": "tsc -w -p src/node",
@@ -34,6 +45,11 @@
     "vite": "^2.5.6 || ^3.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@rollup/plugin-typescript": "^8.3.4",
+    "@babel/preset-env": "^7.18.10",
     "@types/enhanced-resolve": "^3.0.6",
     "@types/fs-extra": "^9.0.8",
     "@types/minimist": "^1.2.0",

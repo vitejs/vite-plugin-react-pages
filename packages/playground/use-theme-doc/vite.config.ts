@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite'
 import * as path from 'path'
 import react from '@vitejs/plugin-react'
-import mdx from 'vite-plugin-mdx'
+import _mdx from 'vite-plugin-mdx'
 import pages from 'vite-plugin-react-pages'
 
-module.exports = defineConfig({
+const mdx = ((_mdx as any).default || _mdx) as typeof _mdx
+
+export default defineConfig({
   resolve: {
     alias: {
       '~pages/': `${path.join(__dirname, 'pages')}/`,
