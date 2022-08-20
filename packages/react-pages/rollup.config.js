@@ -10,6 +10,11 @@ use rollup to bundle code targeted nodejs (native esm)
 to avoid error like this:
 
 [ERR_UNSUPPORTED_DIR_IMPORT]: Directory import '/path/to/vite-plugin-react-pages/packages/react-pages/dist/node-esm/page-strategy/DefaultPageStrategy' is not supported resolving ES modules imported from /path/to/vite-plugin-react-pages/packages/react-pages/dist/node-esm/index.js
+
+It is more flexable to use a bundler to build code for nodejs platform because:
+- it allows us to use directory import in source code
+- we don't need to add `.js` extension in relative import
+- we can bundle include some deps (currently we external all deps)
 */
 
 export default {
