@@ -11,6 +11,7 @@ export * from '@playwright/test'
 
 export type TestOptions = {
   vitePagesMode: 'serve' | 'build' | 'ssr'
+  beforeStartViteServer: (...args: any[]) => any
 }
 
 export const test = base.extend<
@@ -26,6 +27,13 @@ export const test = base.extend<
   } & TestOptions
 >({
   vitePagesMode: ['serve', { option: true, scope: 'worker' }],
+  beforeStartViteServer: [
+    async ({}, use) => {
+      // beforeStartViteServer default to be no-op
+      await use(() => {})
+    },
+    { option: true, scope: 'worker' },
+  ],
   testPlayground: [
     async ({}, use, workerInfo) => {
       const testDir = workerInfo.project.testDir
@@ -45,17 +53,25 @@ export const test = base.extend<
     { scope: 'worker', auto: true },
   ],
   server: [
-    async ({ testPlayground, vitePagesMode }, use, workerInfo) => {
+    async (
+      { testPlayground, vitePagesMode, beforeStartViteServer },
+      use,
+      workerInfo
+    ) => {
+      await beforeStartViteServer?.()
       const vars: { port?: number; subprocess?: any } = {}
-      // TODO: setup cjs env here
       try {
         if (vitePagesMode === 'serve') {
+          console.log('#######2')
+
           await startViteDevServer(testPlayground.path, vars)
         } else if (vitePagesMode === 'build') {
           await startBuildServer(testPlayground.path, vars)
         } else if (vitePagesMode === 'ssr') {
           await startSSRServer(testPlayground.path, vars)
         }
+        console.log('#######3')
+
         if (!vars.port || !vars.subprocess) throw new Error('assertion fail')
         await use({ port: vars.port })
       } finally {
@@ -68,6 +84,8 @@ export const test = base.extend<
     await use(`http://localhost:${server.port}`)
   },
   page: async ({ baseURL, page, server }, use) => {
+    console.log('#######4')
+
     // double check if this fixture works
     if (baseURL !== `http://localhost:${server.port}`)
       throw new Error('unexpected baseURL')

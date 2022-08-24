@@ -1,17 +1,19 @@
-import { test, expect } from '~utils'
+import { test as baseTest, expect } from '~utils'
 
 import { declareTests } from './navigate-tests'
 
-test.beforeAll(({ fsUtils, testPlayground }) => {
-  fsUtils.editFile('package.json', (str) => {
-    return str.replace('"type": "module"', '"type": "commonjs"')
-  })
+const test = baseTest.extend<{}, {}>({
+  beforeStartViteServer: [
+    async ({ fsUtils }, use) => {
+      await use(async () => {
+        fsUtils.editFile('package.json', (str) => {
+          return str.replace('"type": "module"', '"type": "commonjs"')
+        })
+        console.log('######################beforeStartViteServer')
+      })
+    },
+    { scope: 'worker', option: true } as any,
+  ],
 })
 
-test.beforeEach(({ fsUtils, testPlayground }) => {
-  const pkgJson = JSON.parse(fsUtils.readFile('package.json'))
-  expect(pkgJson.type).toBe('commonjs')
-  console.log('@@@pkgJson.type', pkgJson.type)
-})
-
-declareTests({ javaScriptEnabled: true, isCjs: true })
+declareTests({ javaScriptEnabled: true, test, isCjs: true })
