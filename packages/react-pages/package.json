@@ -9,7 +9,9 @@
       "import": "./dist/node-esm/index.mjs",
       "require": "./dist/node/index.js"
     },
-    "./*": "./*"
+    "./*": "./*",
+    "./client": "./client.ts",
+    "./clientTypes": "./clientTypes.d.ts"
   },
   "bin": {
     "vite-pages": "bin/vite-pages.js"
