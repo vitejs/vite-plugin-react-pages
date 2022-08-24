@@ -114,8 +114,10 @@ export async function killProcess(subprocess: ExecaChildProcess) {
     // ref: https://github.com/vitejs/vite/blob/f9b5c14c42bf0a5c7d4ca4b53160047306fb07c5/playground/test-utils.ts#L281
     commandSync(`taskkill /pid ${subprocess.pid} /T /F`)
   } else if (subprocess.pid) {
-    // https://stackoverflow.com/a/49842576
-    process.kill(-subprocess.pid)
+    if (subprocess.exitCode === null) {
+      // https://stackoverflow.com/a/49842576
+      process.kill(-subprocess.pid)
+    }
   } else {
     subprocess.kill()
   }
