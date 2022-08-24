@@ -47,6 +47,7 @@ export const test = base.extend<
   server: [
     async ({ testPlayground, vitePagesMode }, use, workerInfo) => {
       const vars: { port?: number; subprocess?: any } = {}
+      // TODO: setup cjs env here
       try {
         if (vitePagesMode === 'serve') {
           await startViteDevServer(testPlayground.path, vars)
