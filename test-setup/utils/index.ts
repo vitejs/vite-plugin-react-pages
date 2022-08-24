@@ -62,16 +62,12 @@ export const test = base.extend<
       const vars: { port?: number; subprocess?: any } = {}
       try {
         if (vitePagesMode === 'serve') {
-          console.log('#######2')
-
           await startViteDevServer(testPlayground.path, vars)
         } else if (vitePagesMode === 'build') {
           await startBuildServer(testPlayground.path, vars)
         } else if (vitePagesMode === 'ssr') {
           await startSSRServer(testPlayground.path, vars)
         }
-        console.log('#######3')
-
         if (!vars.port || !vars.subprocess) throw new Error('assertion fail')
         await use({ port: vars.port })
       } finally {
@@ -80,12 +76,21 @@ export const test = base.extend<
     },
     { scope: 'worker', auto: true },
   ],
+  fsUtils: [
+    async ({ testPlayground }, use) => {
+      await use(getFsUtils(testPlayground.path))
+    },
+    { scope: 'worker' },
+  ],
   baseURL: async ({ server }, use) => {
     await use(`http://localhost:${server.port}`)
   },
+  // if you are running tests in wsl, and you get error:
+  // Timeout exceeded while running fixture "page" setup
+  // You may have forgotten to start VcXsrv (XLaunch)
+  // Ref: how to run e2e tests in wsl:
+  // https://shouv.medium.com/how-to-run-cypress-on-wsl2-989b83795fb6
   page: async ({ baseURL, page, server }, use) => {
-    console.log('#######4')
-
     // double check if this fixture works
     if (baseURL !== `http://localhost:${server.port}`)
       throw new Error('unexpected baseURL')
@@ -99,12 +104,6 @@ export const test = base.extend<
     await page.goto(baseURL)
     await use(page)
   },
-  fsUtils: [
-    async ({ testPlayground }, use, workerInfo) => {
-      await use(getFsUtils(testPlayground.path))
-    },
-    { scope: 'worker' },
-  ],
 })
 
 const isWindows = process.platform === 'win32'

@@ -9,7 +9,6 @@ const test = baseTest.extend<{}, {}>({
         fsUtils.editFile('package.json', (str) => {
           return str.replace('"type": "module"', '"type": "commonjs"')
         })
-        console.log('######################beforeStartViteServer')
       })
     },
     { scope: 'worker', option: true } as any,
