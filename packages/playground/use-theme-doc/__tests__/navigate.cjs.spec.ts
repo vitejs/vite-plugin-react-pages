@@ -6,12 +6,16 @@ const test = baseTest.extend<{}, {}>({
   beforeStartViteServer: [
     async ({ fsUtils }, use) => {
       await use(async () => {
-        fsUtils.editFile('package.json', (str) => {
+        fsUtils.editFile('package.json', (str: string) => {
+          if (!str.includes('"type": "module"'))
+            throw new Error(
+              'unexpected package.json：should includes type:module'
+            )
           return str.replace('"type": "module"', '"type": "commonjs"')
         })
       })
     },
-    { scope: 'worker', option: true } as any,
+    { option: true, scope: 'worker' } as any,
   ],
 })
 
