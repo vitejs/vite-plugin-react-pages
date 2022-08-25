@@ -76,7 +76,7 @@ export async function startServer(
       // should ignore http_proxy env variable from my shell...
       proxy: false as any,
       headers: { Accept: 'text/html' },
-      timeout: process.env.CI ? 180 * 1000 : 90 * 1000,
+      timeout: 60 * 1000,
     }),
     // if the subprocess faill, it should throw too
     subprocess,

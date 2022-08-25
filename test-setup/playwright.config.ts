@@ -19,7 +19,7 @@ import { TestOptions } from './utils'
  */
 const config: PlaywrightTestConfig = {
   /* Maximum time one test can run for. */
-  timeout: process.env.CI ? 180 * 1000 : 90 * 1000,
+  timeout: process.env.CI ? 180 * 1000 : 60 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -70,11 +70,6 @@ function testProjectConfig(
 ): Project<PlaywrightTestOptions, PlaywrightWorkerOptions & TestOptions>[] {
   const testDir = resolvePlaygrould(playgroundName)
 
-  const matchers = {
-    hmr: /hmr\.spec\.ts/,
-    disableJS: /\.disableJS\.spec\.ts/,
-  }
-
   // for each project, test in serve mode, build mode, and ssr mode
   const result: Project<
     PlaywrightTestOptions,
@@ -87,7 +82,6 @@ function testProjectConfig(
         vitePagesMode: 'serve',
       },
       testDir,
-      testIgnore: [matchers.disableJS],
     },
     {
       name: `${playgroundName}:build`,
@@ -96,7 +90,6 @@ function testProjectConfig(
         vitePagesMode: 'build',
       },
       testDir,
-      testIgnore: [matchers.disableJS, matchers.hmr],
     },
     {
       name: `${playgroundName}:ssr`,
@@ -105,17 +98,6 @@ function testProjectConfig(
         vitePagesMode: 'ssr',
       },
       testDir,
-      testIgnore: [matchers.disableJS, matchers.hmr],
-    },
-    {
-      name: `${playgroundName}:ssr:disableJS`,
-      use: {
-        ...devices['Desktop Chrome'],
-        vitePagesMode: 'ssr',
-        javaScriptEnabled: false,
-      },
-      testDir,
-      testMatch: matchers.disableJS,
     },
   ]
 

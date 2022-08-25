@@ -79,7 +79,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
         },
       },
     }),
-    configResolved({ root, plugins, logger, command }) {
+    async configResolved({ root, plugins, logger, command }) {
       isBuild = command === 'build'
       pagesDir = opts.pagesDir ?? path.resolve(root, 'pages')
       if (opts.pageStrategy) {
@@ -94,7 +94,9 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
 
       if (mdxPlugin?.mdxOptions) {
         // Inject demo transformer
-        mdxPlugin.mdxOptions.remarkPlugins.push(...getRemarkPlugins(root))
+        mdxPlugin.mdxOptions.remarkPlugins.push(
+          ...(await getRemarkPlugins(root))
+        )
       } else {
         logger.warn(
           '[react-pages] Please install vite-plugin-mdx@3.1 or higher'
@@ -212,7 +214,7 @@ export { extractStaticData, File } from './utils/virtual-module'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
 
-function getRemarkPlugins(root: string) {
+async function getRemarkPlugins(root: string) {
   const result: any[] = [
     DemoMdxPlugin,
     TsInfoMdxPlugin,
@@ -226,10 +228,10 @@ function getRemarkPlugins(root: string) {
   // checkout playground/custom-find-pages2.
   const hasPkgJson = fs.pathExistsSync(pkgJsonPath)
 
+  const pkgJson = await fs.readJSON(pkgJsonPath)
+
   // Inject frontmatter parser if missing
-  const { devDependencies = {}, dependencies = {} } = hasPkgJson
-    ? require(pkgJsonPath)
-    : {}
+  const { devDependencies = {}, dependencies = {} } = hasPkgJson ? pkgJson : {}
   // By default we add remark-frontmatter automatically.
   // But if user install their own remark-frontmatter,
   // they are responsible to add the plugin manually
@@ -238,7 +240,9 @@ function getRemarkPlugins(root: string) {
     !devDependencies['remark-frontmatter'] &&
     !dependencies['remark-frontmatter']
   ) {
-    result.push(require('remark-frontmatter'))
+    // result.push(require('remark-frontmatter'))
+    const remarkFrontmatter = await import('remark-frontmatter')
+    result.push(remarkFrontmatter.default || remarkFrontmatter)
   }
   return result
 }

@@ -2,7 +2,7 @@ import { build as viteBuild } from 'vite'
 import type { ResolvedConfig } from 'vite'
 import type { RollupOutput } from 'rollup'
 import * as path from 'path'
-import * as fs from 'fs-extra'
+import fs from 'fs-extra'
 
 import { CLIENT_PATH } from '../constants'
 import { stringify } from 'gray-matter'
@@ -36,7 +36,10 @@ export async function ssrBuild(
         output: {
           format: 'cjs',
           exports: 'named',
-          entryFileNames: '[name].js',
+          // ensure ssr bundle is loaded as cjs even when
+          // users have "type": "module" in their package.json
+          entryFileNames: '[name].cjs',
+          chunkFileNames: '[name]-[hash].cjs',
         },
       },
       outDir: ssrOutDir,
@@ -58,7 +61,7 @@ export async function ssrBuild(
 
   const { renderToString, ssrData } = require(path.join(
     ssrOutDir,
-    'serverRender.js'
+    'serverRender.cjs'
   ))
 
   const pagePaths = Object.keys(ssrData)

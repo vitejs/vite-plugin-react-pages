@@ -2,6 +2,7 @@
   "name": "use-theme",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite serve",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
