@@ -94,7 +94,11 @@ export const test = base.extend<
         if (vars.subprocess) killProcess(vars.subprocess)
       }
     },
-    { scope: 'worker', auto: true },
+    {
+      scope: 'worker',
+      auto: true,
+      timeout: 60 * 1000,
+    },
   ],
   baseURL: async ({ skipPrepare, server, baseURL }, use) => {
     await use(skipPrepare ? baseURL : `http://localhost:${server.port}`)
@@ -104,17 +108,20 @@ export const test = base.extend<
   // You may have forgotten to start VcXsrv (XLaunch)
   // Ref: how to run e2e tests in wsl:
   // https://shouv.medium.com/how-to-run-cypress-on-wsl2-989b83795fb6
-  page: async ({ baseURL, page }, use) => {
-    if (baseURL) {
-      // const res = await axios.get(baseURL, {
-      //   timeout: 5000,
-      //   headers: { Accept: 'text/html' },
-      // })
-      // console.log('@@baseURL.data', res.data)
-      await page.goto(baseURL)
-    }
-    await use(page)
-  },
+  page: [
+    async ({ baseURL, page }, use) => {
+      if (baseURL) {
+        // const res = await axios.get(baseURL, {
+        //   timeout: 5000,
+        //   headers: { Accept: 'text/html' },
+        // })
+        // console.log('@@baseURL.data', res.data)
+        await page.goto(baseURL)
+      }
+      await use(page)
+    },
+    { scope: 'test', timeout: 60 * 1000 },
+  ],
 })
 
 const isWindows = process.platform === 'win32'
