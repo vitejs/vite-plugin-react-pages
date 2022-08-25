@@ -5,8 +5,8 @@ import resolve from '@rollup/plugin-node-resolve'
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
 /*
-use rollup to bundle code targeted nodejs (native esm)
-(instead of using tsc only)
+use rollup to build esm code that target nodejs (run in native esm mode)
+instead of using tsc only
 to avoid error like this:
 
 [ERR_UNSUPPORTED_DIR_IMPORT]: Directory import '/path/to/vite-plugin-react-pages/packages/react-pages/dist/node-esm/page-strategy/DefaultPageStrategy' is not supported resolving ES modules imported from /path/to/vite-plugin-react-pages/packages/react-pages/dist/node-esm/index.js

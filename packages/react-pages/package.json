@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-react-pages",
-  "version": "3.2.2-alpha.1",
+  "version": "3.2.1",
   "main": "dist/node/index.js",
   "module": "dist/node-esm/index.mjs",
   "type": "commonjs",
@@ -35,7 +35,6 @@
   "scripts": {
     "build": "rimraf ./dist && concurrently \"npm:build-*\"",
     "build-node": "tsc -p src/node",
-    "deprecated-build-node-esm": "tsc -p src/node --module ES2022 --outDir ./dist/node-esm && node ./scripts/addESMDeclare.mjs",
     "build-node-esm": "rollup -c",
     "build-client": "tsc -p src/client",
     "dev": "rimraf ./dist && concurrently \"npm:dev-*\"",
