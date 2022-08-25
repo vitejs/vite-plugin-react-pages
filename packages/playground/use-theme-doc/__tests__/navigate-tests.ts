@@ -3,14 +3,12 @@ import { userPages } from './snapshots'
 
 // reuse test declaration
 export function declareTests({
-  javaScriptEnabled,
+  javaScriptEnabled = true,
   test = baseTest,
-  isCjs = false,
 }: {
-  javaScriptEnabled: boolean
+  javaScriptEnabled?: boolean
   test?: typeof baseTest
-  isCjs?: boolean
-}) {
+} = {}) {
   test('test options', async ({ javaScriptEnabled: javaScriptEnabledOpt }) => {
     await expect(javaScriptEnabledOpt).toBe(javaScriptEnabled)
   })
