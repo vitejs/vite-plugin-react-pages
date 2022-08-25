@@ -1,4 +1,4 @@
 {
   "type": "commonjs",
-  "//": "needed for playwright to work"
+  "//": "needed for playwright to work (../package.json has set type to module)"
 }
