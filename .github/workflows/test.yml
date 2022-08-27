@@ -3,6 +3,8 @@ name: test
 on:
   push:
     branches: [main, test-*, playwright-test]
+  pull_request:
+    branches: [main]
 
 env:
   # Force terminal colors. @see https://www.npmjs.com/package/colors
