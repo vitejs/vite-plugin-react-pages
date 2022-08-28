@@ -1,5 +1,7 @@
 import * as path from 'path'
 import fs from 'fs-extra'
+import pkgUp from 'pkg-up'
+import chalk from 'chalk'
 import type { Plugin, IndexHtmlTransformContext } from 'vite'
 import type { MdxPlugin } from 'vite-plugin-mdx/dist/types'
 import {
@@ -95,7 +97,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
       if (mdxPlugin?.mdxOptions) {
         // Inject demo transformer
         mdxPlugin.mdxOptions.remarkPlugins.push(
-          ...(await getRemarkPlugins(root))
+          ...(await getRemarkPlugins())
         )
       } else {
         logger.warn(
@@ -214,24 +216,25 @@ export { extractStaticData, File } from './utils/virtual-module'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
 
-async function getRemarkPlugins(root: string) {
+async function getRemarkPlugins() {
   const result: any[] = [
     DemoMdxPlugin,
     TsInfoMdxPlugin,
     ImageMdxPlugin,
     FileTextMdxPlugin,
   ]
-  const pkgJsonPath = path.join(root, 'package.json')
-  // TODO: user may put the whole vite-pages project
-  // under a sub folder (which is the root here),
-  // so the package.json will be located at the upper folder.
-  // checkout playground/custom-find-pages2.
-  const hasPkgJson = fs.pathExistsSync(pkgJsonPath)
+
+  const pkgJsonPath = pkgUp.sync()
+
+  if(pkgJsonPath === null){
+    console.error(chalk.red(`could not find 'package.json', does it exist?\n'`))
+    process.exit(1)
+  }
 
   const pkgJson = await fs.readJSON(pkgJsonPath)
 
   // Inject frontmatter parser if missing
-  const { devDependencies = {}, dependencies = {} } = hasPkgJson ? pkgJson : {}
+  const { devDependencies = {}, dependencies = {} } = pkgJson
   // By default we add remark-frontmatter automatically.
   // But if user install their own remark-frontmatter,
   // they are responsible to add the plugin manually

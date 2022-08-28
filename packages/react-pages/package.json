@@ -76,6 +76,7 @@
     "jotai": "^0.15.3",
     "mini-debounce": "^1.0.8",
     "minimist": "^1.2.5",
+    "pkg-up": "^3.1.0",
     "remark-frontmatter": "^2.0.0",
     "slash": "^3.0.0",
     "tiny-invariant": "^1.1.0",
