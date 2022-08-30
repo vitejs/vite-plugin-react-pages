@@ -52,7 +52,10 @@
         "react",
         "react-dom",
         "@mdx-js/mdx",
-        "@alifd/meet-react"
+        "@alifd/meet-react",
+        "typescript",
+        "rollup",
+        "@babel/core"
       ]
     }
   }
