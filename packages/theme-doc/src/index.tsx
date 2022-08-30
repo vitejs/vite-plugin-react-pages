@@ -52,22 +52,33 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
     }
 
     const pageStaticData = staticData[loadState.routePath]
-    const body = Object.entries(pageData).map(([key, dataPart], idx) => {
-      const ContentComp = (dataPart as any).default
-      const pageStaticDataPart = pageStaticData?.[key]
-      const content = (() => {
-        if (pageStaticDataPart?.sourceType === 'md')
-          return (
-            <MDX>
-              <ContentComp />
-            </MDX>
-          )
-        if (dataPart?.isDemo)
-          return <Demo style={{ margin: '16px 45px' }} {...dataPart} />
-        return <ContentComp />
-      })()
-      return <React.Fragment key={key}>{content}</React.Fragment>
-    })
+
+    const body = Object.entries(pageData)
+      .map(([key, dataPart], idx) => {
+        const ContentComp = (dataPart as any).default
+        const pageStaticDataPart = pageStaticData?.[key]
+        const content = (() => {
+          if (pageStaticDataPart?.sourceType === 'md')
+            return (
+              <MDX>
+                <ContentComp />
+              </MDX>
+            )
+          if (dataPart?.isDemo)
+            return <Demo style={{ margin: '16px 45px' }} {...dataPart} />
+          return <ContentComp />
+        })()
+        const result = <React.Fragment key={key}>{content}</React.Fragment>
+        let order = Number(pageStaticDataPart?.order || 1)
+        if (Number.isNaN(order)) order = 1
+        return { key, result, order }
+      })
+      .sort((a, b) => {
+        // sort by (order, key)
+        if (a.order !== b.order) return a.order - b.order
+        return a.key.localeCompare(b.key)
+      })
+      .map(({ result }) => result)
 
     return <AppLayout>{body}</AppLayout>
   }

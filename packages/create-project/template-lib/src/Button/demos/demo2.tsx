@@ -1,6 +1,7 @@
 /**
  * @title Button Demo2 Title
  * @description Button demo2 description
+ * @order 2
  */
 
 import React from 'react'
