@@ -28,10 +28,17 @@ module.exports = {
                 if (!match) throw new Error('unexpected file: ' + absolute)
                 const [_, componentName, demoName] = match
                 const pageId = `/components/demos/${componentName}`
-                // set page data
-                const runtimeDataPaths = api.getRuntimeData(pageId)
-                // the ?demo query will wrap the module with useful demoInfo
-                runtimeDataPaths[demoName] = `${absolute}?demo`
+                // register page data
+                api.addPageData({
+                  pageId,
+                  key: demoName,
+                  // register demo runtime data path
+                  // the ?demo query will wrap the module with useful demoInfo
+                  // that will be consumed by theme-doc
+                  dataPath: `${absolute}?demo`,
+                  // register demo static data
+                  staticData: await helpers.extractStaticData(file),
+                })
               }
             )
           }
@@ -46,12 +53,14 @@ module.exports = {
               if (!match) throw new Error('unexpected file: ' + absolute)
               const [_, componentName] = match
               const pageId = `/components/${componentName}`
-              // set page data
-              const runtimeDataPaths = api.getRuntimeData(pageId)
-              runtimeDataPaths.main = absolute
-              // set page staticData
-              const staticData = api.getStaticData(pageId)
-              staticData.main = await helpers.extractStaticData(file)
+              // register page data
+              api.addPageData({
+                pageId,
+                // register demo runtime data path
+                dataPath: absolute,
+                // register demo static data
+                staticData: await helpers.extractStaticData(file),
+              })
             }
           )
         },
