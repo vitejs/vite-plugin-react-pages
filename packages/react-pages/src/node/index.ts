@@ -97,7 +97,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
       if (mdxPlugin?.mdxOptions) {
         // Inject demo transformer
         mdxPlugin.mdxOptions.remarkPlugins.push(
-          ...(await getRemarkPlugins())
+          ...(await getRemarkPlugins(root))
         )
       } else {
         logger.warn(
@@ -216,7 +216,7 @@ export { extractStaticData, File } from './utils/virtual-module'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
 
-async function getRemarkPlugins() {
+async function getRemarkPlugins(root: string) {
   const result: any[] = [
     DemoMdxPlugin,
     TsInfoMdxPlugin,
@@ -224,7 +224,11 @@ async function getRemarkPlugins() {
     FileTextMdxPlugin,
   ]
 
-  const pkgJsonPath = pkgUp.sync()
+  // pass vite project's root otherwise it will
+  // start from process.cwd() by default
+  const pkgJsonPath = pkgUp.sync({
+    cwd: root
+  })
 
   if(pkgJsonPath === null){
     console.error(chalk.red(`could not find 'package.json', does it exist?\n'`))
