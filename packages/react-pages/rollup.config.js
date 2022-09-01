@@ -26,8 +26,10 @@ export default {
       format: 'esm',
       sourcemap: true,
     },
+    // keep using tsc to build dist/node (cjs version) instead of rollup for now...
+    // I prefer using tsc if possiable
     // {
-    //   dir: 'dist-cjs',
+    //   dir: 'dist/node',
     //   format: 'cjs',
     //   sourcemap: true,
     // },

@@ -39,6 +39,7 @@
     "build-client": "tsc -p src/client",
     "dev": "rimraf ./dist && concurrently \"npm:dev-*\"",
     "dev-node": "tsc -w -p src/node",
+    "dev-node-esm": "rollup -c -w",
     "dev-client": "tsc -w -p src/client",
     "prepare": "npm run build"
   },
