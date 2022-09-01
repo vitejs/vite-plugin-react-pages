@@ -2,7 +2,10 @@ import { strip } from 'jest-docblock'
 import { ProxyModulesManager } from '../../utils/virtual-module'
 import { extractStaticData } from '../../utils/virtual-module/utils'
 
-const DEMO_PROXY_PREFIX = '/@react-pages/demos'
+// mark demo proxy files as virtual files to avoid vite warning "missing source files"
+// https://github.com/vitejs/vite/blob/60721ac53a1bf326d1cac097f23642faede234ff/packages/vite/src/node/server/sourcemap.ts#L39
+// https://vitejs.dev/guide/api-plugin.html#virtual-modules-convention
+const DEMO_PROXY_PREFIX = '\0/@react-pages/demos'
 
 export class DemoModuleManager {
   private pmm = new ProxyModulesManager(DEMO_PROXY_PREFIX)
