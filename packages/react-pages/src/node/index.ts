@@ -101,7 +101,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
         )
       } else {
         logger.warn(
-          '[react-pages] Please install vite-plugin-mdx@3.1 or higher'
+          '[vite-plugin-react-pages] Please install vite-plugin-mdx@3.1 or higher'
         )
       }
     },
@@ -227,11 +227,15 @@ async function getRemarkPlugins(root: string) {
   // pass vite project's root otherwise it will
   // start from process.cwd() by default
   const pkgJsonPath = pkgUp.sync({
-    cwd: root
+    cwd: root,
   })
 
-  if(pkgJsonPath === null){
-    console.error(chalk.red(`could not find 'package.json', does it exist?\n'`))
+  if (pkgJsonPath === null) {
+    console.error(
+      chalk.red(
+        `[vite-plugin-react-pages] Could not find 'package.json', does it exist?\n'`
+      )
+    )
     process.exit(1)
   }
 
