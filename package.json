@@ -33,14 +33,15 @@
     "sirv": "^2.0.2",
     "slash": "^3.0.0",
     "typescript": "^4.7.4",
-    "vite-pages-theme-basic": "workspace:*",
-    "vite-plugin-react-pages": "workspace:*",
     "wait-on": "^6.0.1"
   },
   "pnpm": {
     "overrides": {
       "react": "^17.0.1",
-      "react-dom": "^17.0.1"
+      "react-dom": "^17.0.1",
+      "vite-plugin-react-pages": "workspace:*",
+      "vite-pages-theme-doc": "workspace:*",
+      "vite-pages-theme-basic": "workspace:*"
     },
     "peerDependencyRules": {
       "ignoreMissing": [
