@@ -28,8 +28,7 @@ module.exports = {
               runtimeDataPaths[demoPath] = absolute
               const staticData = api.getStaticData(pageId)
               staticData[demoPath] = await helpers.extractStaticData(file)
-              if (!staticData.title)
-                staticData.title = `${componentName} Title`
+              if (!staticData.title) staticData.title = `${componentName} Title`
             }
           )
 

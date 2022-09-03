@@ -12,12 +12,7 @@ const PageLoader = React.memo(({ routePath }: Props) => {
   const loadState = useAppState(routePath)
   const dataCache = useContext(dataCacheCtx)
 
-  return (
-    <Theme
-      loadState={loadState}
-      loadedData={dataCache}
-    />
-  )
+  return <Theme loadState={loadState} loadedData={dataCache} />
 })
 
 export default PageLoader

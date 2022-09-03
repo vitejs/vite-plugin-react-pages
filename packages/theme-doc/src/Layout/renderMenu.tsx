@@ -43,7 +43,7 @@ export const renderMenuHelper = (isTopNav: boolean) =>
               {item.label}
               {rightIcon}
             </a>
-          )
+          ),
         }
       }
 
@@ -58,7 +58,7 @@ export const renderMenuHelper = (isTopNav: boolean) =>
               {item.label}
               {rightIcon}
             </Link>
-          )
+          ),
         }
       }
 

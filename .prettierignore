@@ -1,0 +1,8 @@
+packages/**/node_modules
+packages/**/dist
+packages/playground-temp
+
+doc-site/dist
+doc-site/node_modules
+
+playground-report
