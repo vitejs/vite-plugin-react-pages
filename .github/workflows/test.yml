@@ -35,8 +35,8 @@ jobs:
         run: pnpm install
       - name: Install Playwright
         run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
-      - name: Format & Test
-        run: pnpm format && pnpm test
+      - name: Run tests
+        run: pnpm test
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v2
