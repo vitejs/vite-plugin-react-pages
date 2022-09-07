@@ -18,9 +18,11 @@ You can run this demo in [StackBlitz](https://stackblitz.com/fork/github/vitejs/
 Edit `src/Button/index.tsx` or other source files, the demos will inflect your change instantly.
 Edit `src/Button/demos/demo1.tsx` or other demo files, the demos will inflect your change instantly.
 
-`npm run build` The demos are built and served.
+`npm run build-docs` The demos are built and served.
 
-`npm run ssr` The app are built into a static site (Static-Site Generation) and served.
+`npm run ssr-docs` The app are built into a static site (Static-Site Generation) and served.
+
+`npm run build-lib` Build the library for publishing.
 
 ---
 

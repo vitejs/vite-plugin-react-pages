@@ -5,9 +5,9 @@
   "version": "0.0.3",
   "scripts": {
     "dev": "SHOW_ALL_COMPONENT_DEMOS=true vite serve docs",
-    "build": "rimraf docs/dist && vite build docs && serve -s docs/dist",
-    "ssr": "rimraf docs/dist && vite-pages ssr docs && serve docs/dist",
-    "lib-build": "vite build"
+    "build-docs": "rimraf docs/dist && vite build docs && serve -s docs/dist",
+    "ssr-docs": "rimraf docs/dist && vite-pages ssr docs && serve docs/dist",
+    "build-lib": "vite build"
   },
   "dependencies": {
     "react": "^17.0.1",
