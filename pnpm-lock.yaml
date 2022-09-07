@@ -19,6 +19,8 @@ importers:
       cross-env: ^7.0.3
       execa: ^5.1.1
       get-port: ^5.1.1
+      husky: ^8.0.1
+      prettier: ^2.7.1
       sirv: ^2.0.2
       slash: ^3.0.0
       typescript: ^4.7.4
@@ -32,6 +34,8 @@ importers:
       cross-env: 7.0.3
       execa: 5.1.1
       get-port: 5.1.1
+      husky: 8.0.1
+      prettier: 2.7.1
       sirv: 2.0.2
       slash: 3.0.0
       typescript: 4.7.4
@@ -5393,6 +5397,12 @@ packages:
     engines: {node: '>=10.17.0'}
     dev: true
 
+  /husky/8.0.1:
+    resolution: {integrity: sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==}
+    engines: {node: '>=14'}
+    hasBin: true
+    dev: true
+
   /iconv-lite/0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
@@ -6710,6 +6720,12 @@ packages:
       nanoid: 3.3.4
       picocolors: 1.0.0
       source-map-js: 1.0.2
+    dev: true
+
+  /prettier/2.7.1:
+    resolution: {integrity: sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
     dev: true
 
   /prism-react-renderer/1.3.5:

@@ -27,7 +27,7 @@ export async function setupActualTestPlayground(
       return !file.includes('__tests__')
     },
   })
-  return {playgroundPath: copyTo, restore}
+  return { playgroundPath: copyTo, restore }
 
   async function restore(subPath: string = 'pages') {
     await fs.copy(

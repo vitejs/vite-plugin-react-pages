@@ -1,7 +1,7 @@
 import React from 'react'
 import type { TsInterfaceInfo } from 'vite-plugin-react-pages/clientTypes'
 
-import s from "./index.module.css";
+import s from './index.module.css'
 
 interface Props {
   data: TsInterfaceInfo

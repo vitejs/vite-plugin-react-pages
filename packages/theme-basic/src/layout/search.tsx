@@ -25,16 +25,19 @@ const SiteSearch = ({ pagesStaticData }: Props) => {
     setFilteredData(search(pagesStaticData, ''))
   }, [pagesStaticData])
 
-  const onChange = useCallback((value, type, _) => {
-    if (type === 'itemClick' || type === 'enter') {
-      // user confirm search result
-      history.push(value)
-    } else if (type === 'change') {
-      // user input search text
-      setFilteredData(search(pagesStaticData, value))
-      setSearchVal(value)
-    }
-  }, [pagesStaticData])
+  const onChange = useCallback(
+    (value, type, _) => {
+      if (type === 'itemClick' || type === 'enter') {
+        // user confirm search result
+        history.push(value)
+      } else if (type === 'change') {
+        // user input search text
+        setFilteredData(search(pagesStaticData, value))
+        setSearchVal(value)
+      }
+    },
+    [pagesStaticData]
+  )
 
   return (
     <Search

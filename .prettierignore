@@ -1,0 +1,12 @@
+packages/**/node_modules
+packages/**/dist
+packages/**/lib
+packages/playground-temp
+
+packages/react-pages/src/client/jotai/index.js
+packages/react-pages/src/client/jotai/utils.js
+
+doc-site/dist
+doc-site/node_modules
+
+playground-report
