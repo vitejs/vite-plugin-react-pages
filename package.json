@@ -36,7 +36,7 @@
     "prettier": "^2.7.1",
     "sirv": "^2.0.2",
     "slash": "^3.0.0",
-    "typescript": "^4.7.4",
+    "typescript": "^4.8.3",
     "wait-on": "^6.0.1"
   },
   "pnpm": {
@@ -52,7 +52,10 @@
         "react",
         "react-dom",
         "@mdx-js/mdx",
-        "@alifd/meet-react"
+        "@alifd/meet-react",
+        "typescript",
+        "rollup",
+        "@babel/core"
       ]
     }
   }
