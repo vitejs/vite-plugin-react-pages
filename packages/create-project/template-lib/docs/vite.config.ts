@@ -1,11 +1,10 @@
-import type { UserConfig } from 'vite'
+import { defineConfig } from 'vite'
 import * as path from 'path'
 import react from '@vitejs/plugin-react'
 import mdx from 'vite-plugin-mdx'
 import pages, { DefaultPageStrategy } from 'vite-plugin-react-pages'
 
-module.exports = {
-  jsx: 'react',
+export default defineConfig({
   plugins: [
     react(),
     mdx(),
@@ -72,4 +71,4 @@ module.exports = {
       'my-lib': path.join(__dirname, '../src'),
     },
   },
-} as UserConfig
+})
