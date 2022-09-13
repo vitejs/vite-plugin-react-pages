@@ -3,7 +3,7 @@ import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/github'
 import type { Language } from 'prism-react-renderer'
 import { useCopyToClipBoard } from './useCopyToClipBoard'
-import './CodeBlock.less'
+import s from './CodeBlock.module.less'
 
 // copied from https://mdxjs.com/guides/syntax-highlighting
 
@@ -32,11 +32,11 @@ const CodeBlock = ({
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <pre
-          className={`${className} vp-pre`}
+          className={`${className} ${s.pre}`}
           style={propStyle ? { ...style, ...propStyle } : style}
         >
           <button
-            className={`vp-copy ${hasCopied ? 'vp-copied' : ''}`}
+            className={`${s.copy} ${hasCopied ? s.copied : ''}`}
             onClick={() => copyToClipBoard(children)}
           ></button>
 
