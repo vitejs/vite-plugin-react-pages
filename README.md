@@ -35,7 +35,7 @@ Thanks to [StackBlitz WebContainers](https://blog.stackblitz.com/posts/introduci
 2. `npm install`
 3. `npm run dev` and play with the local dev environment.
 4. `npm run build`.
-5. `npm run ssr`. You can [disable javascript in your browser](https://developers.google.com/web/tools/chrome-devtools/javascript/disable), to verify if it can still render.
+5. `npm run ssr`. You can [disable javascript in your browser](https://developer.chrome.com/docs/devtools/javascript/disable/), to verify if it can still render.
 
 ### Read the documentation
 
