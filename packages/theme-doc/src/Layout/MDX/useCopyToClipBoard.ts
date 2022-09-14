@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import copy from 'copy-to-clipboard'
+import writeText from 'copy-to-clipboard'
 
 const useCopyToClipBoard = () => {
   const timer = useRef<any>()
@@ -10,9 +10,9 @@ const useCopyToClipBoard = () => {
   const copyToClipBoard = (value: string) => {
     setHasCopied(true)
     clearTimeout(timer.current)
+    writeText(value)
     timer.current = setTimeout(() => {
       setHasCopied(false)
-      copy(value)
     }, 2 * 1000)
   }
 
