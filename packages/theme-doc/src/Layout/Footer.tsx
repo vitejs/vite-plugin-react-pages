@@ -41,6 +41,11 @@ export type FooterConfig = {
   copyright?: React.ReactNode
 }
 
+/**
+ * adapter for FooterLink that
+ * replace `label` field with
+ * `title` to adapt RcFooter' props
+ */
 const replaceLabelWithTitle = (columns: FooterColumn[]) => {
   return columns.map((col) => ({
     title: col.title,
@@ -72,8 +77,8 @@ export const Footer = () => {
     <RcFooter
       bottom={
         <>
-          <div>{message}</div>
-          <div>{copyright}</div>
+          {message ? <div>{message}</div> : null}
+          {copyright ? <div>{copyright}</div> : null}
         </>
       }
       columns={replaceLabelWithTitle(columns)}
