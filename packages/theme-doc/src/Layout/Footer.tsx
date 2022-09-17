@@ -13,6 +13,19 @@ export type FooterLink = {
    * navigating to other websites
    */
   url: string
+  /**
+   * link target would be `_blank` if `openExternal` is ture
+   * @default false
+   */
+  openExternal?: boolean
+  /**
+   * icon that before column title
+   */
+  icon?: React.ReactNode
+  /**
+   * description of column, come after title
+   */
+  description?: React.ReactNode
 }
 
 export type FooterColumn = {
@@ -52,6 +65,9 @@ const replaceLabelWithTitle = (columns: FooterColumn[]) => {
     items: col.items?.map((i) => ({
       title: i.label,
       url: i.url,
+      openExternal: i.openExternal,
+      icon: i.icon,
+      description: i.description,
     })),
   }))
 }

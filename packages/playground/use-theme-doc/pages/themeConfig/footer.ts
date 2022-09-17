@@ -11,10 +11,12 @@ export const footerConfig: { [locale: string]: FooterConfig } = {
           {
             label: 'Stack Overflow',
             url: 'https://stackoverflow.com/questions/tagged/vite-plugin-react-pages',
+            openExternal: true,
           },
           {
             label: 'Help',
             url: 'https://github.com/vitejs/vite-plugin-react-pages/issues',
+            openExternal: true,
           },
         ],
       },
@@ -24,10 +26,12 @@ export const footerConfig: { [locale: string]: FooterConfig } = {
           {
             label: 'Vite',
             url: 'https://vitejs.dev/',
+            openExternal: true,
           },
           {
             label: 'GitHub',
             url: 'https://github.com/vitejs/vite-plugin-react-pages',
+            openExternal: true,
           },
         ],
       },
@@ -43,10 +47,12 @@ export const footerConfig: { [locale: string]: FooterConfig } = {
           {
             label: 'Stack Overflow',
             url: 'https://stackoverflow.com/questions/tagged/vite-plugin-react-pages',
+            openExternal: true,
           },
           {
             label: '帮助',
             url: 'https://github.com/vitejs/vite-plugin-react-pages/issues',
+            openExternal: true,
           },
         ],
       },
@@ -56,10 +62,12 @@ export const footerConfig: { [locale: string]: FooterConfig } = {
           {
             label: 'Vite',
             url: 'https://vitejs.dev/',
+            openExternal: true,
           },
           {
             label: 'GitHub',
             url: 'https://github.com/vitejs/vite-plugin-react-pages',
+            openExternal: true,
           },
         ],
       },
