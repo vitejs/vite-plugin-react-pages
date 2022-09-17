@@ -56,6 +56,11 @@ export type FooterConfig = {
    * The copyright message to be displayed at the bottom.
    */
   copyright?: React.ReactNode
+  /**
+   * Footer theme preset
+   * @default 'light'
+   */
+  theme?: 'light' | 'dark'
 }
 
 /**
@@ -92,10 +97,18 @@ export const Footer = () => {
     return null
   }
 
-  const { message, copyright, columns = [] } = resolvedFooterConfig
+  const {
+    message,
+    copyright,
+    columns = [],
+    theme = 'light',
+  } = resolvedFooterConfig
+
+  const themeCls = theme === 'dark' ? s['theme-dark'] : s['theme-light']
 
   return (
     <RcFooter
+      theme={theme}
       bottom={
         <>
           {message ? <div>{message}</div> : null}
@@ -104,8 +117,8 @@ export const Footer = () => {
       }
       columns={replaceLabelWithTitle(columns)}
       columnLayout="space-around"
-      className={s.footer}
-      prefixCls="vp-local-footer"
+      className={`${s.footer} ${themeCls}`}
+      prefixCls={s.footer}
     />
   )
 }

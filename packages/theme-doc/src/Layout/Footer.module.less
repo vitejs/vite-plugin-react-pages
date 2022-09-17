@@ -3,12 +3,9 @@
 @footer-prefix-cls: footer;
 
 .@{footer-prefix-cls} {
-  color: rgb(235, 237, 240);
   font-size: 16px;
-  background-color: #2b3137;
 
   a {
-    color: rgb(235, 237, 240);
     &:hover {
       text-decoration: underline;
     }
@@ -24,5 +21,19 @@
       margin-right: 0.4em;
       width: auto;
     }
+  }
+
+  // theme style
+
+  &.theme-dark {
+    color: rgb(235, 237, 240);
+    background-color: #2b3137;
+    a {
+      color: rgb(235, 237, 240);
+    }
+  }
+
+  &.theme-light {
+    border-top: 1px solid rgba(60, 60, 60, 0.12);
   }
 }

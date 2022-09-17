@@ -48,6 +48,8 @@ export const footerConfig: { [locale: string]: FooterConfig } = {
     ],
   },
   zh: {
+    // test dark theme
+    theme: 'dark',
     message: `2020 - ${new Date().getFullYear()}`,
     copyright: '以 MIT 许可证发布',
     columns: [
