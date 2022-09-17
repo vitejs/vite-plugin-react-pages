@@ -145,5 +145,8 @@ export type {
   I18nConfig,
   ThemeContextValue,
   MenuConfig,
+  FooterConfig,
+  FooterColumn,
+  FooterLink,
 } from './ThemeConfig.doc'
 export { useThemeCtx } from './ctx'

@@ -11,6 +11,7 @@ import { themeConfigCtx } from '../ctx'
 export { default as MDX } from './MDX'
 import { useThemeCtx } from '..'
 import { LayoutContext } from './ctx'
+import { Footer } from './Footer'
 
 ConfigProvider.config({
   prefixCls: 'vp-antd',
@@ -57,6 +58,7 @@ const AppLayout: React.FC<Props> = ({ children }) => {
             )}
             <div className={s.content}>{children}</div>
           </div>
+          <Footer />
         </div>
       </LayoutContext.Provider>
     </ConfigProvider>

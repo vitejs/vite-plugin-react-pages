@@ -1,4 +1,5 @@
 import type { MenuConfig } from './Layout/renderMenu'
+import type { FooterConfig, FooterColumn, FooterLink } from './Layout/Footer'
 import type {
   PagesStaticData,
   ThemeProps,
@@ -34,6 +35,12 @@ export interface ThemeConfig {
    * Extra area at top bar.
    */
   TopBarExtra?: React.ComponentType
+  /**
+   * Footer
+   */
+  footer?:
+    | FooterConfig
+    | ((ctx: ThemeContextValue) => FooterConfig | null | undefined)
   /**
    * View to be rendered when app in 404 state
    * (url not matching any page)
@@ -111,4 +118,4 @@ export type ThemeContextValue = ThemeProps & {
   }
 }
 
-export type { MenuConfig }
+export type { MenuConfig, FooterConfig, FooterColumn, FooterLink }

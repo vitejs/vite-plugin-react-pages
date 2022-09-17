@@ -4,6 +4,7 @@ import { Button } from 'antd'
 import Component404 from './404'
 import { topNavsConfig } from './themeConfig/topNavs'
 import { sideNavsConfig } from './themeConfig/sideNavs'
+import { footerConfig } from './themeConfig/footer'
 
 export default createTheme({
   i18n: {
@@ -49,6 +50,9 @@ export default createTheme({
       resolvedLocale: { localeKey },
     } = ctx
     return defaultSideNavs(ctx, sideNavsConfig[localeKey!])
+  },
+  footer: ({ resolvedLocale: { localeKey } }) => {
+    return footerConfig[localeKey!]
   },
   Component404,
 })

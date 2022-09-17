@@ -1,0 +1,46 @@
+@import 'rc-footer/assets/index.less';
+
+@footer-prefix-cls: footer;
+
+.@{footer-prefix-cls} {
+  font-size: 16px;
+
+  a {
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &-container {
+    padding: 32px 0 20px;
+  }
+
+  &-column {
+    margin-bottom: 20px;
+    &-icon {
+      margin-right: 0.4em;
+      width: auto;
+    }
+  }
+
+  // theme style
+
+  &.theme-dark {
+    color: rgb(235, 237, 240);
+    background-color: #2b3137;
+    a {
+      color: rgb(235, 237, 240);
+    }
+  }
+
+  &.theme-light {
+    border-top: 1px solid rgba(60, 60, 60, 0.12);
+    background-color: rgb(246, 248, 248);
+
+    .@{footer-prefix-cls}-bottom {
+      &-container {
+        border-top: none;
+      }
+    }
+  }
+}

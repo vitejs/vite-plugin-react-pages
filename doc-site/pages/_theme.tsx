@@ -2,6 +2,7 @@ import React from 'react'
 import { createTheme, defaultSideNavs } from 'vite-pages-theme-doc'
 
 import Component404 from './404'
+import { footerConfig } from './themConfig/footer'
 
 export default createTheme({
   topNavs: [
@@ -27,6 +28,9 @@ export default createTheme({
         },
       },
     })
+  },
+  footer: ({ resolvedLocale: { localeKey } }) => {
+    return footerConfig.en
   },
   Component404,
 })
