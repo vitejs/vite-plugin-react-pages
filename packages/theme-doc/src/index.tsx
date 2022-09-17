@@ -146,5 +146,7 @@ export type {
   ThemeContextValue,
   MenuConfig,
   FooterConfig,
+  FooterColumn,
+  FooterLink,
 } from './ThemeConfig.doc'
 export { useThemeCtx } from './ctx'

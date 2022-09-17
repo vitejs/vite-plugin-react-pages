@@ -1,4 +1,12 @@
+import React from 'react'
 import type { FooterConfig } from '../themeDev'
+import {
+  QuestionCircleOutlined,
+  BugOutlined,
+  GithubFilled,
+  TeamOutlined,
+  LinkOutlined,
+} from '@ant-design/icons'
 
 export const footerConfig: { [locale: string]: FooterConfig } = {
   en: {
@@ -6,32 +14,34 @@ export const footerConfig: { [locale: string]: FooterConfig } = {
     copyright: 'Released under the MIT License.',
     columns: [
       {
+        icon: <TeamOutlined />,
         title: 'Community',
         items: [
           {
+            icon: <QuestionCircleOutlined />,
             label: 'Stack Overflow',
             url: 'https://stackoverflow.com/questions/tagged/vite-plugin-react-pages',
-            openExternal: true,
           },
           {
+            icon: <BugOutlined />,
             label: 'Help',
             url: 'https://github.com/vitejs/vite-plugin-react-pages/issues',
-            openExternal: true,
           },
         ],
       },
       {
-        title: 'More',
+        icon: <LinkOutlined />,
+        title: 'Resources',
         items: [
           {
+            icon: <img src="https://vitejs.dev/logo.svg" alt="vite" />,
             label: 'Vite',
             url: 'https://vitejs.dev/',
-            openExternal: true,
           },
           {
+            icon: <GithubFilled />,
             label: 'GitHub',
             url: 'https://github.com/vitejs/vite-plugin-react-pages',
-            openExternal: true,
           },
         ],
       },
@@ -47,12 +57,10 @@ export const footerConfig: { [locale: string]: FooterConfig } = {
           {
             label: 'Stack Overflow',
             url: 'https://stackoverflow.com/questions/tagged/vite-plugin-react-pages',
-            openExternal: true,
           },
           {
             label: '帮助',
             url: 'https://github.com/vitejs/vite-plugin-react-pages/issues',
-            openExternal: true,
           },
         ],
       },
@@ -62,12 +70,10 @@ export const footerConfig: { [locale: string]: FooterConfig } = {
           {
             label: 'Vite',
             url: 'https://vitejs.dev/',
-            openExternal: true,
           },
           {
             label: 'GitHub',
             url: 'https://github.com/vitejs/vite-plugin-react-pages',
-            openExternal: true,
           },
         ],
       },

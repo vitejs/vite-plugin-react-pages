@@ -1,5 +1,5 @@
 import type { MenuConfig } from './Layout/renderMenu'
-import type { FooterConfig } from './Layout/Footer'
+import type { FooterConfig, FooterColumn, FooterLink } from './Layout/Footer'
 import type {
   PagesStaticData,
   ThemeProps,
@@ -118,4 +118,4 @@ export type ThemeContextValue = ThemeProps & {
   }
 }
 
-export type { MenuConfig, FooterConfig }
+export type { MenuConfig, FooterConfig, FooterColumn, FooterLink }
