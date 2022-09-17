@@ -1,0 +1,29 @@
+@search-icon-color: #ced4d9;
+
+.search-box {
+  > :global(.vp-antd-select) {
+    cursor: default;
+  }
+
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  padding-left: 40px;
+  display: flex;
+  align-items: center;
+
+  .input {
+    padding: 4px 0px;
+    input::placeholder {
+      color: #a3b1bf;
+    }
+  }
+
+  .icon {
+    margin-right: 4px;
+    color: @search-icon-color;
+    pointer-events: none;
+  }
+}
+
+.popup {
+  width: 250px !important;
+}

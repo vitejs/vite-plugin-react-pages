@@ -13,6 +13,7 @@ import type { MenuConfig } from './renderMenu'
 import { LayoutContext } from './ctx'
 import { themeConfigCtx, useThemeCtx } from '../ctx'
 import { useLocaleSelector } from './useLocaleSelector'
+import Search from './Search'
 
 const renderMenu = renderMenuHelper(true)
 
@@ -114,6 +115,10 @@ const AppHeader: React.FC<Props> = (props) => {
         </span>
       </div>
       <div className={s.logoArea}>{renderLogo}</div>
+
+      <div className={s.searchArea}>
+        <Search />
+      </div>
 
       <div className={s.flexSpace}></div>
 
