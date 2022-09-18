@@ -4,6 +4,7 @@ import type {
   PagesStaticData,
   ThemeProps,
 } from 'vite-plugin-react-pages/clientTypes'
+import type { PageGroups } from './analyzeStaticData'
 
 export interface ThemeConfig {
   /**
@@ -116,6 +117,7 @@ export type ThemeContextValue = ThemeProps & {
      */
     pagePathWithoutLocalePrefix?: string
   }
+  pageGroups: PageGroups
 }
 
 export type { MenuConfig, FooterConfig, FooterColumn, FooterLink }

@@ -34,3 +34,7 @@ export function normalizeI18nConfig(
   )
   return { ...i18n, locales: newLocales }
 }
+
+export function getStaticDataValue(pageStaticData: any, key: string) {
+  return pageStaticData?.[key] ?? pageStaticData?.main?.[key]
+}

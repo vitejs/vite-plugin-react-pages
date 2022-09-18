@@ -10,8 +10,8 @@ import './style.less'
 import { Demo } from './Layout/Demo'
 import AnchorLink from './components/AnchorLink'
 import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
-import { matchPagePathLocalePrefix } from './Layout/Sider'
 import { normalizeI18nConfig } from './utils'
+import { getPageGroups, matchPagePathLocalePrefix } from './analyzeStaticData'
 
 export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
   const ThemeComp = (props: ThemeProps) => {
@@ -90,14 +90,16 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
       const { loadState, loadedData } = props
       const staticData = useStaticData()
       const themeCtxValue: ThemeContextValue = useMemo(() => {
+        const i18n = normalizeI18nConfig(themeConfig.i18n)
         const result: ThemeContextValue = {
           ...props,
           themeConfig: {
             ...themeConfig,
-            i18n: normalizeI18nConfig(themeConfig.i18n),
+            i18n,
           },
           staticData,
           resolvedLocale: {},
+          pageGroups: getPageGroups(staticData, i18n),
         }
         if (!result.themeConfig.i18n?.locales) return result
         const { locale, localeKey, pagePathWithoutLocalePrefix } =
