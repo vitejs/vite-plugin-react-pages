@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import type { PagesStaticData } from 'vite-plugin-react-pages'
 import { AutoComplete, Input } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
@@ -7,12 +6,12 @@ import { useHistory } from 'react-router-dom'
 import { useThemeCtx } from '../..'
 
 import s from './search.module.less'
-import { matchPagePathLocalePrefix } from '../../analyzeStaticData'
+import type { PageMeta } from '../../analyzeStaticData'
 
 interface Props {}
 
 const Search: React.FC<Props> = (props) => {
-  const { staticData, themeConfig, resolvedLocale, pageGroups } = useThemeCtx()
+  const { staticData, resolvedLocale, pageGroups } = useThemeCtx()
   const [popupOpen, setPopupOpen] = useState(false)
   const [keywords, setKeywords] = useState('')
   const history = useHistory()
@@ -21,28 +20,36 @@ const Search: React.FC<Props> = (props) => {
   // console.log('@@themeCtxValue', themeCtxValue)
   // console.log('@@pageGroups', pageGroups)
 
-  const preparedStaticData: PagesStaticData = useMemo(() => {
-    return Object.fromEntries(
-      Object.entries(staticData).filter(([pagePath, staticData]) => {
-        // pages with path params should not be showed in search result
-        if (pagePath.includes('/:')) return false
-        const { localeKey } = matchPagePathLocalePrefix(
-          pagePath,
-          themeConfig.i18n
-        )
-        // filter out pages with different locale
-        if (resolvedLocale.localeKey !== localeKey) return false
-        return true
+  const preparedPages = useMemo(() => {
+    const res = [] as PageMeta[]
+    Object.entries(pageGroups).forEach(([groupKey, group]) => {
+      Object.entries(group).forEach(([subGroupKey, pages]) => {
+        pages.forEach((page) => {
+          // pages with path params should not be showed in search result
+          if (page.pagePath.includes('/:')) return
+          // pages with different locale should not be showed in search result
+          if (resolvedLocale.localeKey !== page.pageLocaleKey) return
+          res.push(page)
+        })
       })
-    )
-  }, [staticData, themeConfig.i18n, resolvedLocale.localeKey])
+    })
+    return res
+  }, [staticData, resolvedLocale.localeKey])
 
   const options = useMemo(() => {
-    const filteredData = filter(preparedStaticData, keywords)
-    return filteredData.map(({ label, path }) => {
-      return { value: path, label }
-    })
-  }, [preparedStaticData, keywords])
+    const filteredData = filter(preparedPages, keywords)
+    return filteredData.map(
+      ({ groupKey, subGroupKey, pageTitle, pagePath }) => {
+        const label = [groupKey, subGroupKey, pageTitle]
+          .filter((s) => s !== '/')
+          .join(' > ')
+        return {
+          value: pagePath,
+          label,
+        }
+      }
+    )
+  }, [preparedPages, keywords])
 
   return (
     <div className={s['search-box']}>
@@ -71,25 +78,12 @@ const Search: React.FC<Props> = (props) => {
 
 export default Search
 
-interface FilteredData {
-  readonly label: string
-  readonly path: string
-}
-
-function filter(
-  pagesStaticData: PagesStaticData,
-  keywords: string
-): FilteredData[] {
-  return Object.entries(pagesStaticData)
-    .map(([path, staticData]) => {
-      if (path === '/404') return null
-      const label = staticData.title ?? staticData.main.title ?? path
-      if (containString(label, keywords?.trim() ?? '')) {
-        return { label, path }
-      }
-      return null
-    })
-    .filter(Boolean) as FilteredData[]
+function filter(pages: PageMeta[], keywords: string): PageMeta[] {
+  return pages.filter((page) => {
+    if (page.pagePath === '/404') return false
+    if (containString(page.pageTitle, keywords?.trim() ?? '')) return true
+    return false
+  })
 }
 
 function containString(whole: string, part: string) {
