@@ -3,6 +3,8 @@ import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 
+import { LessPluginModuleResolver } from './less-plugin'
+
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
 export default {
@@ -69,12 +71,13 @@ export default {
             'ant-prefix': 'vp-antd',
           },
           javascriptEnabled: true,
+          plugins: [new LessPluginModuleResolver()],
         },
-      },
+      } as any,
       modules: {
         generateScopedName: `vp-local-[local]`,
       },
       extract: 'index.css',
     }),
   ],
-}
+} as any
