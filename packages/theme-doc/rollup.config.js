@@ -72,11 +72,11 @@ export default {
           javascriptEnabled: true,
           plugins: [new LessPluginRemoveAntdGlobalStyles()],
         },
-      } as any,
+      },
       modules: {
         generateScopedName: `vp-local-[local]`,
       },
       extract: 'index.css',
     }),
   ],
-} as any
+}
