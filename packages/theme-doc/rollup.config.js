@@ -2,6 +2,7 @@ import postcss from 'rollup-plugin-postcss'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
+import { LessPluginRemoveAntdGlobalStyles } from 'less-plugin-remove-antd-global-styles'
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
@@ -69,6 +70,7 @@ export default {
             'ant-prefix': 'vp-antd',
           },
           javascriptEnabled: true,
+          plugins: [new LessPluginRemoveAntdGlobalStyles()],
         },
       },
       modules: {

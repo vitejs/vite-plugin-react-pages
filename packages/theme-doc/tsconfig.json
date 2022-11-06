@@ -1,4 +1,5 @@
 {
+  "exclude": ["./lib/**/*"],
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "module": "CommonJS",
