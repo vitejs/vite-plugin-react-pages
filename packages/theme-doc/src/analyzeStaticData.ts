@@ -35,16 +35,16 @@ export function getPageGroups(staticData: any, i18n: I18nConfig | undefined) {
 
   Object.entries(staticData).forEach(([pagePath, pageStaticData]) => {
     if (pagePath === '/404') return
-    const pageGroupInfo = getOnePageGroupInfo(pagePath, pageStaticData, i18n)
-    ensureGroup(pageGroupInfo.group, pageGroupInfo.subGroup).push({
+    const pageInfo = analyzePageInfo(pagePath, pageStaticData, i18n)
+    ensureGroup(pageInfo.group, pageInfo.subGroup).push({
       pageStaticData,
       pagePath,
-      groupKey: pageGroupInfo.group,
-      subGroupKey: pageGroupInfo.subGroup,
-      pageKeyInGroup: pageGroupInfo.pageKeyInGroup,
-      pageTitle: pageGroupInfo.pageTitle,
-      pageLocale: pageGroupInfo.locale,
-      pageLocaleKey: pageGroupInfo.localeKey,
+      groupKey: pageInfo.group,
+      subGroupKey: pageInfo.subGroup,
+      pageKeyInGroup: pageInfo.pageKeyInGroup,
+      pageTitle: pageInfo.pageTitle,
+      pageLocale: pageInfo.locale,
+      pageLocaleKey: pageInfo.localeKey,
     })
   })
 
@@ -69,7 +69,7 @@ export function getPageGroups(staticData: any, i18n: I18nConfig | undefined) {
   return groups
 }
 
-export function getOnePageGroupInfo(
+export function analyzePageInfo(
   pagePath: string,
   pageStaticData: any,
   i18n: I18nConfig | undefined

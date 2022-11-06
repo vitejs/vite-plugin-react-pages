@@ -6,7 +6,7 @@ import { themePropsCtx } from '../ctx'
 import s from './index.module.less'
 import type { ThemeContextValue } from '..'
 import { LayoutContext } from './ctx'
-import { getOnePageGroupInfo } from '../analyzeStaticData'
+import { analyzePageInfo } from '../analyzeStaticData'
 import { getStaticDataValue } from '../utils'
 
 interface Props {
@@ -103,28 +103,28 @@ export function defaultSideNavs(
   opts?: DefaultSideNavsOpts
 ): MenuConfig[] | null {
   const { i18n } = themeConfig || {}
-  const currentGroupInfo = getOnePageGroupInfo(
+  const currentPageInfo = analyzePageInfo(
     loadState.routePath,
     staticData[loadState.routePath],
     i18n
   )
-  // console.log('defaultSideNavs', currentGroupInfo, groups)
+  // console.log('defaultSideNavs', currentPageInfo, groups)
 
   // groupKey of the current page
   const groupKey = (() => {
     if (opts?.forceGroup) return opts.forceGroup
     // infer the group of the current page.
-    // currentGroupInfo.group may be wrong because:
+    // currentPageInfo.group may be wrong because:
     // if there is also pages like /guide/start ,
     // then /guide should not be grouped with /faq .
     // instead, /guide should be moved to the "guide" group
     if (
-      currentGroupInfo.group === '/' &&
-      pageGroups[currentGroupInfo.pageKeyInGroup]
+      currentPageInfo.group === '/' &&
+      pageGroups[currentPageInfo.pageKeyInGroup]
     ) {
-      return currentGroupInfo.pageKeyInGroup
+      return currentPageInfo.pageKeyInGroup
     }
-    return currentGroupInfo.group
+    return currentPageInfo.group
   })()
 
   const subGroups = pageGroups[groupKey] ?? {}
@@ -135,7 +135,7 @@ export function defaultSideNavs(
     // remove pages with different locale
     .map(([subGroupKey, pages]) => {
       const filtered = pages.filter(
-        ({ pageLocaleKey }) => currentGroupInfo.localeKey === pageLocaleKey
+        ({ pageLocaleKey }) => currentPageInfo.localeKey === pageLocaleKey
       )
       return [subGroupKey, filtered] as const
     })
