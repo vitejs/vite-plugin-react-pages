@@ -19,7 +19,6 @@
   "devDependencies": {
     "@mdx-js/mdx": "^2.1.5",
     "@types/react": "^18.0.25",
-    "@types/react-router-dom": "^5.1.7",
     "@vitejs/plugin-react": "^2.2.0",
     "rimraf": "^3.0.2",
     "serve": "^14.0.1",
