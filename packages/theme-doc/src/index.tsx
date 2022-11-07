@@ -91,6 +91,7 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
       const staticData = useStaticData()
       const themeCtxValue: ThemeContextValue = useMemo(() => {
         const i18n = normalizeI18nConfig(themeConfig.i18n)
+        const pageGroups = getPageGroups(staticData, i18n)
         const result: ThemeContextValue = {
           ...props,
           themeConfig: {
@@ -99,7 +100,7 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
           },
           staticData,
           resolvedLocale: {},
-          pageGroups: getPageGroups(staticData, i18n),
+          pageGroups,
         }
         if (!result.themeConfig.i18n?.locales) return result
         const { locale, localeKey, pagePathWithoutLocalePrefix } =
