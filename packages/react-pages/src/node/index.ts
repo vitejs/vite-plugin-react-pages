@@ -27,6 +27,7 @@ import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
 import { ImageMdxPlugin } from './utils/mdx-plugin-image'
 import { FileTextMdxPlugin } from './utils/mdx-plugin-file-text'
+import { AnalyzeHeadingsMdxPlugin } from './utils/mdx-plugin-analyze-headings'
 
 /**
  * This is a public API that users use in their index.html.
@@ -222,6 +223,7 @@ async function getRemarkPlugins(root: string) {
     TsInfoMdxPlugin,
     ImageMdxPlugin,
     FileTextMdxPlugin,
+    AnalyzeHeadingsMdxPlugin,
   ]
 
   // pass vite project's root otherwise it will

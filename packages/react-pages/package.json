@@ -75,6 +75,8 @@
     "gray-matter": "^4.0.2",
     "jest-docblock": "^28.1.1",
     "jotai": "^0.15.3",
+    "mdast-util-toc": "^5.1.0",
+    "mdast-util-to-string": "^2.0.0",
     "mini-debounce": "^1.0.8",
     "minimist": "^1.2.5",
     "pkg-up": "^3.1.0",
