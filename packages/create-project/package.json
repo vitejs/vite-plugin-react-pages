@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "fs-extra": "^10.1.0",
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.7"
   }
 }
