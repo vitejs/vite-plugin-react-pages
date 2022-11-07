@@ -1,5 +1,6 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { hydrateRoot } from 'react-dom/client'
+
 import type { PageLoaded } from '../../../clientTypes'
 import App from '../App'
 import SSRContextProvider from '../SSRContextProvider'
@@ -36,10 +37,11 @@ if (pageDataImporter) {
 }
 
 function hydrate(initCache: PageLoaded) {
-  ReactDOM.hydrate(
+  const container = document.getElementById('root')!
+  hydrateRoot(
+    container,
     <SSRContextProvider initCache={initCache}>
       <App />
-    </SSRContextProvider>,
-    document.getElementById('root')
+    </SSRContextProvider>
   )
 }

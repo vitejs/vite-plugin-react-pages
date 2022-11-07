@@ -14,6 +14,7 @@ const basename = __HASH_ROUTER__
 
 interface Props {
   readonly initCache?: PageLoaded
+  readonly children: React.ReactNode
 }
 
 const SSRContextProvider: React.FC<Props> = ({ initCache, children }) => {
