@@ -1,14 +1,14 @@
 import React from 'react'
 import { Dropdown, Menu, Button } from 'antd'
 import { CaretDownFilled } from '@ant-design/icons'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { useThemeCtx } from '..'
 import { removeTrailingSlash } from '../utils'
 
 export function useLocaleSelector() {
   const themeCtxValue = useThemeCtx()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return { render }
 
@@ -54,7 +54,7 @@ export function useLocaleSelector() {
               newRoutePath = newLocale.routePrefix
             }
             if (staticData[newRoutePath]) {
-              history.push(newRoutePath)
+              navigate(newRoutePath)
             }
           }
         }}

@@ -2,7 +2,6 @@ import React, { useContext, useMemo, useState } from 'react'
 import GithubSlugger from 'github-slugger'
 import { MDXProvider } from '@mdx-js/react'
 import { Link } from 'react-router-dom'
-import type { LinkProps } from 'react-router-dom'
 
 import CodeBlock from './CodeBlock'
 import { themePropsCtx } from '../../ctx'
@@ -23,16 +22,16 @@ const components = {
   Demo,
   TsInfo,
   FileText,
-  a: (props: LinkProps) => {
+  a: (props: React.HTMLProps<HTMLAnchorElement>) => {
     const { href, ...rest } = props
     if (href?.startsWith('/')) {
-      return <Link {...rest} to={href} />
+      return <Link {...rest as any} to={href} />
     }
     return <a target="_blank" rel="noopener" {...props} />
   },
 }
 
-const MDX: React.FC = ({ children }) => {
+const MDX: React.FC<any> = ({ children }) => {
   const themeProps = useContext(themePropsCtx)
 
   const mdxComponents = useMemo(() => {

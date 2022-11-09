@@ -20,7 +20,6 @@ interface Props {
 const SSRContextProvider: React.FC<Props> = ({ initCache, children }) => {
   const [dataCache, setDataCache] = useState<PageLoaded>(initCache ?? {})
   return (
-    // @ts-expect-error
     <Router basename={basename}>
       <dataCacheCtx.Provider value={dataCache}>
         <setDataCacheCtx.Provider value={setDataCache}>

@@ -11,6 +11,7 @@ const AnchorLink: React.FC<NavLinkProps> & {
     <NavLink
       {...props}
       onClick={() => AnchorLink.scrollToAnchor(hash.substring(1))}
+      // TODO: fix
       isActive={(_, location) =>
         !!(hash && decodeURIComponent(location.hash) === hash)
       }

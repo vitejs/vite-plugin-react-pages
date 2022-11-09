@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react'
 import { Search, Select } from '@alifd/next'
 import s from './style.module.css'
 import type { PagesStaticData } from 'vite-plugin-react-pages'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   readonly pagesStaticData: PagesStaticData
@@ -19,17 +19,17 @@ const SiteSearch = ({ pagesStaticData }: Props) => {
   const [filteredData, setFilteredData] = useState<ReadonlyArray<FilteredData>>(
     []
   )
-  const history = useHistory()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setFilteredData(search(pagesStaticData, ''))
   }, [pagesStaticData])
 
   const onChange = useCallback(
-    (value, type, _) => {
+    (value: any, type: any) => {
       if (type === 'itemClick' || type === 'enter') {
         // user confirm search result
-        history.push(value)
+        navigate(value)
       } else if (type === 'change') {
         // user input search text
         setFilteredData(search(pagesStaticData, value))

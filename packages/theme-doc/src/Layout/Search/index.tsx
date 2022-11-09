@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { AutoComplete, Input } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { useThemeCtx } from '../..'
 
@@ -14,7 +14,7 @@ const Search: React.FC<Props> = (props) => {
   const { staticData, resolvedLocale, pageGroups } = useThemeCtx()
   const [popupOpen, setPopupOpen] = useState(false)
   const [keywords, setKeywords] = useState('')
-  const history = useHistory()
+  const navigate = useNavigate()
 
   // const themeCtxValue = useThemeCtx()
   // console.log('@@themeCtxValue', themeCtxValue)
@@ -62,7 +62,7 @@ const Search: React.FC<Props> = (props) => {
         value={keywords}
         onSearch={setKeywords}
         onSelect={(value: any, option: any) => {
-          history.push(value)
+          navigate(value)
         }}
       >
         <Input

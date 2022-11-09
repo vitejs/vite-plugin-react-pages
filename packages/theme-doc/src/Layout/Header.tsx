@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { Menu, Dropdown } from 'antd'
-import { Link, matchPath } from 'react-router-dom'
+import { Link, matchPath, PathPattern } from 'react-router-dom'
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -78,23 +78,37 @@ const AppHeader: React.FC<Props> = (props) => {
 
     function getActiveKeyIfMatch(item: MenuConfig) {
       if ('path' in item) {
-        const matcher = item.activeIfMatch ?? {
-          path: item.path,
-          exact: true,
-        }
-        // use loadState.routePath instead of location.pathname
-        // because location.pathname may contain trailing slash
-        const match = matchPath(routePath, matcher)
-        if (match) return item.path
+        const matcher =
+          item.activeIfMatch ??
+          ({
+            path: item.path,
+            end: true,
+          } as PathPattern<string>)
+        const matchResult = basicMatch(matcher)
+        if (matchResult) return item.path
       } else if ('subMenu' in item) {
         if (item.activeIfMatch) {
-          const match = matchPath(routePath, item.activeIfMatch)
-          if (match) return item.subMenu
+          const matchResult = basicMatch(item.activeIfMatch)
+          if (matchResult) return item.subMenu
         }
-        const match = item.children.some(getActiveKeyIfMatch)
-        if (match) return item.subMenu
+        const childrenMatchResult = item.children.some(getActiveKeyIfMatch)
+        if (childrenMatchResult) return item.subMenu
       }
       return false
+    }
+
+    function basicMatch(
+      matcher: string | string[] | PathPattern<string>
+    ): boolean {
+      if (!Array.isArray(matcher)) {
+        // use loadState.routePath instead of location.pathname
+        // because location.pathname may contain trailing slash
+        return !!matchPath(matcher, routePath)
+      } else {
+        return matcher.some((oneMatcher) => {
+          return !!matchPath(oneMatcher, routePath)
+        })
+      }
     }
   }, [routePath, resolvedTopNavs])
 

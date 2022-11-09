@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/server'
-import { StaticRouter } from 'react-router-dom'
+import { StaticRouter } from 'react-router-dom/server'
 
 import ssrData from '/@react-pages/ssrData'
 import App from '../App'
