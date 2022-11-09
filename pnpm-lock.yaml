@@ -422,7 +422,6 @@ importers:
       '@rollup/plugin-commonjs': ^23.0.2
       '@rollup/plugin-node-resolve': ^15.0.1
       '@rollup/plugin-typescript': ^9.0.2
-      '@types/enhanced-resolve': ^5.0.0
       '@types/fs-extra': ^9.0.8
       '@types/minimist': ^1.2.0
       '@types/react': ^18.0.25
@@ -476,7 +475,6 @@ importers:
       '@rollup/plugin-commonjs': 23.0.2_rollup@3.2.5
       '@rollup/plugin-node-resolve': 15.0.1_rollup@3.2.5
       '@rollup/plugin-typescript': 9.0.2_oa2candk7eitu7usnsurwiyuuu
-      '@types/enhanced-resolve': 5.0.0
       '@types/fs-extra': 9.0.13
       '@types/minimist': 1.2.2
       '@types/react': 18.0.25
@@ -559,7 +557,6 @@ importers:
       '@rollup/plugin-commonjs': ^23.0.2
       '@rollup/plugin-node-resolve': ^15.0.1
       '@rollup/plugin-typescript': ^9.0.2
-      '@types/github-slugger': ^2.0.0
       antd: ^4.24.1
       babel-plugin-import: ^1.13.3
       chokidar: ^3.5.1
@@ -567,7 +564,7 @@ importers:
       copy-to-clipboard: ^3.3.2
       fs-extra: ^10.1.0
       github-markdown-css: ^4.0.0
-      github-slugger: ^1.3.0
+      github-slugger: ^2.0.0
       globby: ^13.1.2
       less: ^4.1.3
       less-plugin-remove-antd-global-styles: ^1.0.2
@@ -589,7 +586,6 @@ importers:
       '@rollup/plugin-commonjs': 23.0.2_rollup@3.2.5
       '@rollup/plugin-node-resolve': 15.0.1_rollup@3.2.5
       '@rollup/plugin-typescript': 9.0.2_skqhbvp355vci76ty3pdffvjrq
-      '@types/github-slugger': 2.0.0
       antd: 4.24.1
       babel-plugin-import: 1.13.5
       chokidar: 3.5.3
@@ -597,7 +593,7 @@ importers:
       copy-to-clipboard: 3.3.2
       fs-extra: 10.1.0
       github-markdown-css: 4.0.0
-      github-slugger: 1.4.0
+      github-slugger: 2.0.0
       globby: 13.1.2
       less: 4.1.3
       less-plugin-remove-antd-global-styles: 1.0.2
@@ -3913,13 +3909,6 @@ packages:
       '@types/ms': 0.7.31
     dev: true
 
-  /@types/enhanced-resolve/5.0.0:
-    resolution: {integrity: sha512-jrgQjVFFHk7lK+Dyv8Lb5agHaCzL9OQdT9aciA61fxs6KI89u5yfEM7qubHq8DdN3UnTcho+S3Lzyr5mfdLUGg==}
-    deprecated: This is a stub types definition. enhanced-resolve provides its own type definitions, so you do not need this installed.
-    dependencies:
-      enhanced-resolve: 5.10.0
-    dev: true
-
   /@types/estree-jsx/1.0.0:
     resolution: {integrity: sha512-3qvGd0z8F2ENTGr/GG1yViqfiKmRfrXVx5sJyHGFu3z7m5g5utCQtGp/g29JnjflhtQJBv1WDQukHiT58xPcYQ==}
     dependencies:
@@ -3943,13 +3932,6 @@ packages:
   /@types/github-slugger/1.3.0:
     resolution: {integrity: sha512-J/rMZa7RqiH/rT29TEVZO4nBoDP9XJOjnbbIofg7GQKs4JIduEO3WLpte+6WeUz/TcrXKlY+bM7FYrp8yFB+3g==}
     dev: false
-
-  /@types/github-slugger/2.0.0:
-    resolution: {integrity: sha512-z/FaJhjFPk5mtrsZWeqyvaJdcZKw6CVCTuynEMrcXtgyozN3yMrtL13xWv8uQV2bWtwSXkdiNM37HEKkEj9x1Q==}
-    deprecated: This is a stub types definition. github-slugger provides its own type definitions, so you do not need this installed.
-    dependencies:
-      github-slugger: 1.5.0
-    dev: true
 
   /@types/hast/2.3.4:
     resolution: {integrity: sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g==}
@@ -5004,6 +4986,7 @@ packages:
     dependencies:
       graceful-fs: 4.2.10
       tapable: 2.2.1
+    dev: false
 
   /entities/2.2.0:
     resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==}
@@ -5660,12 +5643,13 @@ packages:
   /github-markdown-css/4.0.0:
     resolution: {integrity: sha512-mH0bcIKv4XAN0mQVokfTdKo2OD5K8WJE9+lbMdM32/q0Ie5tXgVN/2o+zvToRMxSTUuiTRcLg5hzkFfOyBYreg==}
 
-  /github-slugger/1.4.0:
-    resolution: {integrity: sha512-w0dzqw/nt51xMVmlaV1+JRzN+oCa1KfcgGEWhxUG16wbdA+Xnt/yoFO8Z8x/V82ZcZ0wy6ln9QDup5avbhiDhQ==}
-    dev: true
-
   /github-slugger/1.5.0:
     resolution: {integrity: sha512-wIh+gKBI9Nshz2o46B0B3f5k/W+WI9ZAv6y5Dn5WJ5SK1t0TnDimB4WE5rmTD05ZAIn8HALCZVmCsvj0w0v0lw==}
+    dev: false
+
+  /github-slugger/2.0.0:
+    resolution: {integrity: sha512-IaOQ9puYtjrkq7Y0Ygl9KDZnrf/aiUJYUpVf89y8kyaxbRG7Y1SrX/jaumrv81vc61+kiMempujsM3Yw7w5qcw==}
+    dev: true
 
   /glob-parent/5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -8927,6 +8911,7 @@ packages:
   /tapable/2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
     engines: {node: '>=6'}
+    dev: false
 
   /through2/4.0.2:
     resolution: {integrity: sha512-iOqSav00cVxEEICeD7TjLB1sueEL+81Wpzp2bY17uZjZN0pWZPuo4suZ/61VujxmqSGFfgOcNuTZ85QJwNZQpw==}
