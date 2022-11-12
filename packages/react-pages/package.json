@@ -2,8 +2,10 @@
   "name": "vite-plugin-react-pages",
   "version": "3.3.1",
   "type": "module",
+  "types": "./dist/node-types/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/node-types/index.d.ts",
       "import": "./dist/node-esm/index.mjs",
       "require": "./dist/node-cjs/index.cjs"
     },
@@ -33,9 +35,11 @@
   "scripts": {
     "build": "rimraf ./dist && concurrently \"npm:build-*\"",
     "build-node": "rollup -c",
+    "build-node-types": "tsc -p src/node --outDir dist/node-types --emitDeclarationOnly",
     "build-client": "tsc -p src/client",
     "dev": "rimraf ./dist && concurrently \"npm:dev-*\"",
     "dev-node": "rollup -c -w",
+    "dev-node-types": "tsc -w -p src/node --outDir dist/node-types --emitDeclarationOnly",
     "dev-client": "tsc -w -p src/client",
     "prepare": "npm run build"
   },
