@@ -31,7 +31,7 @@ const components = {
   },
 }
 
-const MDX: React.FC<any> = ({ children }) => {
+const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
   const themeProps = useContext(themePropsCtx)
 
   const mdxComponents = useMemo(() => {

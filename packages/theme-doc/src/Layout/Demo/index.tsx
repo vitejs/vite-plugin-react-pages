@@ -6,7 +6,7 @@ import CodeBlock from '../MDX/CodeBlock'
 import s from './index.module.css'
 
 interface Props {
-  default: React.ComponentType
+  default: React.ComponentType<React.PropsWithChildren<unknown>>
   demoMeta: {
     code: string
     title?: string

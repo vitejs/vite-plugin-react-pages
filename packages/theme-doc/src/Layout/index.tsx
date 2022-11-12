@@ -19,7 +19,7 @@ ConfigProvider.config({
 
 interface Props {}
 
-const AppLayout: React.FC<Props> = ({ children }) => {
+const AppLayout: React.FC<React.PropsWithChildren<Props>> = ({ children }) => {
   const { sideNavs } = useContext(themeConfigCtx)
   const themeCtxValue = useThemeCtx()
 

@@ -13,7 +13,7 @@ import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
 import { normalizeI18nConfig } from './utils'
 import { getPageGroups, matchPagePathLocalePrefix } from './analyzeStaticData'
 
-export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
+export function createTheme(themeConfig: ThemeConfig): React.FC<React.PropsWithChildren<ThemeProps>> {
   const ThemeComp = (props: ThemeProps) => {
     const { loadState, loadedData } = props
     const staticData = useStaticData()
@@ -85,8 +85,8 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
 
   return withThemeRootWrapper(ThemeComp)
 
-  function withThemeRootWrapper(Component: React.FC<ThemeProps>) {
-    const HOC: React.FC<ThemeProps> = (props) => {
+  function withThemeRootWrapper(Component: React.FC<React.PropsWithChildren<ThemeProps>>) {
+    const HOC: React.FC<React.PropsWithChildren<ThemeProps>> = (props) => {
       const { loadState, loadedData } = props
       const staticData = useStaticData()
       const themeCtxValue: ThemeContextValue = useMemo(() => {

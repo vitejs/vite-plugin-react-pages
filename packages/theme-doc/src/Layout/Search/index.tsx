@@ -10,7 +10,7 @@ import type { PageMeta } from '../../analyzeStaticData'
 
 interface Props {}
 
-const Search: React.FC<Props> = (props) => {
+const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { staticData, resolvedLocale, pageGroups } = useThemeCtx()
   const [popupOpen, setPopupOpen] = useState(false)
   const [keywords, setKeywords] = useState('')

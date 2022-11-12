@@ -19,7 +19,7 @@ const renderMenu = renderMenuHelper(true)
 
 interface Props {}
 
-const AppHeader: React.FC<Props> = (props) => {
+const AppHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const themeConfig = useContext(themeConfigCtx)
   const { TopBarExtra, topNavs } = themeConfig
   const layoutCtxVal = useContext(LayoutContext)

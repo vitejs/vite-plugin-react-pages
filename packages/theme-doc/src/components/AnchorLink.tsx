@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
 
-const AnchorLink: React.FC<NavLinkProps> & {
+const AnchorLink: React.FC<React.PropsWithChildren<NavLinkProps>> & {
   scrollToAnchor: (anchor: string) => void
 } = (props) => {
   const hash = (props.to as string).match(/(#.+)$/)?.[1] || ''
