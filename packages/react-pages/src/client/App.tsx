@@ -29,6 +29,6 @@ export default App
 
 function UseLocation({ children }: { children: (location: Location) => any }) {
   const location = useLocation()
-  console.log('###UseLocation', location)
+  // console.log('###UseLocation', location)
   return children(location)
 }

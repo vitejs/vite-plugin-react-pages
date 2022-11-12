@@ -1,11 +1,11 @@
 {
   "name": "vite-plugin-react-pages",
   "version": "3.3.1",
-  "type": "commonjs",
+  "type": "module",
   "exports": {
     ".": {
       "import": "./dist/node-esm/index.mjs",
-      "require": "./dist/node-cjs/index.js"
+      "require": "./dist/node-cjs/index.cjs"
     },
     "./*": "./*",
     "./client": "./client.ts",

@@ -25,7 +25,7 @@
     "clean": "rimraf ./dist ./lib ./dist-cjs",
     "build": "npm run clean && concurrently \"npm:build-*\"",
     "build-dts": "tsc",
-    "build-copy-files": "node ./scripts/copy.js",
+    "build-copy-files": "node ./scripts/copy.mjs",
     "build-rollup": "rollup -c && node scripts/add-css-import.js",
     "dev": "npm run clean && concurrently \"npm:dev-*\"",
     "dev-dts": "tsc --watch",

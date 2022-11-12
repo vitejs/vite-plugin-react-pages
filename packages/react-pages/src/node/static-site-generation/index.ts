@@ -5,7 +5,6 @@ import * as path from 'path'
 import fs from 'fs-extra'
 
 import { CLIENT_PATH } from '../constants'
-import { stringify } from 'gray-matter'
 
 export async function ssrBuild(
   viteConfig: ResolvedConfig,
@@ -32,14 +31,14 @@ export async function ssrBuild(
       cssCodeSplit: false,
       rollupOptions: {
         input: path.join(CLIENT_PATH, 'ssr', 'serverRender.js'),
-        preserveEntrySignatures: 'allow-extension',
+        // preserveEntrySignatures: 'allow-extension',
         output: {
-          format: 'cjs',
-          exports: 'named',
-          // ensure ssr bundle is loaded as cjs even when
-          // users have "type": "module" in their package.json
-          entryFileNames: '[name].cjs',
-          chunkFileNames: '[name]-[hash].cjs',
+          // format: 'cjs',
+          // exports: 'named',
+          // ensure ssr bundle is loaded as esm even when
+          // users have "type": "commonjs" in their package.json
+          entryFileNames: '[name].mjs',
+          chunkFileNames: '[name]-[hash].mjs',
         },
       },
       outDir: ssrOutDir,
@@ -47,22 +46,25 @@ export async function ssrBuild(
     },
     // @ts-ignore
     ssr: {
-      external: ['react', 'react-router-dom', 'react-dom', 'react-dom/server'],
+      // external: ['react', 'react-router-dom', 'react-dom', 'react-dom/server'],
       noExternal: [
-        // TODO: remove this
-        'vite-pages-theme-basic',
-        'vite-plugin-react-pages',
-        'vite-plugin-react-pages/client',
+        /prism-react-renderer/,
+        'prism-react-renderer/themes/github',
+        // 'vite-plugin-react-pages',
+        // 'vite-plugin-react-pages/client',
       ],
+      // noExternal: true,
     },
+    // legacy: {
+    //   buildSsrCjsExternalHeuristics: true,
+    // },
   })
 
   console.log('\n\nrendering html...')
 
-  const { renderToString, ssrData } = require(path.join(
-    ssrOutDir,
-    'serverRender.cjs'
-  ))
+  const { renderToString, ssrData } = await import(
+    path.join(ssrOutDir, 'serverRender.mjs')
+  )
 
   const pagePaths = Object.keys(ssrData)
 
@@ -166,7 +168,7 @@ export async function ssrBuild(
 
   await fs.copy(clientOutDir, outDir)
   await fs.remove(clientOutDir)
-  await fs.remove(ssrOutDir)
+  // await fs.remove(ssrOutDir)
   console.log('vite pages ssr build finished successfully.')
   return
 

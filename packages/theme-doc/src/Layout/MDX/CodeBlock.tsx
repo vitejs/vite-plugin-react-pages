@@ -7,6 +7,8 @@ import s from './CodeBlock.module.less'
 
 // copied from https://mdxjs.com/guides/syntax-highlighting
 
+console.log('!!!!Highlight')
+
 interface Props {
   readonly className?: `language-${Language}` | ''
   readonly children?: string
