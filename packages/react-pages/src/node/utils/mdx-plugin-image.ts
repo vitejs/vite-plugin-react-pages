@@ -1,5 +1,5 @@
 import type { Root } from 'mdast'
-import visit from 'unist-util-visit'
+import { visit } from 'unist-util-visit'
 
 // After we migrating to mdx@2.x, we should probably use:
 // https://github.com/remcohaszing/remark-mdx-images
@@ -13,6 +13,7 @@ export function ImageMdxPlugin() {
     const addImports: string[] = []
 
     visit(tree, 'image', (node, index, parent) => {
+      if (index === null) return
       const { url = '', alt, title } = node as any
       if (url.startsWith('./') || url.startsWith('../')) {
         const nextIndex = addImports.length

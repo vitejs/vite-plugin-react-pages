@@ -17,7 +17,7 @@ interface Props {
   readonly children: React.ReactNode
 }
 
-const SSRContextProvider: React.FC<Props> = ({ initCache, children }) => {
+const SSRContextProvider: React.FC<React.PropsWithChildren<Props>> = ({ initCache, children }) => {
   const [dataCache, setDataCache] = useState<PageLoaded>(initCache ?? {})
   return (
     <Router basename={basename}>

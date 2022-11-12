@@ -1,5 +1,5 @@
-import visit from 'unist-util-visit'
-import nodeToString from 'mdast-util-to-string'
+import { visit } from 'unist-util-visit'
+import { toString } from 'mdast-util-to-string'
 import type { Root } from 'mdast'
 
 export function AnalyzeHeadingsMdxPlugin() {
@@ -9,7 +9,7 @@ export function AnalyzeHeadingsMdxPlugin() {
     const headings = [] as any[]
 
     visit(tree, 'heading', (node, index, parent) => {
-      headings.push({ node, text: nodeToString(node) })
+      headings.push({ node, text: toString(node) })
     })
 
     console.log('headings', headings)
