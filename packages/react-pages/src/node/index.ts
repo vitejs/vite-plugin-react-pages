@@ -281,3 +281,8 @@ function moveScriptTagToBodyEnd(
     }
   }
 }
+
+export async function setupPlugins(vpConfig: PluginConfig) {
+  const mdx = await import('@mdx-js/rollup')
+  return [mdx.default(), pluginFactory(vpConfig)]
+}

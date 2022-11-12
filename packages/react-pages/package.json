@@ -1,13 +1,11 @@
 {
   "name": "vite-plugin-react-pages",
   "version": "3.3.1",
-  "main": "dist/node/index.js",
-  "module": "dist/node-esm/index.mjs",
   "type": "commonjs",
   "exports": {
     ".": {
       "import": "./dist/node-esm/index.mjs",
-      "require": "./dist/node/index.js"
+      "require": "./dist/node-cjs/index.js"
     },
     "./*": "./*",
     "./client": "./client.ts",
@@ -34,12 +32,10 @@
   "homepage": "https://github.com/vitejs/vite-plugin-react-pages",
   "scripts": {
     "build": "rimraf ./dist && concurrently \"npm:build-*\"",
-    "build-node": "tsc -p src/node",
-    "build-node-esm": "rollup -c",
+    "build-node": "rollup -c",
     "build-client": "tsc -p src/client",
     "dev": "rimraf ./dist && concurrently \"npm:dev-*\"",
-    "dev-node": "tsc -w -p src/node",
-    "dev-node-esm": "rollup -c -w",
+    "dev-node": "rollup -c -w",
     "dev-client": "tsc -w -p src/client",
     "prepare": "npm run build"
   },
@@ -65,7 +61,8 @@
     "vite-plugin-mdx": "^3.5.11"
   },
   "dependencies": {
-    "chalk": "^5.1.2",
+    "@mdx-js/rollup": "^2.1.5",
+    "chalk": "^4.1.2",
     "chokidar": "^3.5.1",
     "dequal": "^2.0.3",
     "enhanced-resolve": "^5.10.0",
@@ -79,6 +76,7 @@
     "minimist": "^1.2.7",
     "pkg-up": "^3.1.0",
     "remark-frontmatter": "^4.0.1",
+    "remark-gfm": "^3.0.1",
     "slash": "^3.0.0",
     "tiny-invariant": "^1.3.1",
     "typescript": "^4.8.4",

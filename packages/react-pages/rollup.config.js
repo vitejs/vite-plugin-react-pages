@@ -17,48 +17,68 @@ It is more flexable to use a bundler to build code for nodejs platform because:
 - we can bundle include some deps (currently we external all deps)
 */
 
-export default {
-  input: 'src/node/index.ts',
-  output: [
-    {
-      // dir: 'dist/node-esm',
-      file: 'dist/node-esm/index.mjs',
-      format: 'esm',
-      sourcemap: true,
-    },
-    // keep using tsc to build dist/node (cjs version) instead of rollup for now...
-    // I prefer using tsc if possiable
-    // {
-    //   dir: 'dist/node',
-    //   format: 'cjs',
-    //   sourcemap: true,
-    // },
-  ],
-  external: [],
-  plugins: [
+export default [
+  {
+    input: 'src/node/index.ts',
+    output: [
+      {
+        file: 'dist/node-esm/index.mjs',
+        format: 'esm',
+        sourcemap: true,
+      },
+    ],
+    external: [],
+    plugins: [...plugins()],
+  },
+  {
+    input: 'src/node/index.ts',
+    output: [
+      {
+        dir: 'dist/node-cjs',
+        format: 'cjs',
+        sourcemap: true,
+        exports: 'named',
+      },
+    ],
+    external: [],
+    plugins: [
+      ...plugins({
+        // bundle esm-only packages if they can not be dynamically imported
+        resolveOnly: (module) =>
+          module.startsWith('unist-util-') || module.startsWith('mdast-util-'),
+      }),
+      {
+        // keep dynamic import to import esm-only packages
+        // https://rollupjs.org/guide/en/#renderdynamicimport
+        name: 'vite-pages-esm-dynamic-import',
+        resolveDynamicImport(specifier) {
+          return false
+        },
+        renderDynamicImport({ targetModuleId }) {
+          return {
+            left: 'import(',
+            right: ')',
+          }
+        },
+      },
+    ],
+  },
+]
+
+function plugins({ resolveOnly } = {}) {
+  return [
     resolve({
       // prevent bundling unexpected deps
-      resolveOnly: ['none!'],
+      resolveOnly: resolveOnly || ['none!'],
       extensions,
     }),
     commonjs(),
     babel({
       babelHelpers: 'bundled',
       extensions,
-      presets: [
-        // [
-        //   '@babel/preset-env',
-        //   {
-        //     targets: {
-        //       chrome: '90',
-        //       node: '12',
-        //     },
-        //   },
-        // ],
-        '@babel/preset-typescript',
-      ],
+      presets: ['@babel/preset-typescript'],
       plugins: [],
       configFile: false,
     }),
-  ],
+  ]
 }

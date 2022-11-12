@@ -41,8 +41,6 @@
   },
   "pnpm": {
     "overrides": {
-      "react": "^17.0.1",
-      "react-dom": "^17.0.1",
       "vite-plugin-react-pages": "workspace:*",
       "vite-pages-theme-doc": "workspace:*",
       "vite-pages-theme-basic": "workspace:*"
