@@ -11,12 +11,7 @@ import { FileText } from '../FileText'
 import AnchorLink from '../../components/AnchorLink'
 
 const components = {
-  pre: (
-    props: React.DetailedHTMLProps<
-      React.HTMLAttributes<HTMLDivElement>,
-      HTMLDivElement
-    >
-  ) => <div {...props} />,
+  pre: (props: any) => <div {...props} />,
   code: CodeBlock,
   CodeBlock,
   Demo,
@@ -25,7 +20,7 @@ const components = {
   a: (props: React.HTMLProps<HTMLAnchorElement>) => {
     const { href, ...rest } = props
     if (href?.startsWith('/')) {
-      return <Link {...rest as any} to={href} />
+      return <Link {...(rest as any)} to={href} />
     }
     return <a target="_blank" rel="noopener" {...props} />
   },

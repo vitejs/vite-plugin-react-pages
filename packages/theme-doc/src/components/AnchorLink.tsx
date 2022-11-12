@@ -12,9 +12,9 @@ const AnchorLink: React.FC<React.PropsWithChildren<NavLinkProps>> & {
       {...props}
       onClick={() => AnchorLink.scrollToAnchor(hash.substring(1))}
       // TODO: fix
-      isActive={(_, location) =>
-        !!(hash && decodeURIComponent(location.hash) === hash)
-      }
+      // isActive={(_, location) =>
+      //   !!(hash && decodeURIComponent(location.hash) === hash)
+      // }
     />
   )
 }

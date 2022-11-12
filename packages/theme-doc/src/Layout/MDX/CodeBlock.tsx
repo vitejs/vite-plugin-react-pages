@@ -7,11 +7,8 @@ import s from './CodeBlock.module.less'
 
 // copied from https://mdxjs.com/guides/syntax-highlighting
 
-console.log('!!!!Highlight')
-
 interface Props {
-  readonly className?: `language-${Language}` | ''
-  readonly children?: string
+  readonly className?: `language-${Language}` | '' | string
   readonly style?: React.CSSProperties
 }
 
@@ -19,11 +16,14 @@ const CodeBlock = ({
   children = '',
   className = '',
   style: propStyle,
-}: Props) => {
+}: React.PropsWithChildren<Props>) => {
   // with ```language\n``` md syntax, mdx will pass language in className
   const language = className?.replace(/language-/, '') as Language
 
   const { hasCopied, copyToClipBoard } = useCopyToClipBoard()
+
+  if (typeof children !== 'string')
+    throw new Error('unexpected children of CodeBlock: should be string')
 
   return (
     <Highlight
