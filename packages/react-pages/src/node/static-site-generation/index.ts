@@ -44,20 +44,6 @@ export async function ssrBuild(
       outDir: ssrOutDir,
       minify: false,
     },
-    // @ts-ignore
-    ssr: {
-      // external: ['react', 'react-router-dom', 'react-dom', 'react-dom/server'],
-      noExternal: [
-        /prism-react-renderer/,
-        'prism-react-renderer/themes/github',
-        // 'vite-plugin-react-pages',
-        // 'vite-plugin-react-pages/client',
-      ],
-      // noExternal: true,
-    },
-    // legacy: {
-    //   buildSsrCjsExternalHeuristics: true,
-    // },
   })
 
   console.log('\n\nrendering html...')
@@ -168,7 +154,7 @@ export async function ssrBuild(
 
   await fs.copy(clientOutDir, outDir)
   await fs.remove(clientOutDir)
-  // await fs.remove(ssrOutDir)
+  await fs.remove(ssrOutDir)
   console.log('vite pages ssr build finished successfully.')
   return
 
