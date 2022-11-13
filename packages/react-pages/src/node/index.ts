@@ -1,9 +1,8 @@
 import * as path from 'path'
-import fs from 'fs-extra'
-import pkgUp from 'pkg-up'
-import chalk from 'chalk'
+import type { PluggableList } from 'unified'
 import type { Plugin, IndexHtmlTransformContext } from 'vite'
-import type { MdxPlugin } from 'vite-plugin-mdx/dist/types'
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkGfm from 'remark-gfm'
 import {
   DefaultPageStrategy,
   defaultFileHandler,
@@ -89,21 +88,6 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
         pageStrategy = opts.pageStrategy
       } else {
         pageStrategy = new DefaultPageStrategy()
-      }
-
-      const mdxPlugin = plugins.find(
-        (plugin) => plugin.name === 'vite-plugin-mdx'
-      ) as MdxPlugin | undefined
-
-      if (mdxPlugin?.mdxOptions) {
-        // Inject demo transformer
-        mdxPlugin.mdxOptions.remarkPlugins.push(
-          ...(await getRemarkPlugins(root))
-        )
-      } else {
-        logger.warn(
-          '[vite-plugin-react-pages] Please install vite-plugin-mdx@3.1 or higher'
-        )
       }
     },
     configureServer({ watcher, moduleGraph }) {
@@ -217,49 +201,6 @@ export { extractStaticData, File } from './utils/virtual-module'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
 
-async function getRemarkPlugins(root: string) {
-  const result: any[] = [
-    DemoMdxPlugin,
-    TsInfoMdxPlugin,
-    ImageMdxPlugin,
-    FileTextMdxPlugin,
-    AnalyzeHeadingsMdxPlugin,
-  ]
-
-  // pass vite project's root otherwise it will
-  // start from process.cwd() by default
-  const pkgJsonPath = pkgUp.sync({
-    cwd: root,
-  })
-
-  if (pkgJsonPath === null) {
-    console.error(
-      chalk.red(
-        `[vite-plugin-react-pages] Could not find 'package.json', does it exist?\n'`
-      )
-    )
-    process.exit(1)
-  }
-
-  const pkgJson = await fs.readJSON(pkgJsonPath)
-
-  // Inject frontmatter parser if missing
-  const { devDependencies = {}, dependencies = {} } = pkgJson
-  // By default we add remark-frontmatter automatically.
-  // But if user install their own remark-frontmatter,
-  // they are responsible to add the plugin manually
-  // (they may provide some config to it)
-  if (
-    !devDependencies['remark-frontmatter'] &&
-    !dependencies['remark-frontmatter']
-  ) {
-    // result.push(require('remark-frontmatter'))
-    const remarkFrontmatter = await import('remark-frontmatter')
-    result.push(remarkFrontmatter.default || remarkFrontmatter)
-  }
-  return result
-}
-
 /**
  * vite put script before style, which cause style problem for antd
  * so we move the script tag to the end of the body
@@ -284,5 +225,26 @@ function moveScriptTagToBodyEnd(
 
 export async function setupPlugins(vpConfig: PluginConfig) {
   const mdx = await import('@mdx-js/rollup')
-  return [mdx.default(), pluginFactory(vpConfig)]
+  return [
+    mdx.default({
+      remarkPlugins: getRemarkPlugins(),
+      // treat .md as mdx
+      mdExtensions: [],
+      mdxExtensions: ['.md', '.mdx'],
+      providerImportSource: '@mdx-js/react',
+    }),
+    pluginFactory(vpConfig),
+  ]
+}
+
+function getRemarkPlugins(): PluggableList {
+  return [
+    remarkGfm,
+    remarkFrontmatter,
+    DemoMdxPlugin,
+    // TsInfoMdxPlugin,
+    // ImageMdxPlugin,
+    // FileTextMdxPlugin,
+    AnalyzeHeadingsMdxPlugin,
+  ]
 }
