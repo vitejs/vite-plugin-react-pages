@@ -119,7 +119,11 @@ export type MenuConfig =
        *
        * TODO: check activeIfMatch with react-router v6
        */
-      readonly activeIfMatch?: string | string[] | PathPattern<string>
+      readonly activeIfMatch?:
+        | string
+        | string[]
+        | PathPattern<string>
+        | PathPattern<string>[]
     }
   | {
       /**
@@ -128,7 +132,11 @@ export type MenuConfig =
       readonly subMenu: string
       readonly children: ReadonlyArray<MenuConfig>
       readonly icon?: React.ReactNode
-      readonly activeIfMatch?: string | string[] | PathPattern<string>
+      readonly activeIfMatch?:
+        | string
+        | string[]
+        | PathPattern<string>
+        | PathPattern<string>[]
     }
   | {
       /**

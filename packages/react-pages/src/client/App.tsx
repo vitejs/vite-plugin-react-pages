@@ -1,14 +1,18 @@
 import React from 'react'
-import { useRoutes, useLocation, type Location } from 'react-router-dom'
+import {
+  useRoutes,
+  useLocation,
+  type Location,
+  type RouteObject,
+} from 'react-router-dom'
 import { usePagePaths } from './state'
 import PageLoader from './PageLoader'
 
 const App = () => {
   const pageRoutes = usePagePaths()
     .filter((path) => path !== '/404')
-
     .map((path) => {
-      return { path: '/', element: <PageLoader routePath={path} /> }
+      return { path, element: <PageLoader routePath={path} /> } as RouteObject
     })
 
   pageRoutes.push({

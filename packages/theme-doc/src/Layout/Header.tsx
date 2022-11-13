@@ -82,32 +82,45 @@ const AppHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
           item.activeIfMatch ??
           ({
             path: item.path,
+            // if activeIfMatch is not given,
+            // do exact match by default
             end: true,
           } as PathPattern<string>)
-        const matchResult = basicMatch(matcher)
+        const matchResult = matchUtil(matcher)
         if (matchResult) return item.path
       } else if ('subMenu' in item) {
         if (item.activeIfMatch) {
-          const matchResult = basicMatch(item.activeIfMatch)
+          const matchResult = matchUtil(item.activeIfMatch)
           if (matchResult) return item.subMenu
         }
         const childrenMatchResult = item.children.some(getActiveKeyIfMatch)
         if (childrenMatchResult) return item.subMenu
       }
       return false
-    }
 
-    function basicMatch(
-      matcher: string | string[] | PathPattern<string>
-    ): boolean {
-      if (!Array.isArray(matcher)) {
-        // use loadState.routePath instead of location.pathname
-        // because location.pathname may contain trailing slash
-        return !!matchPath(matcher, routePath)
-      } else {
-        return matcher.some((oneMatcher) => {
-          return !!matchPath(oneMatcher, routePath)
-        })
+      function matchUtil(
+        matcher: string | string[] | PathPattern<string> | PathPattern<string>[]
+      ): boolean {
+        if (!Array.isArray(matcher)) {
+          let actualMatcher: PathPattern<string>
+          if (typeof matcher === 'string') {
+            actualMatcher = {
+              path: matcher,
+              // if users pass activeIfMatch as string
+              // do prefix match (instead of exact match)
+              end: false,
+            }
+          } else {
+            actualMatcher = matcher
+          }
+          // use loadState.routePath instead of location.pathname
+          // because location.pathname may contain trailing slash
+          return !!matchPath(actualMatcher, routePath)
+        } else {
+          return matcher.some((oneMatcher) => {
+            return !!matchPath(oneMatcher, routePath)
+          })
+        }
       }
     }
   }, [routePath, resolvedTopNavs])
