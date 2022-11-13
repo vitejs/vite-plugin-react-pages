@@ -3,6 +3,8 @@ import type { PluggableList } from 'unified'
 import type { Plugin, IndexHtmlTransformContext } from 'vite'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
+import remarkMdxImages from 'remark-mdx-images'
+
 import {
   DefaultPageStrategy,
   defaultFileHandler,
@@ -24,7 +26,6 @@ import {
 } from './virtual-module-plugins/ts-info-module'
 import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
-import { ImageMdxPlugin } from './utils/mdx-plugin-image'
 import { FileTextMdxPlugin } from './utils/mdx-plugin-file-text'
 import { AnalyzeHeadingsMdxPlugin } from './utils/mdx-plugin-analyze-headings'
 
@@ -241,10 +242,11 @@ function getRemarkPlugins(): PluggableList {
   return [
     remarkGfm,
     remarkFrontmatter,
+    remarkMdxImages,
+    // plugins created for vite-pages:
     DemoMdxPlugin,
     TsInfoMdxPlugin,
     FileTextMdxPlugin,
-    // ImageMdxPlugin,
     AnalyzeHeadingsMdxPlugin,
   ]
 }
