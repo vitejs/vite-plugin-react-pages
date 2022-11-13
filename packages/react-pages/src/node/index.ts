@@ -247,6 +247,7 @@ function getRemarkPlugins(): PluggableList {
     DemoMdxPlugin,
     TsInfoMdxPlugin,
     FileTextMdxPlugin,
-    AnalyzeHeadingsMdxPlugin,
+    // todo: analyze toc
+    // AnalyzeHeadingsMdxPlugin,
   ]
 }
