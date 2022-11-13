@@ -1,4 +1,4 @@
-import { createTheme } from 'vite-pages-theme-basic'
+import { createTheme } from 'vite-pages-theme-doc'
 
 export default createTheme({
   topNavs: [
