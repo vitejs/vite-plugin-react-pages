@@ -89,7 +89,6 @@ importers:
       serve: ^14.0.1
       vite: ^3.2.3
       vite-pages-theme-doc: workspace:*
-      vite-plugin-mdx: ^3.5.11
       vite-plugin-react-pages: workspace:*
     dependencies:
       react: 18.2.0
@@ -105,7 +104,6 @@ importers:
       serve: 14.0.1
       vite: 3.2.3_@types+node@18.11.9
       vite-pages-theme-doc: link:../../theme-doc
-      vite-plugin-mdx: 3.5.11_x3fpnrj64c423gopeq6gguduqy
       vite-plugin-react-pages: link:../../react-pages
 
   packages/create-project/template-lib:
@@ -123,7 +121,6 @@ importers:
       serve: ^14.0.1
       vite: ^3.2.3
       vite-pages-theme-doc: workspace:*
-      vite-plugin-mdx: ^3.5.11
       vite-plugin-react-pages: workspace:*
     dependencies:
       react: 18.2.0
@@ -140,7 +137,6 @@ importers:
       serve: 14.0.1
       vite: 3.2.3_@types+node@18.11.9
       vite-pages-theme-doc: link:../../theme-doc
-      vite-plugin-mdx: 3.5.11_x3fpnrj64c423gopeq6gguduqy
       vite-plugin-react-pages: link:../../react-pages
 
   packages/create-project/template-lib-monorepo:
@@ -187,7 +183,6 @@ importers:
       serve: ^14.0.1
       vite: ^3.2.3
       vite-pages-theme-doc: workspace:*
-      vite-plugin-mdx: ^3.5.11
       vite-plugin-react-pages: workspace:*
     dependencies:
       react: 18.2.0
@@ -206,7 +201,6 @@ importers:
       serve: 14.0.1
       vite: 3.2.3_@types+node@18.11.9
       vite-pages-theme-doc: link:../../../../theme-doc
-      vite-plugin-mdx: 3.5.11_x3fpnrj64c423gopeq6gguduqy
       vite-plugin-react-pages: link:../../../../react-pages
 
   packages/playground:
@@ -9134,7 +9128,7 @@ packages:
       esbuild: 0.13.8
       resolve: 1.22.1
       unified: 9.2.2
-      vite: 3.2.3_@types+node@18.11.9
+      vite: 3.2.3
     dev: true
 
   /vite/3.2.3:

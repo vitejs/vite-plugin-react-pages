@@ -2,6 +2,7 @@
   "name": "app-demo",
   "version": "1.0.2",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite serve",
     "build": "rimraf dist && vite build --outDir dist && serve -s dist",
@@ -24,8 +25,7 @@
     "rimraf": "^3.0.2",
     "serve": "^14.0.1",
     "vite": "^3.2.3",
-    "vite-pages-theme-doc": "^3.1.4",
-    "vite-plugin-mdx": "^3.5.11",
-    "vite-plugin-react-pages": "^3.1.8"
+    "vite-pages-theme-doc": "^4.0.0-alpha.0",
+    "vite-plugin-react-pages": "^4.0.0-alpha.0"
   }
 }
