@@ -3,14 +3,13 @@ lockfileVersion: 5.4
 overrides:
   vite-plugin-react-pages: workspace:*
   vite-pages-theme-doc: workspace:*
-  vite-pages-theme-basic: workspace:*
 
 importers:
 
   .:
     specifiers:
       '@playwright/test': ~1.23.4
-      '@pnpm/link-bins': ^8.0.1
+      '@pnpm/link-bins': ^8.0.2
       '@pnpm/logger': ^5.0.0
       '@types/node': ^18.11.9
       '@types/wait-on': ^5.3.1
@@ -25,7 +24,7 @@ importers:
       wait-on: ^6.0.1
     devDependencies:
       '@playwright/test': 1.23.4
-      '@pnpm/link-bins': 8.0.1_@pnpm+logger@5.0.0
+      '@pnpm/link-bins': 8.0.2_@pnpm+logger@5.0.0
       '@pnpm/logger': 5.0.0
       '@types/node': 18.11.9
       '@types/wait-on': 5.3.1
@@ -3435,14 +3434,14 @@ packages:
     engines: {node: '>=14.19'}
     dev: true
 
-  /@pnpm/core-loggers/8.0.1_@pnpm+logger@5.0.0:
-    resolution: {integrity: sha512-ITm19e8BaRgvvv9ABaZmjrjAGFlKhLF58A/O3xI37+WMYLCHrKlkmDYjD+LgltsjwnlcRd8gaI/zwKXmV8GXMg==}
+  /@pnpm/core-loggers/8.0.2_@pnpm+logger@5.0.0:
+    resolution: {integrity: sha512-Pn7hQCGBAqT9q0ITaoW1fUXby9pw5nLsP9GRGXIJ2e+6RkHWVL7U4RyEL2isPlH32bEqqVk2KFSCxtVFSZtCjA==}
     engines: {node: '>=14.6'}
     peerDependencies:
       '@pnpm/logger': ^5.0.0
     dependencies:
       '@pnpm/logger': 5.0.0
-      '@pnpm/types': 8.8.0
+      '@pnpm/types': 8.9.0
     dev: true
 
   /@pnpm/error/4.0.0:
@@ -3459,20 +3458,20 @@ packages:
       graceful-fs: 4.2.10
     dev: true
 
-  /@pnpm/link-bins/8.0.1_@pnpm+logger@5.0.0:
-    resolution: {integrity: sha512-YsgdNexYkvpsFtirWmt1lh+WUERUfcNBfH4LFa5bCpr15VX1+NymEAYhrJxQ5QzrFUIgUJpv3/ltv5vDzMcuwg==}
+  /@pnpm/link-bins/8.0.2_@pnpm+logger@5.0.0:
+    resolution: {integrity: sha512-9qbRokQAkCIALOUq/d7chyURylO+/VxKeWhMqCDIzt1kk+qfLwaPHz94DRnWHpYWHLWhrn10mIvNj+DEot+brQ==}
     engines: {node: '>=14.6'}
     peerDependencies:
       '@pnpm/logger': ^5.0.0
     dependencies:
       '@pnpm/error': 4.0.0
       '@pnpm/logger': 5.0.0
-      '@pnpm/manifest-utils': 4.1.0_@pnpm+logger@5.0.0
-      '@pnpm/package-bins': 7.0.1
+      '@pnpm/manifest-utils': 4.1.1_@pnpm+logger@5.0.0
+      '@pnpm/package-bins': 7.0.2
       '@pnpm/read-modules-dir': 5.0.0
-      '@pnpm/read-package-json': 7.0.1
-      '@pnpm/read-project-manifest': 4.0.1
-      '@pnpm/types': 8.8.0
+      '@pnpm/read-package-json': 7.0.2
+      '@pnpm/read-project-manifest': 4.0.2
+      '@pnpm/types': 8.9.0
       '@zkochan/cmd-shim': 5.3.1
       '@zkochan/rimraf': 2.1.2
       bin-links: 3.0.3
@@ -3492,22 +3491,22 @@ packages:
       ndjson: 2.0.0
     dev: true
 
-  /@pnpm/manifest-utils/4.1.0_@pnpm+logger@5.0.0:
-    resolution: {integrity: sha512-arnB+LnWGhAcZaTMJvecdPGqMIJoneono+TWgDR6DUFW/8C1+T6WbkRX7Fl6QXqWB0Az4ncPSay6G18gBuHa+Q==}
+  /@pnpm/manifest-utils/4.1.1_@pnpm+logger@5.0.0:
+    resolution: {integrity: sha512-HZ08Ei8hHRFpPkfC4KoMa882n75KS38pvF3XcpMN7rtNK7E82Hh9l4LVOR1NLdkbpEqFTrR80piWAYsjbNsbTQ==}
     engines: {node: '>=14.6'}
     dependencies:
-      '@pnpm/core-loggers': 8.0.1_@pnpm+logger@5.0.0
+      '@pnpm/core-loggers': 8.0.2_@pnpm+logger@5.0.0
       '@pnpm/error': 4.0.0
-      '@pnpm/types': 8.8.0
+      '@pnpm/types': 8.9.0
     transitivePeerDependencies:
       - '@pnpm/logger'
     dev: true
 
-  /@pnpm/package-bins/7.0.1:
-    resolution: {integrity: sha512-ybfygSGieVqISGLcotaOlUZaOS3755gML8pRuWBrNVeeArVPJTjmxH1+tVo0ZvbC4+lVsCaWoQL3tQD5MCE4CQ==}
+  /@pnpm/package-bins/7.0.2:
+    resolution: {integrity: sha512-q9ji5wESiVq6y25tmeIyUJxJOfI0hItkU4a+vCQdOGbYzc4uz3p2uipwVJFgEarbGwvkERg9pnMlAPFGcSgDZA==}
     engines: {node: '>=14.6'}
     dependencies:
-      '@pnpm/types': 8.8.0
+      '@pnpm/types': 8.9.0
       fast-glob: 3.2.12
       is-subdir: 1.2.0
     dev: true
@@ -3523,24 +3522,24 @@ packages:
       graceful-fs: 4.2.10
     dev: true
 
-  /@pnpm/read-package-json/7.0.1:
-    resolution: {integrity: sha512-IqZlglqN8syzvj0pzmCVhq2Be8VoxnEIRUhnMXEU8yhZyJ0p7bcwtkp+gFGRAT1Ts6Cr/ODaXDDneWxoqYMrjg==}
+  /@pnpm/read-package-json/7.0.2:
+    resolution: {integrity: sha512-ZmCKb9HVzGDn+gRDLKQ5jDJxOujsLhuxJRngafnBwS8azAVuthA2lnG/ylwK5aMIXTqFfupSzmJ0lNHA+u6fxw==}
     engines: {node: '>=14.6'}
     dependencies:
       '@pnpm/error': 4.0.0
-      '@pnpm/types': 8.8.0
+      '@pnpm/types': 8.9.0
       load-json-file: 6.2.0
       normalize-package-data: 4.0.1
     dev: true
 
-  /@pnpm/read-project-manifest/4.0.1:
-    resolution: {integrity: sha512-+mf0hDMkqRi/nFikEHqNpm+MEYhB96e5QPucFTSMe049JEJ0Ux7vvWaEo2/cCLbedjrmA0tf3dagXNV228op+A==}
+  /@pnpm/read-project-manifest/4.0.2:
+    resolution: {integrity: sha512-Yj8dufvLOr4J91tPNWqrFODyQiKDlHoKdOMQfVLq8bYKlZHo2+6Gnm7bbqACz91CGGYY5Xsu4dL/CPVmBeW/iQ==}
     engines: {node: '>=14.6'}
     dependencies:
       '@pnpm/error': 4.0.0
       '@pnpm/graceful-fs': 2.0.0
-      '@pnpm/types': 8.8.0
-      '@pnpm/write-project-manifest': 4.0.1
+      '@pnpm/types': 8.9.0
+      '@pnpm/write-project-manifest': 4.0.2
       detect-indent: 6.1.0
       fast-deep-equal: 3.1.3
       is-windows: 1.0.2
@@ -3551,16 +3550,16 @@ packages:
       strip-bom: 4.0.0
     dev: true
 
-  /@pnpm/types/8.8.0:
-    resolution: {integrity: sha512-IKUpbWRHDB9C4Yy4UeBpeYhU7eIsLj50jF5HNRUkbJnM0CWHPLxX9TGCI+ov8pgGeTP1t1g0GPDHD6en9D8LxQ==}
+  /@pnpm/types/8.9.0:
+    resolution: {integrity: sha512-3MYHYm8epnciApn6w5Fzx6sepawmsNU7l6lvIq+ER22/DPSrr83YMhU/EQWnf4lORn2YyiXFj0FJSyJzEtIGmw==}
     engines: {node: '>=14.6'}
     dev: true
 
-  /@pnpm/write-project-manifest/4.0.1:
-    resolution: {integrity: sha512-QG6t7EPhZB3pik7BA/Ngv6g95Ys5YNfD5nTpMXb7vSHU7PiBm9vL/vEctdOZKBGh6HBjKcGgdqV5RdGS/CAF6g==}
+  /@pnpm/write-project-manifest/4.0.2:
+    resolution: {integrity: sha512-6h/Vw9/MmsXahfbBWMTtmtvhfwgp6nEr2XaQaDBXg1JnfJ0CeHPleh7xBQDi8E0BDY1evld+5X8d8pIcdXCLDg==}
     engines: {node: '>=14.6'}
     dependencies:
-      '@pnpm/types': 8.8.0
+      '@pnpm/types': 8.9.0
       json5: 2.2.1
       write-file-atomic: 4.0.2
       write-yaml-file: 4.2.0

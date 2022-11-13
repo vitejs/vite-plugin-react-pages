@@ -19,13 +19,12 @@
     "test-ssr": "cross-env VITE_PAGES_MODE=ssr pnpm test",
     "test-debug": "pnpm test -- --debug",
     "build:docs": "pnpm --filter doc-site run ssr-for-deploy",
-    "postinstall": "node ./scripts/linkBins.js",
     "install-test-deps": "playwright install --with-deps chromium",
     "prepare": "husky install"
   },
   "devDependencies": {
     "@playwright/test": "~1.23.4",
-    "@pnpm/link-bins": "^8.0.1",
+    "@pnpm/link-bins": "^8.0.2",
     "@pnpm/logger": "^5.0.0",
     "@types/node": "^18.11.9",
     "@types/wait-on": "^5.3.1",
