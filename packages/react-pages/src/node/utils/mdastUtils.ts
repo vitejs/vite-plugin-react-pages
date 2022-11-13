@@ -44,6 +44,48 @@ export function createNameSpaceImportNode({
 
 /**
  * create mdast node for expression:
+ * import name from 'from'
+ */
+export function createDefaultImportNode({
+  name,
+  from,
+}: {
+  name: string
+  from: string
+}): MdxjsEsm {
+  return {
+    type: 'mdxjsEsm',
+    value: '',
+    data: {
+      estree: {
+        type: 'Program',
+        sourceType: 'module',
+        body: [
+          {
+            type: 'ImportDeclaration',
+            specifiers: [
+              {
+                type: 'ImportDefaultSpecifier',
+                local: {
+                  type: 'Identifier',
+                  name,
+                },
+              },
+            ],
+            source: {
+              type: 'Literal',
+              value: from,
+              raw: JSON.stringify(from),
+            },
+          },
+        ],
+      },
+    },
+  }
+}
+
+/**
+ * create mdast node for expression:
  * <Component {...props} />
  */
 export function createJSXWithSpreadPropsNode({

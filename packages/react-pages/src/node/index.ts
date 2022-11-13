@@ -243,8 +243,8 @@ function getRemarkPlugins(): PluggableList {
     remarkFrontmatter,
     DemoMdxPlugin,
     TsInfoMdxPlugin,
+    FileTextMdxPlugin,
     // ImageMdxPlugin,
-    // FileTextMdxPlugin,
     AnalyzeHeadingsMdxPlugin,
   ]
 }
