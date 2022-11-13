@@ -68,7 +68,13 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
     enforce: 'pre',
     config: () => ({
       optimizeDeps: {
-        include: ['react', 'react-dom', 'react-router-dom', '@mdx-js/react'],
+        include: [
+          'react',
+          'react-dom',
+          'react-dom/client',
+          'react-router-dom',
+          '@mdx-js/react',
+        ],
         exclude: ['vite-plugin-react-pages'],
       },
       define: {
