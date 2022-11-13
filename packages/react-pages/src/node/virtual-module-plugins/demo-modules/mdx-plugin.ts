@@ -1,6 +1,10 @@
 /// <reference types="remark-mdx" />
 import type { Root } from 'mdast'
 import type { MdxjsEsm, MdxJsxFlowElement } from 'mdast-util-mdx'
+import {
+  createJSXWithSpreadPropsNode,
+  createNameSpaceImportNode,
+} from '../../utils/mdastUtils'
 
 export function DemoMdxPlugin() {
   return transformer
@@ -11,6 +15,7 @@ export function DemoMdxPlugin() {
     const addImports: MdxjsEsm[] = []
 
     children.forEach((child, index) => {
+      // find jsx node like: <Demo src="srcValue" />
       if (child.type === 'mdxJsxFlowElement' && child.name === 'Demo') {
         const srcAttr = child.attributes.find(
           (attr) =>
@@ -22,103 +27,25 @@ export function DemoMdxPlugin() {
         if (srcValue) {
           const nextIndex = addImports.length
           const varName = `_demo${nextIndex}`
+          // add import:
+          // import * as varName from "${srcValue}?tsInfo=${nameValue}"
           addImports.push(
             createNameSpaceImportNode({
               name: varName,
               from: `${srcValue}?demo`,
             })
           )
-          children.splice(index, 1, createDemoNode(varName))
+          // replace this node with:
+          // <Demo {...varName} />
+          children.splice(
+            index,
+            1,
+            createJSXWithSpreadPropsNode({ Component: 'Demo', props: varName })
+          )
         }
       }
     })
 
     children.unshift(...addImports)
-  }
-}
-
-/**
- * create mdast node for expression:
- * <Demo {...propsIdentifierName} />
- */
-function createDemoNode(propsIdentifierName: string): MdxJsxFlowElement {
-  return {
-    type: 'mdxJsxFlowElement',
-    name: 'Demo',
-    data: {
-      _mdxExplicitJsx: true,
-    },
-    children: [],
-    attributes: [
-      {
-        type: 'mdxJsxExpressionAttribute',
-        value: '',
-        data: {
-          estree: {
-            type: 'Program',
-            sourceType: 'module',
-            body: [
-              {
-                type: 'ExpressionStatement',
-                expression: {
-                  type: 'ObjectExpression',
-                  properties: [
-                    {
-                      type: 'SpreadElement',
-                      argument: {
-                        type: 'Identifier',
-                        name: propsIdentifierName,
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      },
-    ],
-  }
-}
-
-/**
- * create mdast node for expression:
- * import * as name from 'from'
- */
-function createNameSpaceImportNode({
-  name,
-  from,
-}: {
-  name: string
-  from: string
-}): MdxjsEsm {
-  return {
-    type: 'mdxjsEsm',
-    value: '',
-    data: {
-      estree: {
-        type: 'Program',
-        sourceType: 'module',
-        body: [
-          {
-            type: 'ImportDeclaration',
-            specifiers: [
-              {
-                type: 'ImportNamespaceSpecifier',
-                local: {
-                  type: 'Identifier',
-                  name,
-                },
-              },
-            ],
-            source: {
-              type: 'Literal',
-              value: from,
-              raw: JSON.stringify(from),
-            },
-          },
-        ],
-      },
-    },
   }
 }

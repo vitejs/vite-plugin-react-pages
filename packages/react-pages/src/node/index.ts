@@ -242,7 +242,7 @@ function getRemarkPlugins(): PluggableList {
     remarkGfm,
     remarkFrontmatter,
     DemoMdxPlugin,
-    // TsInfoMdxPlugin,
+    TsInfoMdxPlugin,
     // ImageMdxPlugin,
     // FileTextMdxPlugin,
     AnalyzeHeadingsMdxPlugin,
