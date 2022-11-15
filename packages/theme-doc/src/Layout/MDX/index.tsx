@@ -10,9 +10,34 @@ import { TsInfo } from '../TsInfo'
 import { FileText } from '../FileText'
 import AnchorLink from '../../components/AnchorLink'
 
+/**
+ * use isInsidePreContext to let the `code` Component
+ * know that it is rendered from triple backquote blocks:
+ * ```language
+ * code content
+ * ```
+ * syntax, instead of single backquote: `code content`
+ */
+const isInsidePreContext = React.createContext(false)
+
 const components = {
-  pre: (props: any) => <div {...props} />,
-  code: CodeBlock,
+  pre: (props: any) => {
+    // `pre` tag will be rendered by the nested `code` Component
+    return (
+      <isInsidePreContext.Provider value={true}>
+        {props.children}
+      </isInsidePreContext.Provider>
+    )
+  },
+  code: (props: any) => {
+    const isInsidePre = useContext(isInsidePreContext)
+    if (isInsidePre) {
+      // this is rendered from triple backquote blocks
+      return <CodeBlock {...props} />
+    }
+    // this is rendered from single backquote
+    return <code {...props} />
+  },
   CodeBlock,
   Demo,
   TsInfo,
