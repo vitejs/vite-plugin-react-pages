@@ -97,7 +97,7 @@ export const test = base.extend<
     {
       scope: 'worker',
       auto: true,
-      timeout: process.env.CI ? 180 * 1000 : 60 * 1000,
+      timeout: process.env.CI ? 180 * 1000 : 180 * 1000,
     },
   ],
   baseURL: async ({ skipPrepare, server, baseURL }, use) => {
@@ -120,7 +120,7 @@ export const test = base.extend<
       }
       await use(page)
     },
-    { scope: 'test', timeout: process.env.CI ? 180 * 1000 : 60 * 1000 },
+    { scope: 'test', timeout: process.env.CI ? 180 * 1000 : 180 * 1000 },
   ],
 })
 
