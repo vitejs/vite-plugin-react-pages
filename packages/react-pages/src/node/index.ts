@@ -1,9 +1,6 @@
 import * as path from 'path'
 import type { PluggableList } from 'unified'
 import type { Plugin, IndexHtmlTransformContext } from 'vite'
-import remarkFrontmatter from 'remark-frontmatter'
-import remarkGfm from 'remark-gfm'
-import remarkMdxImages from 'remark-mdx-images'
 
 import {
   DefaultPageStrategy,
@@ -231,10 +228,11 @@ function moveScriptTagToBodyEnd(
 }
 
 export async function setupPlugins(vpConfig: PluginConfig) {
+  // use dynamic import so that it supports node commonjs
   const mdx = await import('@mdx-js/rollup')
   return [
     mdx.default({
-      remarkPlugins: getRemarkPlugins(),
+      remarkPlugins: await getRemarkPlugins(),
       // treat .md as mdx
       mdExtensions: [],
       mdxExtensions: ['.md', '.mdx'],
@@ -244,16 +242,18 @@ export async function setupPlugins(vpConfig: PluginConfig) {
   ]
 }
 
-function getRemarkPlugins(): PluggableList {
-  return [
-    remarkGfm,
-    remarkFrontmatter,
-    remarkMdxImages,
+function getRemarkPlugins(): Promise<PluggableList> {
+  return Promise.all([
+    // use dynamic import so that it works in node commonjs
+    import('remark-frontmatter').then((m) => m.default),
+    import('remark-gfm').then((m) => m.default),
+    import('remark-mdx-images').then((m) => m.default),
+
     // plugins created for vite-pages:
     DemoMdxPlugin,
     TsInfoMdxPlugin,
     FileTextMdxPlugin,
     // todo: analyze toc
     // AnalyzeHeadingsMdxPlugin,
-  ]
+  ])
 }
