@@ -1,9 +1,11 @@
 import React from 'react'
-import Highlight, { defaultProps } from 'prism-react-renderer'
+import * as _cjsExports from 'prism-react-renderer'
+const { default: Highlight, defaultProps } = commonjsExportsInterop(_cjsExports)
 import theme from 'prism-react-renderer/themes/github/index.cjs'
 import type { Language } from 'prism-react-renderer'
 import { useCopyToClipBoard } from './useCopyToClipBoard'
 import s from './CodeBlock.module.less'
+import { commonjsExportsInterop } from '../../utils'
 
 // copied from https://mdxjs.com/guides/syntax-highlighting
 

@@ -38,3 +38,18 @@ export function normalizeI18nConfig(
 export function getStaticDataValue(pageStaticData: any, key: string) {
   return pageStaticData?.[key] ?? pageStaticData?.main?.[key]
 }
+
+/**
+ * normalize commonjs export so that it works with rollup(vite build)
+ * and native node esm (vite ssr)
+ *
+ * https://github.com/evanw/esbuild/issues/532#issuecomment-1044740080
+ */
+export function commonjsExportsInterop<T>(commonjsExports: T) {
+  if (
+    (commonjsExports as any).__esModule === true &&
+    'default' in commonjsExports
+  )
+    return (commonjsExports as any).default as T
+  return commonjsExports
+}

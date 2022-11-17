@@ -26,6 +26,7 @@ export async function ssrBuild(
   const ssrOutput = await viteBuild({
     root,
     configFile: viteConfig.configFile,
+    // mode: "development",
     build: {
       ssr: true,
       cssCodeSplit: false,
@@ -51,6 +52,10 @@ export async function ssrBuild(
   const { renderToString, ssrData } = await import(
     path.join(ssrOutDir, 'serverRender.mjs')
   )
+
+  // debug code
+  // const res = renderToString('/page2')
+  // return console.log('@@@renderToString', res);
 
   const pagePaths = Object.keys(ssrData)
 

@@ -1,6 +1,6 @@
 /// <reference types="remark-mdx" />
 import type { Root } from 'mdast'
-import type { MdxjsEsm, MdxJsxFlowElement } from 'mdast-util-mdx'
+import type { MdxjsEsm } from 'mdast-util-mdx'
 import {
   createJSXWithSpreadPropsNode,
   createNameSpaceImportNode,
