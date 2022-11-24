@@ -13,7 +13,9 @@ import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
 import { normalizeI18nConfig } from './utils'
 import { getPageGroups, matchPagePathLocalePrefix } from './analyzeStaticData'
 
-export function createTheme(themeConfig: ThemeConfig): React.FC<React.PropsWithChildren<ThemeProps>> {
+export function createTheme(
+  themeConfig: ThemeConfig
+): React.FC<React.PropsWithChildren<ThemeProps>> {
   const ThemeComp = (props: ThemeProps) => {
     const { loadState, loadedData } = props
     const staticData = useStaticData()
@@ -54,6 +56,8 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<React.PropsWithC
     const pageStaticData = staticData[loadState.routePath]
 
     const body = Object.entries(pageData)
+      // the dataPiece with key 'outlineInfo' is not for render
+      .filter(([key]) => key !== 'outlineInfo')
       .map(([key, dataPart], idx) => {
         const ContentComp = (dataPart as any).default
         const pageStaticDataPart = pageStaticData?.[key]
@@ -85,7 +89,9 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<React.PropsWithC
 
   return withThemeRootWrapper(ThemeComp)
 
-  function withThemeRootWrapper(Component: React.FC<React.PropsWithChildren<ThemeProps>>) {
+  function withThemeRootWrapper(
+    Component: React.FC<React.PropsWithChildren<ThemeProps>>
+  ) {
     const HOC: React.FC<React.PropsWithChildren<ThemeProps>> = (props) => {
       const { loadState, loadedData } = props
       const staticData = useStaticData()

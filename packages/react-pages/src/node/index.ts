@@ -25,6 +25,7 @@ import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
 import { FileTextMdxPlugin } from './utils/mdx-plugin-file-text'
 import { AnalyzeHeadingsMdxPlugin } from './utils/mdx-plugin-analyze-headings'
+import { OutlineInfoModuleManager } from './virtual-module-plugins/outline-info-module'
 
 /**
  * This is a public API that users use in their index.html.
@@ -59,6 +60,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
   const virtualModulesManager = new VirtualModulesManager()
   const demoModuleManager = new DemoModuleManager()
   const tsInfoModuleManager = new TsInfoModuleManager()
+  const outlineInfoModuleManager = new OutlineInfoModuleManager()
 
   return {
     name: 'vite-plugin-react-pages',
@@ -113,6 +115,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
 
       demoModuleManager.onUpdate(reloadVirtualModule)
       tsInfoModuleManager.onUpdate(reloadVirtualModule)
+      outlineInfoModuleManager.onUpdate(reloadVirtualModule)
     },
     buildStart() {
       // buildStart may be called multiple times
@@ -132,6 +135,13 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
         if (!resolved || resolved.external)
           throw new Error(`can not resolve demo: ${id}. importer: ${importer}`)
         return demoModuleManager.registerProxyModule(resolved.id)
+      }
+      if (id.endsWith('?outlineInfo')) {
+        const bareImport = id.slice(0, 0 - '?outlineInfo'.length)
+        const resolved = await this.resolve(bareImport, importer)
+        if (!resolved || resolved.external)
+          throw new Error(`can not resolve outlineInfo: ${id}. importer: ${importer}`)
+        return outlineInfoModuleManager.registerProxyModule(resolved.id)
       }
       const matchTsInfo = id.match(tsInfoQueryReg)
       if (matchTsInfo) {
@@ -163,6 +173,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
         if (!page) {
           throw Error(`Page not found: ${pageId}`)
         }
+        // TODO: 将toc分析结果放在 page data 中，搜索的时候，要拉取所有的page data ，然后在前端搜
         return renderOnePageData(page.data)
       }
       if (id === themeModuleId) {
@@ -174,6 +185,9 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
       if (demoModuleManager.isProxyModuleId(id)) {
         return demoModuleManager.loadProxyModule(id)
       }
+      if (outlineInfoModuleManager.isProxyModuleId(id)) {
+        return outlineInfoModuleManager.loadProxyModule(id)
+      }
       if (tsInfoModuleManager.isProxyModuleId(id)) {
         return tsInfoModuleManager.loadProxyModule(id)
       }
@@ -184,6 +198,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
       virtualModulesManager.close()
       demoModuleManager.close()
       tsInfoModuleManager.close()
+      outlineInfoModuleManager.close()
     },
     transformIndexHtml(html, ctx) {
       return moveScriptTagToBodyEnd(html, ctx)

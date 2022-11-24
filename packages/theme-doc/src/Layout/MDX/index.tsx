@@ -56,6 +56,7 @@ const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
 
   const mdxComponents = useMemo(() => {
     // reset slugger state for each page
+    // TODO: use toc data from buildtime analyze
     const slugger = new GithubSlugger()
     return {
       ...components,

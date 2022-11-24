@@ -27,10 +27,21 @@ export class DefaultPageStrategy extends PageStrategy {
  */
 export const defaultFileHandler: FileHandler = async (file: File, api) => {
   const pagePublicPath = getPagePublicPath(file.relative)
+
+  const staticData = await extractStaticData(file)
+
+  if (staticData.sourceType === 'md') {
+    api.addPageData({
+      pageId: pagePublicPath,
+      key: 'outlineInfo',
+      dataPath: `${file.path}?outlineInfo`,
+    })
+  }
+
   return {
     pageId: pagePublicPath,
     dataPath: file.path,
-    staticData: await extractStaticData(file),
+    staticData,
   }
 }
 
