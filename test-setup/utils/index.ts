@@ -130,7 +130,11 @@ import { commandSync, type ExecaChildProcess } from 'execa'
 export async function killProcess(subprocess: ExecaChildProcess) {
   if (isWindows) {
     // ref: https://github.com/vitejs/vite/blob/f9b5c14c42bf0a5c7d4ca4b53160047306fb07c5/playground/test-utils.ts#L281
-    commandSync(`taskkill /pid ${subprocess.pid} /T /F`)
+    try {
+      commandSync(`taskkill /pid ${subprocess.pid} /T /F`)
+    } catch (e) {
+      console.error('failed to taskkill:', e)
+    }
   } else if (subprocess.pid) {
     if (subprocess.exitCode === null) {
       // https://stackoverflow.com/a/49842576
