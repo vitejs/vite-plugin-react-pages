@@ -129,7 +129,7 @@ import { isWindows } from './utils'
 
 export async function killProcess(subprocess: ExecaChildProcess) {
   const { exitCode } = subprocess
-  if (exitCode !== null) return // the child process has already existed
+  if (exitCode !== null) return // the child process has already exited
   if (isWindows) {
     // ref: https://github.com/vitejs/vite/blob/f9b5c14c42bf0a5c7d4ca4b53160047306fb07c5/playground/test-utils.ts#L281
     try {
