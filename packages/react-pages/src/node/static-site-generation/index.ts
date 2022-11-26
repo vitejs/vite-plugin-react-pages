@@ -3,6 +3,7 @@ import type { ResolvedConfig } from 'vite'
 import type { RollupOutput } from 'rollup'
 import * as path from 'path'
 import fs from 'fs-extra'
+import { pathToFileURL } from 'node:url'
 
 import { CLIENT_PATH } from '../constants'
 
@@ -50,7 +51,7 @@ export async function ssrBuild(
   console.log('\n\nrendering html...')
 
   const { renderToString, ssrData } = await import(
-    path.join(ssrOutDir, 'serverRender.mjs')
+    pathToFileURL(path.join(ssrOutDir, 'serverRender.mjs')).toString()
   )
 
   // debug code
