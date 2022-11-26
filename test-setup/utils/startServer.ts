@@ -63,7 +63,7 @@ export async function startServer(
 
   const subprocess = execa('pnpm', args, {
     cwd: playgroundPath,
-    detached: true,
+    // detached: true,
   })
   subprocess.stdout?.pipe(process.stdout)
   subprocess.stderr?.pipe(process.stderr)
