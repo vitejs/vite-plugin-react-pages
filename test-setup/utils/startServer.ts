@@ -1,6 +1,7 @@
 import execa from 'execa'
 import waitOn from 'wait-on'
 import getPort from 'get-port'
+import { isWindows } from './utils';
 
 export async function startViteDevServer(
   playgroundPath: string,
@@ -63,7 +64,10 @@ export async function startServer(
 
   const subprocess = execa('pnpm', args, {
     cwd: playgroundPath,
-    // detached: true,
+    // on unix, we pass detached: true,
+    // so that we can use process.kill(-subprocess.pid)
+    // in killProcess()
+    detached: !isWindows,
   })
   subprocess.stdout?.pipe(process.stdout)
   subprocess.stderr?.pipe(process.stderr)

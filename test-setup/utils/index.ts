@@ -124,10 +124,12 @@ export const test = base.extend<
   ],
 })
 
-const isWindows = process.platform === 'win32'
 import { commandSync, type ExecaChildProcess } from 'execa'
+import { isWindows } from './utils'
 
 export async function killProcess(subprocess: ExecaChildProcess) {
+  const { exitCode } = subprocess
+  if (exitCode !== null) return // the child process has already existed
   if (isWindows) {
     // ref: https://github.com/vitejs/vite/blob/f9b5c14c42bf0a5c7d4ca4b53160047306fb07c5/playground/test-utils.ts#L281
     try {
@@ -136,11 +138,9 @@ export async function killProcess(subprocess: ExecaChildProcess) {
       console.error('failed to taskkill:', e)
     }
   } else if (subprocess.pid) {
-    if (subprocess.exitCode === null) {
-      // https://stackoverflow.com/a/49842576
-      process.kill(-subprocess.pid)
-    }
+    // https://stackoverflow.com/a/49842576
+    process.kill(-subprocess.pid)
   } else {
-    subprocess.kill()
+    subprocess.kill('SIGTERM', { forceKillAfterTimeout: 2000 })
   }
 }
