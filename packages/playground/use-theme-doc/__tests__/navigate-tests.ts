@@ -183,7 +183,9 @@ export function declareTests({
     // locale selector
     await expect(
       page.locator('.vp-local-header .vp-local-localeSelectorCtn')
-    ).toHaveText(currentLocale)
+      // antd 5.x injects inline <style> into DOM, which mess up with element.textContent
+      // when disableJS=true
+    ).toHaveText(currentLocale, { useInnerText: true })
 
     if (javaScriptEnabled !== false) {
       // hover menu only works when javaScriptEnabled===true
