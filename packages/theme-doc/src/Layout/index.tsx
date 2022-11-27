@@ -12,6 +12,7 @@ export { default as MDX } from './MDX'
 import { useThemeCtx } from '..'
 import { LayoutContext } from './ctx'
 import { Footer } from './Footer'
+import OutLine from './Outline'
 
 ConfigProvider.config({
   prefixCls: 'vp-antd',
@@ -57,6 +58,7 @@ const AppLayout: React.FC<React.PropsWithChildren<Props>> = ({ children }) => {
               </div>
             )}
             <div className={s.content}>{children}</div>
+            <OutLine />
           </div>
           <Footer />
         </div>

@@ -140,7 +140,9 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
         const bareImport = id.slice(0, 0 - '?outlineInfo'.length)
         const resolved = await this.resolve(bareImport, importer)
         if (!resolved || resolved.external)
-          throw new Error(`can not resolve outlineInfo: ${id}. importer: ${importer}`)
+          throw new Error(
+            `can not resolve outlineInfo: ${id}. importer: ${importer}`
+          )
         return outlineInfoModuleManager.registerProxyModule(resolved.id)
       }
       const matchTsInfo = id.match(tsInfoQueryReg)
@@ -248,6 +250,7 @@ export async function setupPlugins(vpConfig: PluginConfig) {
   return [
     mdx.default({
       remarkPlugins: await getRemarkPlugins(),
+      rehypePlugins: await getRehypePlugins(),
       // treat .md as mdx
       mdExtensions: [],
       mdxExtensions: ['.md', '.mdx'],
@@ -268,7 +271,12 @@ function getRemarkPlugins(): Promise<PluggableList> {
     DemoMdxPlugin,
     TsInfoMdxPlugin,
     FileTextMdxPlugin,
-    // todo: analyze toc
-    // AnalyzeHeadingsMdxPlugin,
+  ])
+}
+
+function getRehypePlugins(): Promise<PluggableList> {
+  return Promise.all([
+    // use dynamic import so that it works in node commonjs
+    import('rehype-slug').then((m) => m.default),
   ])
 }

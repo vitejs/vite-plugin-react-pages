@@ -1,5 +1,5 @@
 import { ProxyModulesManager } from '../../utils/virtual-module'
-import { extractStaticData } from '../../utils/virtual-module/utils'
+import { extractOutlineInfo } from './extractOutlineInfo'
 
 // mark demo proxy files as virtual files to avoid vite warning "missing source files"
 // https://github.com/vitejs/vite/blob/60721ac53a1bf326d1cac097f23642faede234ff/packages/vite/src/node/server/sourcemap.ts#L39
@@ -12,9 +12,10 @@ export class OutlineInfoModuleManager {
   registerProxyModule(datasourceFilePath: string) {
     return this.pmm.registerProxyModule(datasourceFilePath, async (file) => {
       const content = await file.read()
-      // TODO: anlyze markdown toc with remark
+      const { outline } = extractOutlineInfo(content)
       return {
         datasourceFilePath,
+        outline,
       }
     })
   }
@@ -25,13 +26,11 @@ export class OutlineInfoModuleManager {
 
   async loadProxyModule(proxyModuleId: string) {
     const data = await this.pmm.getProxyModuleData(proxyModuleId)
-    const { datasourceFilePath } = data ?? {}
-    if (!datasourceFilePath)
-      throw new Error(`assertion fail: invalid demo data: ${proxyModuleId}`)
+    const { outline } = data ?? {}
+    if (!outline)
+      throw new Error(`assertion fail: invalid outline data: ${proxyModuleId}`)
 
-    return `export const datasourceFilePath = ${JSON.stringify(
-      datasourceFilePath
-    )};`
+    return `export const outline = ${JSON.stringify(outline)};`
   }
 
   onUpdate(cb: (reloadPath: string) => void) {

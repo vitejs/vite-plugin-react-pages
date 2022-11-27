@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
+import { Anchor_Scroll_Offset } from '../utils'
 
 const AnchorLink: React.FC<React.PropsWithChildren<NavLinkProps>> & {
   scrollToAnchor: (anchor: string) => void
@@ -9,12 +10,10 @@ const AnchorLink: React.FC<React.PropsWithChildren<NavLinkProps>> & {
 
   return (
     <NavLink
+      aria-hidden="true"
+      tabIndex={-1}
       {...props}
       onClick={() => AnchorLink.scrollToAnchor(hash.substring(1))}
-      // TODO: fix
-      // isActive={(_, location) =>
-      //   !!(hash && decodeURIComponent(location.hash) === hash)
-      // }
     />
   )
 }
@@ -24,10 +23,8 @@ AnchorLink.scrollToAnchor = (anchor: string) => {
   // wait for dom update
   window.requestAnimationFrame(() => {
     const elm = document.getElementById(decodeURIComponent(anchor))
-
     if (elm) {
-      // compatible in Edge
-      window.scrollTo(0, getElmScrollPosition(elm) - 20)
+      window.scrollTo(0, getElmScrollPosition(elm) - Anchor_Scroll_Offset)
     }
   })
 }

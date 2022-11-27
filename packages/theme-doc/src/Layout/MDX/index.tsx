@@ -1,5 +1,4 @@
 import React, { useContext, useMemo, useState } from 'react'
-import GithubSlugger from 'github-slugger'
 import { MDXProvider } from '@mdx-js/react'
 import { Link } from 'react-router-dom'
 
@@ -47,6 +46,17 @@ const components = {
     if (href?.startsWith('/')) {
       return <Link {...(rest as any)} to={href} />
     }
+    if (href?.startsWith('#')) {
+      return (
+        <Link
+          {...(rest as any)}
+          to={href}
+          onClick={() => {
+            AnchorLink.scrollToAnchor(href.substring(1))
+          }}
+        />
+      )
+    }
     return <a target="_blank" rel="noopener" {...props} />
   },
 }
@@ -55,15 +65,14 @@ const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
   const themeProps = useContext(themePropsCtx)
 
   const mdxComponents = useMemo(() => {
-    // reset slugger state for each page
-    // TODO: use toc data from buildtime analyze
-    const slugger = new GithubSlugger()
     return {
       ...components,
+      h1: heading(1),
       h2: heading(2),
       h3: heading(3),
       h4: heading(4),
       h5: heading(5),
+      h6: heading(6),
     }
     function heading(level: number) {
       const Tag = 'h' + level
@@ -73,17 +82,14 @@ const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
           HTMLDivElement
         >
       ) {
-        const [idCache] = useState<Record<string, string>>({})
-        const title = props.children
-        if (typeof title === 'string') {
-          if (!idCache[title]) idCache[title] = slugger.slug(title)
-          const id = idCache[title]
+        const { id } = props
+        if (id && typeof id === 'string') {
           return (
             <Tag {...props}>
-              <AnchorLink id={id} className="anchor" to={`#${id}`}>
+              <AnchorLink className="anchor" to={`#${id}`}>
                 <span className="octicon octicon-link"></span>
               </AnchorLink>
-              {title}
+              {props.children}
             </Tag>
           )
         }
