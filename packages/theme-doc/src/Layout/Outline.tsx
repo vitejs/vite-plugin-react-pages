@@ -66,7 +66,14 @@ function buildTree(data: OutlineItem[]) {
         lastBuilt.children.push({ ...nextData, children: [] })
         nextDataIndex++
         put(lastBuilt.children)
+      } else if (built === rootResult) {
+        // nextData.depth < lastBuilt.depth
+        // but this is already the outest recursive level
+        built.push({ ...nextData, children: [] })
+        nextDataIndex++
       } else {
+        // nextData.depth < lastBuilt.depth
+        // should return to the outer recursive level
         return
       }
     }

@@ -1,5 +1,7 @@
 import { remark } from 'remark'
 import remarkMdx from 'remark-mdx'
+import frontmatter from 'remark-frontmatter'
+import gfm from 'remark-gfm'
 import { visit } from 'unist-util-visit'
 import { toString } from 'mdast-util-to-string'
 import Slugger from 'github-slugger'
@@ -10,7 +12,7 @@ const slugs = new Slugger()
 // ref: https://github.com/syntax-tree/mdast-util-toc/blob/ba8f680a3cbcd96351febe2b73edb21598720945/lib/search.js#L67
 
 export function extractOutlineInfo(md: string) {
-  const ast = remark().use(remarkMdx).parse(md)
+  const ast = remark().use(frontmatter).use(gfm).use(remarkMdx).parse(md)
 
   slugs.reset()
 
