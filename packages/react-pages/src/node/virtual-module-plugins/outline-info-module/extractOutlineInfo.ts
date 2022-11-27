@@ -1,21 +1,17 @@
-import { remark } from 'remark'
-import remarkMdx from 'remark-mdx'
-import frontmatter from 'remark-frontmatter'
-import gfm from 'remark-gfm'
-import { visit } from 'unist-util-visit'
-import { toString } from 'mdast-util-to-string'
-import Slugger from 'github-slugger'
-
-const slugs = new Slugger()
-
 // collect headings
 // ref: https://github.com/syntax-tree/mdast-util-toc/blob/ba8f680a3cbcd96351febe2b73edb21598720945/lib/search.js#L67
 
-export function extractOutlineInfo(md: string) {
+export async function extractOutlineInfo(md: string) {
+  const { remark } = await import('remark')
+  const { default: remarkMdx } = await import('remark-mdx')
+  const { default: frontmatter } = await import('remark-frontmatter')
+  const { default: gfm } = await import('remark-gfm')
+  const { visit } = await import('unist-util-visit')
+  const { toString } = await import('mdast-util-to-string')
+  const { default: Slugger } = await import('github-slugger')
+
   const ast = remark().use(frontmatter).use(gfm).use(remarkMdx).parse(md)
-
-  slugs.reset()
-
+  const slugs = new Slugger()
   const headings: { depth: number; text: string; id: string }[] = []
 
   visit(ast, 'heading', (node) => {

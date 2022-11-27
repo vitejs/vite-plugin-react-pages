@@ -12,7 +12,7 @@ export class OutlineInfoModuleManager {
   registerProxyModule(datasourceFilePath: string) {
     return this.pmm.registerProxyModule(datasourceFilePath, async (file) => {
       const content = await file.read()
-      const { outline } = extractOutlineInfo(content)
+      const { outline } = await extractOutlineInfo(content)
       return {
         datasourceFilePath,
         outline,
