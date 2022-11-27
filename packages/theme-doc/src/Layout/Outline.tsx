@@ -13,7 +13,8 @@ const OutLine: React.FC<Props> = (props) => {
 
   const data = useMemo(() => {
     const outline: OutlineItem[] | undefined = pageData?.outlineInfo?.outline
-    if (!Array.isArray(outline)) return null
+    // should not render OutLine if there is only one heading
+    if (!Array.isArray(outline) || outline.length < 2) return null
     return buildTree(outline)
   }, [pageData])
 
@@ -65,6 +66,7 @@ function buildTree(data: OutlineItem[]) {
       } else if (nextData.depth > lastBuilt.depth) {
         lastBuilt.children.push({ ...nextData, children: [] })
         nextDataIndex++
+        // recursive
         put(lastBuilt.children)
       } else if (built === rootResult) {
         // nextData.depth < lastBuilt.depth
