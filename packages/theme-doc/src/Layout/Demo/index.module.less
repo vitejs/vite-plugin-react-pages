@@ -1,14 +1,16 @@
+@import '../variables.less';
+
 .demoBox {
   position: relative;
   margin: 0 0 16px;
-  border: 1px solid #f0f0f0;
+  border: 1px solid @colorSplit;
   border-radius: 2px;
   transition: all 0.2s;
 }
 
 .demo {
   padding: 42px 24px 50px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid @colorSplit;
 }
 
 .meta {
@@ -29,7 +31,7 @@
   display: flex;
   justify-content: center;
   padding: 4px 0;
-  border-top: 1px dashed #f0f0f0;
+  border-top: 1px dashed @colorSplit;
   opacity: 0.7;
   transition: opacity 0.3s;
 }
@@ -53,7 +55,7 @@
 }
 
 .code {
-  border-top: 1px dashed #f0f0f0;
+  border-top: 1px dashed @colorSplit;
   overflow: auto;
 }
 

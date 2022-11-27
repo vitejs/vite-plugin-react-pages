@@ -47,7 +47,7 @@ const AppSider: React.FC<React.PropsWithChildren<Props>> = ({ sideNavsData }) =>
         <Drawer
           placement="left"
           closable={false}
-          visible={layoutCtxVal.isSlideSiderOpen}
+          open={layoutCtxVal.isSlideSiderOpen}
           onClose={() => {
             layoutCtxVal.setIsSlideSiderOpen(false)
           }}

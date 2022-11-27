@@ -1,3 +1,5 @@
+@import './variables.less';
+
 .layout {
   background: #fff;
   position: relative;
@@ -18,7 +20,9 @@
     align-items: stretch;
     flex-wrap: nowrap;
     background: #fff;
-    border-bottom: 1px solid rgba(60, 60, 67, 0.12);
+    border-bottom: 1px solid @colorSplit;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03),
+      0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
 
     > * {
       flex: 0 0 auto;
@@ -72,6 +76,7 @@
       flex: 1 1 auto;
     }
 
+    // topbar nav
     .navCtn {
       display: none;
 
@@ -155,7 +160,7 @@
       :global {
         :local(.sideMenu) {
           min-height: 100%;
-          // copied from https://github.com/ant-design/ant-design/blob/acbeb0b4f18de5ca4d2c9a12329328c89afea662/site/theme/static/common.less#L61
+          // refer to antd doc theme: https://github.com/ant-design/ant-design/blob/390d497015e88818b6f4a3755cb533b81b297c63/.dumi/theme/slots/Sidebar/index.tsx#L21
           &.vp-antd-menu-inline {
             .vp-antd-menu-submenu-title h4,
             > .vp-antd-menu-item,
@@ -176,7 +181,7 @@
                 display: block;
                 width: calc(100% - 20px);
                 height: 1px;
-                background: #f0f0f0;
+                background: @colorSplit;
                 content: '';
               }
             }
@@ -192,7 +197,6 @@
               > .vp-antd-menu-item-group-list
               > .vp-antd-menu-item {
               padding-left: 40px !important;
-
               .vp-antd-row-rtl & {
                 padding-right: 40px !important;
                 padding-left: 16px !important;
@@ -203,7 +207,7 @@
             &.vp-antd-menu-inline {
               .vp-antd-menu-item-group-title {
                 padding-left: 60px;
-
+                margin-left: 4px;
                 .vp-antd-row-rtl & {
                   padding-right: 60px;
                   padding-left: 16px;

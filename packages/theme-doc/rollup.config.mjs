@@ -2,7 +2,6 @@ import postcss from 'rollup-plugin-postcss'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
-import { LessPluginRemoveAntdGlobalStyles } from 'less-plugin-remove-antd-global-styles'
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
@@ -50,27 +49,14 @@ export default {
         '@babel/preset-typescript',
         '@babel/preset-react',
       ],
-      plugins: [
-        [
-          'babel-plugin-import',
-          {
-            libraryName: 'antd',
-            libraryDirectory: 'es',
-            style: true,
-          },
-        ],
-      ],
+      plugins: [],
       configFile: false,
     }),
     postcss({
       config: false,
       use: {
         less: {
-          modifyVars: {
-            'ant-prefix': 'vp-antd',
-          },
           javascriptEnabled: true,
-          plugins: [new LessPluginRemoveAntdGlobalStyles()],
         },
       },
       modules: {
