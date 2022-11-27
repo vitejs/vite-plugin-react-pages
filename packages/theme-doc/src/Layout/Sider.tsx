@@ -51,7 +51,7 @@ const AppSider: React.FC<React.PropsWithChildren<Props>> = ({ sideNavsData }) =>
           onClose={() => {
             layoutCtxVal.setIsSlideSiderOpen(false)
           }}
-          style={{
+          rootStyle={{
             top: 64,
             height: 'calc(100vh - 64px)',
           }}
