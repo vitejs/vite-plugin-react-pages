@@ -10,6 +10,7 @@
     "ver:p": "npm run ver -- patch",
     "ver:mi": "npm run ver -- minor",
     "ver:major": "npm run ver -- major",
+    "ver:alpha": "npm run ver -- prerelease --preid alpha",
     "pub": "pnpm -r publish --filter create-vite-pages --filter vite-plugin-react-pages --filter vite-pages-theme-doc",
     "update-deps": "pnpm -r update -i -L",
     "update-local-deps": "pnpm update -r vite-plugin-react-pages vite-pages-theme-doc --workspace --filter \"!./packages/create-project/**\"",
