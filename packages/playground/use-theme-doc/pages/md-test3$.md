@@ -5,8 +5,6 @@
 
 # Markdown: Syntax
 
-----
-
 ## Overview
 
 ### Philosophy
