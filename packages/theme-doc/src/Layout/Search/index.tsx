@@ -29,7 +29,7 @@ const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
 
   useEffect(() => {
     setTimeout(() => {
-      fetchAllPagesOutlines().then((res) => {
+      fetchAllPagesOutlines().then((res: any) => {
         setAllPagesOutlines(res)
       })
     }, 2000)
