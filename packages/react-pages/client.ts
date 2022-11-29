@@ -17,10 +17,9 @@ export const useStaticData: UseStaticData = (...params: any[]) => {
 }
 
 export function fetchAllPagesOutlines() {
-  // @ts-ignore
-  return import('/@react-pages/allPagesOutlines').then(
-    ({ allPagesOutlines }) => allPagesOutlines
-  )
+  return (globalThis as any)
+    .importAllPagesOutlines()
+    .then(({ allPagesOutlines }: any) => allPagesOutlines)
 }
 
 export type { Theme } from './clientTypes'

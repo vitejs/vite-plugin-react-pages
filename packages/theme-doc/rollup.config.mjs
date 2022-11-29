@@ -64,13 +64,5 @@ export default {
       },
       extract: 'index.css',
     }),
-    {
-      resolveId(id) {
-        // TODO: use a better way to import allPagesOutlines
-        if (id === '/@react-pages/allPagesOutlines') {
-          return { id, external: true }
-        }
-      },
-    },
   ],
 }
