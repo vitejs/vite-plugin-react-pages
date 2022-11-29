@@ -1,5 +1,6 @@
 import React from 'react'
-import { Dropdown, Menu, Button } from 'antd'
+import { Dropdown, Button } from 'antd'
+import type { MenuProps } from 'antd'
 import { CaretDownFilled } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 
@@ -29,40 +30,38 @@ export function useLocaleSelector() {
       }
     })
 
-    const menu = (
-      <Menu
-        selectable
-        selectedKeys={localeKey ? [localeKey] : undefined}
-        items={localeOptions}
-        onSelect={(info) => {
-          if (info.key !== localeKey) {
-            // change locale
-            const newLocale = locales[info.key]
-            if (!newLocale?.routePrefix || !pagePathWithoutLocalePrefix) {
-              console.error('unexpected', {
-                newLocale,
-                pagePathWithoutLocalePrefix,
-              })
-              return
-            }
-            // infer the page path with selected locale
-            let newRoutePath =
-              removeTrailingSlash(newLocale.routePrefix) +
-              pagePathWithoutLocalePrefix
-            if (!staticData[newRoutePath]) {
-              // fallback to the index page of this locale
-              newRoutePath = newLocale.routePrefix
-            }
-            if (staticData[newRoutePath]) {
-              navigate(newRoutePath)
-            }
+    const menu: MenuProps = {
+      selectable: true,
+      selectedKeys: localeKey ? [localeKey] : undefined,
+      items: localeOptions,
+      onSelect: (info) => {
+        if (info.key !== localeKey) {
+          // change locale
+          const newLocale = locales[info.key]
+          if (!newLocale?.routePrefix || !pagePathWithoutLocalePrefix) {
+            console.error('unexpected', {
+              newLocale,
+              pagePathWithoutLocalePrefix,
+            })
+            return
           }
-        }}
-      />
-    )
+          // infer the page path with selected locale
+          let newRoutePath =
+            removeTrailingSlash(newLocale.routePrefix) +
+            pagePathWithoutLocalePrefix
+          if (!staticData[newRoutePath]) {
+            // fallback to the index page of this locale
+            newRoutePath = newLocale.routePrefix
+          }
+          if (staticData[newRoutePath]) {
+            navigate(newRoutePath)
+          }
+        }
+      },
+    }
 
     return (
-      <Dropdown overlay={menu}>
+      <Dropdown menu={menu}>
         <Button size="small" style={{ verticalAlign: 'middle' }}>
           {locale?.label || localeKey || 'Select locale'}
           <CaretDownFilled size={12} />

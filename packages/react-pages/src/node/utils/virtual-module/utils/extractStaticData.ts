@@ -10,7 +10,11 @@ export async function extractStaticData(
     case 'md':
     case 'mdx':
       const { data: frontmatter } = grayMatter(code)
-      const staticData: any = { ...frontmatter, sourceType: 'md' }
+      const staticData: any = {
+        ...frontmatter,
+        sourceType: 'md',
+        __sourceFilePath: file.path,
+      }
       if (staticData.title === undefined) {
         staticData.title = extractMarkdownTitle(code)
       }

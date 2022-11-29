@@ -10,6 +10,7 @@ import {
   renderPageList,
   renderPageListInSSR,
   renderOnePageData,
+  renderAllPagesOutlines,
 } from './page-strategy/pageUtils'
 import { PageStrategy } from './page-strategy'
 import { resolveTheme } from './virtual-module-plugins/theme'
@@ -34,12 +35,13 @@ import { OutlineInfoModuleManager } from './virtual-module-plugins/outline-info-
 const appEntryId = '/@pages-infra/main.js'
 
 /**
- * This is a private prefix an users should not use them
+ * This is a private prefix and users should not use them directly
  */
 const modulePrefix = '/@react-pages/'
 const pagesModuleId = modulePrefix + 'pages'
 const themeModuleId = modulePrefix + 'theme'
 const ssrDataModuleId = modulePrefix + 'ssrData'
+const allOutlineDataModuleId = modulePrefix + 'allPagesOutlines'
 
 const tsInfoQueryReg = /\?tsInfo=(.*)$/
 
@@ -128,7 +130,6 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
     async resolveId(id, importer) {
       if (id === appEntryId) return id
       if (id.startsWith(modulePrefix)) return id
-      // TODO
       if (id.endsWith('?demo')) {
         const bareImport = id.slice(0, 0 - '?demo'.length)
         const resolved = await this.resolve(bareImport, importer)
@@ -189,6 +190,9 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
       }
       if (outlineInfoModuleManager.isProxyModuleId(id)) {
         return outlineInfoModuleManager.loadProxyModule(id)
+      }
+      if (id === allOutlineDataModuleId) {
+        return renderAllPagesOutlines(await pageStrategy.getPages())
       }
       if (tsInfoModuleManager.isProxyModuleId(id)) {
         return tsInfoModuleManager.loadProxyModule(id)

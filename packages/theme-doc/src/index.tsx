@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo, useLayoutEffect } from 'react'
 import type { ThemeProps } from 'vite-plugin-react-pages/clientTypes'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 import { useLocation } from 'react-router-dom'
@@ -21,14 +21,16 @@ export function createTheme(
     const staticData = useStaticData()
 
     const location = useLocation()
-    useEffect(() => {
+    useLayoutEffect(() => {
       // scroll to anchor after page component loaded
       if (loadState.type === 'loaded') {
         if (location.hash) {
           AnchorLink.scrollToAnchor(decodeURIComponent(location.hash.slice(1)))
+          return
         }
       }
-    }, [loadState, loadedData])
+      window.scrollTo(0, 0)
+    }, [loadState, location.hash])
 
     if (loadState.type === 'loading') {
       return <AppLayout></AppLayout>

@@ -16,6 +16,7 @@ export class OutlineInfoModuleManager {
       return {
         datasourceFilePath,
         outline,
+        content,
       }
     })
   }

@@ -1,3 +1,5 @@
+@import '../variables.less';
+
 @search-icon-color: #ced4d9;
 
 .search-box {
@@ -5,7 +7,7 @@
     cursor: default;
   }
 
-  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  border-left: 1px solid @colorSplit;
   padding-left: 40px;
   display: flex;
   align-items: center;
@@ -25,5 +27,22 @@
 }
 
 .popup {
-  width: 250px !important;
+  max-width: 600px;
+}
+
+.searchResultLable {
+  display: flex;
+  align-items: center;
+}
+
+.searchResultLableIcon {
+  margin-right: 8px;
+}
+
+.searchResultPagePosition {
+  color: #8c8c8c;
+}
+
+.searchResultMatchedText {
+  font-size: 18px;
 }

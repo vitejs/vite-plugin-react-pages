@@ -143,10 +143,9 @@ const AppHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
       </div>
       <div className={s.logoArea}>{renderLogo}</div>
 
-      {/* TODO: enable search after polished */}
-      {/* <div className={s.searchArea}>
+      <div className={s.searchArea}>
         <Search />
-      </div> */}
+      </div>
 
       <div className={s.flexSpace}></div>
 
@@ -164,13 +163,11 @@ const AppHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
           <div className={s.triggerCtn}>
             <Dropdown
               placement="bottomRight"
-              overlay={
-                <Menu
-                  selectedKeys={activeKeys}
-                  disabledOverflow
-                  items={renderMenu(resolvedTopNavs, true)}
-                />
-              }
+              menu={{
+                selectedKeys: activeKeys,
+                disabledOverflow: true,
+                items: renderMenu(resolvedTopNavs, true),
+              }}
             >
               <span className={s.trigger}>
                 <UnorderedListOutlined />
