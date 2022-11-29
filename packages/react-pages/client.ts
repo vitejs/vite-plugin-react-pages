@@ -23,3 +23,5 @@ export function fetchAllPagesOutlines() {
 }
 
 export type { Theme } from './clientTypes'
+
+declare module '/@react-pages/*'
