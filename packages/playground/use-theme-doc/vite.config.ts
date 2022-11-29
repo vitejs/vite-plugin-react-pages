@@ -15,6 +15,7 @@ export default defineConfig(async () => {
       react(),
       ...(await setupPlugins({
         pagesDir: path.join(__dirname, 'pages'),
+        useHashRouter: true
       })),
     ],
     // theme local dev

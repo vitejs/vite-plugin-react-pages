@@ -1,5 +1,7 @@
 import React, { useMemo, useContext } from 'react'
 import { Anchor } from 'antd'
+import type { AnchorProps } from 'antd'
+
 import { useThemeCtx } from '..'
 import s from './index.module.less'
 import { Anchor_Scroll_Offset } from '../utils'
@@ -23,9 +25,23 @@ const OutLine: React.FC<Props> = (props) => {
 
   if (!data || isSmallScreen) return null
 
+  const onClickAnchor: AnchorProps['onClick'] = __HASH_ROUTER__
+    ? (e, { title, href }) => {
+        // antd Anchor links break hash router by default
+        // so we need to manually update hash
+        e.preventDefault()
+        history.pushState(null, '', `#${loadState.routePath}${href}`)
+      }
+    : undefined
+
   return (
     <div className={s.outline}>
-      <Anchor affix={true} offsetTop={100} targetOffset={Anchor_Scroll_Offset}>
+      <Anchor
+        affix={true}
+        offsetTop={100}
+        targetOffset={Anchor_Scroll_Offset}
+        onClick={onClickAnchor}
+      >
         {renderAnchorLinks(data)}
       </Anchor>
     </div>
@@ -43,6 +59,10 @@ function renderAnchorLinks(data: OutlineTreeItem[]) {
 }
 
 export default OutLine
+
+declare global {
+  const __HASH_ROUTER__: boolean
+}
 
 function buildTree(data: OutlineItem[]) {
   let nextDataIndex = 0
