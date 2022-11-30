@@ -25,14 +25,16 @@ const OutLine: React.FC<Props> = (props) => {
 
   if (!data || isSmallScreen) return null
 
-  const onClickAnchor: AnchorProps['onClick'] = __HASH_ROUTER__
-    ? (e, { title, href }) => {
-        // antd Anchor links break hash router by default
-        // so we need to manually update hash
-        e.preventDefault()
-        history.pushState(null, '', `#${loadState.routePath}${href}`)
-      }
-    : undefined
+  const onClickAnchor: AnchorProps['onClick'] = (e, { title, href }) => {
+    // preventDefault to prevent browser scroll to the heading
+    // let antd Anchor handle the scrolling
+    e.preventDefault()
+    if (__HASH_ROUTER__) {
+      history.pushState(null, '', `#${loadState.routePath}${href}`)
+    } else {
+      history.pushState(null, '', href)
+    }
+  }
 
   return (
     <div className={s.outline}>
