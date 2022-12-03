@@ -94,8 +94,16 @@ ${res.join('\n')}
 // filter out internal data field in staticData
 // don't leak them into build output assets
 function cleanStaticData(staticData: any) {
-  return {
-    ...staticData,
-    __sourceFilePath: undefined,
-  }
+  if (!staticData || typeof staticData !== 'object') return staticData
+  return Object.fromEntries(
+    Object.entries(staticData).map(([key, value]) => {
+      return [
+        key,
+        {
+          ...(value as any),
+          __sourceFilePath: undefined,
+        },
+      ]
+    })
+  )
 }
