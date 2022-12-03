@@ -61,9 +61,11 @@ export class ProxyModulesManager {
   /**
    * emit event when a proxyModule has been updated
    */
-  onProxyModuleUpdate(cb: (proxyModuleId: string) => void) {
-    this.vmm.addModuleListener((proxyModuleId) => {
-      cb(proxyModuleId)
+  onProxyModuleUpdate(
+    cb: (proxyModuleId: string, data: any[], prevData: any[]) => void
+  ) {
+    this.vmm.addModuleListener((proxyModuleId, data, prevData) => {
+      cb(proxyModuleId, data, prevData)
     })
   }
 

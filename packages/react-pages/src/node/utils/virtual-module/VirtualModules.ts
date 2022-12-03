@@ -82,8 +82,8 @@ export class VirtualModuleGraph {
    *
    * users will retrieve new module data and previous module data,
    * so users can diff them to decide whether the module has "really" changed.
-   * if users think they are the same, the can skip updating other virtual modules.
-   * VirtualModuleGraph works on a very low level. It don't know what module data means. So it send updates event to users very often and let users to interpret module data.
+   * if users think they are the same, they can skip updating other virtual modules.
+   * VirtualModuleGraph works on a very low level. It don't know what module data means. So it send updates event to users very often and let users to interpret module data (and whether the data has "really" changed).
    *
    * @return unsubscribe function
    */

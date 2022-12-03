@@ -176,7 +176,6 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
         if (!page) {
           throw Error(`Page not found: ${pageId}`)
         }
-        // TODO: 将toc分析结果放在 page data 中，搜索的时候，要拉取所有的page data ，然后在前端搜
         return renderOnePageData(page.data)
       }
       if (id === themeModuleId) {

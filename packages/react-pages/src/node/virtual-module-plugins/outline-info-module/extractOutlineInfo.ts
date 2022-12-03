@@ -40,3 +40,9 @@ export async function extractOutlineInfo(md: string) {
 // # t2
 // asd
 // `)
+
+export type OutlineItem = {
+  depth: number
+  text: string
+  id: string
+}

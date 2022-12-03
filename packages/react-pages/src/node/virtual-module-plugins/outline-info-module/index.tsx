@@ -1,3 +1,6 @@
+import invariant from 'tiny-invariant'
+import { dequal } from 'dequal'
+
 import { ProxyModulesManager } from '../../utils/virtual-module'
 import { extractOutlineInfo } from './extractOutlineInfo'
 
@@ -16,7 +19,7 @@ export class OutlineInfoModuleManager {
       return {
         datasourceFilePath,
         outline,
-        content,
+        // content,
       }
     })
   }
@@ -35,7 +38,17 @@ export class OutlineInfoModuleManager {
   }
 
   onUpdate(cb: (reloadPath: string) => void) {
-    this.pmm.onProxyModuleUpdate(cb)
+    this.pmm.onProxyModuleUpdate((proxyModuleId: string, data, prevData) => {
+      invariant(data.length <= 1)
+      invariant(prevData.length <= 1)
+      const outline = data[0]?.outline
+      const prevOutline = prevData[0]?.outline
+      if (dequal(outline, prevOutline)) {
+        // outline hasn't changed. skip update
+        return
+      }
+      cb(proxyModuleId)
+    })
   }
 
   close() {
