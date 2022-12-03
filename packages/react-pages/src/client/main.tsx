@@ -15,6 +15,3 @@ const container = document.getElementById('root')!
 const root = createRoot(container)
 root.render(<SSRContextProvider>{app}</SSRContextProvider>)
 
-// make it available to vite-plugin-react-pages/client
-;(globalThis as any)['importAllPagesOutlines'] = () =>
-  import('/@react-pages/allPagesOutlines')

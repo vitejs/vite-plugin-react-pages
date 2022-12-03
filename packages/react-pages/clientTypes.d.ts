@@ -28,3 +28,5 @@ export interface TsInterfacePropertyInfo {
   // fullText: string
   optional: boolean
 }
+
+export type UseAllPagesOutlines = (timeout: number) => any

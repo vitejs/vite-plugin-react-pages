@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite serve",
+    "devLog": "DEBUG=\"vite:hmr\" vite serve",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
     "build": "rimraf dist && vite build --outDir dist && serve -s dist",
     "debug:build": "node --inspect ./node_modules/vite/bin/vite build --outDir dist",

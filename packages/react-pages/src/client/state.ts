@@ -1,14 +1,20 @@
-import { useMemo, createContext } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { dequal } from 'dequal'
 import type { SetAtom } from 'jotai/core/types'
 import { atom, useAtom } from './jotai'
 import { atomFamily, useAtomValue, useUpdateAtom } from './jotai/utils'
-import type { PageLoaded, UseStaticData, Theme } from '../../clientTypes'
+import type {
+  PageLoaded,
+  UseStaticData,
+  Theme,
+  UseAllPagesOutlines,
+} from '../../clientTypes'
 
 export let useTheme: () => Theme
 export let usePagePaths: () => string[]
 export let usePageModule: (path: string) => Promise<PageModule> | undefined
 export let useStaticData: UseStaticData
+export let useAllPagesOutlines: UseAllPagesOutlines
 
 interface PageModule {
   ['default']: PageLoaded
@@ -29,6 +35,7 @@ const initialPagePaths = Object.keys(initialPages)
 if (import.meta.hot) {
   let setTheme: SetAtom<{ Theme: Theme }> | undefined
   import.meta.hot!.accept('/@react-pages/theme', (module) => {
+    console.log('@@hot update /@react-pages/theme', module)
     if (!module) {
       console.error('unexpected hot module', module)
       return
@@ -45,6 +52,7 @@ if (import.meta.hot) {
 
   let setPages: SetAtom<any> | undefined
   import.meta.hot!.accept('/@react-pages/pages', (module) => {
+    console.log('@@hot update /@react-pages/pages', module)
     if (!module) {
       console.error('unexpected hot module', module)
       return
@@ -52,9 +60,20 @@ if (import.meta.hot) {
     setPages?.(module.default)
   })
 
+  let setAllPagesOutlines: SetAtom<any> | undefined
+  import.meta.hot!.accept('/@react-pages/allPagesOutlines', (module) => {
+    console.log('@@hot update /@react-pages/allPagesOutlines', module)
+    if (!module) {
+      console.error('unexpected hot module', module)
+      return
+    }
+    setAllPagesOutlines?.(module)
+  })
+
   const pagesAtom = atom(initialPages)
   const pagePathsAtom = atom(initialPagePaths.sort())
   const staticDataAtom = atom(toStaticData(initialPages))
+  const allPagesOutlinesAtom = atom(initialPages)
 
   const setPagesAtom = atom(null, (get, set, newPages: any) => {
     let newStaticData: Record<string, any> | undefined
@@ -138,6 +157,19 @@ if (import.meta.hot) {
     }
     return useAtomValue(staticData)
   }
+
+  useAllPagesOutlines = (timeout: number) => {
+    const [data, set] = useAtom(allPagesOutlinesAtom)
+    setAllPagesOutlines = set
+    useEffect(() => {
+      setTimeout(() => {
+        import('/@react-pages/allPagesOutlines').then((mod) => {
+          set(mod)
+        })
+      }, timeout)
+    }, [])
+    return data
+  }
 }
 
 // Static mode
@@ -156,6 +188,17 @@ else {
     }
     return toStaticData(initialPages)
   }
+  useAllPagesOutlines = (timeout: number) => {
+    const [data, set] = useState<any>()
+    useEffect(() => {
+      setTimeout(() => {
+        import('/@react-pages/allPagesOutlines').then((mod) => {
+          set(mod)
+        })
+      }, timeout)
+    }, [])
+    return data
+  }
 }
 
 function toStaticData(pages: Record<string, any>) {
@@ -168,9 +211,11 @@ function toStaticData(pages: Record<string, any>) {
 
 if ((globalThis as any)['__vite_pages_use_static_data']) {
   throw new Error(
-    `[vite-pages] useStaticData already exists on window. There are multiple vite-pages apps in this page. Please report this to vite-pages.`
+    `[vite-pages] global hooks (.e.g useStaticData) already exists on window. It means there are multiple vite-pages runtime in this page. Please report this to vite-pages.`
   )
 } else {
-  // make it available to vite-plugin-react-pages/client
+  // make them available in vite-plugin-react-pages/client
   ;(globalThis as any)['__vite_pages_use_static_data'] = useStaticData
+  ;(globalThis as any)['__vite_pages_use_all_pages_outlines'] =
+    useAllPagesOutlines
 }

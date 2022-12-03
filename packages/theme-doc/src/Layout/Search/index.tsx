@@ -6,7 +6,7 @@ import {
   ProfileOutlined,
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import { fetchAllPagesOutlines } from 'vite-plugin-react-pages/client'
+import { useAllPagesOutlines } from 'vite-plugin-react-pages/client'
 
 import { useThemeCtx } from '../..'
 
@@ -25,15 +25,7 @@ const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const [keywords, setKeywords] = useState('')
   const navigate = useNavigate()
 
-  const [allPagesOutlines, setAllPagesOutlines] = useState<any>()
-
-  useEffect(() => {
-    setTimeout(() => {
-      fetchAllPagesOutlines().then((res: any) => {
-        setAllPagesOutlines(res)
-      })
-    }, 2000)
-  }, [])
+  const allPagesOutlines = useAllPagesOutlines(2000)?.allPagesOutlines
 
   // const themeCtxValue = useThemeCtx()
   // console.log('@@themeCtxValue', themeCtxValue)

@@ -6,7 +6,7 @@
 // So this module can't import vite-pages core.
 // Otherwise vite will try to optimize vite-pages core during dev.
 
-import type { UseStaticData } from './clientTypes'
+import type { UseStaticData, UseAllPagesOutlines } from './clientTypes'
 
 // access globalThis['__vite_pages_use_static_data'] lazily
 export const useStaticData: UseStaticData = (...params: any[]) => {
@@ -16,10 +16,9 @@ export const useStaticData: UseStaticData = (...params: any[]) => {
   return actualUseStaticData(...params)
 }
 
-export function fetchAllPagesOutlines() {
-  return (globalThis as any)
-    .importAllPagesOutlines()
-    .then(({ allPagesOutlines }: any) => allPagesOutlines)
+export const useAllPagesOutlines: UseAllPagesOutlines = (...params) => {
+  const actualHook = (globalThis as any)['__vite_pages_use_all_pages_outlines']
+  return actualHook(...params)
 }
 
 export type { Theme } from './clientTypes'
