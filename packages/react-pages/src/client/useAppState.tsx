@@ -44,27 +44,43 @@ export default function useAppState(routePath: string) {
     if (!loading) {
       onLoadState('404', routePath)
     } else {
-      // notice that during hmr, dataCache[routePath] may exist
-      if (dataCache[routePath] && !import.meta.hot) {
-        // this is a ssr client render, not hmr
+      if (dataCache[routePath]) {
+        /**
+         * Data already exists. Possible causes:
+         * - User navigates back to a loaded page.
+         * - This is a hmr update during dev. The dataCache[routePath] contains the old data. We need to load() the new data (but don't show loading state).
+         * - This is a ssr client-side render. The page data is loaded before hydration.
+         */
         onLoadState('loaded', routePath)
+        if (import.meta.hot) {
+          // If user navigates back to a loaded page during dev
+          // this will also be executed.
+          // But in this case, it will import() the same es module again,
+          // which is handled by the browser es module cache.
+          // So it won't load the module from dev server again and won't evaluate the module again.
+          load()
+        }
       } else {
         onLoadState('loading', routePath)
-        loading.then(
-          (page) =>
-            loading === loadingRef.current &&
-            batchedUpdates(() => {
-              onLoadState('loaded', routePath)
-              setDataCache((prev) => ({
-                ...prev,
-                [routePath]: page.default,
-              }))
-            }),
-          (error) =>
-            loading === loadingRef.current &&
-            onLoadState('load-error', routePath, error)
-        )
+        load()
       }
+    }
+
+    function load() {
+      loading!.then(
+        (page) =>
+          loading === loadingRef.current &&
+          batchedUpdates(() => {
+            onLoadState('loaded', routePath)
+            setDataCache((prev) => ({
+              ...prev,
+              [routePath]: page.default,
+            }))
+          }),
+        (error) =>
+          loading === loadingRef.current &&
+          onLoadState('load-error', routePath, error)
+      )
     }
   }, [loading])
 
