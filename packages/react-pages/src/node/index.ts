@@ -166,7 +166,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
       // vite will resolve it with v=${versionHash} query
       // so that this import can be cached
       if (id === appEntryId)
-        return `import "vite-plugin-react-pages/dist/client/main.js";`
+        return `import "vite-plugin-react-pages/dist/client/entries/csr.js";`
       // page list
       if (id === pagesModuleId) {
         return renderPageList(await pageStrategy.getPages(), isBuild)

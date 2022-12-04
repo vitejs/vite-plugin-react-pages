@@ -1,9 +1,15 @@
+/**
+ * This is the entry for static-site-generation(ssg)'s client side hydration.
+ * Used in: "ssr mode"
+ * ("ssr" is used in many places in this project to refer to "ssg". Should have called it ssg mode...)
+ */
+
 import React from 'react'
 import { hydrateRoot } from 'react-dom/client'
 
 import type { PageLoaded } from '../../../clientTypes'
 import App from '../App'
-import SSRContextProvider from '../SSRContextProvider'
+import SSRContextProvider from './ClientAppWrapper'
 import pages from '/@react-pages/pages'
 
 declare global {

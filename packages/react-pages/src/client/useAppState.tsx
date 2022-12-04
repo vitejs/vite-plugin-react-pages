@@ -1,7 +1,7 @@
 import { useState, useLayoutEffect, useContext, useRef } from 'react'
 import { unstable_batchedUpdates as batchedUpdates } from 'react-dom'
 import type { LoadState } from '../../clientTypes'
-import { dataCacheCtx, setDataCacheCtx } from './ssr/ctx'
+import { dataCacheCtx, setDataCacheCtx } from './ctx'
 import { usePageModule } from './state'
 
 export default function useAppState(routePath: string) {
