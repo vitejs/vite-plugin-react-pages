@@ -51,7 +51,7 @@ export async function ssrBuild(
   console.log('\n\nrendering html...')
 
   const { renderToString, ssrData } = await import(
-    pathToFileURL(path.join(ssrOutDir, 'serverRender.mjs')).toString()
+    pathToFileURL(path.join(ssrOutDir, 'ssg-server.mjs')).toString()
   )
 
   // debug code
