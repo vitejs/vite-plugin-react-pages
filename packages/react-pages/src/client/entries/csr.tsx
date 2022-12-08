@@ -1,9 +1,6 @@
 /**
  * This is the entry for client-side-render(csr).
  * Used in: dev mode, build mode.
- * 
- * TODO: pre-bundle this entry to reduce requests during dev.
- * also avoid local jotai copy.
  */
 
 import React from 'react'
