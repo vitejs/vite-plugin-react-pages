@@ -73,7 +73,7 @@
     "fs-extra": "^10.1.0",
     "gray-matter": "^4.0.2",
     "jest-docblock": "^29.2.0",
-    "jotai": "^0.15.3",
+    "jotai": "^1.11.1",
     "mdast-util-to-string": "^3.1.0",
     "mini-debounce": "^1.0.8",
     "minimist": "^1.2.7",

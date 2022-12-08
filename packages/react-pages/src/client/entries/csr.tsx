@@ -9,7 +9,7 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 
-import { Provider as Jotai } from '../jotai'
+import { Provider as Jotai } from 'jotai'
 import ClientAppWrapper from './ClientAppWrapper'
 import App from '../App'
 

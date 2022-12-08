@@ -402,7 +402,7 @@ importers:
       fs-extra: ^10.1.0
       gray-matter: ^4.0.2
       jest-docblock: ^29.2.0
-      jotai: ^0.15.3
+      jotai: ^1.11.1
       mdast-util-to-string: ^3.1.0
       mini-debounce: ^1.0.8
       minimist: ^1.2.7
@@ -431,7 +431,7 @@ importers:
       fs-extra: 10.1.0
       gray-matter: 4.0.3
       jest-docblock: 29.2.0
-      jotai: 0.15.5_react@18.2.0
+      jotai: 1.11.1_react@18.2.0
       mdast-util-to-string: 3.1.0
       mini-debounce: 1.0.8
       minimist: 1.2.7
@@ -5933,24 +5933,43 @@ packages:
       '@sideway/pinpoint': 2.0.0
     dev: true
 
-  /jotai/0.15.5_react@18.2.0:
-    resolution: {integrity: sha512-Q9YCdIcqNUlZG2K5UA2qc1utDuWM9P6dlkJqZykCNUik783fipHprJzvIU2nk36NAPnbZnrAK2owX3WXkKKjpQ==}
+  /jotai/1.11.1_react@18.2.0:
+    resolution: {integrity: sha512-pHpaZUdvIpcS12ryMCrwtvmT/IovZAbicfrlll/Rb9394rwhqKoDFsDs0kv4oWtBy/XHHNv7iSZnQFmntiQj+w==}
+    engines: {node: '>=12.20.0'}
     peerDependencies:
-      immer: '*'
-      optics-ts: '*'
+      '@babel/core': '*'
+      '@babel/template': '*'
+      jotai-immer: '*'
+      jotai-optics: '*'
+      jotai-redux: '*'
+      jotai-tanstack-query: '*'
+      jotai-urql: '*'
+      jotai-valtio: '*'
+      jotai-xstate: '*'
+      jotai-zustand: '*'
       react: '>=16.8'
-      react-query: '*'
-      xstate: '*'
     peerDependenciesMeta:
-      immer:
+      '@babel/core':
         optional: true
-      optics-ts:
+      '@babel/template':
+        optional: true
+      jotai-immer:
+        optional: true
+      jotai-optics:
+        optional: true
+      jotai-redux:
+        optional: true
+      jotai-tanstack-query:
+        optional: true
+      jotai-urql:
+        optional: true
+      jotai-valtio:
+        optional: true
+      jotai-xstate:
+        optional: true
+      jotai-zustand:
         optional: true
       react:
-        optional: true
-      react-query:
-        optional: true
-      xstate:
         optional: true
     dependencies:
       react: 18.2.0
