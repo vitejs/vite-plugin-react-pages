@@ -9,7 +9,7 @@ import { hydrateRoot } from 'react-dom/client'
 
 import type { PageLoaded } from '../../../clientTypes'
 import App from '../App'
-import SSRContextProvider from './ClientAppWrapper'
+import ClientAppWrapper from './ClientAppWrapper'
 import pages from '/@react-pages/pages'
 
 declare global {
@@ -46,8 +46,8 @@ function hydrate(initCache: PageLoaded) {
   const container = document.getElementById('root')!
   hydrateRoot(
     container,
-    <SSRContextProvider initCache={initCache}>
+    <ClientAppWrapper initCache={initCache}>
       <App />
-    </SSRContextProvider>
+    </ClientAppWrapper>
   )
 }

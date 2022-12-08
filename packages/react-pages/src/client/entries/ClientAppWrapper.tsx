@@ -21,7 +21,7 @@ interface Props {
   readonly children: React.ReactNode
 }
 
-const SSRContextProvider: React.FC<React.PropsWithChildren<Props>> = ({
+const ClientAppWrapper: React.FC<React.PropsWithChildren<Props>> = ({
   initCache,
   children,
 }) => {
@@ -37,4 +37,4 @@ const SSRContextProvider: React.FC<React.PropsWithChildren<Props>> = ({
   )
 }
 
-export default SSRContextProvider
+export default ClientAppWrapper
