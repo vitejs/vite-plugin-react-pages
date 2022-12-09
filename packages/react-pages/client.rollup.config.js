@@ -36,7 +36,8 @@ export default {
     },
     resolve({
       // prevent bundling unexpected deps
-      resolveOnly: ['jotai'],
+      // resolveOnly: ['jotai'],
+      resolveOnly: ['none!'],
       extensions,
     }),
     commonjs(),
