@@ -384,7 +384,6 @@ importers:
 
   packages/react-pages:
     specifiers:
-      '@babel/plugin-syntax-jsx': ^7.18.6
       '@babel/preset-env': ^7.20.2
       '@babel/preset-react': ^7.18.6
       '@mdx-js/rollup': ^2.1.5
@@ -449,7 +448,6 @@ importers:
       typescript: 4.8.4
       unist-util-visit: 4.1.1
     devDependencies:
-      '@babel/plugin-syntax-jsx': 7.18.6
       '@babel/preset-env': 7.20.2
       '@babel/preset-react': 7.18.6
       '@rollup/plugin-babel': 6.0.2_rollup@2.79.1
@@ -1747,7 +1745,7 @@ packages:
       '@babel/core':
         optional: true
     dependencies:
-      '@babel/helper-plugin-utils': 7.20.2
+      '@babel/helper-plugin-utils': 7.19.0
     dev: true
 
   /@babel/plugin-syntax-jsx/7.18.6_@babel+core@7.20.2:
@@ -2635,7 +2633,7 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.20.2
-      '@babel/helper-plugin-utils': 7.18.9
+      '@babel/helper-plugin-utils': 7.20.2
     dev: true
 
   /@babel/plugin-transform-react-jsx-development/7.18.6:
@@ -2687,23 +2685,6 @@ packages:
     dependencies:
       '@babel/core': 7.20.2
       '@babel/helper-plugin-utils': 7.20.2
-    dev: true
-
-  /@babel/plugin-transform-react-jsx/7.18.10_@babel+core@7.20.2:
-    resolution: {integrity: sha512-gCy7Iikrpu3IZjYZolFE4M1Sm+nrh1/6za2Ewj77Z+XirT4TsbJcvOFOyF+fRPwU6AKKK136CZxx6L8AbSFG6A==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    peerDependenciesMeta:
-      '@babel/core':
-        optional: true
-    dependencies:
-      '@babel/core': 7.20.2
-      '@babel/helper-annotate-as-pure': 7.18.6
-      '@babel/helper-module-imports': 7.18.6
-      '@babel/helper-plugin-utils': 7.18.9
-      '@babel/plugin-syntax-jsx': 7.18.6_@babel+core@7.20.2
-      '@babel/types': 7.18.10
     dev: true
 
   /@babel/plugin-transform-react-jsx/7.19.0:
@@ -2763,7 +2744,7 @@ packages:
     dependencies:
       '@babel/core': 7.20.2
       '@babel/helper-annotate-as-pure': 7.18.6
-      '@babel/helper-plugin-utils': 7.18.9
+      '@babel/helper-plugin-utils': 7.20.2
     dev: true
 
   /@babel/plugin-transform-regenerator/7.18.6:
@@ -3249,10 +3230,10 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.20.2
-      '@babel/helper-plugin-utils': 7.18.9
+      '@babel/helper-plugin-utils': 7.20.2
       '@babel/helper-validator-option': 7.18.6
       '@babel/plugin-transform-react-display-name': 7.18.6_@babel+core@7.20.2
-      '@babel/plugin-transform-react-jsx': 7.18.10_@babel+core@7.20.2
+      '@babel/plugin-transform-react-jsx': 7.19.0_@babel+core@7.20.2
       '@babel/plugin-transform-react-jsx-development': 7.18.6_@babel+core@7.20.2
       '@babel/plugin-transform-react-pure-annotations': 7.18.6_@babel+core@7.20.2
     dev: true
