@@ -48,7 +48,7 @@ export function getStaticDataValue(pageStaticData: any, key: string) {
 export function commonjsExportsInterop<T>(commonjsExports: T) {
   if (
     (commonjsExports as any).__esModule === true &&
-    'default' in commonjsExports
+    'default' in (commonjsExports as any)
   )
     return (commonjsExports as any).default as T
   return commonjsExports
