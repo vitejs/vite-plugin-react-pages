@@ -1,4 +1,5 @@
-import { test as base } from '@playwright/test'
+import { expect, test as base } from '@playwright/test'
+import type { Locator } from '@playwright/test'
 import path from 'node:path'
 import fs from 'fs-extra'
 import { getFsUtils, setupActualTestPlayground } from './fsUtils'
@@ -7,7 +8,6 @@ import {
   startSSRServer,
   startViteDevServer,
 } from './startServer'
-export * from '@playwright/test'
 
 export type TestOptions = {
   vitePagesMode: 'serve' | 'build' | 'ssr'
@@ -144,3 +144,25 @@ export async function killProcess(subprocess: ExecaChildProcess) {
     subprocess.kill('SIGTERM', { forceKillAfterTimeout: 2000 })
   }
 }
+
+/**
+ * same as this but in parallel
+  await expect(this.imprintAddress).toContainText(this.imprintAddressTextLine1)
+  await expect(this.imprintAddress).toContainText(this.imprintAddressTextLine2)
+  await expect(this.imprintAddress).toContainText(this.imprintAddressTextLine3)
+  ......
+ * imitate the old behaviour of toContainText(stringArray): https://github.com/microsoft/playwright/issues/17350#issuecomment-1247819044
+ */
+export async function assertContainText(
+  locator: Locator,
+  asserts: string | RegExp | (string | RegExp)[]
+) {
+  if (!Array.isArray(asserts)) asserts = [asserts]
+  return await Promise.all(
+    asserts.map(async (assert) => {
+      return await expect(locator).toContainText(assert)
+    })
+  )
+}
+
+export * from '@playwright/test'
