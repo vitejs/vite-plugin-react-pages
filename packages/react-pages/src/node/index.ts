@@ -261,8 +261,6 @@ export async function setupPlugins(vpConfig: PluginConfig) {
       mdExtensions: [],
       mdxExtensions: ['.md', '.mdx'],
       providerImportSource: '@mdx-js/react',
-      // jsx syntax is handled by the plugin vite-pages:mdx-transform
-      jsx: true,
     }),
     createMdxTransformPlugin(),
     pluginFactory(vpConfig),
