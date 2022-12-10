@@ -37,12 +37,10 @@
     "build-node": "rollup -c",
     "build-node-types": "tsc -p src/node --outDir dist/node-types --emitDeclarationOnly",
     "build-client": "rollup -c client.rollup.config.js",
-    "build-client-tsc": "tsc -p src/client",
     "dev": "rimraf ./dist && concurrently \"npm:dev-*\"",
     "dev-node": "rollup -c -w",
     "dev-node-types": "tsc -w -p src/node --outDir dist/node-types",
     "dev-client": "rollup -w -c client.rollup.config.js",
-    "dev-client-tsc": "tsc -w -p src/client",
     "prepare": "npm run build"
   },
   "peerDependencies": {

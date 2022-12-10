@@ -32,7 +32,7 @@ export async function ssrBuild(
       ssr: true,
       cssCodeSplit: false,
       rollupOptions: {
-        input: path.join(CLIENT_PATH, 'entries', 'ssg-server.js'),
+        input: path.join(CLIENT_PATH, 'entries', 'ssg-server.mjs'),
         // preserveEntrySignatures: 'allow-extension',
         output: {
           // format: 'cjs',
@@ -67,7 +67,7 @@ export async function ssrBuild(
     build: {
       cssCodeSplit: false,
       rollupOptions: {
-        input: path.join(CLIENT_PATH, 'entries', 'ssg-client.js'),
+        input: path.join(CLIENT_PATH, 'entries', 'ssg-client.mjs'),
         preserveEntrySignatures: 'allow-extension',
       },
       assetsDir: 'assets',

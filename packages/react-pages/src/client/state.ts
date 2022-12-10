@@ -35,7 +35,7 @@ const initialPagePaths = Object.keys(initialPages)
 if (import.meta.hot) {
   let setTheme: SetAtom<{ Theme: Theme }, void> | undefined
   import.meta.hot!.accept('/@react-pages/theme', (module) => {
-    console.log('@@hot update /@react-pages/theme', module)
+    // console.log('@@hot update /@react-pages/theme', module)
     if (!module) {
       console.error('unexpected hot module', module)
       return
@@ -52,7 +52,7 @@ if (import.meta.hot) {
 
   let setPages: SetAtom<any, void> | undefined
   import.meta.hot!.accept('/@react-pages/pages', (module) => {
-    console.log('@@hot update /@react-pages/pages', module)
+    // console.log('@@hot update /@react-pages/pages', module)
     if (!module) {
       console.error('unexpected hot module', module)
       return
@@ -62,7 +62,7 @@ if (import.meta.hot) {
 
   let setAllPagesOutlines: SetAtom<any, void> | undefined
   import.meta.hot!.accept('/@react-pages/allPagesOutlines', (module) => {
-    console.log('@@hot update /@react-pages/allPagesOutlines', module)
+    // console.log('@@hot update /@react-pages/allPagesOutlines', module)
     if (!module) {
       console.error('unexpected hot module', module)
       return
