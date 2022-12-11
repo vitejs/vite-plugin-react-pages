@@ -1,6 +1,6 @@
 {
   "name": "vite-pages-theme-doc",
-  "version": "4.0.0-alpha.14",
+  "version": "4.0.0-alpha.15",
   "description": "A document theme for vite-plugin-react-pages.",
   "main": "dist-cjs/index.js",
   "module": "dist/index.js",
