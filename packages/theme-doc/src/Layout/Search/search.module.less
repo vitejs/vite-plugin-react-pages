@@ -1,4 +1,4 @@
-@import '../variables.less';
+@import '../common.less';
 
 @search-icon-color: #ced4d9;
 
@@ -8,9 +8,17 @@
   }
 
   border-left: 1px solid @colorSplit;
-  padding-left: 40px;
   display: flex;
   align-items: center;
+
+  padding-left: 12px;
+  margin-left: 20px;
+  .media-width-md({
+    & {
+      padding-left: 40px;
+      margin-left: 0px;
+    }
+  });
 
   .input {
     padding: 4px 0px;
@@ -27,7 +35,12 @@
 }
 
 .popup {
-  max-width: 600px;
+  max-width: 100vw;
+  .media-width-md({
+    & {
+      max-width: 600px;
+    }
+  });
 }
 
 .searchResultLable {
