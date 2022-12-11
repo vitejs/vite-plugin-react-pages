@@ -232,7 +232,7 @@ easy to include example HTML source code using Markdown -- just paste
 it and indent it, and Markdown will handle the hassle of encoding the
 ampersands and angle brackets. For example, this:
 
-    <div class="footer">
+    <div className="footer">
         &copy; 2004 Foo Corporation
     </div>
 
