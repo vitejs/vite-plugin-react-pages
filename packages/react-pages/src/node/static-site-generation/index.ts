@@ -165,7 +165,7 @@ export async function ssrBuild(
   return
 
   function renderHTML(pagePath: string) {
-    const ssrContent = renderToString(pagePath)
+    const { contentText, styleText } = renderToString(pagePath)
     const ssrInfo = {
       routePath: pagePath,
     }
@@ -173,16 +173,16 @@ export async function ssrBuild(
       RootElementInjectPoint,
       // let client know the current ssr page
       `<script>window._vitePagesSSR=${JSON.stringify(ssrInfo)};</script>
-<div id="root">${ssrContent}</div>`
+<div id="root">${contentText}</div>`
     )
-    const cssInject = cssChunks
-      .map((cssChunk) => {
-        return `<link rel="stylesheet" href="${basePath}${cssChunk.fileName}" />`
-      })
-      .join('\n')
+    const cssInject = cssChunks.map((cssChunk) => {
+      return `<link rel="stylesheet" href="${basePath}${cssChunk.fileName}" />`
+    })
+    cssInject.push(styleText)
+
     html = html.replace(
       CSSInjectPoint,
-      `${cssInject}
+      `${cssInject.join('\n')}
 ${CSSInjectPoint}`
     )
     html = html.replace(
