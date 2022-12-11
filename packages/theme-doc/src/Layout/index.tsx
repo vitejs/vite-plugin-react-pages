@@ -58,9 +58,7 @@ const AppLayout: React.FC<React.PropsWithChildren<Props>> = ({ children }) => {
               </div>
             )}
             <div className={s.content}>{children}</div>
-            <div className={s.outline}>
-              <OutLine />
-            </div>
+            <OutLine />
           </div>
           <Footer />
         </div>

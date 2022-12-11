@@ -4,7 +4,7 @@ import type { AnchorProps } from 'antd'
 
 import { useThemeCtx } from '..'
 import s from './index.module.less'
-import { Anchor_Scroll_Offset } from '../utils'
+import { Anchor_Scroll_Offset, isSSR } from '../utils'
 import { LayoutContext } from './ctx'
 
 interface Props {}
@@ -23,6 +23,11 @@ const OutLine: React.FC<Props> = (props) => {
   const layoutCtxVal = useContext(LayoutContext)
   const isSmallScreen = !layoutCtxVal.screenWidth?.md
 
+  if (isSSR) {
+    // don't render Anchor during ssr because it is not supported well
+    // keep width place holder during ssr
+    return <div className={s.outline}></div>
+  }
   if (!data || isSmallScreen) return null
 
   const onClickAnchor: AnchorProps['onClick'] = (e, { title, href }) => {
@@ -37,14 +42,16 @@ const OutLine: React.FC<Props> = (props) => {
   }
 
   return (
-    <Anchor
-      affix={true}
-      offsetTop={100}
-      targetOffset={Anchor_Scroll_Offset}
-      onClick={onClickAnchor}
-    >
-      {renderAnchorLinks(data)}
-    </Anchor>
+    <div className={s.outline}>
+      <Anchor
+        affix={true}
+        offsetTop={100}
+        targetOffset={Anchor_Scroll_Offset}
+        onClick={onClickAnchor}
+      >
+        {renderAnchorLinks(data)}
+      </Anchor>
+    </div>
   )
 }
 
