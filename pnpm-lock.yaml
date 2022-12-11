@@ -50,7 +50,6 @@ importers:
       serve: ^14.1.2
       vite: ^4.0.0
       vite-pages-theme-doc: workspace:*
-      vite-plugin-mdx: ^3.5.11
       vite-plugin-react-pages: workspace:*
     dependencies:
       react: 18.2.0
@@ -64,7 +63,6 @@ importers:
       serve: 14.1.2
       vite: 4.0.0
       vite-pages-theme-doc: link:../packages/theme-doc
-      vite-plugin-mdx: 3.5.11_vite@4.0.0
       vite-plugin-react-pages: link:../packages/react-pages
 
   packages/create-project:
