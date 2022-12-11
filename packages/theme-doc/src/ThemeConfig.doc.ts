@@ -56,6 +56,11 @@ export interface ThemeConfig {
    * i18n metadata
    */
   i18n?: I18nConfig
+  /**
+   * Whether enable search feature
+   * @defaultValue true
+   */
+  search?: boolean
 }
 
 export interface I18nConfig {

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useContext } from 'react'
 import type { ThemeProps } from 'vite-plugin-react-pages/clientTypes'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 import { useLocation } from 'react-router-dom'
@@ -14,8 +14,15 @@ import { normalizeI18nConfig, useIsomorphicLayoutEffect } from './utils'
 import { getPageGroups, matchPagePathLocalePrefix } from './analyzeStaticData'
 
 export function createTheme(
-  themeConfig: ThemeConfig
+  originalThemeConfig: ThemeConfig
 ): React.FC<React.PropsWithChildren<ThemeProps>> {
+  // normalize themeConfig
+  const themeConfig = {
+    ...originalThemeConfig,
+    search: originalThemeConfig.search ?? true,
+    i18n: normalizeI18nConfig(originalThemeConfig.i18n),
+  }
+
   const ThemeComp = (props: ThemeProps) => {
     const { loadState, loadedData } = props
     const staticData = useStaticData()
@@ -98,14 +105,10 @@ export function createTheme(
       const { loadState, loadedData } = props
       const staticData = useStaticData()
       const themeCtxValue: ThemeContextValue = useMemo(() => {
-        const i18n = normalizeI18nConfig(themeConfig.i18n)
-        const pageGroups = getPageGroups(staticData, i18n)
+        const pageGroups = getPageGroups(staticData, themeConfig.i18n)
         const result: ThemeContextValue = {
           ...props,
-          themeConfig: {
-            ...themeConfig,
-            i18n,
-          },
+          themeConfig,
           staticData,
           resolvedLocale: {},
           pageGroups,
@@ -122,7 +125,7 @@ export function createTheme(
           pagePathWithoutLocalePrefix,
         })
         return result
-      }, [themeConfig, loadState, loadedData, staticData])
+      }, [loadState, loadedData, staticData])
 
       let children = <Component {...props} />
       if (themeConfig.AppWrapper) {

@@ -19,7 +19,6 @@ interface Props {}
 // flexsearch options to support both en and zh:
 // https://github.com/nextapps-de/flexsearch/issues/202#issuecomment-1092409502
 // load outline data on demand
-// add an option to turn off search
 
 const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { staticData, resolvedLocale, pageGroups } = useThemeCtx()

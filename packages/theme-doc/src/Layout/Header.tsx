@@ -143,9 +143,11 @@ const AppHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
       </div>
       <div className={s.logoArea}>{renderLogo}</div>
 
-      <div className={s.searchArea}>
-        <Search />
-      </div>
+      {themeConfig.search && (
+        <div className={s.searchArea}>
+          <Search />
+        </div>
+      )}
 
       <div className={s.flexSpace}></div>
 
