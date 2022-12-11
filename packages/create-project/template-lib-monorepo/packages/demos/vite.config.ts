@@ -1,12 +1,12 @@
 import { defineConfig } from 'vite'
 import * as path from 'path'
 import react from '@vitejs/plugin-react'
-import { setupPlugins, DefaultPageStrategy } from 'vite-plugin-react-pages'
+import pages, { DefaultPageStrategy } from 'vite-plugin-react-pages'
 
 export default defineConfig({
   plugins: [
     react(),
-    setupPlugins({
+    pages({
       pagesDir: path.join(__dirname, 'pages'),
       pageStrategy: new DefaultPageStrategy({
         extraFindPages: async (pagesDir, helpers) => {
