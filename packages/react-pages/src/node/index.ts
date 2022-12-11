@@ -25,7 +25,6 @@ import {
 import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
 import { FileTextMdxPlugin } from './utils/mdx-plugin-file-text'
-import { AnalyzeHeadingsMdxPlugin } from './utils/mdx-plugin-analyze-headings'
 import {
   OutlineInfoModuleManager,
   OUTLINE_INFO_MODULE_ID_PREFIX,

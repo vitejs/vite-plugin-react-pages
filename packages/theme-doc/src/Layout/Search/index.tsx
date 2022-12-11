@@ -18,6 +18,8 @@ interface Props {}
 // TODO: use https://github.com/nextapps-de/flexsearch to do full text search in browser
 // flexsearch options to support both en and zh:
 // https://github.com/nextapps-de/flexsearch/issues/202#issuecomment-1092409502
+// load outline data on demand
+// add an option to turn off search
 
 const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { staticData, resolvedLocale, pageGroups } = useThemeCtx()
@@ -26,10 +28,6 @@ const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const navigate = useNavigate()
 
   const allPagesOutlines = useAllPagesOutlines(2000)?.allPagesOutlines
-
-  // const themeCtxValue = useThemeCtx()
-  // console.log('@@themeCtxValue', themeCtxValue)
-  // console.log('@@pageGroups', pageGroups)
 
   const preparedPages = useMemo(() => {
     const res = [] as PageMetaExtended[]
