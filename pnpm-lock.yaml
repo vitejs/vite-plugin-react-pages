@@ -75,7 +75,6 @@ importers:
 
   packages/create-project/template-app:
     specifiers:
-      '@mdx-js/mdx': ^2.1.5
       '@mdx-js/react': ^2.1.5
       '@types/node': ^18.11.12
       '@types/react': ^18.0.26
@@ -93,7 +92,6 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-router-dom: 6.4.5_biqbaboplfbrettd7655fr4n2y
     devDependencies:
-      '@mdx-js/mdx': 2.1.5
       '@mdx-js/react': 2.1.5_react@18.2.0
       '@types/node': 18.11.12
       '@types/react': 18.0.26
@@ -106,7 +104,6 @@ importers:
 
   packages/create-project/template-lib:
     specifiers:
-      '@mdx-js/mdx': ^2.1.5
       '@mdx-js/react': ^2.1.5
       '@rollup/plugin-typescript': ^10.0.1
       '@types/node': ^18.11.12
@@ -125,7 +122,6 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-router-dom: 6.4.5_biqbaboplfbrettd7655fr4n2y
     devDependencies:
-      '@mdx-js/mdx': 2.1.5
       '@mdx-js/react': 2.1.5_react@18.2.0
       '@rollup/plugin-typescript': 10.0.1
       '@types/node': 18.11.12
@@ -166,7 +162,6 @@ importers:
 
   packages/create-project/template-lib-monorepo/packages/demos:
     specifiers:
-      '@mdx-js/mdx': ^2.1.5
       '@mdx-js/react': ^2.1.5
       '@types/node': ^18.11.12
       '@types/react': ^18.0.26
@@ -187,7 +182,6 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-router-dom: 6.4.5_biqbaboplfbrettd7655fr4n2y
     devDependencies:
-      '@mdx-js/mdx': 2.1.5
       '@mdx-js/react': 2.1.5_react@18.2.0
       '@types/node': 18.11.12
       '@types/react': 18.0.26
@@ -9229,9 +9223,6 @@ packages:
     peerDependencies:
       '@mdx-js/mdx': '*'
       vite: '*'
-    peerDependenciesMeta:
-      '@mdx-js/mdx':
-        optional: true
     dependencies:
       '@alloc/quick-lru': 5.2.0
       '@mdx-js/mdx': 2.1.5
@@ -9246,9 +9237,6 @@ packages:
     peerDependencies:
       '@mdx-js/mdx': '*'
       vite: '*'
-    peerDependenciesMeta:
-      '@mdx-js/mdx':
-        optional: true
     dependencies:
       '@alloc/quick-lru': 5.2.0
       esbuild: 0.13.8
