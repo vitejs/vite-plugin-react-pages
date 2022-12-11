@@ -249,6 +249,10 @@
     .outline {
       flex: 0 0 auto;
       width: 180px;
+      display: none;
+      .media-width-md({
+        display: block;
+      });
     }
   }
 }
@@ -256,7 +260,7 @@
 :global {
   .markdown-body {
     box-sizing: border-box;
-    max-width: 1080px;
+    // max-width: 1080px;
     margin: 0 auto 0 0;
     padding: 24px;
     .media-width-md({

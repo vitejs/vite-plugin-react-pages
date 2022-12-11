@@ -23,12 +23,12 @@ const OutLine: React.FC<Props> = (props) => {
   const layoutCtxVal = useContext(LayoutContext)
   const isSmallScreen = !layoutCtxVal.screenWidth?.md
 
-  if (isSSR) {
+  if (!data) return null
+  if (isSSR || isSmallScreen) {
+    // keep width place holder
     // don't render Anchor during ssr because it is not supported well
-    // keep width place holder during ssr
     return <div className={s.outline}></div>
   }
-  if (!data || isSmallScreen) return null
 
   const onClickAnchor: AnchorProps['onClick'] = (e, { title, href }) => {
     // preventDefault to prevent browser scroll to the heading
