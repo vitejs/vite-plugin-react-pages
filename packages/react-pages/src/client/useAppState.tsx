@@ -1,8 +1,9 @@
-import { useState, useLayoutEffect, useContext, useRef } from 'react'
+import { useState, useContext, useRef } from 'react'
 import { unstable_batchedUpdates as batchedUpdates } from 'react-dom'
 import type { LoadState } from '../../clientTypes'
 import { dataCacheCtx, setDataCacheCtx } from './ctx'
 import { usePageModule } from './state'
+import { useIsomorphicLayoutEffect } from './utils'
 
 export default function useAppState(routePath: string) {
   const dataCache = useContext(dataCacheCtx)
@@ -39,7 +40,7 @@ export default function useAppState(routePath: string) {
 
   const loading = usePageModule(routePath)
   const loadingRef = useRef<Promise<any> | undefined>()
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     loadingRef.current = loading
     if (!loading) {
       onLoadState('404', routePath)

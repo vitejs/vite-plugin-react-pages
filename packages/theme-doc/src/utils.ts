@@ -1,3 +1,4 @@
+import { useLayoutEffect, useEffect } from 'react'
 import type { I18nConfig, LocalConfig } from './ThemeConfig.doc'
 
 export function withClsPrefix(cls: string) {
@@ -55,3 +56,8 @@ export function commonjsExportsInterop<T>(commonjsExports: T) {
 }
 
 export const Anchor_Scroll_Offset = 72
+
+// fix warning of useLayoutEffect during ssr
+// https://gist.github.com/gaearon/e7d97cdf38a2907924ea12e4ebdf3c85
+export const useIsomorphicLayoutEffect =
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect

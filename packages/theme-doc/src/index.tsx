@@ -1,4 +1,4 @@
-import React, { useMemo, useLayoutEffect } from 'react'
+import React, { useMemo } from 'react'
 import type { ThemeProps } from 'vite-plugin-react-pages/clientTypes'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 import { useLocation } from 'react-router-dom'
@@ -10,7 +10,7 @@ import './style.less'
 import { Demo } from './Layout/Demo'
 import AnchorLink from './components/AnchorLink'
 import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
-import { normalizeI18nConfig } from './utils'
+import { normalizeI18nConfig, useIsomorphicLayoutEffect } from './utils'
 import { getPageGroups, matchPagePathLocalePrefix } from './analyzeStaticData'
 
 export function createTheme(
@@ -21,7 +21,7 @@ export function createTheme(
     const staticData = useStaticData()
 
     const location = useLocation()
-    useLayoutEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       // scroll to anchor after page component loaded
       if (loadState.type === 'loaded') {
         if (location.hash) {
