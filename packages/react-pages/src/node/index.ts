@@ -99,6 +99,14 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
       } else {
         pageStrategy = new DefaultPageStrategy()
       }
+      const mdxPlugin = plugins.find(
+        (plugin) => plugin.name === 'vite-plugin-mdx'
+      )
+      if (mdxPlugin) {
+        throw new Error(
+          'You should not use vite-plugin-mdx with vite-plugin-react-pages. vite-pages v5 has buildin plugin for mdx.'
+        )
+      }
     },
     configureServer({ watcher, moduleGraph }) {
       const reloadVirtualModule = (moduleId: string) => {
