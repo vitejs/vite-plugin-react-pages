@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
     "dev": "vite serve",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
@@ -27,7 +28,6 @@
     "serve": "^14.1.2",
     "vite": "^4.0.0",
     "vite-pages-theme-doc": "workspace:*",
-    "vite-plugin-mdx": "^3.5.11",
     "vite-plugin-react-pages": "workspace:*"
   }
 }

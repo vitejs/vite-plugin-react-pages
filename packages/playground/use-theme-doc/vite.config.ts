@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import * as path from 'path'
 import react from '@vitejs/plugin-react'
 import { setupPlugins } from 'vite-plugin-react-pages'
-import { LessPluginRemoveAntdGlobalStyles } from 'less-plugin-remove-antd-global-styles'
 
 export default defineConfig(async () => {
   return {
@@ -26,7 +25,6 @@ export default defineConfig(async () => {
             'ant-prefix': 'vp-antd',
           },
           javascriptEnabled: true,
-          plugins: [new LessPluginRemoveAntdGlobalStyles()],
         },
       },
       modules: {
