@@ -118,6 +118,8 @@ const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
     <div className={s['search-box']}>
       <AutoComplete
         popupClassName={s.popup}
+        // https://ant.design/docs/react/faq#how-do-i-prevent-select-dropdown-datepicker-timepicker-popover-popconfirm-scrolling-with-the-page
+        getPopupContainer={(trigger) => trigger.parentElement}
         dropdownMatchSelectWidth={false}
         style={{ width: 200 }}
         options={options}
