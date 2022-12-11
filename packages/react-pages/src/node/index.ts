@@ -54,7 +54,7 @@ export interface PluginConfig {
   staticSiteGeneration?: {}
 }
 
-export default function pluginFactory(opts: PluginConfig = {}): Plugin {
+function pluginFactory(opts: PluginConfig = {}): Plugin {
   const { useHashRouter = false, staticSiteGeneration } = opts
 
   let isBuild: boolean
@@ -257,7 +257,9 @@ function moveScriptTagToBodyEnd(
   }
 }
 
-export async function setupPlugins(vpConfig: PluginConfig) {
+export default async function setupPlugins(
+  vpConfig: PluginConfig = {}
+): Promise<Plugin[]> {
   // use dynamic import so that it supports node commonjs
   const mdx = await import('@mdx-js/rollup')
   return [
