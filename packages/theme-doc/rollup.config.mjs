@@ -2,6 +2,7 @@ import postcss from 'rollup-plugin-postcss'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
+import MagicString from 'magic-string'
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
@@ -64,5 +65,29 @@ export default {
       },
       extract: 'index.css',
     }),
+    {
+      name: 'add-css-import',
+      async renderChunk(code, chunk, options, meta) {
+        debugger
+        if (chunk.fileName === 'index.js' && chunk.isEntry) {
+          chunk.imports.push('./index.css')
+          chunk.importedBindings['./index.css'] = []
+          const s = new MagicString(code)
+          if (options.format === 'cjs') {
+            if (code.startsWith(`'use strict';`)) {
+              s.remove(0, `'use strict';`.length)
+            }
+            s.prepend(`'use strict';\nrequire('./index.css');\n`)
+          } else {
+            s.prepend(`import './index.css';\n`)
+          }
+          const map = s.generateMap({ hires: true })
+          return {
+            code: s.toString(),
+            map,
+          }
+        }
+      },
+    },
   ],
 }
