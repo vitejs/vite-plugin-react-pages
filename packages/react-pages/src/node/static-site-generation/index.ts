@@ -35,16 +35,16 @@ export async function ssrBuild(
         input: path.join(CLIENT_PATH, 'entries', 'ssg-server.mjs'),
         // preserveEntrySignatures: 'allow-extension',
         output: {
-          // format: 'cjs',
-          // exports: 'named',
-          // ensure ssr bundle is loaded as esm even when
-          // users have "type": "commonjs" in their package.json
           entryFileNames: '[name].mjs',
           chunkFileNames: '[name]-[hash].mjs',
         },
       },
       outDir: ssrOutDir,
       minify: false,
+    },
+    ssr: {
+      // TODO: theme-doc should export a vite plugin to do this
+      noExternal: ['vite-pages-theme-doc'],
     },
   })
 
