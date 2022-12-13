@@ -26,7 +26,12 @@ if (root) {
 ;(async () => {
   if (!command || command === 'ssr') {
     // user can pass in vite config like --outDir or --configFile
-    const viteConfig = await resolveConfig(argv, 'build')
+    const viteConfig = await resolveConfig(
+      argv,
+      'build',
+      'production',
+      'production'
+    )
     const thisPlugin = viteConfig.plugins.find((plugin) => {
       return plugin.name === 'vite-plugin-react-pages'
     })

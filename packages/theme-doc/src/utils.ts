@@ -57,7 +57,7 @@ export function commonjsExportsInterop<T>(commonjsExports: T) {
 
 export const Anchor_Scroll_Offset = 72
 
-export const isSSR = typeof window === 'undefined'
+export const isSSR = import.meta.env.SSR
 
 // fix warning of useLayoutEffect during ssr
 // https://gist.github.com/gaearon/e7d97cdf38a2907924ea12e4ebdf3c85

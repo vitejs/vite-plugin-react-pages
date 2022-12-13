@@ -14,11 +14,6 @@ export default {
       format: 'esm',
       sourcemap: true,
     },
-    {
-      dir: 'dist-cjs',
-      format: 'cjs',
-      sourcemap: true,
-    },
   ],
   external: [
     'react',
@@ -31,6 +26,7 @@ export default {
     resolve({
       // prevent bundling unexpected deps
       // resolveOnly: ['antd', /^antd\/.*$/, '@babel/runtime'],
+      // resolveOnly: ['none!'],
       extensions,
     }),
     commonjs(),
@@ -73,14 +69,7 @@ export default {
           chunk.imports.push('./index.css')
           chunk.importedBindings['./index.css'] = []
           const s = new MagicString(code)
-          if (options.format === 'cjs') {
-            if (code.startsWith(`'use strict';`)) {
-              s.remove(0, `'use strict';`.length)
-            }
-            s.prepend(`'use strict';\nrequire('./index.css');\n`)
-          } else {
-            s.prepend(`import './index.css';\n`)
-          }
+          s.prepend(`import './index.css';\n`)
           const map = s.generateMap({ hires: true })
           return {
             code: s.toString(),
