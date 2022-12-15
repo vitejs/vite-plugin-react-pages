@@ -7,7 +7,10 @@ import MagicString from 'magic-string'
 const extensions = ['.js', '.jsx', '.ts', '.tsx']
 
 export default {
-  input: 'src/index.tsx',
+  input: {
+    index: 'src/index.tsx',
+    ssrPlugin: 'src/ssrPlugin.tsx'
+  },
   output: [
     {
       dir: 'dist',

@@ -12,7 +12,6 @@ import AnchorLink from './components/AnchorLink'
 import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
 import { normalizeI18nConfig, useIsomorphicLayoutEffect } from './utils'
 import { getPageGroups, matchPagePathLocalePrefix } from './analyzeStaticData'
-import { useAntdSSRPlugin } from './useAntdSSRPlugin'
 
 export function createTheme(
   originalThemeConfig: ThemeConfig
@@ -25,7 +24,6 @@ export function createTheme(
   }
 
   const ThemeComp = (props: ThemeProps) => {
-    useAntdSSRPlugin()
     const { loadState, loadedData } = props
     const staticData = useStaticData()
 

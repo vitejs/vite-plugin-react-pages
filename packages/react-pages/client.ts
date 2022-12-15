@@ -26,6 +26,6 @@ export const useAllPagesOutlines: UseAllPagesOutlines = (...params) => {
 
 export type { Theme } from './clientTypes'
 
-export function useSSRPlugin(ssrPlugin: SSRPlugin) {
-  ;(globalThis as any)['__vite_pages_useSSRPlugin'](ssrPlugin)
-}
+// export function useSSRPlugin(ssrPlugin: SSRPlugin) {
+//   ;(globalThis as any)['__vite_pages_useSSRPlugin'](ssrPlugin)
+// }

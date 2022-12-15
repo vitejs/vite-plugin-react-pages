@@ -11,7 +11,15 @@
       "import": "./dist/index.js"
     },
     "./src": "./src",
-    "./src/*": "./src/*"
+    "./src/*": "./src/*",
+    "./vitePlugin": {
+      "import": "./dist-vite-plugin/esm/index.js",
+      "require": "./dist-vite-plugin/cjs/index.js"
+    },
+    "./vitePlugin/*": {
+      "import": "./dist-vite-plugin/esm/*",
+      "require": "./dist-vite-plugin/cjs/*"
+    }
   },
   "keywords": [
     "vite",
@@ -30,14 +38,17 @@
   },
   "homepage": "https://github.com/vitejs/vite-plugin-react-pages",
   "scripts": {
-    "clean": "rimraf ./dist ./lib ./dist-cjs",
+    "clean": "rimraf ./dist ./lib ./dist-vite-plugin",
     "build": "npm run clean && concurrently \"npm:build-*\"",
-    "build-dts": "tsc",
-    "build-copy-files": "node ./scripts/copy.mjs",
+    "build-dts": "tsc -p src",
     "build-rollup": "rollup -c",
+    "build-vite-plugin": "tsc -p ./vitePlugin",
+    "build-vite-plugin-cjs": "tsc -p ./vitePlugin --module commonjs --outDir ./dist-vite-plugin/cjs",
     "dev": "npm run clean && concurrently \"npm:dev-*\"",
-    "dev-dts": "tsc --watch",
+    "dev-dts": "tsc -p src --watch",
     "dev-rollup": "rollup -wc",
+    "dev-vite-plugin": "tsc -p ./vitePlugin --watch",
+    "dev-vite-plugin-cjs": "tsc -p ./vitePlugin --module commonjs --outDir ./dist-vite-plugin/cjs --watch",
     "prepare": "npm run build"
   },
   "devDependencies": {
