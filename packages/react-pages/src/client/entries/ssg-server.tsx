@@ -13,22 +13,17 @@ import { dataCacheCtx } from '../ctx'
 import type { PagesLoaded, SSRPlugin } from '../../../clientTypes'
 
 import ssrData from '/@react-pages/ssrData'
-import { plugins as _plugins } from '/@react-pages/ssr-plugins'
-
-const ssrPlugins: SSRPlugin[] = _plugins
-
-console.log('[vite-pages] ssrPlugins:', ssrPlugins)
 
 export { ssrData }
 
 // put all page data in cache, so that we don't need to load it in ssr
 const dataCache: PagesLoaded = ssrData
 
-export function renderToString(url: string) {
+export function renderToString(url: string, ssrPlugins?: SSRPlugin[]) {
   let ssrApp: React.ReactNode = <SSRApp url={url} />
 
   const extractStyleArr: (() => string)[] = []
-  ssrPlugins.forEach((ssrPlugin) => {
+  ssrPlugins?.forEach((ssrPlugin) => {
     const { app, extractStyle } = ssrPlugin.prepare(ssrApp)
     if (extractStyle) extractStyleArr.push(extractStyle)
     if (app) ssrApp = app

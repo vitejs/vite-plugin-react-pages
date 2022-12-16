@@ -29,7 +29,6 @@ import {
   OutlineInfoModuleManager,
   OUTLINE_INFO_MODULE_ID_PREFIX,
 } from './virtual-module-plugins/outline-info-module'
-import { SSRPluginModuleManager } from './virtual-module-plugins/ssr-plugin-module'
 
 /**
  * This is a public API that users use in their index.html.
@@ -66,12 +65,11 @@ function pluginFactory(opts: PluginConfig = {}): Plugin {
   const demoModuleManager = new DemoModuleManager()
   const tsInfoModuleManager = new TsInfoModuleManager()
   const outlineInfoModuleManager = new OutlineInfoModuleManager()
-  const ssrPluginModuleManager = new SSRPluginModuleManager()
 
   return {
     name: 'vite-plugin-react-pages',
     enforce: 'pre',
-    config: () => ({
+    config: (config, env) => ({
       optimizeDeps: {
         include: [
           'react',
@@ -84,6 +82,9 @@ function pluginFactory(opts: PluginConfig = {}): Plugin {
       },
       define: {
         __HASH_ROUTER__: !!useHashRouter,
+        'process.env.VITE_PAGES_IS_SSR': env.ssrBuild
+          ? JSON.stringify('true')
+          : JSON.stringify('false'),
       },
       build: {
         rollupOptions: {
@@ -208,9 +209,6 @@ function pluginFactory(opts: PluginConfig = {}): Plugin {
       if (tsInfoModuleManager.isProxyModuleId(id)) {
         return tsInfoModuleManager.loadProxyModule(id)
       }
-      if (ssrPluginModuleManager.isSSRPluginModule(id)) {
-        return ssrPluginModuleManager.load()
-      }
     },
     closeBundle() {
       virtualModulesManager.close()
@@ -224,12 +222,6 @@ function pluginFactory(opts: PluginConfig = {}): Plugin {
     // Read by the cli script to get staticSiteGeneration config
     // @ts-expect-error
     vitePagesStaticSiteGeneration: staticSiteGeneration,
-    /**
-     * Called by other plugin to hook into the SSR process
-     */
-    registerSSRPlugin(ssrPluginPath: string) {
-      ssrPluginModuleManager.registerSSRPlugin(ssrPluginPath)
-    },
   }
 }
 

@@ -1,4 +1,6 @@
 import { useLayoutEffect, useEffect } from 'react'
+import { IS_SSR } from 'vite-plugin-react-pages/client'
+
 import type { I18nConfig, LocalConfig } from './ThemeConfig.doc'
 
 export function withClsPrefix(cls: string) {
@@ -57,7 +59,7 @@ export function commonjsExportsInterop<T>(commonjsExports: T) {
 
 export const Anchor_Scroll_Offset = 72
 
-export const isSSR = import.meta.env.SSR
+export const isSSR = IS_SSR
 
 // fix warning of useLayoutEffect during ssr
 // https://gist.github.com/gaearon/e7d97cdf38a2907924ea12e4ebdf3c85

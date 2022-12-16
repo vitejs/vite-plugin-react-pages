@@ -6,6 +6,7 @@ import fs from 'fs-extra'
 import { pathToFileURL } from 'node:url'
 
 import { CLIENT_PATH } from '../constants'
+import type { SSRPlugin } from '../../../clientTypes'
 
 export async function ssrBuild(
   viteConfig: ResolvedConfig,
@@ -50,13 +51,31 @@ export async function ssrBuild(
 
   console.log('\n\nrendering html...')
 
+  const ssrPluginPromises: Promise<SSRPlugin>[] = []
+  ;(global as any)['register_vite_pages_ssr_plugin'] = (
+    promise: Promise<SSRPlugin>
+  ) => {
+    ssrPluginPromises.push(promise)
+  }
+  process.env.VITE_PAGES_IS_SSR = 'true'
+
   const { renderToString, ssrData } = await import(
     pathToFileURL(path.join(ssrOutDir, 'ssg-server.mjs')).toString()
   )
 
-  // debug code
-  // const res = renderToString('/page2')
-  // return console.log('@@@renderToString', res);
+  const ssrPlugins = await Promise.all(ssrPluginPromises)
+  ssrPlugins.forEach((plugin, index) => {
+    // validate ssr plugins
+    if (!plugin?.id) {
+      console.error('invalid ssr plugins:', ssrPlugins)
+      throw new Error('invalid ssr plugin: no plugin id')
+    }
+    const idx = ssrPlugins.findIndex((p) => p.id === plugin.id)
+    if (idx !== index) {
+      console.error('invalid ssr plugins:', ssrPlugins)
+      throw new Error(`duplicate ssr plugin: ${plugin.id}`)
+    }
+  })
 
   const pagePaths = Object.keys(ssrData)
 
@@ -165,7 +184,7 @@ export async function ssrBuild(
   return
 
   function renderHTML(pagePath: string) {
-    const { contentText, styleText } = renderToString(pagePath)
+    const { contentText, styleText } = renderToString(pagePath, ssrPlugins)
     const ssrInfo = {
       routePath: pagePath,
     }

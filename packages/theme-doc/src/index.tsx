@@ -13,6 +13,8 @@ import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
 import { normalizeI18nConfig, useIsomorphicLayoutEffect } from './utils'
 import { getPageGroups, matchPagePathLocalePrefix } from './analyzeStaticData'
 
+import './importSSRPlugin'
+
 export function createTheme(
   originalThemeConfig: ThemeConfig
 ): React.FC<React.PropsWithChildren<ThemeProps>> {

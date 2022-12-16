@@ -26,6 +26,14 @@ export const useAllPagesOutlines: UseAllPagesOutlines = (...params) => {
 
 export type { Theme } from './clientTypes'
 
-// export function useSSRPlugin(ssrPlugin: SSRPlugin) {
-//   ;(globalThis as any)['__vite_pages_useSSRPlugin'](ssrPlugin)
-// }
+export const IS_SSR = process.env.VITE_PAGES_IS_SSR === 'true'
+
+export function registerSSRPlugin(ssrPlugin: SSRPlugin | Promise<SSRPlugin>) {
+  const impl = (global as any)['register_vite_pages_ssr_plugin']
+  if (typeof impl !== 'function') {
+    throw new Error(
+      'registerSSRPlugin hook should only be called under the condition: `IS_SSR === true`. Otherwise, your client bundle will include your ssrPlugin and related dependencies, which will increase your bundle size.'
+    )
+  }
+  return impl(ssrPlugin)
+}
