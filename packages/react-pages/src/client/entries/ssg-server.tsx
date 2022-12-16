@@ -10,9 +10,7 @@ import { StaticRouter } from 'react-router-dom/server'
 
 import App from '../App'
 import { dataCacheCtx } from '../ctx'
-import type { PagesLoaded } from '../../../clientTypes'
-import type { SSRPlugin } from '../SSRPlugin'
-import { collectSSRPlugins as collect } from '../SSRPlugin'
+import type { PagesLoaded, SSRPlugin } from '../../../clientTypes'
 
 import ssrData from '/@react-pages/ssrData'
 import { plugins as _plugins } from '/@react-pages/ssr-plugins'
@@ -49,10 +47,6 @@ export function renderToString(url: string) {
     contentText,
     styleText,
   }
-}
-
-export function collectSSRPlugins(url: string): SSRPlugin[] {
-  return collect(<SSRApp url={url} />)
 }
 
 function SSRApp({ url }: { url: string }) {

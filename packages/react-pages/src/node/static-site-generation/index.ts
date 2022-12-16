@@ -50,7 +50,7 @@ export async function ssrBuild(
 
   console.log('\n\nrendering html...')
 
-  const { renderToString, collectSSRPlugins, ssrData } = await import(
+  const { renderToString, ssrData } = await import(
     pathToFileURL(path.join(ssrOutDir, 'ssg-server.mjs')).toString()
   )
 
@@ -120,9 +120,6 @@ export async function ssrBuild(
     )
   }
 
-  // render any page, and collect SSRPlugin from it
-  const ssrPlugins = collectSSRPlugins('/internal-404-page')
-
   await Promise.all(
     pagePaths.map(async (pagePath) => {
       // currently not support pages with path params
@@ -168,9 +165,7 @@ export async function ssrBuild(
   return
 
   function renderHTML(pagePath: string) {
-    const { contentText, styleText } = renderToString(pagePath, {
-      applySSRPlugins: ssrPlugins,
-    })
+    const { contentText, styleText } = renderToString(pagePath)
     const ssrInfo = {
       routePath: pagePath,
     }

@@ -15,10 +15,6 @@
     "./vitePlugin": {
       "import": "./dist-vite-plugin/esm/index.js",
       "require": "./dist-vite-plugin/cjs/index.js"
-    },
-    "./vitePlugin/*": {
-      "import": "./dist-vite-plugin/esm/*",
-      "require": "./dist-vite-plugin/cjs/*"
     }
   },
   "keywords": [
