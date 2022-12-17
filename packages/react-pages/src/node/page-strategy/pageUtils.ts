@@ -96,14 +96,16 @@ ${res.join('\n')}
 function cleanStaticData(staticData: any) {
   if (!staticData || typeof staticData !== 'object') return staticData
   return Object.fromEntries(
-    Object.entries(staticData).map(([key, value]) => {
-      return [
-        key,
-        {
-          ...(value as any),
-          __sourceFilePath: undefined,
-        },
-      ]
+    Object.entries(staticData).map(([key, value]: [string, any]) => {
+      if (value?.__sourceFilePath)
+        return [
+          key,
+          {
+            ...value,
+            __sourceFilePath: undefined,
+          },
+        ]
+      return [key, value]
     })
   )
 }
