@@ -26,7 +26,6 @@
     "serve": "^14.1.2",
     "vite": "^4.0.1",
     "vite-pages-theme-doc": "workspace:*",
-    "vite-plugin-mdx": "^3.5.11",
     "vite-plugin-react-pages": "workspace:*"
   }
 }
