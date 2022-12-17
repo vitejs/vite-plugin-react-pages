@@ -44,8 +44,8 @@ const OutLine: React.FC<Props> = (props) => {
   return (
     <div className={s.outline}>
       <Anchor
-        affix={true}
-        offsetTop={100}
+        affix={false}
+        className={s.anchors}
         targetOffset={Anchor_Scroll_Offset}
         onClick={onClickAnchor}
       >
