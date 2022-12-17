@@ -116,8 +116,6 @@ export type MenuConfig =
       /**
        * The menu item will show an "active" state
        * if it matches with current browsing path.
-       *
-       * TODO: check activeIfMatch with react-router v6
        */
       readonly activeIfMatch?:
         | string
