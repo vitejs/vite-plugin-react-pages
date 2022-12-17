@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-react-pages",
-  "version": "4.0.0-alpha.20",
+  "version": "4.0.0-alpha.21",
   "type": "module",
   "types": "./dist/node-types/index.d.ts",
   "exports": {
