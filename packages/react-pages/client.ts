@@ -28,12 +28,16 @@ export type { Theme } from './clientTypes'
 
 export const IS_SSR = process.env.VITE_PAGES_IS_SSR === 'true'
 
-export function registerSSRPlugin(ssrPlugin: SSRPlugin | Promise<SSRPlugin>) {
+/**
+ * With ssr plugins, users can hook into the ssr process.
+ *
+ * For example, you can extract style from css-in-js tools to render it in ssr output(HTML):
+ * https://ant.design/docs/react/customize-theme#server-side-render-ssr
+ *
+ * Register ssr plugin with dynamic import function,
+ * so that your ssr code will not increase client bundle size.
+ */
+export function registerSSRPlugin(importSSRPlugin: () => Promise<SSRPlugin>) {
   const impl = (global as any)['register_vite_pages_ssr_plugin']
-  if (typeof impl !== 'function') {
-    throw new Error(
-      'registerSSRPlugin hook should only be called under the condition: `IS_SSR === true`. Otherwise, your client bundle will include your ssrPlugin and related dependencies, which will increase your bundle size.'
-    )
-  }
-  return impl(ssrPlugin)
+  return impl(importSSRPlugin)
 }

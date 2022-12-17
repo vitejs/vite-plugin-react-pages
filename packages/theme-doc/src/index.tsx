@@ -1,4 +1,4 @@
-import React, { useMemo, useContext } from 'react'
+import React, { useMemo } from 'react'
 import type { ThemeProps } from 'vite-plugin-react-pages/clientTypes'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 import { useLocation } from 'react-router-dom'
@@ -12,8 +12,6 @@ import AnchorLink from './components/AnchorLink'
 import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
 import { normalizeI18nConfig, useIsomorphicLayoutEffect } from './utils'
 import { getPageGroups, matchPagePathLocalePrefix } from './analyzeStaticData'
-
-import './importSSRPlugin'
 
 export function createTheme(
   originalThemeConfig: ThemeConfig
@@ -166,3 +164,6 @@ export type {
   FooterLink,
 } from './ThemeConfig.doc'
 export { useThemeCtx } from './ctx'
+
+import { registerSSRPlugin } from 'vite-plugin-react-pages/client'
+registerSSRPlugin(() => import('./ssrPlugin').then((mod) => mod.default))

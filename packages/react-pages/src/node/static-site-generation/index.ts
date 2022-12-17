@@ -44,7 +44,11 @@ export async function ssrBuild(
       minify: false,
     },
     ssr: {
-      // TODO: theme-doc should export a vite plugin to do this
+      // `vite-pages-theme-doc/dist/index.js` have `import './index.css'`
+      // so it needs to be bundled by vite before executed by node.js.
+      // This is coupled to theme-doc,
+      // but we don't want to ask users to put this in their vite config.
+      // So let's put it here :)
       noExternal: ['vite-pages-theme-doc'],
     },
   })
@@ -53,9 +57,9 @@ export async function ssrBuild(
 
   const ssrPluginPromises: Promise<SSRPlugin>[] = []
   ;(global as any)['register_vite_pages_ssr_plugin'] = (
-    promise: Promise<SSRPlugin>
+    importSSRPlugin: () => Promise<SSRPlugin>
   ) => {
-    ssrPluginPromises.push(promise)
+    ssrPluginPromises.push(importSSRPlugin())
   }
   process.env.VITE_PAGES_IS_SSR = 'true'
 
