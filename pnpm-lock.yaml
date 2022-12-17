@@ -210,6 +210,7 @@ importers:
       react-dom: ^18.2.0
       react-router-dom: ^6.5.0
       rimraf: ^3.0.2
+      sass: ^1.57.0
       serve: ^14.1.2
       vite: ^4.0.1
       vite-plugin-react-pages: workspace:*
@@ -222,8 +223,9 @@ importers:
       '@types/react': 18.0.26
       '@vitejs/plugin-react': 3.0.0_vite@4.0.1
       rimraf: 3.0.2
+      sass: 1.57.0
       serve: 14.1.2
-      vite: 4.0.1
+      vite: 4.0.1_sass@1.57.0
       vite-plugin-react-pages: link:../../react-pages
 
   packages/playground/custom-find-pages:
@@ -4197,7 +4199,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.20.5
       magic-string: 0.27.0
       react-refresh: 0.14.0
-      vite: 4.0.1
+      vite: 4.0.1_sass@1.57.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5606,6 +5608,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /immutable/4.1.0:
+    resolution: {integrity: sha512-oNkuqVTA8jqG1Q6c+UglTOD1xhC1BtjKI7XkCXRkZHrN5m18/XsnUp8Q89GkQO/z+0WjonSvl0FLhDYftp46nQ==}
+    dev: true
 
   /import-cwd/3.0.0:
     resolution: {integrity: sha512-4pnzH16plW+hgvRECbDWpQl3cqtvSofHWh44met7ESfZ8UZOWWddm8hEyDTqREJ9RbYHY8gi8DqmaelApoOGMg==}
@@ -8415,6 +8421,16 @@ packages:
     dev: true
     optional: true
 
+  /sass/1.57.0:
+    resolution: {integrity: sha512-IZNEJDTK1cF5B1cGA593TPAV/1S0ysUDxq9XHjX/+SMy0QfUny+nfUsq5ZP7wWSl4eEf7wDJcEZ8ABYFmh3m/w==}
+    engines: {node: '>=12.0.0'}
+    hasBin: true
+    dependencies:
+      chokidar: 3.5.3
+      immutable: 4.1.0
+      source-map-js: 1.0.2
+    dev: true
+
   /sax/1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
     dev: true
@@ -9066,6 +9082,40 @@ packages:
       postcss: 8.4.20
       resolve: 1.22.1
       rollup: 3.7.5
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
+  /vite/4.0.1_sass@1.57.0:
+    resolution: {integrity: sha512-kZQPzbDau35iWOhy3CpkrRC7It+HIHtulAzBhMqzGHKRf/4+vmh8rPDDdv98SWQrFWo6//3ozwsRmwQIPZsK9g==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      esbuild: 0.16.8
+      postcss: 8.4.20
+      resolve: 1.22.1
+      rollup: 3.7.5
+      sass: 1.57.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
