@@ -38,6 +38,6 @@ export const IS_SSR = process.env.VITE_PAGES_IS_SSR === 'true'
  * so that your ssr code will not increase client bundle size.
  */
 export function registerSSRPlugin(importSSRPlugin: () => Promise<SSRPlugin>) {
-  const impl = (global as any)['register_vite_pages_ssr_plugin']
-  return impl(importSSRPlugin)
+  const impl = (globalThis as any)['register_vite_pages_ssr_plugin']
+  return impl?.(importSSRPlugin)
 }
