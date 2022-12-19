@@ -5,6 +5,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "build": "pnpm -r --filter='./packages/*' run build",
+    "dev": "pnpm -r --parallel --filter='./packages/*' run dev",
     "format": "prettier --write ./**/*.{js,ts,tsx}",
     "ver": "pnpm recursive --filter create-vite-pages --filter vite-plugin-react-pages --filter vite-pages-theme-doc exec -- npm version",
     "ver:p": "npm run ver -- patch",
