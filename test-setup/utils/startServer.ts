@@ -1,7 +1,7 @@
 import execa from 'execa'
 import waitOn from 'wait-on'
 import getPort from 'get-port'
-import { isWindows } from './utils';
+import { isWindows } from './utils'
 
 export async function startViteDevServer(
   playgroundPath: string,

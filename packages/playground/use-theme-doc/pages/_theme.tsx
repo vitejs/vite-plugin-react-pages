@@ -35,11 +35,7 @@ export default createTheme({
     // TopBarExtra is a component, you can call useThemeCtx hook in it
     const themeCtx = useThemeCtx()
     // console.log('themeCtx', themeCtx)
-    return (
-      <button>
-        Extra
-      </button>
-    )
+    return <button>Extra</button>
   },
   sideNavs(ctx) {
     if (ctx.loadState.routePath.startsWith('/users')) {
