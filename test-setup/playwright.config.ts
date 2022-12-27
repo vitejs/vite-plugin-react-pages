@@ -53,6 +53,8 @@ const config: PlaywrightTestConfig = {
   /* Configure projects for major browsers */
   projects: [...testProjectConfig('use-theme-doc')],
 
+  reportSlowTests: process.env.CI ? null : undefined,
+
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
   // outputDir: 'test-results/',
 
