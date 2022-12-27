@@ -1,0 +1,61 @@
+@import '../common.less';
+
+@search-icon-color: #ced4d9;
+
+.search-box {
+  > :global(.vp-antd-select) {
+    cursor: default;
+  }
+
+  border-left: 1px solid @colorSplit;
+  display: flex;
+  align-items: center;
+
+  padding-left: 12px;
+  margin-left: 20px;
+  .media-width-md({
+    & {
+      padding-left: 40px;
+      margin-left: 0px;
+    }
+  });
+
+  .input {
+    padding: 4px 0px;
+    input::placeholder {
+      color: #a3b1bf;
+    }
+  }
+
+  .icon {
+    margin-right: 4px;
+    color: @search-icon-color;
+    pointer-events: none;
+  }
+}
+
+.popup {
+  max-width: 100vw;
+  .media-width-md({
+    & {
+      max-width: 600px;
+    }
+  });
+}
+
+.searchResultLable {
+  display: flex;
+  align-items: center;
+}
+
+.searchResultLableIcon {
+  margin-right: 8px;
+}
+
+.searchResultPagePosition {
+  color: #8c8c8c;
+}
+
+.searchResultMatchedText {
+  font-size: 18px;
+}

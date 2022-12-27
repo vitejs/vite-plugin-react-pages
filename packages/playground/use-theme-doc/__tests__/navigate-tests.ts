@@ -1,4 +1,4 @@
-import { test as baseTest, expect, type Page } from '~utils'
+import { test as baseTest, expect, type Page, assertContainText } from '~utils'
 import { userPages } from './snapshots'
 
 // reuse test declaration
@@ -16,7 +16,7 @@ export function declareTests({
   test('index page', async ({ page }) => {
     await testIndexPageSider(page)
     await testHeader(page)
-    await expect(page.locator('.vp-local-content')).toContainText([
+    await assertContainText(page.locator('.vp-local-content'), [
       'Index page',
       'Jump to page1',
     ])
@@ -27,17 +27,13 @@ export function declareTests({
     await page.waitForURL('/page1')
     await testIndexPageSider(page)
     await testHeader(page)
-    await expect(page.locator('.vp-local-content')).toContainText(
-      'This is page1.'
-    )
+    await assertContainText(page.locator('.vp-local-content'), 'This is page1.')
 
     await page.locator('.vp-local-sider >> text="page2 title"').click()
     await page.waitForURL('/page2')
     await testIndexPageSider(page)
     await testHeader(page)
-    await expect(page.locator('.vp-local-content')).toContainText(
-      'This is page2.'
-    )
+    await assertContainText(page.locator('.vp-local-content'), 'This is page2.')
 
     await page.locator('.vp-local-header >> text="Users"').click()
     await page.waitForURL('/users')
@@ -56,7 +52,8 @@ export function declareTests({
           page.waitForNavigation(),
           page.locator('.vp-local-content a').nth(i).click(),
         ])
-        await expect(page.locator('.vp-local-content')).toContainText(
+        await assertContainText(
+          page.locator('.vp-local-content'),
           userPages[i].split('\n')
         )
         i++
@@ -88,16 +85,14 @@ export function declareTests({
     await page.waitForURL('/zh/page2')
     testIndexPageSider(page, { currentLocale: '中文' })
     await testHeader(page, { currentLocale: '中文' })
-    await expect(page.locator('.vp-local-content')).toContainText(
-      '这是页面 2。'
-    )
+    await assertContainText(page.locator('.vp-local-content'), '这是页面 2。')
 
     await page.locator('.vp-local-content >> text="前往页面 1"').click()
 
     await page.waitForURL('/zh/page1')
     testIndexPageSider(page, { currentLocale: '中文' })
     await testHeader(page, { currentLocale: '中文' })
-    await expect(page.locator('.vp-local-content')).toContainText('这是页面1。')
+    await assertContainText(page.locator('.vp-local-content'), '这是页面1。')
 
     // switch locale
     if (javaScriptEnabled) {
@@ -112,9 +107,7 @@ export function declareTests({
     await page.waitForURL('/page1')
     testIndexPageSider(page, { currentLocale: 'English' })
     await testHeader(page, { currentLocale: 'English' })
-    await expect(page.locator('.vp-local-content')).toContainText(
-      'This is page1.'
-    )
+    await assertContainText(page.locator('.vp-local-content'), 'This is page1.')
 
     await page.locator('.vp-local-header >> text="Guide"').click()
 
@@ -141,7 +134,7 @@ export function declareTests({
     { currentLocale = 'English' }: { currentLocale?: 'English' | '中文' } = {}
   ) {
     if (currentLocale === 'English') {
-      await expect(page.locator('.vp-local-sider')).toContainText([
+      await assertContainText(page.locator('.vp-local-sider'), [
         'index page title',
         'resources',
         'sub-group',
@@ -149,7 +142,7 @@ export function declareTests({
         'page2 title',
       ])
     } else {
-      await expect(page.locator('.vp-local-sider')).toContainText([
+      await assertContainText(page.locator('.vp-local-sider'), [
         '首页标题',
         '资源',
         '小分组',
@@ -164,14 +157,14 @@ export function declareTests({
     { currentLocale = 'English' }: { currentLocale?: 'English' | '中文' } = {}
   ) {
     if (currentLocale === 'English') {
-      await expect(page.locator('.vp-local-header')).toContainText([
+      await assertContainText(page.locator('.vp-local-header'), [
         'Vite Pages',
         'Guide',
         'Links',
         'Extra',
       ])
     } else {
-      await expect(page.locator('.vp-local-header')).toContainText([
+      await assertContainText(page.locator('.vp-local-header'), [
         'Vite Pages',
         '首页',
         '组件',
@@ -183,7 +176,9 @@ export function declareTests({
     // locale selector
     await expect(
       page.locator('.vp-local-header .vp-local-localeSelectorCtn')
-    ).toHaveText(currentLocale)
+      // antd 5.x injects inline <style> into DOM, which mess up with element.textContent
+      // when disableJS=true
+    ).toHaveText(currentLocale, { useInnerText: true })
 
     if (javaScriptEnabled !== false) {
       // hover menu only works when javaScriptEnabled===true
@@ -200,13 +195,15 @@ export function declareTests({
         page.locator('.vp-antd-menu-submenu-popup:visible')
       ).toHaveCount(1)
       if (currentLocale === 'English') {
-        await expect(
-          page.locator('.vp-antd-menu-submenu-popup:visible')
-        ).toContainText(['Resources', 'Vite', 'Ant Design'])
+        await assertContainText(
+          page.locator('.vp-antd-menu-submenu-popup:visible'),
+          ['Resources', 'Vite', 'Ant Design']
+        )
       } else {
-        await expect(
-          page.locator('.vp-antd-menu-submenu-popup:visible')
-        ).toContainText(['资源', 'Vite', 'Ant Design'])
+        await assertContainText(
+          page.locator('.vp-antd-menu-submenu-popup:visible'),
+          ['资源', 'Vite', 'Ant Design']
+        )
       }
       await page.locator('body').hover({
         position: {
@@ -224,7 +221,7 @@ export function declareTests({
         .locator('.vp-local-header .vp-local-localeSelectorCtn button')
         .hover()
       await expect(page.locator('.vp-antd-dropdown:visible')).toHaveCount(1)
-      await expect(page.locator('.vp-antd-dropdown:visible')).toContainText([
+      await assertContainText(page.locator('.vp-antd-dropdown:visible'), [
         '中文',
         'English',
       ])

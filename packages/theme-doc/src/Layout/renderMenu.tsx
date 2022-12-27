@@ -1,7 +1,7 @@
 import React from 'react'
 import type { MenuProps } from 'antd'
 import { Link } from 'react-router-dom'
-import type { RouteProps } from 'react-router-dom'
+import type { PathPattern } from 'react-router-dom'
 import { CaretDownOutlined } from '@ant-design/icons'
 
 type ItemTypes = NonNullable<MenuProps['items']>
@@ -117,7 +117,11 @@ export type MenuConfig =
        * The menu item will show an "active" state
        * if it matches with current browsing path.
        */
-      readonly activeIfMatch?: string | string[] | RouteProps
+      readonly activeIfMatch?:
+        | string
+        | string[]
+        | PathPattern<string>
+        | PathPattern<string>[]
     }
   | {
       /**
@@ -126,7 +130,11 @@ export type MenuConfig =
       readonly subMenu: string
       readonly children: ReadonlyArray<MenuConfig>
       readonly icon?: React.ReactNode
-      readonly activeIfMatch?: string | string[] | RouteProps
+      readonly activeIfMatch?:
+        | string
+        | string[]
+        | PathPattern<string>
+        | PathPattern<string>[]
     }
   | {
       /**

@@ -1,4 +1,5 @@
-import { test as base } from '@playwright/test'
+import { expect, test as base } from '@playwright/test'
+import type { Locator } from '@playwright/test'
 import path from 'node:path'
 import fs from 'fs-extra'
 import { getFsUtils, setupActualTestPlayground } from './fsUtils'
@@ -7,7 +8,6 @@ import {
   startSSRServer,
   startViteDevServer,
 } from './startServer'
-export * from '@playwright/test'
 
 export type TestOptions = {
   vitePagesMode: 'serve' | 'build' | 'ssr'
@@ -97,7 +97,7 @@ export const test = base.extend<
     {
       scope: 'worker',
       auto: true,
-      timeout: process.env.CI ? 180 * 1000 : 60 * 1000,
+      timeout: process.env.CI ? 180 * 1000 : 180 * 1000,
     },
   ],
   baseURL: async ({ skipPrepare, server, baseURL }, use) => {
@@ -120,23 +120,49 @@ export const test = base.extend<
       }
       await use(page)
     },
-    { scope: 'test', timeout: process.env.CI ? 180 * 1000 : 60 * 1000 },
+    { scope: 'test', timeout: process.env.CI ? 180 * 1000 : 180 * 1000 },
   ],
 })
 
-const isWindows = process.platform === 'win32'
 import { commandSync, type ExecaChildProcess } from 'execa'
+import { isWindows } from './utils'
 
 export async function killProcess(subprocess: ExecaChildProcess) {
+  const { exitCode } = subprocess
+  if (exitCode !== null) return // the child process has already exited
   if (isWindows) {
     // ref: https://github.com/vitejs/vite/blob/f9b5c14c42bf0a5c7d4ca4b53160047306fb07c5/playground/test-utils.ts#L281
-    commandSync(`taskkill /pid ${subprocess.pid} /T /F`)
-  } else if (subprocess.pid) {
-    if (subprocess.exitCode === null) {
-      // https://stackoverflow.com/a/49842576
-      process.kill(-subprocess.pid)
+    try {
+      commandSync(`taskkill /pid ${subprocess.pid} /T /F`)
+    } catch (e) {
+      console.error('failed to taskkill:', e)
     }
+  } else if (subprocess.pid) {
+    // https://stackoverflow.com/a/49842576
+    process.kill(-subprocess.pid)
   } else {
-    subprocess.kill()
+    subprocess.kill('SIGTERM', { forceKillAfterTimeout: 2000 })
   }
 }
+
+/**
+ * same as this but in parallel
+  await expect(this.imprintAddress).toContainText(this.imprintAddressTextLine1)
+  await expect(this.imprintAddress).toContainText(this.imprintAddressTextLine2)
+  await expect(this.imprintAddress).toContainText(this.imprintAddressTextLine3)
+  ......
+ * imitate the old behaviour of toContainText(stringArray): https://github.com/microsoft/playwright/issues/17350#issuecomment-1247819044
+ */
+export async function assertContainText(
+  locator: Locator,
+  asserts: string | RegExp | (string | RegExp)[]
+) {
+  if (!Array.isArray(asserts)) asserts = [asserts]
+  return await Promise.all(
+    asserts.map(async (assert) => {
+      return await expect(locator).toContainText(assert)
+    })
+  )
+}
+
+export * from '@playwright/test'

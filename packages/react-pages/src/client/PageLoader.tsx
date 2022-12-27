@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { dataCacheCtx } from './ssr/ctx'
+import { dataCacheCtx } from './ctx'
 import { useTheme } from './state'
 import useAppState from './useAppState'
 

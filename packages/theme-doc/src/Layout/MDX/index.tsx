@@ -1,8 +1,6 @@
 import React, { useContext, useMemo, useState } from 'react'
-import GithubSlugger from 'github-slugger'
 import { MDXProvider } from '@mdx-js/react'
 import { Link } from 'react-router-dom'
-import type { LinkProps } from 'react-router-dom'
 
 import CodeBlock from './CodeBlock'
 import { themePropsCtx } from '../../ctx'
@@ -11,39 +9,70 @@ import { TsInfo } from '../TsInfo'
 import { FileText } from '../FileText'
 import AnchorLink from '../../components/AnchorLink'
 
+/**
+ * use isInsidePreContext to let the `code` Component
+ * know that it is rendered from triple backquote blocks:
+ * ```language
+ * code content
+ * ```
+ * syntax, instead of single backquote: `code content`
+ */
+const isInsidePreContext = React.createContext(false)
+
 const components = {
-  pre: (
-    props: React.DetailedHTMLProps<
-      React.HTMLAttributes<HTMLDivElement>,
-      HTMLDivElement
-    >
-  ) => <div {...props} />,
-  code: CodeBlock,
+  pre: (props: any) => {
+    // `pre` tag will be rendered by the nested `code` Component
+    return (
+      <isInsidePreContext.Provider value={true}>
+        {props.children}
+      </isInsidePreContext.Provider>
+    )
+  },
+  code: (props: any) => {
+    const isInsidePre = useContext(isInsidePreContext)
+    if (isInsidePre) {
+      // this is rendered from triple backquote blocks
+      return <CodeBlock {...props} />
+    }
+    // this is rendered from single backquote
+    return <code {...props} />
+  },
   CodeBlock,
   Demo,
   TsInfo,
   FileText,
-  a: (props: LinkProps) => {
+  a: (props: React.HTMLProps<HTMLAnchorElement>) => {
     const { href, ...rest } = props
     if (href?.startsWith('/')) {
-      return <Link {...rest} to={href} />
+      return <Link {...(rest as any)} to={href} />
+    }
+    if (href?.startsWith('#')) {
+      return (
+        <Link
+          {...(rest as any)}
+          to={href}
+          onClick={() => {
+            AnchorLink.scrollToAnchor(href.substring(1))
+          }}
+        />
+      )
     }
     return <a target="_blank" rel="noopener" {...props} />
   },
 }
 
-const MDX: React.FC = ({ children }) => {
+const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
   const themeProps = useContext(themePropsCtx)
 
   const mdxComponents = useMemo(() => {
-    // reset slugger state for each page
-    const slugger = new GithubSlugger()
     return {
       ...components,
+      h1: heading(1),
       h2: heading(2),
       h3: heading(3),
       h4: heading(4),
       h5: heading(5),
+      h6: heading(6),
     }
     function heading(level: number) {
       const Tag = 'h' + level
@@ -53,17 +82,14 @@ const MDX: React.FC = ({ children }) => {
           HTMLDivElement
         >
       ) {
-        const [idCache] = useState<Record<string, string>>({})
-        const title = props.children
-        if (typeof title === 'string') {
-          if (!idCache[title]) idCache[title] = slugger.slug(title)
-          const id = idCache[title]
+        const { id } = props
+        if (id && typeof id === 'string') {
           return (
             <Tag {...props}>
-              <AnchorLink id={id} className="anchor" to={`#${id}`}>
+              <AnchorLink className="anchor" to={`#${id}`}>
                 <span className="octicon octicon-link"></span>
               </AnchorLink>
-              {title}
+              {props.children}
             </Tag>
           )
         }

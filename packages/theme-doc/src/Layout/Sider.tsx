@@ -4,9 +4,10 @@ import { Menu, Drawer } from 'antd'
 import { MenuConfig, renderMenuHelper } from './renderMenu'
 import { themePropsCtx } from '../ctx'
 import s from './index.module.less'
-import type { ThemeContextValue, I18nConfig, LocalConfig } from '..'
+import type { ThemeContextValue } from '..'
 import { LayoutContext } from './ctx'
-import { ensureStartSlash, removeStartSlash } from '../utils'
+import { analyzePageInfo } from '../analyzeStaticData'
+import { getStaticDataValue } from '../utils'
 
 interface Props {
   sideNavsData: readonly MenuConfig[] | null | undefined
@@ -14,7 +15,9 @@ interface Props {
 
 const renderMenu = renderMenuHelper(false)
 
-const AppSider: React.FC<Props> = ({ sideNavsData }) => {
+const AppSider: React.FC<React.PropsWithChildren<Props>> = ({
+  sideNavsData,
+}) => {
   const themeProps = useContext(themePropsCtx)
   const subMenuKeys: string[] = []
   const menuItems = sideNavsData
@@ -46,11 +49,11 @@ const AppSider: React.FC<Props> = ({ sideNavsData }) => {
         <Drawer
           placement="left"
           closable={false}
-          visible={layoutCtxVal.isSlideSiderOpen}
+          open={layoutCtxVal.isSlideSiderOpen}
           onClose={() => {
             layoutCtxVal.setIsSlideSiderOpen(false)
           }}
-          style={{
+          rootStyle={{
             top: 64,
             height: 'calc(100vh - 64px)',
           }}
@@ -98,33 +101,35 @@ export interface DefaultSideNavsOpts {
 }
 
 export function defaultSideNavs(
-  { loadState, staticData, themeConfig }: ThemeContextValue,
+  { loadState, staticData, themeConfig, pageGroups }: ThemeContextValue,
   opts?: DefaultSideNavsOpts
 ): MenuConfig[] | null {
   const { i18n } = themeConfig || {}
-  const currentGroupInfo = getPageGroupInfo(
+  const currentPageInfo = analyzePageInfo(
     loadState.routePath,
     staticData[loadState.routePath],
     i18n
   )
-  const groups = getGroups(staticData, i18n)
-  // console.log('defaultSideNavs', currentGroupInfo, groups)
+  // console.log('defaultSideNavs', currentPageInfo, groups)
 
   // groupKey of the current page
   const groupKey = (() => {
     if (opts?.forceGroup) return opts.forceGroup
     // infer the group of the current page.
-    // currentGroupInfo.group may be wrong because:
+    // currentPageInfo.group may be wrong because:
     // if there is also pages like /guide/start ,
     // then /guide should not be grouped with /faq .
     // instead, /guide should be moved to the "guide" group
-    if (currentGroupInfo.group === '/' && groups[currentGroupInfo.pageName]) {
-      return currentGroupInfo.pageName
+    if (
+      currentPageInfo.group === '/' &&
+      pageGroups[currentPageInfo.pageKeyInGroup]
+    ) {
+      return currentPageInfo.pageKeyInGroup
     }
-    return currentGroupInfo.group
+    return currentPageInfo.group
   })()
 
-  const subGroups = groups[groupKey] ?? {}
+  const subGroups = pageGroups[groupKey] ?? {}
 
   const result: MenuConfig[] = []
 
@@ -132,7 +137,7 @@ export function defaultSideNavs(
     // remove pages with different locale
     .map(([subGroupKey, pages]) => {
       const filtered = pages.filter(
-        ({ pageLocaleKey }) => currentGroupInfo.localeKey === pageLocaleKey
+        ({ pageLocaleKey }) => currentPageInfo.localeKey === pageLocaleKey
       )
       return [subGroupKey, filtered] as const
     })
@@ -162,16 +167,14 @@ export function defaultSideNavs(
           // pages with path params should not be showed in sideNav
           .filter((page) => !page.pagePath.includes('/:'))
           .forEach((page) => {
-            const label =
-              getStaticDataValue(page.pageStaticData, 'title') ?? page.pageName
             result.push({
-              label,
+              label: page.pageTitle,
               path: page.pagePath,
             })
           })
         return
       }
-      const groupLabel =
+      const subGroupLabel =
         getGroupConfig(groupKey, subGroupKey)?.label ?? subGroupKey
 
       const subGroupItems = pages
@@ -186,16 +189,14 @@ export function defaultSideNavs(
         // pages with path params should not be showed in sideNav
         .filter((page) => !page.pagePath.includes('/:'))
         .map((page) => {
-          const label =
-            getStaticDataValue(page.pageStaticData, 'title') ?? page.pageName
           return {
-            label,
+            label: page.pageTitle,
             path: page.pagePath,
           }
         })
       if (subGroupItems.length > 0)
         result.push({
-          group: groupLabel,
+          group: subGroupLabel,
           children: subGroupItems,
         })
     })
@@ -204,10 +205,6 @@ export function defaultSideNavs(
   function getGroupConfig(groupKey: string, subGroupKey: string) {
     return opts?.groupConfig?.[groupKey]?.[subGroupKey]
   }
-}
-
-function getStaticDataValue(pageStaticData: any, key: string) {
-  return pageStaticData?.[key] ?? pageStaticData?.main?.[key]
 }
 
 function sortPages(
@@ -221,140 +218,4 @@ function sortPages(
   if (!Number.isNaN(orderA) && !Number.isNaN(orderB) && orderA !== orderB)
     return orderA - orderB
   return pathA.localeCompare(pathB)
-}
-
-// map groups -> subgroups -> pages
-type Groups = {
-  [groupKey: string]: {
-    [subGroupKey: string]: PageMeta[]
-  }
-}
-
-type PageMeta = {
-  pagePath: string
-  pageStaticData: any
-  pageName: string
-  pageLocale: LocalConfig | undefined
-  pageLocaleKey: string | undefined
-}
-
-function getGroups(staticData: any, i18n: I18nConfig | undefined) {
-  const groups: Groups = {}
-  function ensureGroup(group: string): Record<string, PageMeta[]>
-  function ensureGroup(group: string, subGroup: string): PageMeta[]
-  function ensureGroup(group: string, subGroup?: string) {
-    const subGroups = (groups[group] ||= {})
-    if (!subGroup) return subGroups
-    return (subGroups[subGroup] ||= [])
-  }
-
-  Object.entries(staticData).forEach(([pagePath, pageStaticData]) => {
-    if (pagePath === '/404') return
-    const pageGroupInfo = getPageGroupInfo(pagePath, pageStaticData, i18n)
-    ensureGroup(pageGroupInfo.group, pageGroupInfo.subGroup).push({
-      pagePath,
-      pageStaticData,
-      pageName: pageGroupInfo.pageName,
-      pageLocale: pageGroupInfo.locale,
-      pageLocaleKey: pageGroupInfo.localeKey,
-    })
-  })
-
-  const rootGroup = groups['/']?.['/']
-  if (rootGroup) {
-    const filtered = rootGroup.filter((page) => {
-      if (page.pageName === '/') return true
-      if (groups[page.pageName]) {
-        // it is explicit grouped
-        if (getStaticDataValue(page.pageStaticData, 'group')) return true
-        // if there is also pages like /guide/start
-        // then /guide should not be grouped with /faq
-        // instead, /guide should be moved to the "guide" group
-        ensureGroup(page.pageName, '/').push(page)
-        return false
-      }
-      return true
-    })
-    groups['/']['/'] = filtered
-  }
-
-  return groups
-}
-
-function getPageGroupInfo(
-  pagePath: string,
-  pageStaticData: any,
-  i18n: I18nConfig | undefined
-): {
-  group: string
-  subGroup: string
-  pageName: string
-  locale: LocalConfig | undefined
-  localeKey: string | undefined
-} {
-  if (!pagePath.startsWith('/'))
-    throw new Error(`expect pagePath.startsWith('/'). pagePath: ${pagePath}`)
-  const { pagePathWithoutLocalePrefix, locale, localeKey } =
-    matchPagePathLocalePrefix(pagePath, i18n)
-  const seg = removeStartSlash(pagePathWithoutLocalePrefix).split('/')
-  let group: string = getStaticDataValue(pageStaticData, 'group')
-  let subGroup: string = getStaticDataValue(pageStaticData, 'subGroup')
-  // used as default title
-  const pageName: string = seg[seg.length - 1] || '/'
-  if (seg.length === 1) {
-    group ||= '/'
-    subGroup ||= '/'
-  } else if (seg.length === 2) {
-    group ||= seg[0]
-    subGroup ||= '/'
-  } else if (seg.length >= 3) {
-    group ||= seg[0]
-    subGroup ||= seg[1]
-  } else {
-    throw new Error('getPageGroup assertion fail')
-  }
-  return {
-    group,
-    subGroup,
-    pageName,
-    locale,
-    localeKey,
-  }
-}
-
-export function matchPagePathLocalePrefix(
-  pagePath: string,
-  i18n: I18nConfig | undefined
-) {
-  const result = {
-    pagePathWithoutLocalePrefix: pagePath,
-    localeKey: undefined as string | undefined,
-    locale: undefined as LocalConfig | undefined,
-  }
-  if (!i18n?.locales) return result
-
-  Object.entries(i18n.locales).forEach(([localeKey, locale]) => {
-    const prefix = locale.routePrefix || ensureStartSlash(localeKey)
-    if (
-      pagePath.startsWith(prefix) &&
-      // routePrefix '/' has lower priority than '/any-prefix'
-      (!result.locale || result.locale.routePrefix === '/')
-    ) {
-      result.pagePathWithoutLocalePrefix = ensureStartSlash(
-        pagePath.slice(prefix.length)
-      )
-      result.localeKey = localeKey
-      result.locale = locale
-    }
-  })
-  // fallback to defaultLocale
-  if (
-    !result.locale &&
-    i18n.defaultLocale &&
-    i18n.locales[i18n.defaultLocale]
-  ) {
-    result.localeKey = i18n.defaultLocale
-    result.locale = i18n.locales[i18n.defaultLocale]
-  }
-  return result
 }

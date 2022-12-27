@@ -1,12 +1,21 @@
 import chalk from 'chalk'
+import fs from 'fs-extra'
 import minimist from 'minimist'
+import path from 'node:path'
 import { resolveConfig } from 'vite'
+import { PKG_ROOT } from './constants'
 import { ssrBuild } from './static-site-generation'
 
 const argv: any = minimist(process.argv.slice(2))
 
-console.log(chalk.cyan(`vite-pages v${require('../../package.json').version}`))
-console.log(chalk.cyan(`vite v${require('vite/package.json').version}`))
+console.log(
+  chalk.cyan(
+    `vite-pages v${
+      fs.readJSONSync(path.resolve(PKG_ROOT, 'package.json')).version
+    }`
+  )
+)
+// console.log(chalk.cyan(`vite v${require('vite/package.json').version}`))
 
 // cli usage: vite-pages ssr [root] [vite config like --outDir or --configFile]
 const [command, root] = argv._
@@ -17,7 +26,12 @@ if (root) {
 ;(async () => {
   if (!command || command === 'ssr') {
     // user can pass in vite config like --outDir or --configFile
-    const viteConfig = await resolveConfig(argv, 'build')
+    const viteConfig = await resolveConfig(
+      argv,
+      'build',
+      'production',
+      'production'
+    )
     const thisPlugin = viteConfig.plugins.find((plugin) => {
       return plugin.name === 'vite-plugin-react-pages'
     })

@@ -1,9 +1,7 @@
 import * as path from 'path'
-import fs from 'fs-extra'
-import pkgUp from 'pkg-up'
-import chalk from 'chalk'
+import type { PluggableList } from 'unified'
 import type { Plugin, IndexHtmlTransformContext } from 'vite'
-import type { MdxPlugin } from 'vite-plugin-mdx/dist/types'
+
 import {
   DefaultPageStrategy,
   defaultFileHandler,
@@ -12,6 +10,7 @@ import {
   renderPageList,
   renderPageListInSSR,
   renderOnePageData,
+  renderAllPagesOutlines,
 } from './page-strategy/pageUtils'
 import { PageStrategy } from './page-strategy'
 import { resolveTheme } from './virtual-module-plugins/theme'
@@ -25,8 +24,11 @@ import {
 } from './virtual-module-plugins/ts-info-module'
 import { injectHTMLTag } from './utils/injectHTMLTag'
 import { VirtualModulesManager } from './utils/virtual-module'
-import { ImageMdxPlugin } from './utils/mdx-plugin-image'
 import { FileTextMdxPlugin } from './utils/mdx-plugin-file-text'
+import {
+  OutlineInfoModuleManager,
+  OUTLINE_INFO_MODULE_ID_PREFIX,
+} from './virtual-module-plugins/outline-info-module'
 
 /**
  * This is a public API that users use in their index.html.
@@ -35,12 +37,13 @@ import { FileTextMdxPlugin } from './utils/mdx-plugin-file-text'
 const appEntryId = '/@pages-infra/main.js'
 
 /**
- * This is a private prefix an users should not use them
+ * This is a private prefix and users should not use them directly
  */
 const modulePrefix = '/@react-pages/'
 const pagesModuleId = modulePrefix + 'pages'
 const themeModuleId = modulePrefix + 'theme'
 const ssrDataModuleId = modulePrefix + 'ssrData'
+const allOutlineDataModuleId = modulePrefix + 'allPagesOutlines'
 
 const tsInfoQueryReg = /\?tsInfo=(.*)$/
 
@@ -51,7 +54,7 @@ export interface PluginConfig {
   staticSiteGeneration?: {}
 }
 
-export default function pluginFactory(opts: PluginConfig = {}): Plugin {
+function pluginFactory(opts: PluginConfig = {}): Plugin {
   const { useHashRouter = false, staticSiteGeneration } = opts
 
   let isBuild: boolean
@@ -61,17 +64,27 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
   const virtualModulesManager = new VirtualModulesManager()
   const demoModuleManager = new DemoModuleManager()
   const tsInfoModuleManager = new TsInfoModuleManager()
+  const outlineInfoModuleManager = new OutlineInfoModuleManager()
 
   return {
     name: 'vite-plugin-react-pages',
     enforce: 'pre',
-    config: () => ({
+    config: (config, env) => ({
       optimizeDeps: {
-        include: ['react', 'react-dom', 'react-router-dom', '@mdx-js/react'],
+        include: [
+          'react',
+          'react-dom',
+          'react-dom/client',
+          'react-router-dom',
+          '@mdx-js/react',
+        ],
         exclude: ['vite-plugin-react-pages'],
       },
       define: {
         __HASH_ROUTER__: !!useHashRouter,
+        'process.env.VITE_PAGES_IS_SSR': env.ssrBuild
+          ? JSON.stringify('true')
+          : JSON.stringify('false'),
       },
       build: {
         rollupOptions: {
@@ -89,19 +102,12 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
       } else {
         pageStrategy = new DefaultPageStrategy()
       }
-
       const mdxPlugin = plugins.find(
         (plugin) => plugin.name === 'vite-plugin-mdx'
-      ) as MdxPlugin | undefined
-
-      if (mdxPlugin?.mdxOptions) {
-        // Inject demo transformer
-        mdxPlugin.mdxOptions.remarkPlugins.push(
-          ...(await getRemarkPlugins(root))
-        )
-      } else {
-        logger.warn(
-          '[vite-plugin-react-pages] Please install vite-plugin-mdx@3.1 or higher'
+      )
+      if (mdxPlugin) {
+        throw new Error(
+          'You should not use vite-plugin-mdx with vite-plugin-react-pages. vite-pages v5 has buildin plugin for mdx.'
         )
       }
     },
@@ -124,6 +130,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
 
       demoModuleManager.onUpdate(reloadVirtualModule)
       tsInfoModuleManager.onUpdate(reloadVirtualModule)
+      outlineInfoModuleManager.onUpdate(reloadVirtualModule)
     },
     buildStart() {
       // buildStart may be called multiple times
@@ -136,13 +143,21 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
     async resolveId(id, importer) {
       if (id === appEntryId) return id
       if (id.startsWith(modulePrefix)) return id
-      // TODO
       if (id.endsWith('?demo')) {
         const bareImport = id.slice(0, 0 - '?demo'.length)
         const resolved = await this.resolve(bareImport, importer)
         if (!resolved || resolved.external)
           throw new Error(`can not resolve demo: ${id}. importer: ${importer}`)
         return demoModuleManager.registerProxyModule(resolved.id)
+      }
+      if (id.endsWith('?outlineInfo')) {
+        const bareImport = id.slice(0, 0 - '?outlineInfo'.length)
+        const resolved = await this.resolve(bareImport, importer)
+        if (!resolved || resolved.external)
+          throw new Error(
+            `can not resolve outlineInfo: ${id}. importer: ${importer}`
+          )
+        return outlineInfoModuleManager.registerProxyModule(resolved.id)
       }
       const matchTsInfo = id.match(tsInfoQueryReg)
       if (matchTsInfo) {
@@ -161,7 +176,7 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
       // vite will resolve it with v=${versionHash} query
       // so that this import can be cached
       if (id === appEntryId)
-        return `import "vite-plugin-react-pages/dist/client/main.js";`
+        return `import "vite-plugin-react-pages/dist/client-bundles/entries/csr.mjs";`
       // page list
       if (id === pagesModuleId) {
         return renderPageList(await pageStrategy.getPages(), isBuild)
@@ -185,20 +200,28 @@ export default function pluginFactory(opts: PluginConfig = {}): Plugin {
       if (demoModuleManager.isProxyModuleId(id)) {
         return demoModuleManager.loadProxyModule(id)
       }
+      if (outlineInfoModuleManager.isProxyModuleId(id)) {
+        return outlineInfoModuleManager.loadProxyModule(id)
+      }
+      if (id === allOutlineDataModuleId) {
+        return renderAllPagesOutlines(await pageStrategy.getPages())
+      }
       if (tsInfoModuleManager.isProxyModuleId(id)) {
         return tsInfoModuleManager.loadProxyModule(id)
       }
     },
-    // @ts-expect-error
-    vitePagesStaticSiteGeneration: staticSiteGeneration,
     closeBundle() {
       virtualModulesManager.close()
       demoModuleManager.close()
       tsInfoModuleManager.close()
+      outlineInfoModuleManager.close()
     },
     transformIndexHtml(html, ctx) {
       return moveScriptTagToBodyEnd(html, ctx)
     },
+    // Read by the cli script to get staticSiteGeneration config
+    // @ts-expect-error
+    vitePagesStaticSiteGeneration: staticSiteGeneration,
   }
 }
 
@@ -215,48 +238,6 @@ export type { FileHandler } from './page-strategy/types.doc'
 export { extractStaticData, File } from './utils/virtual-module'
 export { PageStrategy }
 export { DefaultPageStrategy, defaultFileHandler }
-
-async function getRemarkPlugins(root: string) {
-  const result: any[] = [
-    DemoMdxPlugin,
-    TsInfoMdxPlugin,
-    ImageMdxPlugin,
-    FileTextMdxPlugin,
-  ]
-
-  // pass vite project's root otherwise it will
-  // start from process.cwd() by default
-  const pkgJsonPath = pkgUp.sync({
-    cwd: root,
-  })
-
-  if (pkgJsonPath === null) {
-    console.error(
-      chalk.red(
-        `[vite-plugin-react-pages] Could not find 'package.json', does it exist?\n'`
-      )
-    )
-    process.exit(1)
-  }
-
-  const pkgJson = await fs.readJSON(pkgJsonPath)
-
-  // Inject frontmatter parser if missing
-  const { devDependencies = {}, dependencies = {} } = pkgJson
-  // By default we add remark-frontmatter automatically.
-  // But if user install their own remark-frontmatter,
-  // they are responsible to add the plugin manually
-  // (they may provide some config to it)
-  if (
-    !devDependencies['remark-frontmatter'] &&
-    !dependencies['remark-frontmatter']
-  ) {
-    // result.push(require('remark-frontmatter'))
-    const remarkFrontmatter = await import('remark-frontmatter')
-    result.push(remarkFrontmatter.default || remarkFrontmatter)
-  }
-  return result
-}
 
 /**
  * vite put script before style, which cause style problem for antd
@@ -277,5 +258,86 @@ function moveScriptTagToBodyEnd(
       html = html.replace(script, '')
       return injectHTMLTag(html, script)
     }
+  }
+}
+
+export default async function setupPlugins(
+  vpConfig: PluginConfig = {}
+): Promise<Plugin[]> {
+  // use dynamic import so that it supports node commonjs
+  const mdx = await import('@mdx-js/rollup')
+  return [
+    mdx.default({
+      remarkPlugins: await getRemarkPlugins(),
+      rehypePlugins: await getRehypePlugins(),
+      // treat .md as mdx
+      mdExtensions: [],
+      mdxExtensions: ['.md', '.mdx'],
+      providerImportSource: '@mdx-js/react',
+    }),
+    createMdxTransformPlugin(),
+    pluginFactory(vpConfig),
+  ] as Plugin[]
+}
+
+function getRemarkPlugins(): Promise<PluggableList> {
+  return Promise.all([
+    // use dynamic import so that it works in node commonjs
+    import('remark-frontmatter').then((m) => m.default),
+    import('remark-gfm').then((m) => m.default),
+    import('remark-mdx-images').then((m) => m.default),
+
+    // plugins created for vite-pages:
+    DemoMdxPlugin,
+    TsInfoMdxPlugin,
+    FileTextMdxPlugin,
+  ])
+}
+
+function getRehypePlugins(): Promise<PluggableList> {
+  return Promise.all([
+    // use dynamic import so that it works in node commonjs
+    import('rehype-slug').then((m) => m.default),
+  ])
+}
+
+/**
+ * use @vitejs/plugin-react to handle the output of @mdx-js/rollup
+ * workaround this issue: https://github.com/vitejs/vite-plugin-react/issues/38
+ */
+function createMdxTransformPlugin(): Plugin {
+  let vitePluginReactTrasnform: Plugin['transform'] | undefined
+  return {
+    name: 'vite-pages:mdx-transform',
+    configResolved: ({ plugins }) => {
+      // find this plugin to call it's transform function:
+      // https://github.com/vitejs/vite-plugin-react/blob/b647e74c38565696bd6fb931b8bd9ac7f3bebe88/packages/plugin-react/src/index.ts#L206
+      vitePluginReactTrasnform = plugins.find(
+        (p) =>
+          p.name === 'vite:react-babel' && typeof p.transform === 'function'
+      )?.transform
+      if (!vitePluginReactTrasnform) {
+        throw new Error(
+          `Can't find an instance of @vitejs/plugin-react. You should apply this plugin to make mdx work.`
+        )
+      }
+    },
+    transform: (code, id, options) => {
+      const [filepath, querystring = ''] = id.split('?')
+      if (
+        filepath.match(/\.mdx?$/) &&
+        !id.startsWith(OUTLINE_INFO_MODULE_ID_PREFIX)
+      ) {
+        // make @vitejs/plugin-react treat the "output of @mdx-js/rollup transform" like a jsx file
+        // https://github.com/vitejs/vite-plugin-react/blob/b647e74c38565696bd6fb931b8bd9ac7f3bebe88/packages/plugin-react/src/index.ts#L215
+        let newId
+        if (querystring) {
+          newId = id + '&ext=.jsx'
+        } else {
+          newId = id + '?ext=.jsx'
+        }
+        return (vitePluginReactTrasnform as any)(code, newId, options)
+      }
+    },
   }
 }

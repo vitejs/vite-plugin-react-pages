@@ -1,38 +1,38 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import {
+  useRoutes,
+  useLocation,
+  type Location,
+  type RouteObject,
+} from 'react-router-dom'
 import { usePagePaths } from './state'
 import PageLoader from './PageLoader'
 
 const App = () => {
   const pageRoutes = usePagePaths()
     .filter((path) => path !== '/404')
-    .sort((pathA, pathB) => {
-      // path with params should be put afront
-      if (pathA.includes('/:')) return 1
-      if (pathB.includes('/:')) return -1
-      return 0
+    .map((path) => {
+      return { path, element: <PageLoader routePath={path} /> } as RouteObject
     })
-    .map((path) => (
-      // avoid re-mount layout component
-      // https://github.com/ReactTraining/react-router/issues/3928#issuecomment-284152397
-      <Route key="same" exact path={path}>
-        <PageLoader routePath={path} />
-      </Route>
-    ))
 
-  return (
-    <Switch>
-      {pageRoutes}
-      <Route
-        key="same"
-        path="*"
-        render={({ match }) => {
-          // 404
-          return <PageLoader routePath={match.url} />
-        }}
-      />
-    </Switch>
-  )
+  pageRoutes.push({
+    path: '*',
+    element: (
+      <UseLocation>
+        {(location) => <PageLoader routePath={location.pathname} />}
+      </UseLocation>
+    ),
+  })
+
+  const routesRender = useRoutes(pageRoutes)
+
+  return routesRender
 }
 
 export default App
+
+function UseLocation({ children }: { children: (location: Location) => any }) {
+  const location = useLocation()
+  // console.log('###UseLocation', location)
+  return children(location)
+}

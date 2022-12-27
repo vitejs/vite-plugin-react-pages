@@ -1,3 +1,5 @@
-import * as path from 'path'
+import { resolve } from 'path'
+import { fileURLToPath } from 'url'
 
-export const CLIENT_PATH = path.join(__dirname, '../client')
+export const PKG_ROOT = resolve(fileURLToPath(import.meta.url), '../../..')
+export const CLIENT_PATH = resolve(PKG_ROOT, 'dist/client-bundles')

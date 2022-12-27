@@ -1,5 +1,13 @@
 import React, { useContext, useMemo } from 'react'
-import RcFooter from 'rc-footer'
+import _RcFooter from 'rc-footer'
+
+let RcFooter: any = _RcFooter
+// rc-footer is not esm friendly.
+// when imported direct by node esm
+// it's defailt export is {default: FooterComponent}
+if (RcFooter.default) {
+  RcFooter = RcFooter.default
+}
 
 import { themeConfigCtx, useThemeCtx } from '../ctx'
 import s from './Footer.module.less'

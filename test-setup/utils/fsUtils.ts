@@ -20,6 +20,9 @@ export async function setupActualTestPlayground(
   const copyTo = path.resolve(playgroundTempDir, `${playgroundName}-${key}`)
   await fs.ensureDir(copyTo)
   await fs.emptyDir(copyTo)
+  // On windows, you may need to activate Developer Mode or run this with admin privileges.
+  // Otherwise you will get error: "operation not permitted, symlink"
+  // ref: https://github.com/vitejs/vite/issues/7390
   await fs.copy(copyFrom, copyTo, {
     dereference: false,
     filter(file) {

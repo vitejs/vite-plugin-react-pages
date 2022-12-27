@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import { Code } from './icons'
 import CodeBlock from '../MDX/CodeBlock'
 
-import s from './index.module.css'
+import s from './index.module.less'
 
 interface Props {
-  default: React.ComponentType
+  default: React.ComponentType<React.PropsWithChildren<unknown>>
   demoMeta: {
     code: string
     title?: string

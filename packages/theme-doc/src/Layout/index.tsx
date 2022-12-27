@@ -12,6 +12,7 @@ export { default as MDX } from './MDX'
 import { useThemeCtx } from '..'
 import { LayoutContext } from './ctx'
 import { Footer } from './Footer'
+import OutLine from './Outline'
 
 ConfigProvider.config({
   prefixCls: 'vp-antd',
@@ -19,7 +20,7 @@ ConfigProvider.config({
 
 interface Props {}
 
-const AppLayout: React.FC<Props> = ({ children }) => {
+const AppLayout: React.FC<React.PropsWithChildren<Props>> = ({ children }) => {
   const { sideNavs } = useContext(themeConfigCtx)
   const themeCtxValue = useThemeCtx()
 
@@ -57,6 +58,7 @@ const AppLayout: React.FC<Props> = ({ children }) => {
               </div>
             )}
             <div className={s.content}>{children}</div>
+            <OutLine />
           </div>
           <Footer />
         </div>

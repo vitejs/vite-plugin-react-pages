@@ -1,4 +1,4 @@
-const linkBins = require('@pnpm/link-bins').default
+const { linkBins } = require('@pnpm/link-bins')
 const path = require('path')
 const fs = require('fs-extra')
 

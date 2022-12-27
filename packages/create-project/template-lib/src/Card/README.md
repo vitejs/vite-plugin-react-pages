@@ -9,7 +9,7 @@ This is a **markdown** document of the `Card` component.
 
 You can put this page in a subGroup of the side menu using `staticData.subGroup`.
 
-## demos
+## Demos
 
 You can import demos like this:
 

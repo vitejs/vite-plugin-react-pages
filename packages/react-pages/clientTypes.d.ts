@@ -28,3 +28,13 @@ export interface TsInterfacePropertyInfo {
   // fullText: string
   optional: boolean
 }
+
+export type UseAllPagesOutlines = (timeout: number) => any
+
+export type SSRPlugin = {
+  id: string
+  prepare: (app: React.ReactNode) => {
+    app?: React.ReactNode
+    extractStyle?: () => string
+  }
+}

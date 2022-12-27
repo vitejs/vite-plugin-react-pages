@@ -1,3 +1,6 @@
+import { useLayoutEffect, useEffect } from 'react'
+import { IS_SSR } from 'vite-plugin-react-pages/client'
+
 import type { I18nConfig, LocalConfig } from './ThemeConfig.doc'
 
 export function withClsPrefix(cls: string) {
@@ -34,3 +37,30 @@ export function normalizeI18nConfig(
   )
   return { ...i18n, locales: newLocales }
 }
+
+export function getStaticDataValue(pageStaticData: any, key: string) {
+  return pageStaticData?.[key] ?? pageStaticData?.main?.[key]
+}
+
+/**
+ * normalize commonjs export so that it works with rollup(vite build)
+ * and native node esm (vite ssr)
+ *
+ * https://github.com/evanw/esbuild/issues/532#issuecomment-1044740080
+ */
+export function commonjsExportsInterop<T>(commonjsExports: T) {
+  if (
+    (commonjsExports as any).__esModule === true &&
+    'default' in (commonjsExports as any)
+  )
+    return (commonjsExports as any).default as T
+  return commonjsExports
+}
+
+export const Anchor_Scroll_Offset = 72
+
+export const isSSR = IS_SSR
+
+// fix warning of useLayoutEffect during ssr
+// https://gist.github.com/gaearon/e7d97cdf38a2907924ea12e4ebdf3c85
+export const useIsomorphicLayoutEffect = isSSR ? useEffect : useLayoutEffect

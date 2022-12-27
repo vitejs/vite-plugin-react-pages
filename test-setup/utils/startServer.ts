@@ -1,6 +1,7 @@
 import execa from 'execa'
 import waitOn from 'wait-on'
 import getPort from 'get-port'
+import { isWindows } from './utils'
 
 export async function startViteDevServer(
   playgroundPath: string,
@@ -63,7 +64,10 @@ export async function startServer(
 
   const subprocess = execa('pnpm', args, {
     cwd: playgroundPath,
-    detached: true,
+    // on unix, we pass detached: true,
+    // so that we can use process.kill(-subprocess.pid)
+    // in killProcess()
+    detached: !isWindows,
   })
   subprocess.stdout?.pipe(process.stdout)
   subprocess.stderr?.pipe(process.stderr)
@@ -76,7 +80,7 @@ export async function startServer(
       // should ignore http_proxy env variable from my shell...
       proxy: false as any,
       headers: { Accept: 'text/html' },
-      timeout: process.env.CI ? 180 * 1000 : 60 * 1000,
+      timeout: process.env.CI ? 180 * 1000 : 180 * 1000,
     }),
     // if the subprocess faill, it should throw too
     subprocess,

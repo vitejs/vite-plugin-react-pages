@@ -1,0 +1,64 @@
+@import '../common.less';
+
+.demoBox {
+  position: relative;
+  margin: 0 0 16px;
+  border: 1px solid @colorSplit;
+  border-radius: 2px;
+  transition: all 0.2s;
+}
+
+.demo {
+  padding: 42px 24px 50px;
+  border-bottom: 1px solid @colorSplit;
+}
+
+.meta {
+  position: relative;
+}
+.meta .title {
+  position: absolute;
+  top: -14px;
+  margin-left: 16px;
+  padding: 1px 8px;
+  background: #fff;
+}
+.meta .desc {
+  padding: 18px 24px 12px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+  border-top: 1px dashed @colorSplit;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+.actions:hover {
+  opacity: 1;
+}
+.actions .action {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 32px;
+  color: #00000073;
+  cursor: pointer;
+  transition: all 0.24s;
+}
+.actions .action:hover {
+  color: #000000d9;
+}
+
+.code {
+  border-top: 1px dashed @colorSplit;
+  overflow: auto;
+}
+
+.code .codeInner {
+  padding: 0px 8px;
+}

@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { Menu, Dropdown } from 'antd'
-import { Link, matchPath } from 'react-router-dom'
+import { Link, matchPath, PathPattern } from 'react-router-dom'
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -13,12 +13,13 @@ import type { MenuConfig } from './renderMenu'
 import { LayoutContext } from './ctx'
 import { themeConfigCtx, useThemeCtx } from '../ctx'
 import { useLocaleSelector } from './useLocaleSelector'
+import Search from './Search'
 
 const renderMenu = renderMenuHelper(true)
 
 interface Props {}
 
-const AppHeader: React.FC<Props> = (props) => {
+const AppHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const themeConfig = useContext(themeConfigCtx)
   const { TopBarExtra, topNavs } = themeConfig
   const layoutCtxVal = useContext(LayoutContext)
@@ -77,23 +78,50 @@ const AppHeader: React.FC<Props> = (props) => {
 
     function getActiveKeyIfMatch(item: MenuConfig) {
       if ('path' in item) {
-        const matcher = item.activeIfMatch ?? {
-          path: item.path,
-          exact: true,
-        }
-        // use loadState.routePath instead of location.pathname
-        // because location.pathname may contain trailing slash
-        const match = matchPath(routePath, matcher)
-        if (match) return item.path
+        const matcher =
+          item.activeIfMatch ??
+          ({
+            path: item.path,
+            // if activeIfMatch is not given,
+            // do exact match by default
+            end: true,
+          } as PathPattern<string>)
+        const matchResult = matchUtil(matcher)
+        if (matchResult) return item.path
       } else if ('subMenu' in item) {
         if (item.activeIfMatch) {
-          const match = matchPath(routePath, item.activeIfMatch)
-          if (match) return item.subMenu
+          const matchResult = matchUtil(item.activeIfMatch)
+          if (matchResult) return item.subMenu
         }
-        const match = item.children.some(getActiveKeyIfMatch)
-        if (match) return item.subMenu
+        const childrenMatchResult = item.children.some(getActiveKeyIfMatch)
+        if (childrenMatchResult) return item.subMenu
       }
       return false
+
+      function matchUtil(
+        matcher: string | string[] | PathPattern<string> | PathPattern<string>[]
+      ): boolean {
+        if (!Array.isArray(matcher)) {
+          let actualMatcher: PathPattern<string>
+          if (typeof matcher === 'string') {
+            actualMatcher = {
+              path: matcher,
+              // if users pass activeIfMatch as string
+              // do prefix match (instead of exact match)
+              end: false,
+            }
+          } else {
+            actualMatcher = matcher
+          }
+          // use loadState.routePath instead of location.pathname
+          // because location.pathname may contain trailing slash
+          return !!matchPath(actualMatcher, routePath)
+        } else {
+          return matcher.some((oneMatcher) => {
+            return !!matchPath(oneMatcher, routePath)
+          })
+        }
+      }
     }
   }, [routePath, resolvedTopNavs])
 
@@ -115,6 +143,12 @@ const AppHeader: React.FC<Props> = (props) => {
       </div>
       <div className={s.logoArea}>{renderLogo}</div>
 
+      {themeConfig.search && (
+        <div className={s.searchArea}>
+          <Search />
+        </div>
+      )}
+
       <div className={s.flexSpace}></div>
 
       {resolvedTopNavs && (
@@ -131,13 +165,11 @@ const AppHeader: React.FC<Props> = (props) => {
           <div className={s.triggerCtn}>
             <Dropdown
               placement="bottomRight"
-              overlay={
-                <Menu
-                  selectedKeys={activeKeys}
-                  disabledOverflow
-                  items={renderMenu(resolvedTopNavs, true)}
-                />
-              }
+              menu={{
+                selectedKeys: activeKeys,
+                disabledOverflow: true,
+                items: renderMenu(resolvedTopNavs, true),
+              }}
             >
               <span className={s.trigger}>
                 <UnorderedListOutlined />

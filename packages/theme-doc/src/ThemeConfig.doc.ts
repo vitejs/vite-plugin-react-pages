@@ -4,6 +4,7 @@ import type {
   PagesStaticData,
   ThemeProps,
 } from 'vite-plugin-react-pages/clientTypes'
+import type { PageGroups } from './analyzeStaticData'
 
 export interface ThemeConfig {
   /**
@@ -34,7 +35,7 @@ export interface ThemeConfig {
   /**
    * Extra area at top bar.
    */
-  TopBarExtra?: React.ComponentType
+  TopBarExtra?: React.ComponentType<React.PropsWithChildren<unknown>>
   /**
    * Footer
    */
@@ -45,16 +46,21 @@ export interface ThemeConfig {
    * View to be rendered when app in 404 state
    * (url not matching any page)
    */
-  Component404?: React.ComponentType
+  Component404?: React.ComponentType<React.PropsWithChildren<unknown>>
   /**
    * Wrap the App with custom Component.
    * You can use `useThemeCtx()` in it to get context info
    */
-  AppWrapper?: React.ComponentType
+  AppWrapper?: React.ComponentType<React.PropsWithChildren<unknown>>
   /**
    * i18n metadata
    */
   i18n?: I18nConfig
+  /**
+   * Whether enable search feature
+   * @defaultValue true
+   */
+  search?: boolean
 }
 
 export interface I18nConfig {
@@ -116,6 +122,7 @@ export type ThemeContextValue = ThemeProps & {
      */
     pagePathWithoutLocalePrefix?: string
   }
+  pageGroups: PageGroups
 }
 
 export type { MenuConfig, FooterConfig, FooterColumn, FooterLink }

@@ -1,11 +1,23 @@
 import { build as viteBuild } from 'vite'
 import type { ResolvedConfig } from 'vite'
 import type { RollupOutput } from 'rollup'
+import { minify } from 'html-minifier-terser'
 import * as path from 'path'
 import fs from 'fs-extra'
+import { pathToFileURL } from 'node:url'
 
 import { CLIENT_PATH } from '../constants'
-import { stringify } from 'gray-matter'
+import type { SSRPlugin } from '../../../clientTypes'
+
+const minifyOptions = {
+  collapseWhitespace: true,
+  keepClosingSlash: true,
+  removeComments: true,
+  removeRedundantAttributes: true,
+  removeStyleLinkTypeAttributes: true,
+  useShortDoctype: true,
+  minifyCSS: true,
+}
 
 export async function ssrBuild(
   viteConfig: ResolvedConfig,
@@ -27,42 +39,58 @@ export async function ssrBuild(
   const ssrOutput = await viteBuild({
     root,
     configFile: viteConfig.configFile,
+    // mode: "development",
     build: {
       ssr: true,
       cssCodeSplit: false,
       rollupOptions: {
-        input: path.join(CLIENT_PATH, 'ssr', 'serverRender.js'),
-        preserveEntrySignatures: 'allow-extension',
+        input: path.join(CLIENT_PATH, 'entries', 'ssg-server.mjs'),
+        // preserveEntrySignatures: 'allow-extension',
         output: {
-          format: 'cjs',
-          exports: 'named',
-          // ensure ssr bundle is loaded as cjs even when
-          // users have "type": "module" in their package.json
-          entryFileNames: '[name].cjs',
-          chunkFileNames: '[name]-[hash].cjs',
+          entryFileNames: '[name].mjs',
+          chunkFileNames: '[name]-[hash].mjs',
         },
       },
       outDir: ssrOutDir,
       minify: false,
     },
-    // @ts-ignore
     ssr: {
-      external: ['react', 'react-router-dom', 'react-dom', 'react-dom/server'],
-      noExternal: [
-        // TODO: remove this
-        'vite-pages-theme-basic',
-        'vite-plugin-react-pages',
-        'vite-plugin-react-pages/client',
-      ],
+      // `vite-pages-theme-doc/dist/index.js` have `import './index.css'`
+      // so it needs to be bundled by vite before executed by node.js.
+      // This is coupled to theme-doc,
+      // but we don't want to ask users to put this in their vite config.
+      // So let's put it here :)
+      noExternal: ['vite-pages-theme-doc'],
     },
   })
 
   console.log('\n\nrendering html...')
 
-  const { renderToString, ssrData } = require(path.join(
-    ssrOutDir,
-    'serverRender.cjs'
-  ))
+  const ssrPluginPromises: Promise<SSRPlugin>[] = []
+  ;(global as any)['register_vite_pages_ssr_plugin'] = (
+    importSSRPlugin: () => Promise<SSRPlugin>
+  ) => {
+    ssrPluginPromises.push(importSSRPlugin())
+  }
+  process.env.VITE_PAGES_IS_SSR = 'true'
+
+  const { renderToString, ssrData } = await import(
+    pathToFileURL(path.join(ssrOutDir, 'ssg-server.mjs')).toString()
+  )
+
+  const ssrPlugins = await Promise.all(ssrPluginPromises)
+  ssrPlugins.forEach((plugin, index) => {
+    // validate ssr plugins
+    if (!plugin?.id) {
+      console.error('invalid ssr plugins:', ssrPlugins)
+      throw new Error('invalid ssr plugin: no plugin id')
+    }
+    const idx = ssrPlugins.findIndex((p) => p.id === plugin.id)
+    if (idx !== index) {
+      console.error('invalid ssr plugins:', ssrPlugins)
+      throw new Error(`duplicate ssr plugin: ${plugin.id}`)
+    }
+  })
 
   const pagePaths = Object.keys(ssrData)
 
@@ -73,7 +101,7 @@ export async function ssrBuild(
     build: {
       cssCodeSplit: false,
       rollupOptions: {
-        input: path.join(CLIENT_PATH, 'ssr', 'clientRender.js'),
+        input: path.join(CLIENT_PATH, 'entries', 'ssg-client.mjs'),
         preserveEntrySignatures: 'allow-extension',
       },
       assetsDir: 'assets',
@@ -131,7 +159,7 @@ export async function ssrBuild(
       // currently not support pages with path params
       // .e.g /users/:userId
       if (pagePath.match(/\/:\w/)) return
-      const html = renderHTML(pagePath)
+      const html = await renderHTML(pagePath)
       // TODO: injectPreload
       // preload data module for this page
       // html = injectPreload(html, "path/to/page/data")
@@ -157,7 +185,7 @@ export async function ssrBuild(
   const html404Path = path.join(clientOutDir, '404.html')
   // pass in a pagePath that won't match any defined page
   // so the render result will be 404 page
-  const html404 = renderHTML('/internal-404-page')
+  const html404 = await renderHTML('/internal-404-page')
   await fs.writeFile(html404Path, html404)
   // move 404 page to `/` if `/` doesn't exists
   if (!pagePaths.includes('/')) {
@@ -170,8 +198,8 @@ export async function ssrBuild(
   console.log('vite pages ssr build finished successfully.')
   return
 
-  function renderHTML(pagePath: string) {
-    const ssrContent = renderToString(pagePath)
+  async function renderHTML(pagePath: string) {
+    const { contentText, styleText } = renderToString(pagePath, ssrPlugins)
     const ssrInfo = {
       routePath: pagePath,
     }
@@ -179,23 +207,26 @@ export async function ssrBuild(
       RootElementInjectPoint,
       // let client know the current ssr page
       `<script>window._vitePagesSSR=${JSON.stringify(ssrInfo)};</script>
-<div id="root">${ssrContent}</div>`
+<div id="root">${contentText}</div>`
     )
-    const cssInject = cssChunks
-      .map((cssChunk) => {
-        return `<link rel="stylesheet" href="${basePath}${cssChunk.fileName}" />`
-      })
-      .join('\n')
+    const cssInject = cssChunks.map((cssChunk) => {
+      return `<link rel="stylesheet" href="${basePath}${cssChunk.fileName}" />`
+    })
+    cssInject.push(styleText)
+
     html = html.replace(
       CSSInjectPoint,
-      `${cssInject}
+      `${cssInject.join('\n')}
 ${CSSInjectPoint}`
     )
     html = html.replace(
       EntryModuleInjectPoint,
       `<script type="module" src="${basePath}${entryChunk.fileName}"></script>`
     )
-    return html
+
+    const minifiedHtml = await minify(html, minifyOptions)
+
+    return minifiedHtml
   }
 }
 

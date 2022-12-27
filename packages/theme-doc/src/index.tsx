@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import type { ThemeProps } from 'vite-plugin-react-pages/clientTypes'
 import { useStaticData } from 'vite-plugin-react-pages/client'
 import { useLocation } from 'react-router-dom'
@@ -10,23 +10,34 @@ import './style.less'
 import { Demo } from './Layout/Demo'
 import AnchorLink from './components/AnchorLink'
 import type { ThemeConfig, ThemeContextValue } from './ThemeConfig.doc'
-import { matchPagePathLocalePrefix } from './Layout/Sider'
-import { normalizeI18nConfig } from './utils'
+import { normalizeI18nConfig, useIsomorphicLayoutEffect } from './utils'
+import { getPageGroups, matchPagePathLocalePrefix } from './analyzeStaticData'
 
-export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
+export function createTheme(
+  originalThemeConfig: ThemeConfig
+): React.FC<React.PropsWithChildren<ThemeProps>> {
+  // normalize themeConfig
+  const themeConfig = {
+    ...originalThemeConfig,
+    search: originalThemeConfig.search ?? true,
+    i18n: normalizeI18nConfig(originalThemeConfig.i18n),
+  }
+
   const ThemeComp = (props: ThemeProps) => {
     const { loadState, loadedData } = props
     const staticData = useStaticData()
 
     const location = useLocation()
-    useEffect(() => {
+    useIsomorphicLayoutEffect(() => {
       // scroll to anchor after page component loaded
       if (loadState.type === 'loaded') {
         if (location.hash) {
           AnchorLink.scrollToAnchor(decodeURIComponent(location.hash.slice(1)))
+          return
         }
       }
-    }, [loadState, loadedData])
+      window.scrollTo(0, 0)
+    }, [loadState, location.hash])
 
     if (loadState.type === 'loading') {
       return <AppLayout></AppLayout>
@@ -54,6 +65,8 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
     const pageStaticData = staticData[loadState.routePath]
 
     const body = Object.entries(pageData)
+      // the dataPiece with key 'outlineInfo' is not for render
+      .filter(([key]) => key !== 'outlineInfo')
       .map(([key, dataPart], idx) => {
         const ContentComp = (dataPart as any).default
         const pageStaticDataPart = pageStaticData?.[key]
@@ -85,19 +98,20 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
 
   return withThemeRootWrapper(ThemeComp)
 
-  function withThemeRootWrapper(Component: React.FC<ThemeProps>) {
-    const HOC: React.FC<ThemeProps> = (props) => {
+  function withThemeRootWrapper(
+    Component: React.FC<React.PropsWithChildren<ThemeProps>>
+  ) {
+    const HOC: React.FC<React.PropsWithChildren<ThemeProps>> = (props) => {
       const { loadState, loadedData } = props
       const staticData = useStaticData()
       const themeCtxValue: ThemeContextValue = useMemo(() => {
+        const pageGroups = getPageGroups(staticData, themeConfig.i18n)
         const result: ThemeContextValue = {
           ...props,
-          themeConfig: {
-            ...themeConfig,
-            i18n: normalizeI18nConfig(themeConfig.i18n),
-          },
+          themeConfig,
           staticData,
           resolvedLocale: {},
+          pageGroups,
         }
         if (!result.themeConfig.i18n?.locales) return result
         const { locale, localeKey, pagePathWithoutLocalePrefix } =
@@ -111,7 +125,7 @@ export function createTheme(themeConfig: ThemeConfig): React.FC<ThemeProps> {
           pagePathWithoutLocalePrefix,
         })
         return result
-      }, [themeConfig, loadState, loadedData, staticData])
+      }, [loadState, loadedData, staticData])
 
       let children = <Component {...props} />
       if (themeConfig.AppWrapper) {
@@ -150,3 +164,6 @@ export type {
   FooterLink,
 } from './ThemeConfig.doc'
 export { useThemeCtx } from './ctx'
+
+import { registerSSRPlugin } from 'vite-plugin-react-pages/client'
+registerSSRPlugin(() => import('./ssrPlugin').then((mod) => mod.default))

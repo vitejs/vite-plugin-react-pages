@@ -1,6 +1,5 @@
 import React from 'react'
 import { createTheme, defaultSideNavs, useThemeCtx } from './themeDev'
-import { Button } from 'antd'
 import Component404 from './404'
 import { topNavsConfig } from './themeConfig/topNavs'
 import { sideNavsConfig } from './themeConfig/sideNavs'
@@ -36,11 +35,7 @@ export default createTheme({
     // TopBarExtra is a component, you can call useThemeCtx hook in it
     const themeCtx = useThemeCtx()
     // console.log('themeCtx', themeCtx)
-    return (
-      <Button size="small" style={{ verticalAlign: 'middle' }}>
-        Extra
-      </Button>
-    )
+    return <button>Extra</button>
   },
   sideNavs(ctx) {
     if (ctx.loadState.routePath.startsWith('/users')) {

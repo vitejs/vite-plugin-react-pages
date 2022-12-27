@@ -14,7 +14,7 @@ export async function renderPageList(pagesData: PagesData, isBuild: boolean) {
       let code = `
 pages["${pageId}"] = {};
 pages["${pageId}"].data = () => import("${dataModulePath}");
-pages["${pageId}"].staticData = ${JSON.stringify(staticData)};`
+pages["${pageId}"].staticData = ${JSON.stringify(cleanStaticData(staticData))};`
       return code
     }
   )
@@ -58,4 +58,54 @@ modules["${dataKey}"] = m${idx};`
   const modules = {};
   ${importModule.join('\n')}
   export default modules;`
+}
+
+export function renderAllPagesOutlines(pagesData: PagesData) {
+  const res = [] as string[]
+  Object.entries(pagesData).map(([pageId, { staticData }], index1) => {
+    const outlinesForThisPage = [] as any[]
+    // check all data pieces (identified by key within a page) of all pages
+    Object.entries(staticData).forEach(([key, dataPiece], index2) => {
+      if (dataPiece?.sourceType === 'md' && dataPiece.__sourceFilePath) {
+        // collect outline info of markdown pages
+        const varName = `pageOutline_${index1}_${index2}`
+        outlinesForThisPage.push({
+          key,
+          varName,
+          importOutlineInfo: `import * as ${varName} from ${JSON.stringify(
+            dataPiece.__sourceFilePath + '?outlineInfo'
+          )}`,
+        })
+      }
+    })
+    if (outlinesForThisPage.length === 0) return
+    res.push(`allPagesOutlines["${pageId}"] = {};`)
+    outlinesForThisPage.forEach(({ key, varName, importOutlineInfo }) => {
+      res.push(importOutlineInfo)
+      res.push(`allPagesOutlines["${pageId}"]["${key}"] = ${varName};`)
+    })
+  })
+  return `
+export const allPagesOutlines = {};
+${res.join('\n')}
+`
+}
+
+// filter out internal data field in staticData
+// don't leak them into build output assets
+function cleanStaticData(staticData: any) {
+  if (!staticData || typeof staticData !== 'object') return staticData
+  return Object.fromEntries(
+    Object.entries(staticData).map(([key, value]: [string, any]) => {
+      if (value?.__sourceFilePath)
+        return [
+          key,
+          {
+            ...value,
+            __sourceFilePath: undefined,
+          },
+        ]
+      return [key, value]
+    })
+  )
 }
