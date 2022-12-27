@@ -34,5 +34,7 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: doc-site/dist
+          # Some chunk files may start with underscores. So we need to disable jekyll. https://github.blog/2009-12-29-bypassing-jekyll-on-github-pages/
+          jekyll: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
