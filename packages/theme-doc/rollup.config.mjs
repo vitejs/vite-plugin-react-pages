@@ -9,7 +9,7 @@ const extensions = ['.js', '.jsx', '.ts', '.tsx']
 export default {
   input: {
     index: 'src/index.tsx',
-    ssrPlugin: 'src/ssrPlugin.tsx'
+    ssrPlugin: 'src/ssrPlugin.tsx',
   },
   output: [
     {
