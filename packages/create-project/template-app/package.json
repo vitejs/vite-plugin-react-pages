@@ -24,7 +24,7 @@
     "rimraf": "^3.0.2",
     "serve": "^14.1.2",
     "vite": "^4.0.1",
-    "vite-pages-theme-doc": "^4.0.0-alpha.1",
-    "vite-plugin-react-pages": "^4.0.0-alpha.2"
+    "vite-pages-theme-doc": "^4.0.0",
+    "vite-plugin-react-pages": "^4.0.0"
   }
 }
