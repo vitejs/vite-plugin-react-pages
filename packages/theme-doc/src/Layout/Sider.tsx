@@ -15,7 +15,9 @@ interface Props {
 
 const renderMenu = renderMenuHelper(false)
 
-const AppSider: React.FC<React.PropsWithChildren<Props>> = ({ sideNavsData }) => {
+const AppSider: React.FC<React.PropsWithChildren<Props>> = ({
+  sideNavsData,
+}) => {
   const themeProps = useContext(themePropsCtx)
   const subMenuKeys: string[] = []
   const menuItems = sideNavsData

@@ -1,12 +1,23 @@
 import { build as viteBuild } from 'vite'
 import type { ResolvedConfig } from 'vite'
 import type { RollupOutput } from 'rollup'
+import { minify } from 'html-minifier-terser'
 import * as path from 'path'
 import fs from 'fs-extra'
 import { pathToFileURL } from 'node:url'
 
 import { CLIENT_PATH } from '../constants'
 import type { SSRPlugin } from '../../../clientTypes'
+
+const minifyOptions = {
+  collapseWhitespace: true,
+  keepClosingSlash: true,
+  removeComments: true,
+  removeRedundantAttributes: true,
+  removeStyleLinkTypeAttributes: true,
+  useShortDoctype: true,
+  minifyCSS: true,
+}
 
 export async function ssrBuild(
   viteConfig: ResolvedConfig,
@@ -148,7 +159,7 @@ export async function ssrBuild(
       // currently not support pages with path params
       // .e.g /users/:userId
       if (pagePath.match(/\/:\w/)) return
-      const html = renderHTML(pagePath)
+      const html = await renderHTML(pagePath)
       // TODO: injectPreload
       // preload data module for this page
       // html = injectPreload(html, "path/to/page/data")
@@ -174,7 +185,7 @@ export async function ssrBuild(
   const html404Path = path.join(clientOutDir, '404.html')
   // pass in a pagePath that won't match any defined page
   // so the render result will be 404 page
-  const html404 = renderHTML('/internal-404-page')
+  const html404 = await renderHTML('/internal-404-page')
   await fs.writeFile(html404Path, html404)
   // move 404 page to `/` if `/` doesn't exists
   if (!pagePaths.includes('/')) {
@@ -187,7 +198,7 @@ export async function ssrBuild(
   console.log('vite pages ssr build finished successfully.')
   return
 
-  function renderHTML(pagePath: string) {
+  async function renderHTML(pagePath: string) {
     const { contentText, styleText } = renderToString(pagePath, ssrPlugins)
     const ssrInfo = {
       routePath: pagePath,
@@ -212,7 +223,10 @@ ${CSSInjectPoint}`
       EntryModuleInjectPoint,
       `<script type="module" src="${basePath}${entryChunk.fileName}"></script>`
     )
-    return html
+
+    const minifiedHtml = await minify(html, minifyOptions)
+
+    return minifiedHtml
   }
 }
 
