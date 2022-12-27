@@ -10,9 +10,7 @@ import { CLIENT_PATH } from '../constants'
 import type { SSRPlugin } from '../../../clientTypes'
 
 const minifyOptions = {
-  collapseWhitespace: true,
   keepClosingSlash: true,
-  removeComments: true,
   removeRedundantAttributes: true,
   removeStyleLinkTypeAttributes: true,
   useShortDoctype: true,
