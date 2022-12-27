@@ -7,7 +7,7 @@
   "scripts": {
     "build": "pnpm -r --filter='./packages/*' run build",
     "dev": "pnpm -r --parallel --filter='./packages/*' run dev",
-    "format": "prettier --write ./**/*.{js,ts,tsx}",
+    "format": "prettier --write * --ignore-unknown",
     "ver": "pnpm recursive --filter create-vite-pages --filter vite-plugin-react-pages --filter vite-pages-theme-doc exec -- npm version",
     "ver:p": "npm run ver -- patch",
     "ver:mi": "npm run ver -- minor",
@@ -27,8 +27,8 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "./**/*.{js,ts,tsx}": [
-      "prettier --write"
+    "*": [
+      "prettier --write --cache --ignore-unknown"
     ]
   },
   "devDependencies": {
