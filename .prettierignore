@@ -7,3 +7,8 @@ doc-site/dist
 doc-site/node_modules
 
 playground-report
+
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+LICENSE

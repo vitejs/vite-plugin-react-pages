@@ -7,7 +7,7 @@
   "scripts": {
     "build": "pnpm -r --filter='./packages/*' run build",
     "dev": "pnpm -r --parallel --filter='./packages/*' run dev",
-    "format": "prettier --write ./**/*.{js,ts,tsx}",
+    "format": "prettier --write * --ignore-unknown",
     "ver": "pnpm recursive --filter create-vite-pages --filter vite-plugin-react-pages --filter vite-pages-theme-doc exec -- npm version",
     "ver:p": "npm run ver -- patch",
     "ver:mi": "npm run ver -- minor",
@@ -23,7 +23,13 @@
     "test-debug": "pnpm test -- --debug",
     "build:docs": "pnpm --filter doc-site run ssr-for-deploy",
     "install-test-deps": "playwright install --with-deps chromium",
+    "lint-staged": "lint-staged -q",
     "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*": [
+      "prettier --write --cache --ignore-unknown"
+    ]
   },
   "devDependencies": {
     "@playwright/test": "~1.29.0",
@@ -35,6 +41,7 @@
     "execa": "^5.1.1",
     "get-port": "^5.1.1",
     "husky": "^8.0.2",
+    "lint-staged": "^13.1.0",
     "prettier": "^2.8.1",
     "sirv": "^2.0.2",
     "slash": "^3.0.0",
