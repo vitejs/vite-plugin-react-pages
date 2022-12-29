@@ -21,7 +21,10 @@
     "test-build": "cross-env VITE_PAGES_MODE=build pnpm test",
     "test-ssr": "cross-env VITE_PAGES_MODE=ssr pnpm test",
     "test-debug": "pnpm test -- --debug",
-    "build:docs": "pnpm --filter doc-site run ssr-for-deploy",
+    "build:docs": "pnpm build:core && pnpm build:theme && pnpm build:docs-only",
+    "build:docs-only": "pnpm --filter doc-site run ssr-for-deploy",
+    "build:core": "pnpm --filter vite-plugin-react-pages run build",
+    "build:theme": "pnpm --filter vite-pages-theme-doc run build",
     "install-test-deps": "playwright install --with-deps chromium",
     "lint-staged": "lint-staged -q",
     "prepare": "husky install"

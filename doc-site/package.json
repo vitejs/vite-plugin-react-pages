@@ -8,8 +8,9 @@
     "dev": "vite serve",
     "debug": "node --inspect ./node_modules/vite/bin/vite serve",
     "build": "rimraf dist && vite build --outDir dist && serve -s dist",
-    "ssr": "rimraf dist && vite-pages ssr && serve dist",
-    "ssr-for-deploy": "rimraf dist && GITHUB_PAGES_DEPLOY=true vite-pages ssr",
+    "ssr": "rimraf dist && vite-pages ssr",
+    "ssr-for-preview": "rimraf dist && vite-pages ssr && serve dist",
+    "ssr-for-deploy": "rimraf dist && cross-env GITHUB_PAGES_DEPLOY=true vite-pages ssr",
     "deploy": "npm run ssr-for-deploy && touch ./dist/.nojekyll && gh-pages -d dist -t"
   },
   "keywords": [],
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@types/react": "^18.0.26",
     "@vitejs/plugin-react": "^3.0.0",
+    "cross-env": "^7.0.3",
     "gh-pages": "^4.0.0",
     "rimraf": "^3.0.2",
     "serve": "^14.1.2",
