@@ -13,6 +13,87 @@ import { useThemeCtx } from '../..'
 import s from './search.module.less'
 import type { PageMeta } from '../../analyzeStaticData'
 
+const recentSearchesKey = '__VITE_PAGES_RECENT_SEARCHES'
+
+const getPagePosition = (page: PageMetaExtended) => {
+  return [page.groupKey, page.subGroupKey, page.pageTitle]
+    .filter((s) => s !== '/')
+    .join(' > ')
+}
+
+const hasInRecentSearches = (
+  page: PageMetaExtended,
+  recentSearches: SearchResultItem[]
+) => {
+  return recentSearches
+    .map((item) => item.page.pagePath)
+    .includes(page.pagePath)
+}
+
+const renderSearchResultItem = (
+  type: 'title' | 'heading',
+  matchedString: string,
+  pagePosition: string
+) => {
+  if (type === 'title') {
+    return (
+      <div className={s.searchResultLable}>
+        <div className={s.searchResultLableIcon}>
+          <NumberOutlined style={{ fontSize: '36px', color: '#1f1f1f' }} />
+        </div>
+        <div>
+          <div className={s.searchResultMatchedText}>
+            Title: {matchedString}
+          </div>
+          <div className={s.searchResultPagePosition}>{pagePosition}</div>
+        </div>
+      </div>
+    )
+  }
+  if (type === 'heading') {
+    return (
+      <div className={s.searchResultLable}>
+        <div className={s.searchResultLableIcon}>
+          <ProfileOutlined style={{ fontSize: '36px', color: '#1f1f1f' }} />
+        </div>
+        <div>
+          <div className={s.searchResultMatchedText}>
+            Heading: {matchedString}
+          </div>
+          <div className={s.searchResultPagePosition}>{pagePosition}</div>
+        </div>
+      </div>
+    )
+  }
+
+  throw new Error('unexpected SearchResultItem: type ' + type)
+}
+
+const calcRecentSearchesOptions = (recentSearches: SearchResultItem[]) => {
+  const label = <p>Recent</p>
+
+  const options = recentSearches.map((item) => {
+    const { type, page, matechedString } = item
+
+    const value = [
+      type,
+      page.pagePath,
+      type === 'heading' ? item.headingId : '',
+      matechedString,
+    ].join(' - ')
+
+    const rendered = (() => {
+      const pagePosition = getPagePosition(page)
+
+      return renderSearchResultItem(type, matechedString, pagePosition)
+    })()
+
+    return { value, label: rendered, result: item }
+  })
+
+  return [{ label, options }]
+}
+
 interface Props {}
 
 // TODO: use https://github.com/nextapps-de/flexsearch to do full text search in browser
@@ -24,9 +105,15 @@ const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { staticData, resolvedLocale, pageGroups } = useThemeCtx()
   const [popupOpen, setPopupOpen] = useState(false)
   const [keywords, setKeywords] = useState('')
+  const [recentSearches, setRecentSearches] = useState<SearchResultItem[]>([])
   const navigate = useNavigate()
 
   const allPagesOutlines = useAllPagesOutlines(2000)?.allPagesOutlines
+
+  const recentSearchesOptions = useMemo(
+    () => calcRecentSearchesOptions(recentSearches),
+    [recentSearches]
+  )
 
   const preparedPages = useMemo(() => {
     const res = [] as PageMetaExtended[]
@@ -61,44 +148,9 @@ const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
     return filteredData.map((item) => {
       const { type, page, matechedString } = item
       const rendered = (() => {
-        const pagePosition = [page.groupKey, page.subGroupKey, page.pageTitle]
-          .filter((s) => s !== '/')
-          .join(' > ')
-        if (type === 'title') {
-          return (
-            <div className={s.searchResultLable}>
-              <div className={s.searchResultLableIcon}>
-                <NumberOutlined
-                  style={{ fontSize: '36px', color: '#1f1f1f' }}
-                />
-              </div>
-              <div>
-                <div className={s.searchResultMatchedText}>
-                  Title: {matechedString}
-                </div>
-                <div className={s.searchResultPagePosition}>{pagePosition}</div>
-              </div>
-            </div>
-          )
-        }
-        if (type === 'heading') {
-          return (
-            <div className={s.searchResultLable}>
-              <div className={s.searchResultLableIcon}>
-                <ProfileOutlined
-                  style={{ fontSize: '36px', color: '#1f1f1f' }}
-                />
-              </div>
-              <div>
-                <div className={s.searchResultMatchedText}>
-                  Heading: {matechedString}
-                </div>
-                <div className={s.searchResultPagePosition}>{pagePosition}</div>
-              </div>
-            </div>
-          )
-        }
-        throw new Error('unexpected SearchResultItem: type ' + type)
+        const pagePosition = getPagePosition(page)
+
+        return renderSearchResultItem(type, matechedString, pagePosition)
       })()
       return {
         value: [
@@ -113,6 +165,14 @@ const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
     })
   }, [preparedPages, keywords])
 
+  useEffect(() => {
+    const value = localStorage.getItem(recentSearchesKey)
+
+    if (value) {
+      setRecentSearches(JSON.parse(value))
+    }
+  }, [])
+
   return (
     <div className={s['search-box']}>
       <AutoComplete
@@ -121,13 +181,23 @@ const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
         getPopupContainer={(trigger) => trigger.parentElement}
         dropdownMatchSelectWidth={false}
         style={{ width: 200 }}
-        options={options}
+        options={keywords ? options : (recentSearchesOptions as any)}
         open={popupOpen}
         onDropdownVisibleChange={setPopupOpen}
         value={keywords}
         onSearch={setKeywords}
         onSelect={(value: any, option: any) => {
           const result: SearchResultItem = option.result
+
+          if (!hasInRecentSearches(result.page, recentSearches)) {
+            setRecentSearches((prev) => [...prev, result])
+
+            localStorage.setItem(
+              recentSearchesKey,
+              JSON.stringify([...recentSearches, result])
+            )
+          }
+
           if (result.type === 'title') {
             navigate(result.page.pagePath)
           } else if (result.type === 'heading') {
