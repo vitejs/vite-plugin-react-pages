@@ -26,8 +26,8 @@ const hasInRecentSearches = (
   recentSearches: SearchResultItem[]
 ) => {
   return recentSearches
-    .map((item) => getPagePosition(item.page))
-    .includes(getPagePosition(page))
+    .map((item) => item.page.pagePath)
+    .includes(page.pagePath)
 }
 
 const renderSearchResultItem = (
@@ -110,7 +110,10 @@ const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
 
   const allPagesOutlines = useAllPagesOutlines(2000)?.allPagesOutlines
 
-  const recentSearchesOptions = calcRecentSearchesOptions(recentSearches)
+  const recentSearchesOptions = useMemo(
+    () => calcRecentSearchesOptions(recentSearches),
+    [recentSearches]
+  )
 
   const preparedPages = useMemo(() => {
     const res = [] as PageMetaExtended[]
