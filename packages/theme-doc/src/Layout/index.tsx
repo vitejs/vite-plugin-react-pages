@@ -43,7 +43,7 @@ const AppLayout: React.FC<React.PropsWithChildren<Props>> = ({ children }) => {
   }, [isSlideSiderOpen, screenWidth])
 
   return (
-    <ConfigProvider prefixCls="vp-antd">
+    <ConfigProvider prefixCls="vp-antd" theme={theme}>
       <LayoutContext.Provider value={layoutCtxVal}>
         <div className={s.layout}>
           <AppHeader />
@@ -68,3 +68,9 @@ const AppLayout: React.FC<React.PropsWithChildren<Props>> = ({ children }) => {
 }
 
 export default AppLayout
+
+const theme = {
+  token: {
+    colorSplit: 'rgba(5, 5, 5, 0.1)',
+  },
+} as const
