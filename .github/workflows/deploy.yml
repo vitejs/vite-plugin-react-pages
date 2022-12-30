@@ -1,4 +1,4 @@
-name: ci
+name: deploy to gh-pages
 
 on:
   push:
