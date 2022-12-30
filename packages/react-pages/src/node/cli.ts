@@ -5,6 +5,7 @@ import path from 'node:path'
 import { resolveConfig } from 'vite'
 import { PKG_ROOT } from './constants'
 import { ssrBuild } from './static-site-generation'
+import type { staticSiteGenerationConfig } from './types'
 
 const argv: any = minimist(process.argv.slice(2))
 
@@ -17,7 +18,7 @@ console.log(
 )
 // console.log(chalk.cyan(`vite v${require('vite/package.json').version}`))
 
-// cli usage: vite-pages ssr [root] [vite config like --outDir or --configFile]
+// cli usage: vite-pages ssr [root] [-minifyHtml] [vite config like --outDir or --configFile]
 const [command, root] = argv._
 if (root) {
   argv.root = root
@@ -25,9 +26,16 @@ if (root) {
 
 ;(async () => {
   if (!command || command === 'ssr') {
+    const toBeResovledConfig = {
+      configFile: argv.configFile,
+      build: {
+        outDir: argv.outDir,
+      },
+    }
+
     // user can pass in vite config like --outDir or --configFile
     const viteConfig = await resolveConfig(
-      argv,
+      toBeResovledConfig,
       'build',
       'production',
       'production'
@@ -35,16 +43,18 @@ if (root) {
     const thisPlugin = viteConfig.plugins.find((plugin) => {
       return plugin.name === 'vite-plugin-react-pages'
     })
-    // @ts-expect-error
-    const ssrConfig = thisPlugin?.vitePagesStaticSiteGeneration
+    //@ts-expect-error
+    const ssrConfig = thisPlugin?.vitePagesStaticSiteGeneration as
+      | staticSiteGenerationConfig
+      | undefined
 
-    await ssrBuild(viteConfig, ssrConfig, argv).catch((err: any) => {
+    await ssrBuild(viteConfig, argv, ssrConfig).catch((err: any) => {
       console.error(chalk.red(`ssr error:\n`), err)
       process.exit(1)
     })
   } else {
     console.error(
-      `[vite-pages] Invalid command. CLI usage: vite-pages ssr [root] [vite config like --outDir or --configFile]`
+      `[vite-pages] Invalid command. CLI usage: vite-pages ssr [root] [-minifyHtml]  [vite config like --outDir or --configFile]`
     )
   }
 })()

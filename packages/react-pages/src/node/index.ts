@@ -2,6 +2,7 @@ import * as path from 'path'
 import type { PluggableList } from 'unified'
 import type { Plugin, IndexHtmlTransformContext } from 'vite'
 import type { OutputPlugin } from 'rollup'
+import type { staticSiteGenerationConfig } from './types'
 
 import {
   DefaultPageStrategy,
@@ -52,7 +53,7 @@ export interface PluginConfig {
   pagesDir?: string
   pageStrategy?: PageStrategy
   useHashRouter?: boolean
-  staticSiteGeneration?: {}
+  staticSiteGeneration?: staticSiteGenerationConfig
 }
 
 function pluginFactory(opts: PluginConfig = {}): Plugin {
