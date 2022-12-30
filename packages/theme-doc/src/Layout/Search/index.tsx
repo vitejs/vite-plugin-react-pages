@@ -4,6 +4,7 @@ import {
   SearchOutlined,
   NumberOutlined,
   ProfileOutlined,
+  ClearOutlined,
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { useAllPagesOutlines } from 'vite-plugin-react-pages/client'
@@ -69,8 +70,20 @@ const renderSearchResultItem = (
   throw new Error('unexpected SearchResultItem: type ' + type)
 }
 
-const calcRecentSearchesOptions = (recentSearches: SearchResultItem[]) => {
-  const label = <p>Recent</p>
+const calcRecentSearchesOptions = (
+  recentSearches: SearchResultItem[],
+  clearAllHistory: () => void
+) => {
+  const len = recentSearches.length
+
+  const label = (
+    <p className={s.recentSearchesLabel}>
+      <div className={s.recentSearchesLabelText}>
+        {len ? 'Recent' : 'No recent searches'}
+      </div>
+      {len ? <ClearOutlined onClick={clearAllHistory} /> : null}
+    </p>
+  )
 
   const options = recentSearches.map((item) => {
     const { type, page, matechedString } = item
@@ -110,8 +123,13 @@ const Search: React.FC<React.PropsWithChildren<Props>> = (props) => {
 
   const allPagesOutlines = useAllPagesOutlines(2000)?.allPagesOutlines
 
+  const clearAllHistory = () => {
+    setRecentSearches([])
+    localStorage.setItem(recentSearchesKey, JSON.stringify([]))
+  }
+
   const recentSearchesOptions = useMemo(
-    () => calcRecentSearchesOptions(recentSearches),
+    () => calcRecentSearchesOptions(recentSearches, clearAllHistory),
     [recentSearches]
   )
 
