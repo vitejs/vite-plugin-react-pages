@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import root from 'react-shadow';
 
 import { Code } from './icons'
 import CodeBlock from '../MDX/CodeBlock'
@@ -39,9 +40,9 @@ If you use it in markdown, you should use it exactly like "<Demo src="./demos/de
       className={[s.demoBox, className].filter(Boolean).join(' ')}
       style={style}
     >
-      <div className={s.demo}>
+      <root.div className={s.demo}>
         <DemoComp />
-      </div>
+      </root.div>
 
       <div className={s.meta}>
         {title && <div className={s.title}>{title}</div>}
