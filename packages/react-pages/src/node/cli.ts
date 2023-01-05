@@ -18,7 +18,7 @@ console.log(
 )
 // console.log(chalk.cyan(`vite v${require('vite/package.json').version}`))
 
-// cli usage: vite-pages ssr [root] [-minifyHtml] [vite config like --outDir or --configFile]
+// cli usage: vite-pages ssr [root] [--minifyHtml] [vite config like --outDir or --configFile]
 const [command, root] = argv._
 if (root) {
   argv.root = root
@@ -54,7 +54,7 @@ if (root) {
     })
   } else {
     console.error(
-      `[vite-pages] Invalid command. CLI usage: vite-pages ssr [root] [-minifyHtml]  [vite config like --outDir or --configFile]`
+      `[vite-pages] Invalid command. CLI usage: vite-pages ssr [root] [--minifyHtml]  [vite config like --outDir or --configFile]`
     )
   }
 })()
