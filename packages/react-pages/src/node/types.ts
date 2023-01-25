@@ -1,6 +1,6 @@
 export interface staticSiteGenerationConfig {
   /**
-   * @default false
+   * @default true
    */
   readonly minifyHtml?: boolean
 }

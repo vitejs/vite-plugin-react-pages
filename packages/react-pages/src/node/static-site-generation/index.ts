@@ -223,9 +223,9 @@ ${CSSInjectPoint}`
       `<script type="module" src="${basePath}${entryChunk.fileName}"></script>`
     )
 
-    if (ssrConfig?.minifyHtml || argv?.minifyHtml) {
+    const minifyHtml = argv?.minifyHtml ?? ssrConfig?.minifyHtml ?? true
+    if (minifyHtml) {
       const minifiedHtml = await minify(html, minifyOptions)
-
       return minifiedHtml
     }
 
