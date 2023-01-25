@@ -25,6 +25,12 @@ if (root) {
   argv.root = root
 }
 
+// make `--minifyHtml=false` to be treated as boolean false instead of string "false"
+Object.entries(argv).forEach(([key, value]) => {
+  if (value === 'false') argv[key] = false
+})
+
+// console.log('@@argv', argv)
 ;(async () => {
   if (!command || command === 'ssr') {
     const toBeResovledConfig: InlineConfig = {
