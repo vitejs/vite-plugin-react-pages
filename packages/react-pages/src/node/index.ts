@@ -91,7 +91,8 @@ function pluginFactory(opts: PluginConfig = {}): Plugin {
         rollupOptions: {
           output: {
             manualChunks: undefined,
-            plugins: [outputPluginDisableJekyll()],
+            // local rollup's types may not be compatible with vite's rollup types
+            plugins: [outputPluginDisableJekyll() as any],
           },
         },
       },
