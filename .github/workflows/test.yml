@@ -32,7 +32,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
-      - name: Get npm cache directory
+      - name: Get pnpm cache directory
         id: pnpm-cache
         shell: bash
         run: echo "dir=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
