@@ -3,6 +3,7 @@ import fs from 'fs-extra'
 import minimist from 'minimist'
 import path from 'node:path'
 import { resolveConfig } from 'vite'
+import type { InlineConfig } from 'vite'
 import { PKG_ROOT } from './constants'
 import { ssrBuild } from './static-site-generation'
 import type { staticSiteGenerationConfig } from './types'
@@ -18,7 +19,7 @@ console.log(
 )
 // console.log(chalk.cyan(`vite v${require('vite/package.json').version}`))
 
-// cli usage: vite-pages ssr [root] [--minifyHtml] [vite config like --outDir or --configFile]
+// cli usage: vite-pages ssr [root] [--minifyHtml] [vite options like: --configFile, --base, --logLevel, --mode, --build.outDir, etc.]
 const [command, root] = argv._
 if (root) {
   argv.root = root
@@ -26,11 +27,8 @@ if (root) {
 
 ;(async () => {
   if (!command || command === 'ssr') {
-    const toBeResovledConfig = {
-      configFile: argv.configFile,
-      build: {
-        outDir: argv.outDir,
-      },
+    const toBeResovledConfig: InlineConfig = {
+      ...argv,
     }
 
     // user can pass in vite config like --outDir or --configFile
@@ -54,7 +52,7 @@ if (root) {
     })
   } else {
     console.error(
-      `[vite-pages] Invalid command. CLI usage: vite-pages ssr [root] [--minifyHtml]  [vite config like --outDir or --configFile]`
+      `[vite-pages] Invalid command. CLI usage: vite-pages ssr [root] [--minifyHtml] [vite options like: --configFile, --base, --logLevel, --mode, --build.outDir, etc.]`
     )
   }
 })()
