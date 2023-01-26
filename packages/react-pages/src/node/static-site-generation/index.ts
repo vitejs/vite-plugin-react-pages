@@ -8,6 +8,7 @@ import { pathToFileURL } from 'node:url'
 
 import { CLIENT_PATH } from '../constants'
 import type { SSRPlugin } from '../../../clientTypes'
+import type { staticSiteGenerationConfig } from '../types'
 
 const minifyOptions = {
   keepClosingSlash: true,
@@ -19,8 +20,8 @@ const minifyOptions = {
 
 export async function ssrBuild(
   viteConfig: ResolvedConfig,
-  ssrConfig: any,
-  argv: any
+  argv: any,
+  ssrConfig?: staticSiteGenerationConfig
 ) {
   // ssr build should not use hash router
   // if (viteOptions?.define?.['__HASH_ROUTER__'])
@@ -222,9 +223,13 @@ ${CSSInjectPoint}`
       `<script type="module" src="${basePath}${entryChunk.fileName}"></script>`
     )
 
-    const minifiedHtml = await minify(html, minifyOptions)
+    const minifyHtml = argv?.minifyHtml ?? ssrConfig?.minifyHtml ?? true
+    if (minifyHtml) {
+      const minifiedHtml = await minify(html, minifyOptions)
+      return minifiedHtml
+    }
 
-    return minifiedHtml
+    return html
   }
 }
 
