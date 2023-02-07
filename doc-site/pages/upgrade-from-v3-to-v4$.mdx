@@ -66,6 +66,17 @@ Update `package.json`:
 }
 ```
 
+## MDX Comment Syntax Change
+
+mdx v2 drops support for HTML comment syntax `<!-- html comment -->` (actually it drops all HTML syntax), and [the document](https://mdxjs.com/docs/what-is-mdx/#markdown) recommends using jsx comment syntax instead:
+> HTML syntax doesn’t work in MDX as it’s replaced by JSX. Instead of HTML comments, you can use JavaScript comments in braces: `{/* comment! */}`.
+
+The author explain the reason behind this at [this rfc](https://github.com/mdx-js/mdx/issues/1042#issuecomment-622281752). The author hopes that the mdx syntax is only composed of markdown syntax + JSX syntax. The introduction of HTML syntax is not necessary and it would increase the mental burden.
+
+> Although many markdown parsers support HTML syntax, it is technically not the syntax of markdown itself. Those markdown parsers support it because markdown was not expressive enough in the past (without mdx). mdx has already solved the lack of expressiveness (via JSX syntax), so there is no need to support HTML syntax.
+
+The removing of html comment syntax does bring some migration costs. You can quickly migrate it by regular search and replacement: `<!--(.*?)-->` replace to `{/*$0*/}`.
+
 ## Use Node.js ECMAScript modules
 
 The Node.js community is quickly migrating from CommonJS to ECMAScript modules (esm). And we encourage you to run vite on the esm mode of Node.js.
