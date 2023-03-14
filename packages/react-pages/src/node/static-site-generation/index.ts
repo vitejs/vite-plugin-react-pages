@@ -1,6 +1,5 @@
 import { build as viteBuild } from 'vite'
 import type { ResolvedConfig } from 'vite'
-import type { RollupOutput } from 'rollup'
 import { minify } from 'html-minifier-terser'
 import * as path from 'path'
 import fs from 'fs-extra'
@@ -9,6 +8,17 @@ import { pathToFileURL } from 'node:url'
 import { CLIENT_PATH } from '../constants'
 import type { SSRPlugin } from '../../../clientTypes'
 import type { staticSiteGenerationConfig } from '../types'
+
+type ViteBuildOutput = Awaited<ReturnType<typeof viteBuild>>
+
+type PickArrayLike<T> = T extends Array<unknown> ? T : never
+
+type RollupOutputArray = PickArrayLike<ViteBuildOutput>
+
+type ArrayElement<ArrayType extends unknown[]> =
+  ArrayType extends (infer ElementType)[] ? ElementType : never
+
+type RollupOutput = ArrayElement<RollupOutputArray>
 
 const minifyOptions = {
   keepClosingSlash: true,
