@@ -9,17 +9,6 @@ import { CLIENT_PATH } from '../constants'
 import type { SSRPlugin } from '../../../clientTypes'
 import type { staticSiteGenerationConfig } from '../types'
 
-type ViteBuildOutput = Awaited<ReturnType<typeof viteBuild>>
-
-type PickArrayLike<T> = T extends Array<unknown> ? T : never
-
-type RollupOutputArray = PickArrayLike<ViteBuildOutput>
-
-type ArrayElement<ArrayType extends unknown[]> =
-  ArrayType extends (infer ElementType)[] ? ElementType : never
-
-type RollupOutput = ArrayElement<RollupOutputArray>
-
 const minifyOptions = {
   keepClosingSlash: true,
   removeRedundantAttributes: true,
@@ -251,3 +240,16 @@ const injectPreload = (html: string, filePath: string) => {
     return tag + '\n' + html
   }
 }
+
+// TODO: use Rollup types from vite after this is published:
+//  https://github.com/vitejs/vite/pull/12316
+// import type { Rollup } from 'vite'
+// type RollupOutput = Rollup.RollupOutput
+// For now, we use this to work around vite-ecosystem-ci error:
+// https://github.com/vitejs/vite-plugin-react-pages/pull/115
+type ViteBuildOutput = Awaited<ReturnType<typeof viteBuild>>
+type PickArrayLike<T> = T extends Array<unknown> ? T : never
+type RollupOutputArray = PickArrayLike<ViteBuildOutput>
+type ArrayElement<ArrayType extends unknown[]> =
+  ArrayType extends (infer ElementType)[] ? ElementType : never
+type RollupOutput = ArrayElement<RollupOutputArray>
