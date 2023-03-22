@@ -23,7 +23,7 @@
     "rimraf": "^3.0.2",
     "sass": "^1.57.0",
     "serve": "^14.1.2",
-    "vite": "^4.0.1",
+    "vite": "^4.2.1",
     "vite-plugin-react-pages": "workspace:*"
   }
 }
