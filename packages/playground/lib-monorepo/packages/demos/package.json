@@ -23,7 +23,7 @@
     "playground-card": "*",
     "rimraf": "^3.0.2",
     "serve": "^14.1.2",
-    "vite": "^4.0.1",
+    "vite": "^4.2.1",
     "vite-pages-theme-doc": "workspace:*",
     "vite-plugin-react-pages": "workspace:*"
   }

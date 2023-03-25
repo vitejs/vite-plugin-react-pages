@@ -22,7 +22,7 @@
     "@vitejs/plugin-react": "^3.0.0",
     "rimraf": "^3.0.2",
     "serve": "^14.1.2",
-    "vite": "^4.0.1",
+    "vite": "^4.2.1",
     "vite-pages-theme-doc": "^4.0.0",
     "vite-plugin-react-pages": "^4.0.0"
   }
