@@ -27,7 +27,7 @@ export function Demo({
   if (!DemoComp || !demoMeta || !isDemo) {
     return (
       <pre>{`Demo Error: <Demo> component receives invalid props.
-If you use it in jsx, you should import demos like "import * as demoInfo from './demos/demo.tsx?demo'" and use it like "<Demo {...demoInfo}>"
+If you use it in jsx, you should import demoInfo like "import * as demoInfo from './demos/demo.tsx?demo'" and render it like "<Demo {...demoInfo}>"
 If you use it in markdown, you should use it exactly like "<Demo src="./demos/demo1.tsx" />" (we use simple regexp to parse it, so you should use this format strictly)
 `}</pre>
     )

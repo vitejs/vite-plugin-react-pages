@@ -28,7 +28,7 @@ export function DemoMdxPlugin() {
           const nextIndex = addImports.length
           const varName = `_demo${nextIndex}`
           // add import:
-          // import * as varName from "${srcValue}?tsInfo=${nameValue}"
+          // import * as varName from "${srcValue}?demo"
           addImports.push(
             createNameSpaceImportNode({
               name: varName,

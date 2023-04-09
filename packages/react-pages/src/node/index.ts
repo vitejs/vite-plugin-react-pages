@@ -234,8 +234,8 @@ export type {
   LoadState,
   PagesLoaded,
   PagesStaticData,
-  TsInterfaceInfo,
-  TsInterfacePropertyInfo,
+  TsInfo,
+  TsPropertyOrMethodInfo,
 } from '../../clientTypes'
 
 export type { FileHandler } from './page-strategy/types.doc'

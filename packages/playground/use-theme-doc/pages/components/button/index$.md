@@ -8,8 +8,14 @@ subGroup: general
 demo1:
 <Demo src="./demos/demo1.tsx" />
 
-ButtonProps:
+ButtonProps (Interface):
 <TsInfo src="./types.ts" name="ButtonProps" />
 
-ButtonProps by FileText:
+SomeObjectLiteralType (Object Literal):
+<TsInfo src="./types.ts" name="SomeObjectLiteralType" />
+
+SomeComplexType (Complex Type):
+<TsInfo src="./types.ts" name="SomeComplexType" />
+
+FileText:
 <FileText src="./types.ts" syntax="ts" />
