@@ -1,3 +1,5 @@
+import type { Root } from 'remark-mdx'
+
 // collect headings
 // ref: https://github.com/syntax-tree/mdast-util-toc/blob/ba8f680a3cbcd96351febe2b73edb21598720945/lib/search.js#L67
 
@@ -10,7 +12,7 @@ export async function extractOutlineInfo(md: string) {
   const { toString } = await import('mdast-util-to-string')
   const { default: Slugger } = await import('github-slugger')
 
-  const ast = remark().use(frontmatter).use(gfm).use(remarkMdx).parse(md)
+  const ast: Root = remark().use(frontmatter).use(gfm).use(remarkMdx).parse(md)
   const slugs = new Slugger()
   const headings: { depth: number; text: string; id: string }[] = []
 
