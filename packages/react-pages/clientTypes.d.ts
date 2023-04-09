@@ -11,21 +11,34 @@ export interface PagesInternal {
 }
 
 // the result of tsInfo extraction
-export interface TsInterfaceInfo {
+export type TsInfo =
+  | {
+      // example: type A = { k: v }
+      type: 'object-literal'
+      name: string
+      description: string
+      properties: TsPropertyOrMethodInfo[]
+    }
+  | {
+      // example: interface MyInterface { k: v }
+      type: 'interface'
+      name: string
+      description: string
+      properties: TsPropertyOrMethodInfo[]
+    }
+  | {
+      // complex type literal
+      // example: type A = 'asd' | 123
+      type: 'other'
+      name: string
+      description: string
+      text: string
+    }
+export interface TsPropertyOrMethodInfo {
   name: string
-  // commentText: string
-  description: string
-  // fullText: string
-  properties: TsInterfacePropertyInfo[]
-}
-
-export interface TsInterfacePropertyInfo {
-  name: string
-  // commentText: string
   type: string
   description: string
   defaultValue: string | undefined
-  // fullText: string
   optional: boolean
 }
 

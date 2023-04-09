@@ -1,154 +1,237 @@
-import ts from 'typescript'
-
 import {
-  TsInterfaceInfo,
-  TsInterfacePropertyInfo,
-} from '../../../../clientTypes'
+  Project,
+  TypeElementMemberedNode,
+  Node,
+  TypeChecker,
+  ts,
+} from 'ts-morph'
+
+export type TsInfo =
+  | {
+      // example: type A = { k: v }
+      type: 'object-literal'
+      name: string
+      description: string
+      properties: TsPropertyOrMethodInfo[]
+    }
+  | {
+      // example: interface MyInterface { k: v }
+      type: 'interface'
+      name: string
+      description: string
+      properties: TsPropertyOrMethodInfo[]
+    }
+  | {
+      // complex type literal
+      // example: type A = 'asd' | 123
+      type: 'other'
+      name: string
+      description: string
+      text: string
+    }
+
+export interface TsPropertyOrMethodInfo {
+  name: string
+  type: string
+  description: string
+  defaultValue: string | undefined
+  optional: boolean
+}
 
 const defaultTsConfig: ts.CompilerOptions = {
+  target: ts.ScriptTarget.ESNext,
+  lib: ['lib.esnext.full.d.ts'],
   moduleResolution: ts.ModuleResolutionKind.NodeJs,
 }
 
 export function collectInterfaceInfo(
   fileName: string,
   exportName: string,
-  options: ts.CompilerOptions = defaultTsConfig
-): TsInterfaceInfo {
-  // Build a program using the set of root file names in fileNames
-  let program = ts.createProgram([fileName], options)
-  // Get the checker, we will use it to find more about classes
-  let checker = program.getTypeChecker()
+  options: ts.CompilerOptions = {}
+): TsInfo {
+  const project = new Project({
+    compilerOptions: {
+      ...defaultTsConfig,
+      ...options,
+    },
+  })
 
-  const sourceFile = program.getSourceFile(fileName)!
+  const sourceFile = project.addSourceFileAtPath(fileName)
+  const typeChecker = project.getTypeChecker()
 
-  // inspired by
-  // https://github.com/microsoft/rushstack/blob/6ca0cba723ad8428e6e099f12715ce799f29a73f/apps/api-extractor/src/analyzer/ExportAnalyzer.ts#L702
-  // and https://stackoverflow.com/a/58885450
-  const fileSymbol = checker.getSymbolAtLocation(sourceFile)
-  if (!fileSymbol || !fileSymbol.exports) {
-    throw new Error(`unexpected fileSymbol`)
-  }
-  const escapedExportName = ts.escapeLeadingUnderscores(exportName)
-  const exportSymbol = fileSymbol.exports.get(escapedExportName)
-  if (!exportSymbol) {
-    throw new Error(`Named export ${exportName} is not found in file`)
-  }
-  const sourceDeclareSymbol = getAliasedSymbolIfNecessary(exportSymbol)
-  const sourceDeclare = sourceDeclareSymbol.declarations?.[0]
-  if (!sourceDeclare) {
-    throw new Error(`Can't find sourceDeclare for ${exportName}`)
-  }
-  const interfaceInfo = collectInterfaceInfo(sourceDeclare, sourceDeclareSymbol)
-  return interfaceInfo
-
-  function getAliasedSymbolIfNecessary(symbol: ts.Symbol) {
-    if ((symbol.flags & ts.SymbolFlags.Alias) !== 0)
-      return checker.getAliasedSymbol(symbol)
-    return symbol
-  }
-
-  function collectInterfaceInfo(node: ts.Declaration, symbol: ts.Symbol) {
-    if (!ts.isInterfaceDeclaration(node))
-      throw new Error(`target is not an InterfaceDeclaration`)
-
-    const type = checker.getTypeAtLocation(node)
-    if (!symbol) throw new Error(`can't find symbol`)
-
-    const name = node.name.getText()
-    const commentText =
-      getComment(node, node.getSourceFile().getFullText()) ?? ''
-    const description = ts.displayPartsToString(
-      symbol.getDocumentationComment(checker)
+  const exportedDeclarations = sourceFile
+    .getExportedDeclarations()
+    .get(exportName)
+  if (!exportedDeclarations) {
+    throw new Error(
+      `Can not find export. ${JSON.stringify({ exportName, fileName })}`
     )
+  }
+  if (exportedDeclarations.length !== 1) {
+    throw new Error(
+      `Unexpected exportedDeclaration.length. ${JSON.stringify({
+        exportName,
+        fileName,
+      })}`
+    )
+  }
 
-    const propertiesInfo: TsInterfacePropertyInfo[] = []
+  const node = exportedDeclarations[0]
 
-    // extract property info
-    symbol.members?.forEach((symbol) => {
-      const name = symbol.name
-      const declaration = symbol.valueDeclaration
-      if (
-        !(
-          declaration &&
-          (ts.isPropertySignature(declaration) ||
-            ts.isMethodSignature(declaration))
-        )
-      ) {
-        // known member in interface symbol
-        // that we don't handle
-        if (symbol.getFlags() & ts.SymbolFlags.TypeParameter) return
-        console.warn(
-          `unexpected declaration type in interface. name: ${name}, kind: ${
-            ts.SyntaxKind[declaration?.kind as any]
-          }`
-        )
-        return
-      }
-      const commentText =
-        getComment(declaration, declaration.getSourceFile().getFullText()) ?? ''
-      const typeText = declaration.type?.getFullText() ?? ''
-      const description = ts.displayPartsToString(
-        symbol.getDocumentationComment(checker)
-      )
-
-      const isOptional = !!(symbol.getFlags() & ts.SymbolFlags.Optional)
-      // get defaultValue from jsDocTags
-      const jsDocTags = symbol.getJsDocTags()
-      const defaultValueTag = jsDocTags.find(
-        (t) => t.name === 'defaultValue' || 'default'
-      )
-      const defaultValue = defaultValueTag?.text?.[0].text
-
-      propertiesInfo.push({
-        name,
-        // commentText,
-        type: typeText,
-        description,
-        defaultValue,
-        optional: isOptional,
-        // fullText: declaration.getFullText(),
+  if (Node.isTypeAliasDeclaration(node)) {
+    // type A = { k: v } (type literal)
+    // or type A = 'asd' | 123 (complex type)
+    const name = node.getName()
+    const description = node
+      .getJsDocs()
+      .map((jsDoc) => {
+        return jsDoc.getDescription().trim()
       })
-    })
+      .join('\n\n')
+    const typeNode = node.getTypeNode()
 
-    const interfaceInfo: TsInterfaceInfo = {
-      name,
-      // commentText,
-      description,
-      properties: propertiesInfo,
-      // fullText: node.getFullText(),
+    if (Node.isTypeLiteral(typeNode)) {
+      // example: type A = { k: v }
+      const members = handleTypeElementMembered(typeNode, typeChecker)
+      return {
+        type: 'object-literal',
+        name,
+        description,
+        properties: members,
+      }
+    } else {
+      // example: type A = 'asd' | 123
+      return {
+        type: 'other',
+        name,
+        description,
+        text:
+          typeNode?.getText({
+            includeJsDocComments: false,
+            trimLeadingIndentation: true,
+          }) || '',
+      }
     }
-
-    return interfaceInfo
   }
 
-  /** True if this is visible outside this file, false otherwise */
-  function isNodeExported(node: ts.Node): boolean {
-    return (
-      (ts.getCombinedModifierFlags(node as ts.Declaration) &
-        ts.ModifierFlags.Export) !==
-        0 &&
-      !!node.parent &&
-      node.parent.kind === ts.SyntaxKind.SourceFile
+  if (Node.isInterfaceDeclaration(node)) {
+    const name = node.getName()
+    const description = node
+      .getJsDocs()
+      .map((jsDoc) => {
+        return jsDoc.getDescription().trim()
+      })
+      .join('\n\n')
+    const members = handleTypeElementMembered(node, typeChecker)
+    return { type: 'interface', name, description, properties: members }
+  }
+
+  throw new Error('unexpected node type: ' + node.getKindName())
+}
+
+// handle Interface or TypeLiteral
+// iterate members at type level
+// which is higher than ast level, so that we can get inherited membered from a Interface
+// https://github.com/dsherret/ts-morph/issues/457#issuecomment-427688926
+function handleTypeElementMembered(
+  node: TypeElementMemberedNode & Node,
+  typeChecker: TypeChecker
+): TsPropertyOrMethodInfo[] {
+  const result: TsPropertyOrMethodInfo[] = []
+  const nodeType = node.getType()
+  const properties = nodeType.getProperties()
+  for (const prop of properties) {
+    const name = prop.getName()
+    const description = ts.displayPartsToString(
+      prop.compilerSymbol.getDocumentationComment(typeChecker.compilerObject)
     )
+    const type = prop.getTypeAtLocation(node).getText()
+    const defaultValue = (() => {
+      let res = ''
+      prop.getJsDocTags().find((tag) => {
+        const match = ['defaultvalue', 'default'].includes(
+          tag.getName().toLowerCase()
+        )
+        if (match) {
+          res = ts.displayPartsToString(tag.getText())
+          return true
+        }
+      })
+      return res
+    })()
+    const optional = prop.isOptional()
+    result.push({
+      name,
+      description,
+      type,
+      defaultValue,
+      optional,
+    })
   }
+  return result
 }
 
-function getJSDocCommentRanges(
-  node: ts.Node,
-  text: string
-): ts.CommentRange[] | undefined {
-  // Compiler internal:
-  // https://github.com/microsoft/TypeScript/blob/66ecfcbd04b8234855a673adb85e5cff3f8458d4/src/compiler/utilities.ts#L1202
-  return (ts as any).getJSDocCommentRanges.apply(ts, arguments)
-}
+// an alternative way to implement handleTypeElementMembered
+// iterate members at ast level
+// not used. just for backup...
+function handleTypeElementMembered2(
+  node: TypeElementMemberedNode & Node,
+  typeChecker: TypeChecker
+): TsPropertyOrMethodInfo[] {
+  const result: TsPropertyOrMethodInfo[] = []
+  node.getMembers().forEach((member) => {
+    if (Node.isPropertySignature(member) || Node.isMethodSignature(member)) {
+      const memberSymbol = member.getSymbolOrThrow()
 
-function getComment(declaration: ts.Declaration, sourceFileFullText: string) {
-  const ranges = getJSDocCommentRanges(declaration, sourceFileFullText)
-  if (!ranges || !ranges.length) return
-  const range = ranges[ranges.length - 1]
-  if (!range) return
-  const text = sourceFileFullText.slice(range.pos, range.end)
-  return text
+      const name = member.getName()
+
+      // or use this to get description?
+      // const description = ts.displayPartsToString(
+      //   memberSymbol.compilerSymbol.getDocumentationComment(
+      //     typeChecker.compilerObject
+      //   )
+      // )
+      // My consideration: getJsDocs is newer than getDocumentationComment
+      // and ts-morph docs recommend using getJsDocs:
+      // https://github.com/dsherret/ts-morph/blob/cea07aa7759ecf5a1e9f90b628334b8bd617c624/docs/details/documentation.md#L59
+      const description = member
+        .getJsDocs()
+        .map((jsDoc) => {
+          return jsDoc.getDescription().trim()
+        })
+        .join('\n\n')
+
+      const type = member.getType().getText()
+
+      const defaultValue = (() => {
+        let res = ''
+        member.getJsDocs().find((jsDoc) =>
+          jsDoc.getTags().find((tag) => {
+            const match = ['defaultvalue', 'default'].includes(
+              tag.getTagName().toLowerCase()
+            )
+            if (match) {
+              res = tag.getCommentText() || ''
+              return true
+            }
+          })
+        )
+        return res
+      })()
+
+      // or use member.hasQuestionToken()
+      const optional = memberSymbol.isOptional()
+
+      result.push({
+        name,
+        description,
+        type,
+        defaultValue,
+        optional,
+      })
+    }
+  })
+  return result
 }
 
 /**

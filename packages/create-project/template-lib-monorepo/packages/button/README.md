@@ -17,9 +17,11 @@ You can import demos like this:
 
 <Demo src="./demos/demo2.tsx" />
 
-## Extract API info from Typescript code
+## Extract Type info from Typescript code
 
-You can extract API from Typescript interface and render it into page.
+You can extract Typescript type info and render it into page. This is very useful for API documentation.
+
+### Render Interface
 
 The following markdown
 
@@ -33,7 +35,19 @@ will result in:
 
 <TsInfo src="./src/types.ts" name="ButtonProps" />
 
-In jsx page, You can render TsInfo like this:
+### Render Type Alias
+
+Besides interface, TsInfo API also support type alias.
+
+SomeObjectLiteralType (Object Literal):
+<TsInfo src="./src/types.ts" name="SomeObjectLiteralType" />
+
+SomeComplexType (Complex Type):
+<TsInfo src="./src/types.ts" name="SomeComplexType" />
+
+### Using TsInfo API in JS files
+
+In jsx page, You can import and render tsInfo like this:
 
 ```tsx
 import tsInfoData from './types.ts?tsInfo=ButtonProps'
