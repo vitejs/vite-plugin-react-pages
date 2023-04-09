@@ -35,20 +35,20 @@
     ]
   },
   "devDependencies": {
-    "@playwright/test": "~1.29.0",
-    "@pnpm/link-bins": "^8.0.4",
+    "@playwright/test": "~1.32.2",
+    "@pnpm/link-bins": "^9.0.0",
     "@pnpm/logger": "^5.0.0",
-    "@types/node": "^18.11.16",
+    "@types/node": "^18.15.11",
     "@types/wait-on": "^5.3.1",
     "cross-env": "^7.0.3",
     "execa": "^5.1.1",
     "get-port": "^5.1.1",
-    "husky": "^8.0.2",
-    "lint-staged": "^13.1.0",
-    "prettier": "^2.8.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
+    "prettier": "^2.8.7",
     "sirv": "^2.0.2",
     "slash": "^3.0.0",
-    "typescript": "^4.9.4",
+    "typescript": "^5.0.4",
     "wait-on": "^6.0.1"
   },
   "pnpm": {
