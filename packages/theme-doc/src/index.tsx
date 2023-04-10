@@ -29,7 +29,7 @@ export function createTheme(
 
     const location = useLocation()
     useIsomorphicLayoutEffect(() => {
-      // scroll to anchor after page component loaded
+      // scroll to anchor link after page component loaded
       if (loadState.type === 'loaded') {
         if (location.hash) {
           AnchorLink.scrollToAnchor(decodeURIComponent(location.hash.slice(1)))
@@ -40,7 +40,10 @@ export function createTheme(
     }, [loadState, location.hash])
 
     if (loadState.type === 'loading') {
-      return <AppLayout></AppLayout>
+      const ComponentLoading = themeConfig.ComponentLoading
+      return (
+        <AppLayout>{ComponentLoading ? <ComponentLoading /> : null}</AppLayout>
+      )
     }
 
     if (loadState.type === 'load-error') {

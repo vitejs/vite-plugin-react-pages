@@ -43,10 +43,14 @@ export interface ThemeConfig {
     | FooterConfig
     | ((ctx: ThemeContextValue) => FooterConfig | null | undefined)
   /**
-   * View to be rendered when app in 404 state
+   * Component to be rendered when app in 404 state
    * (url not matching any page)
    */
   Component404?: React.ComponentType<React.PropsWithChildren<unknown>>
+  /**
+   * Component to be rendered when app is loading js bundle
+   */
+  ComponentLoading?: React.ComponentType<React.PropsWithChildren<unknown>>
   /**
    * Wrap the App with custom Component.
    * You can use `useThemeCtx()` in it to get context info
