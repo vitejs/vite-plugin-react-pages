@@ -17,6 +17,8 @@ pnpm run build
 pnpm run ssr
 ```
 
+> Notice that the playground [import theme-doc from it's src](https://github.com/vitejs/vite-plugin-react-pages/blob/2b2c33aca69e76f89a52e16f27840106c8e56fdb/packages/playground/use-theme-doc/pages/themeDev.tsx#L4) so that we can get hmr when editing theme-doc's source files. This setup should only be used during theme development and it's not for package users.
+
 ## Debugging
 
 To use breakpoints and explore code execution, you can use the ["Run and Debug"](https://code.visualstudio.com/docs/editor/debugging) feature from **VS Code**.
