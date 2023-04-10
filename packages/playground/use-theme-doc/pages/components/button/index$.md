@@ -17,5 +17,8 @@ SomeObjectLiteralType (Object Literal):
 SomeComplexType (Complex Type):
 <TsInfo src="./types.ts" name="SomeComplexType" />
 
+Re-exported Type:
+<TsInfo src="./types.ts" name="ReExportedInterface" />
+
 FileText:
 <FileText src="./types.ts" syntax="ts" />
