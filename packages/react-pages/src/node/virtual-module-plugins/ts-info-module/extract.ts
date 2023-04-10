@@ -138,6 +138,7 @@ function handleTypeElementMembered(
   typeChecker: TypeChecker
 ): TsPropertyOrMethodInfo[] {
   const result: TsPropertyOrMethodInfo[] = []
+  // or use node.getSymbol()?.getMembers() ?
   const nodeType = node.getType()
   const properties = nodeType.getProperties()
   for (const prop of properties) {
@@ -145,7 +146,11 @@ function handleTypeElementMembered(
     const description = ts.displayPartsToString(
       prop.compilerSymbol.getDocumentationComment(typeChecker.compilerObject)
     )
-    const type = prop.getTypeAtLocation(node).getText()
+    const type = prop
+      .getTypeAtLocation(node)
+      // drop the `import('/path/to/file').` before the type text
+      // https://github.com/dsherret/ts-morph/issues/453#issuecomment-667578386
+      .getText(node, ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope)
     const defaultValue = (() => {
       let res = ''
       prop.getJsDocTags().find((tag) => {

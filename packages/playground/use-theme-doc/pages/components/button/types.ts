@@ -1,3 +1,14 @@
+import type { MyImportedTypeAlias } from './typesUtils'
+export type { ReExportedInterface } from './typesUtils'
+export type MyExportedTypeAlias = { a: number }
+type MyTypeAlias = { a: number }
+export interface MyExportedInterface {
+  a: number
+}
+interface MyInterface {
+  a: number
+}
+
 /**
  * This is the description of the Button component's props
  */
@@ -22,9 +33,14 @@ export interface ButtonProps<TestGenerics extends string> extends Base {
    */
   onClick?: (event: React.MouseEvent) => void
   /** test method declaration */
-  testMethod(param: string): void
+  testMethod(param: MyExportedTypeAlias): MyTypeAlias
   /** test required property */
   testRequired: boolean
+  myExportedTypeAlias: MyExportedTypeAlias
+  myTypeAlias: MyTypeAlias
+  myExportedInterface: MyExportedInterface
+  myInterface: MyInterface
+  myImportedTypeAlias: MyImportedTypeAlias
 }
 
 interface Base {
@@ -55,9 +71,14 @@ export type SomeObjectLiteralType<TestGenerics> = {
    */
   onClick?: (event: React.MouseEvent) => void
   /** test method declaration */
-  testMethod(param: string): void
+  testMethod(param: MyInterface): MyExportedInterface
   /** test required property */
   testRequired: boolean
+  myExportedTypeAlias: MyExportedTypeAlias
+  myTypeAlias: MyTypeAlias
+  myExportedInterface: MyExportedInterface
+  myInterface: MyInterface
+  myImportedTypeAlias: MyImportedTypeAlias
 }
 
 /**
