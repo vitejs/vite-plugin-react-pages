@@ -3,8 +3,11 @@
   "version": "0.0.2",
   "private": true,
   "scripts": {
-    "dev": "cd packages/demos && npm run dev"
+    "dev": "cd packages/demos && npm run dev",
+    "dev-pnpm": "pnpm run --filter library-demos dev",
+    "dev-npm": "npm run dev --workspace library-demos"
   },
+  "//comment": "The following workspaces config is used by `npm workspaces`. You can delete it if you use pnpm.",
   "workspaces": [
     "packages/*"
   ]
