@@ -1,6 +1,7 @@
 import React, { useContext, useMemo, useState } from 'react'
 import { MDXProvider } from '@mdx-js/react'
 import { Link } from 'react-router-dom'
+import type { MDXComponents } from 'mdx/types'
 
 import CodeBlock from './CodeBlock'
 import { themePropsCtx } from '../../ctx'
@@ -19,7 +20,7 @@ import AnchorLink from '../../components/AnchorLink'
  */
 const isInsidePreContext = React.createContext(false)
 
-const components = {
+const components: MDXComponents = {
   pre: (props: any) => {
     // `pre` tag will be rendered by the nested `code` Component
     return (
@@ -28,7 +29,7 @@ const components = {
       </isInsidePreContext.Provider>
     )
   },
-  code: (props: any) => {
+  code: withMdClassName((props: any) => {
     const isInsidePre = useContext(isInsidePreContext)
     if (isInsidePre) {
       // this is rendered from triple backquote blocks
@@ -36,7 +37,7 @@ const components = {
     }
     // this is rendered from single backquote
     return <code {...props} />
-  },
+  }),
   CodeBlock,
   Demo,
   TsInfo,
@@ -106,3 +107,11 @@ const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
 }
 
 export default MDX
+
+function withMdClassName(Component: React.FC | string) {
+  return function (props: any) {
+    const { className } = props
+    const newClassName = className ? `${className} markdown-el` : 'markdown-el'
+    return <Component {...props} className={newClassName} />
+  }
+}
