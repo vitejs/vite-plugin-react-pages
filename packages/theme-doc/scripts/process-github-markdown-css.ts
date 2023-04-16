@@ -11,7 +11,7 @@ const css = fs.readFileSync(cssPath, 'utf-8')
 
 // github-markdown-css normally applies to .markdown-body and ALL its descendants.
 // But user custom components and demo component may also be rendered inside .markdown-body. We don't want github-markdown-css affects them.
-// So we use this script to preprocess github-markdown-css to make it scoped inside "markdown element"（.e.g "p" or "ul").
+// So we use this script to preprocess github-markdown-css to make it scoped to "markdown element"（.e.g "p" or "ul").
 
 postcss([
   {
