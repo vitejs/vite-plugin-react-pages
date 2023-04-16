@@ -40,8 +40,8 @@ const components: MDXComponents = {
   }),
   CodeBlock,
   Demo,
-  TsInfo,
-  FileText,
+  TsInfo: withMdClassName(TsInfo),
+  FileText: withMdClassName(FileText),
   a: (props: React.HTMLProps<HTMLAnchorElement>) => {
     const { href, ...rest } = props
     if (href?.startsWith('/')) {
@@ -117,13 +117,13 @@ const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
 export default MDX
 
 /**
- * Only "FlowContent" elements need to have .markdown-el className
- * because they are top-level elements under the root
- * https://github.com/syntax-tree/mdast#flowcontent
- *
+ * We only need to add ".markdown-el" className to top-level block elements under the markdown root.
  * our github-markdown-light.css will add markdown style to markdown-el and all its descendants
+ *
+ * Ref: "FlowContent" are the top-level block elements in mdast
+ * https://github.com/syntax-tree/mdast#flowcontent
  */
-function withMdClassName(Component: React.FC | string) {
+function withMdClassName(Component: React.FC<any> | string) {
   return function (props: any) {
     const { className } = props
     const newClassName = className ? `${className} markdown-el` : 'markdown-el'

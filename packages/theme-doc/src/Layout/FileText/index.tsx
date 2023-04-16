@@ -5,9 +5,10 @@ import CodeBlock from '../MDX/CodeBlock'
 export interface Props {
   syntax: Language
   text: string
+  className?: string
 }
 
-export function FileText({ syntax, text }: Props) {
+export function FileText({ syntax, text, className }: Props) {
   if (typeof text !== 'string') {
     return (
       <pre>{`FileText Error: <FileText> component receives invalid props.
@@ -16,5 +17,11 @@ If you use it in markdown, you should use it exactly like "<FileText src="./file
 `}</pre>
     )
   }
-  return <CodeBlock className={`language-${syntax}`} children={text} />
+
+  return (
+    <CodeBlock
+      className={[`language-${syntax}`, className].filter(Boolean).join(' ')}
+      children={text}
+    />
+  )
 }

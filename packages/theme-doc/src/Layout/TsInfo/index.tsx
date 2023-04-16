@@ -5,12 +5,15 @@ import s from './index.module.css'
 
 interface Props {
   data: TsInfoData
+  className?: string
 }
 
-export function TsInfo({ data }: Props) {
+export function TsInfo({ data, className: _className }: Props) {
+  const className = [_className, s.table].filter(Boolean).join(' ')
+
   if (data.type === 'interface' || data.type === 'object-literal') {
     return (
-      <table className={s.table}>
+      <table className={className}>
         <thead>
           <tr>
             <th>Name</th>
@@ -47,7 +50,7 @@ export function TsInfo({ data }: Props) {
 
   if (data.type === 'other') {
     return (
-      <table className={s.table}>
+      <table className={className}>
         <thead>
           <tr>
             <th>Name</th>
