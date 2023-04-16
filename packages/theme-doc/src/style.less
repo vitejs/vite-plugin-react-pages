@@ -1,12 +1,13 @@
-// take useful css normalize from antd, so that antd components rendered by this theme can display normally
-// https://github.com/ant-design/ant-design/blob/4.x-stable/components/style/core/global.less
-// but don't take global style that may interfere with user's content
+// global style
 
-// this is a reasonable global style
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+body {
+  margin: 0px;
 }
 
 // only apply to elements rendered by this theme
@@ -19,13 +20,15 @@
   text-decoration: none;
 }
 
-body {
-  margin: 0px;
-}
-
-// Suppress the focus outline on elements that cannot be accessed via keyboard.
-// This prevents an unwanted focus outline from appearing around elements that
-// might still respond to pointer events.
-[tabindex='-1']:focus {
-  outline: none !important;
+// appply to markdown footnote heading (#footnote-label)
+// copied from github style
+.markdown-body .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  word-wrap: normal;
+  border: 0;
 }

@@ -1,6 +1,7 @@
 import React, { useContext, useMemo, useState } from 'react'
 import { MDXProvider } from '@mdx-js/react'
 import { Link } from 'react-router-dom'
+import type { MDXComponents } from 'mdx/types'
 
 import CodeBlock from './CodeBlock'
 import { themePropsCtx } from '../../ctx'
@@ -19,7 +20,7 @@ import AnchorLink from '../../components/AnchorLink'
  */
 const isInsidePreContext = React.createContext(false)
 
-const components = {
+const components: MDXComponents = {
   pre: (props: any) => {
     // `pre` tag will be rendered by the nested `code` Component
     return (
@@ -28,7 +29,7 @@ const components = {
       </isInsidePreContext.Provider>
     )
   },
-  code: (props: any) => {
+  code: withMdClassName((props: any) => {
     const isInsidePre = useContext(isInsidePreContext)
     if (isInsidePre) {
       // this is rendered from triple backquote blocks
@@ -36,7 +37,7 @@ const components = {
     }
     // this is rendered from single backquote
     return <code {...props} />
-  },
+  }),
   CodeBlock,
   Demo,
   TsInfo,
@@ -59,6 +60,13 @@ const components = {
     }
     return <a target="_blank" rel="noopener" {...props} />
   },
+  table: withMdClassName('table'),
+  p: withMdClassName('p'),
+  hr: withMdClassName('hr'),
+  ul: withMdClassName('ul'),
+  ol: withMdClassName('ol'),
+  blockquote: withMdClassName('blockquote'),
+  section: withMdClassName('section'),
 }
 
 const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
@@ -76,7 +84,8 @@ const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
     }
     function heading(level: number) {
       const Tag = 'h' + level
-      return function Heading(
+      return withMdClassName(Heading)
+      function Heading(
         props: React.DetailedHTMLProps<
           React.HTMLAttributes<HTMLHeadingElement>,
           HTMLDivElement
@@ -106,3 +115,18 @@ const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
 }
 
 export default MDX
+
+/**
+ * Only "FlowContent" elements need to have .markdown-el className
+ * because they are top-level elements under the root
+ * https://github.com/syntax-tree/mdast#flowcontent
+ *
+ * our github-markdown-light.css will add markdown style to markdown-el and all its descendants
+ */
+function withMdClassName(Component: React.FC | string) {
+  return function (props: any) {
+    const { className } = props
+    const newClassName = className ? `${className} markdown-el` : 'markdown-el'
+    return <Component {...props} className={newClassName} />
+  }
+}

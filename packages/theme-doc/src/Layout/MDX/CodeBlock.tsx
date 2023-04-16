@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import * as _cjsExports from 'prism-react-renderer'
 const { default: Highlight, defaultProps } = commonjsExportsInterop(_cjsExports)
 import theme from 'prism-react-renderer/themes/github/index.cjs'
@@ -20,7 +20,19 @@ const CodeBlock = ({
   style: propStyle,
 }: React.PropsWithChildren<Props>) => {
   // with ```language\n``` md syntax, mdx will pass language in className
-  const language = className?.replace(/language-/, '') as Language
+  const language: any = useMemo(() => {
+    if (typeof className !== 'string') return
+    let res: undefined | string
+    className.split(' ').find((oneCls) => {
+      const match = oneCls.trim().match(/^language-(.*)$/)
+      if (!match) return false
+      res = match[1]
+      return true
+    })
+    return res
+  }, [className])
+
+  const ctnClassName = className
 
   const { hasCopied, copyToClipBoard } = useCopyToClipBoard()
 
@@ -36,7 +48,7 @@ const CodeBlock = ({
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <pre
-          className={`${className} ${s.pre}`}
+          className={`${className} ${ctnClassName} ${s.pre}`}
           style={propStyle ? { ...style, ...propStyle } : style}
         >
           <button
