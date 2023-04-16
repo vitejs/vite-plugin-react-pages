@@ -48,20 +48,20 @@ const OutLine: React.FC<Props> = (props) => {
         className={s.anchors}
         targetOffset={Anchor_Scroll_Offset}
         onClick={onClickAnchor}
-      >
-        {renderAnchorLinks(data)}
-      </Anchor>
+        items={renderAnchorLinks(data)}
+      />
     </div>
   )
 }
 
-function renderAnchorLinks(data: OutlineTreeItem[]) {
+function renderAnchorLinks(data: OutlineTreeItem[]): AnchorProps['items'] {
   return data.map(({ id, text, children }) => {
-    return (
-      <Anchor.Link key={id} href={`#${id}`} title={text || id}>
-        {renderAnchorLinks(children)}
-      </Anchor.Link>
-    )
+    return {
+      key: id,
+      href: `#${id}`,
+      title: text || id,
+      children: renderAnchorLinks(children),
+    }
   })
 }
 
