@@ -1,6 +1,7 @@
 import postcss from 'postcss'
 import fs from 'fs-extra'
 import parser from 'postcss-selector-parser'
+import type { Node as SelectorNode } from 'postcss-selector-parser'
 import { createRequire } from 'node:module'
 
 const require = createRequire(import.meta.url)
@@ -10,7 +11,7 @@ const css = fs.readFileSync(cssPath, 'utf-8')
 
 // github-markdown-css normally applies to .markdown-body and ALL its descendants.
 // But user custom components and demo component may also be rendered inside .markdown-body. We don't want github-markdown-css affects them.
-// So we use this script to preprocess github-markdown-css to make it apply to "markdown element", for example "p" or "ul".
+// So we use this script to preprocess github-markdown-css to make it scoped inside "markdown element"（.e.g "p" or "ul").
 
 postcss([
   {
@@ -32,7 +33,7 @@ postcss([
             const groups = selector.split((selector) => {
               return selector.type === 'combinator'
             })
-            // debugger
+
             // remove the ".markdown-body " part
             groups.shift()
 
@@ -43,11 +44,8 @@ postcss([
               value: ':is(.markdown-el, .markdown-el *)',
             })
 
-            if (lastItemOf(groups[0])?.type === 'combinator') {
-              groups[0].splice(groups[0].length - 1, 0, newNode)
-            } else {
-              groups[0].push(newNode)
-            }
+            const index = findPseudoInsertPosition(groups[0])
+            groups[0].splice(index, 0, newNode)
 
             selector.nodes = groups.flat()
           }
@@ -65,6 +63,20 @@ postcss([
     )
   })
 
-function lastItemOf<T>(array: T[]): T | undefined {
-  return array[array.length - 1]
+/**
+ * Insert pseudo selector after type selector and universal selector, before combinator and other pseudo.
+ * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors#structure_of_a_selector
+ */
+function findPseudoInsertPosition(nodes: SelectorNode[]) {
+  let insertIndex = 0
+  while (insertIndex < nodes.length) {
+    if (
+      nodes[insertIndex].type === 'combinator' ||
+      nodes[insertIndex].type === 'pseudo'
+    ) {
+      break
+    }
+    insertIndex++
+  }
+  return insertIndex
 }

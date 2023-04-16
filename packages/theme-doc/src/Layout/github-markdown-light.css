@@ -17,7 +17,7 @@
   vertical-align: text-bottom;
 }
 
-h1:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link:before,h2:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link:before,h3:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link:before,h4:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link:before,h5:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link:before,h6:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link:before {
+h1:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link:before,h2:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link:before,h3:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link:before,h4:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link:before,h5:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link:before,h6:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link:before {
   width: 16px;
   height: 16px;
   content: ' ';
@@ -136,39 +136,39 @@ input:is(.markdown-el, .markdown-el *) {
   padding: 0;
 }
 
-[type=number]::-webkit-inner-spin-button:is(.markdown-el, .markdown-el *),[type=number]::-webkit-outer-spin-button:is(.markdown-el, .markdown-el *) {
+[type=number]:is(.markdown-el, .markdown-el *)::-webkit-inner-spin-button,[type=number]:is(.markdown-el, .markdown-el *)::-webkit-outer-spin-button {
   height: auto;
 }
 
-[type=search]::-webkit-search-cancel-button:is(.markdown-el, .markdown-el *),[type=search]::-webkit-search-decoration:is(.markdown-el, .markdown-el *) {
+[type=search]:is(.markdown-el, .markdown-el *)::-webkit-search-cancel-button,[type=search]:is(.markdown-el, .markdown-el *)::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-::-webkit-input-placeholder:is(.markdown-el, .markdown-el *) {
+:is(.markdown-el, .markdown-el *)::-webkit-input-placeholder {
   color: inherit;
   opacity: .54;
 }
 
-::-webkit-file-upload-button:is(.markdown-el, .markdown-el *) {
+:is(.markdown-el, .markdown-el *)::-webkit-file-upload-button {
   -webkit-appearance: button;
   font: inherit;
 }
 
-a:hover:is(.markdown-el, .markdown-el *) {
+a:is(.markdown-el, .markdown-el *):hover {
   text-decoration: underline;
 }
 
-::placeholder:is(.markdown-el, .markdown-el *) {
+:is(.markdown-el, .markdown-el *)::placeholder {
   color: #6e7781;
   opacity: 1;
 }
 
-hr::before:is(.markdown-el, .markdown-el *) {
+hr:is(.markdown-el, .markdown-el *)::before {
   display: table;
   content: "";
 }
 
-hr::after:is(.markdown-el, .markdown-el *) {
+hr:is(.markdown-el, .markdown-el *)::after {
   display: table;
   clear: both;
   content: "";
@@ -191,27 +191,27 @@ details:is(.markdown-el, .markdown-el *) summary {
   cursor: pointer;
 }
 
-details:not([open]):is(.markdown-el, .markdown-el *)>*:not(summary) {
+details:is(.markdown-el, .markdown-el *):not([open])>*:not(summary) {
   display: none !important;
 }
 
-a:focus:is(.markdown-el, .markdown-el *),[role=button]:focus:is(.markdown-el, .markdown-el *),input[type=radio]:focus:is(.markdown-el, .markdown-el *),input[type=checkbox]:focus:is(.markdown-el, .markdown-el *) {
+a:is(.markdown-el, .markdown-el *):focus,[role=button]:is(.markdown-el, .markdown-el *):focus,input[type=radio]:is(.markdown-el, .markdown-el *):focus,input[type=checkbox]:is(.markdown-el, .markdown-el *):focus {
   outline: 2px solid #0969da;
   outline-offset: -2px;
   box-shadow: none;
 }
 
-a:focus:not(:focus-visible):is(.markdown-el, .markdown-el *),[role=button]:focus:not(:focus-visible):is(.markdown-el, .markdown-el *),input[type=radio]:focus:not(:focus-visible):is(.markdown-el, .markdown-el *),input[type=checkbox]:focus:not(:focus-visible):is(.markdown-el, .markdown-el *) {
+a:is(.markdown-el, .markdown-el *):focus:not(:focus-visible),[role=button]:is(.markdown-el, .markdown-el *):focus:not(:focus-visible),input[type=radio]:is(.markdown-el, .markdown-el *):focus:not(:focus-visible),input[type=checkbox]:is(.markdown-el, .markdown-el *):focus:not(:focus-visible) {
   outline: solid 1px transparent;
 }
 
-a:focus-visible:is(.markdown-el, .markdown-el *),[role=button]:focus-visible:is(.markdown-el, .markdown-el *),input[type=radio]:focus-visible:is(.markdown-el, .markdown-el *),input[type=checkbox]:focus-visible:is(.markdown-el, .markdown-el *) {
+a:is(.markdown-el, .markdown-el *):focus-visible,[role=button]:is(.markdown-el, .markdown-el *):focus-visible,input[type=radio]:is(.markdown-el, .markdown-el *):focus-visible,input[type=checkbox]:is(.markdown-el, .markdown-el *):focus-visible {
   outline: 2px solid #0969da;
   outline-offset: -2px;
   box-shadow: none;
 }
 
-a:not([class]):focus:is(.markdown-el, .markdown-el *),a:not([class]):focus-visible:is(.markdown-el, .markdown-el *),input[type=radio]:focus:is(.markdown-el, .markdown-el *),input[type=radio]:focus-visible:is(.markdown-el, .markdown-el *),input[type=checkbox]:focus:is(.markdown-el, .markdown-el *),input[type=checkbox]:focus-visible:is(.markdown-el, .markdown-el *) {
+a:is(.markdown-el, .markdown-el *):not([class]):focus,a:is(.markdown-el, .markdown-el *):not([class]):focus-visible,input[type=radio]:is(.markdown-el, .markdown-el *):focus,input[type=radio]:is(.markdown-el, .markdown-el *):focus-visible,input[type=checkbox]:is(.markdown-el, .markdown-el *):focus,input[type=checkbox]:is(.markdown-el, .markdown-el *):focus-visible {
   outline-offset: 0;
 }
 
@@ -314,7 +314,7 @@ pre:is(.markdown-el, .markdown-el *) {
   fill: currentColor;
 }
 
-input::-webkit-outer-spin-button:is(.markdown-el, .markdown-el *),input::-webkit-inner-spin-button:is(.markdown-el, .markdown-el *) {
+input:is(.markdown-el, .markdown-el *)::-webkit-outer-spin-button,input:is(.markdown-el, .markdown-el *)::-webkit-inner-spin-button {
   margin: 0;
   -webkit-appearance: none;
   appearance: none;
@@ -339,7 +339,7 @@ input::-webkit-outer-spin-button:is(.markdown-el, .markdown-el *),input::-webkit
   margin-bottom: 0 !important;
 }
 
-a:not([href]):is(.markdown-el, .markdown-el *) {
+a:is(.markdown-el, .markdown-el *):not([href]) {
   color: inherit;
   text-decoration: none;
 }
@@ -355,7 +355,7 @@ a:not([href]):is(.markdown-el, .markdown-el *) {
   line-height: 1;
 }
 
-.anchor:focus:is(.markdown-el, .markdown-el *) {
+.anchor:is(.markdown-el, .markdown-el *):focus {
   outline: none;
 }
 
@@ -378,11 +378,11 @@ h1:is(.markdown-el, .markdown-el *) .octicon-link,h2:is(.markdown-el, .markdown-
   visibility: hidden;
 }
 
-h1:hover:is(.markdown-el, .markdown-el *) .anchor,h2:hover:is(.markdown-el, .markdown-el *) .anchor,h3:hover:is(.markdown-el, .markdown-el *) .anchor,h4:hover:is(.markdown-el, .markdown-el *) .anchor,h5:hover:is(.markdown-el, .markdown-el *) .anchor,h6:hover:is(.markdown-el, .markdown-el *) .anchor {
+h1:is(.markdown-el, .markdown-el *):hover .anchor,h2:is(.markdown-el, .markdown-el *):hover .anchor,h3:is(.markdown-el, .markdown-el *):hover .anchor,h4:is(.markdown-el, .markdown-el *):hover .anchor,h5:is(.markdown-el, .markdown-el *):hover .anchor,h6:is(.markdown-el, .markdown-el *):hover .anchor {
   text-decoration: none;
 }
 
-h1:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link,h2:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link,h3:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link,h4:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link,h5:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link,h6:hover:is(.markdown-el, .markdown-el *) .anchor .octicon-link {
+h1:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link,h2:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link,h3:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link,h4:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link,h5:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link,h6:is(.markdown-el, .markdown-el *):hover .anchor .octicon-link {
   visibility: visible;
 }
 
@@ -677,11 +677,11 @@ pre:is(.markdown-el, .markdown-el *) code,pre:is(.markdown-el, .markdown-el *) t
   border-top: 0;
 }
 
-[data-footnote-ref]::before:is(.markdown-el, .markdown-el *) {
+[data-footnote-ref]:is(.markdown-el, .markdown-el *)::before {
   content: "[";
 }
 
-[data-footnote-ref]::after:is(.markdown-el, .markdown-el *) {
+[data-footnote-ref]:is(.markdown-el, .markdown-el *)::after {
   content: "]";
 }
 
@@ -874,7 +874,7 @@ g-emoji:is(.markdown-el, .markdown-el *) img {
   vertical-align: middle;
 }
 
-.contains-task-list:dir(rtl):is(.markdown-el, .markdown-el *) .task-list-item-checkbox {
+.contains-task-list:is(.markdown-el, .markdown-el *):dir(rtl) .task-list-item-checkbox {
   margin: 0 -1.6em .25em .2em;
 }
 
@@ -882,7 +882,7 @@ g-emoji:is(.markdown-el, .markdown-el *) img {
   position: relative;
 }
 
-.contains-task-list:hover:is(.markdown-el, .markdown-el *) .task-list-item-convert-container,.contains-task-list:focus-within:is(.markdown-el, .markdown-el *) .task-list-item-convert-container {
+.contains-task-list:is(.markdown-el, .markdown-el *):hover .task-list-item-convert-container,.contains-task-list:is(.markdown-el, .markdown-el *):focus-within .task-list-item-convert-container {
   display: block;
   width: auto;
   height: 24px;
@@ -890,6 +890,6 @@ g-emoji:is(.markdown-el, .markdown-el *) img {
   clip: auto;
 }
 
-::-webkit-calendar-picker-indicator:is(.markdown-el, .markdown-el *) {
+:is(.markdown-el, .markdown-el *)::-webkit-calendar-picker-indicator {
   filter: invert(50%);
 }

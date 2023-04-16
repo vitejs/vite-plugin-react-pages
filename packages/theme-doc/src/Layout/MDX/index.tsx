@@ -60,6 +60,13 @@ const components: MDXComponents = {
     }
     return <a target="_blank" rel="noopener" {...props} />
   },
+  table: withMdClassName('table'),
+  p: withMdClassName('p'),
+  hr: withMdClassName('hr'),
+  ul: withMdClassName('ul'),
+  ol: withMdClassName('ol'),
+  blockquote: withMdClassName('blockquote'),
+  section: withMdClassName('section'),
 }
 
 const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
@@ -77,7 +84,8 @@ const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
     }
     function heading(level: number) {
       const Tag = 'h' + level
-      return function Heading(
+      return withMdClassName(Heading)
+      function Heading(
         props: React.DetailedHTMLProps<
           React.HTMLAttributes<HTMLHeadingElement>,
           HTMLDivElement
@@ -108,6 +116,13 @@ const MDX: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
 
 export default MDX
 
+/**
+ * Only "FlowContent" elements need to have .markdown-el className
+ * because they are top-level elements under the root
+ * https://github.com/syntax-tree/mdast#flowcontent
+ *
+ * our github-markdown-light.css will add markdown style to markdown-el and all its descendants
+ */
 function withMdClassName(Component: React.FC | string) {
   return function (props: any) {
     const { className } = props
