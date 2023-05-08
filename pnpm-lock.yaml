@@ -45,7 +45,7 @@ importers:
   doc-site:
     specifiers:
       '@types/react': ^18.0.33
-      '@vitejs/plugin-react': ^3.1.0
+      '@vitejs/plugin-react': ^4.0.0
       cross-env: ^7.0.3
       gh-pages: ^5.0.0
       react: ^18.2.0
@@ -62,7 +62,7 @@ importers:
       react-router-dom: 6.10.0_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@types/react': 18.0.33
-      '@vitejs/plugin-react': 3.1.0_vite@4.2.1
+      '@vitejs/plugin-react': 4.0.0_vite@4.2.1
       cross-env: 7.0.3
       gh-pages: 5.0.0
       rimraf: 4.4.1
@@ -84,7 +84,7 @@ importers:
       '@mdx-js/react': ^2.3.0
       '@types/node': ^18.15.11
       '@types/react': ^18.0.33
-      '@vitejs/plugin-react': ^3.1.0
+      '@vitejs/plugin-react': ^4.0.0
       react: ^18.2.0
       react-dom: ^18.2.0
       react-router-dom: ^6.10.0
@@ -101,7 +101,7 @@ importers:
       '@mdx-js/react': 2.3.0_react@18.2.0
       '@types/node': 18.15.11
       '@types/react': 18.0.33
-      '@vitejs/plugin-react': 3.1.0_vite@4.2.1
+      '@vitejs/plugin-react': 4.0.0_vite@4.2.1
       rimraf: 4.4.1
       serve: 14.2.0
       vite: 4.2.1_@types+node@18.15.11
@@ -114,7 +114,7 @@ importers:
       '@rollup/plugin-typescript': ^11.1.0
       '@types/node': ^18.15.11
       '@types/react': ^18.0.33
-      '@vitejs/plugin-react': ^3.1.0
+      '@vitejs/plugin-react': ^4.0.0
       react: ^18.2.0
       react-dom: ^18.2.0
       react-router-dom: ^6.10.0
@@ -132,7 +132,7 @@ importers:
       '@rollup/plugin-typescript': 11.1.0
       '@types/node': 18.15.11
       '@types/react': 18.0.33
-      '@vitejs/plugin-react': 3.1.0_vite@4.2.1
+      '@vitejs/plugin-react': 4.0.0_vite@4.2.1
       rimraf: 4.4.1
       serve: 14.2.0
       vite: 4.2.1_@types+node@18.15.11
@@ -171,7 +171,7 @@ importers:
       '@mdx-js/react': ^2.3.0
       '@types/node': ^18.15.11
       '@types/react': ^18.0.33
-      '@vitejs/plugin-react': ^3.1.0
+      '@vitejs/plugin-react': ^4.0.0
       globby: ^13.1.3
       my-button: '*'
       my-card: '*'
@@ -191,7 +191,7 @@ importers:
       '@mdx-js/react': 2.3.0_react@18.2.0
       '@types/node': 18.15.11
       '@types/react': 18.0.33
-      '@vitejs/plugin-react': 3.1.0_vite@4.2.1
+      '@vitejs/plugin-react': 4.0.0_vite@4.2.1
       globby: 13.1.3
       my-button: link:../button
       my-card: link:../card
@@ -211,7 +211,7 @@ importers:
     specifiers:
       '@mdx-js/mdx': ^2.3.0
       '@types/react': ^18.0.33
-      '@vitejs/plugin-react': ^3.1.0
+      '@vitejs/plugin-react': ^4.0.0
       react: ^18.2.0
       react-dom: ^18.2.0
       react-router-dom: ^6.10.0
@@ -227,7 +227,7 @@ importers:
     devDependencies:
       '@mdx-js/mdx': 2.3.0
       '@types/react': 18.0.33
-      '@vitejs/plugin-react': 3.1.0_vite@4.2.1
+      '@vitejs/plugin-react': 4.0.0_vite@4.2.1
       rimraf: 4.4.1
       sass: 1.61.0
       serve: 14.2.0
@@ -237,7 +237,7 @@ importers:
   packages/playground/custom-find-pages:
     specifiers:
       '@types/react': ^18.0.33
-      '@vitejs/plugin-react': ^3.1.0
+      '@vitejs/plugin-react': ^4.0.0
       react: ^18.2.0
       react-dom: ^18.2.0
       react-router-dom: ^6.10.0
@@ -252,7 +252,7 @@ importers:
       react-router-dom: 6.10.0_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@types/react': 18.0.33
-      '@vitejs/plugin-react': 3.1.0_vite@4.2.1
+      '@vitejs/plugin-react': 4.0.0_vite@4.2.1
       rimraf: 4.4.1
       serve: 14.2.0
       vite: 4.2.1
@@ -262,7 +262,7 @@ importers:
   packages/playground/custom-find-pages2:
     specifiers:
       '@types/react': ^18.0.33
-      '@vitejs/plugin-react': ^3.1.0
+      '@vitejs/plugin-react': ^4.0.0
       react: ^18.2.0
       react-dom: ^18.2.0
       react-router-dom: ^6.10.0
@@ -277,7 +277,7 @@ importers:
       react-router-dom: 6.10.0_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@types/react': 18.0.33
-      '@vitejs/plugin-react': 3.1.0_vite@4.2.1
+      '@vitejs/plugin-react': 4.0.0_vite@4.2.1
       rimraf: 4.4.1
       serve: 14.2.0
       vite: 4.2.1
@@ -314,7 +314,7 @@ importers:
   packages/playground/lib-monorepo/packages/demos:
     specifiers:
       '@types/react': ^18.0.33
-      '@vitejs/plugin-react': ^3.1.0
+      '@vitejs/plugin-react': ^4.0.0
       globby: ^13.1.3
       playground-button: '*'
       playground-card: '*'
@@ -332,7 +332,7 @@ importers:
       react-router-dom: 6.10.0_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@types/react': 18.0.33
-      '@vitejs/plugin-react': 3.1.0_vite@4.2.1
+      '@vitejs/plugin-react': 4.0.0_vite@4.2.1
       globby: 13.1.3
       playground-button: link:../button
       playground-card: link:../card
@@ -345,7 +345,7 @@ importers:
   packages/playground/use-theme-doc:
     specifiers:
       '@types/react': ^18.0.33
-      '@vitejs/plugin-react': ^3.1.0
+      '@vitejs/plugin-react': ^4.0.0
       react: ^18.2.0
       react-dom: ^18.2.0
       react-router-dom: ^6.10.0
@@ -360,7 +360,7 @@ importers:
       react-router-dom: 6.10.0_biqbaboplfbrettd7655fr4n2y
     devDependencies:
       '@types/react': 18.0.33
-      '@vitejs/plugin-react': 3.1.0_vite@4.2.1
+      '@vitejs/plugin-react': 4.0.0_vite@4.2.1
       rimraf: 4.4.1
       serve: 14.2.0
       vite: 4.2.1
@@ -862,11 +862,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       '@babel/types': 7.21.4
-    dev: true
-
-  /@babel/helper-plugin-utils/7.19.0:
-    resolution: {integrity: sha512-40Ryx7I8mT+0gaNxm8JGTZFUITNqdLAgdg0hXzeVZxVD6nFsdhQvip6v8dqkRHzsz1VFpFAaOCHNn0vKBL7Czw==}
-    engines: {node: '>=6.9.0'}
     dev: true
 
   /@babel/helper-plugin-utils/7.20.2:
@@ -1685,7 +1680,7 @@ packages:
       '@babel/core':
         optional: true
     dependencies:
-      '@babel/helper-plugin-utils': 7.19.0
+      '@babel/helper-plugin-utils': 7.20.2
     dev: true
 
   /@babel/plugin-syntax-jsx/7.18.6_@babel+core@7.21.4:
@@ -1698,7 +1693,7 @@ packages:
         optional: true
     dependencies:
       '@babel/core': 7.21.4
-      '@babel/helper-plugin-utils': 7.19.0
+      '@babel/helper-plugin-utils': 7.20.2
     dev: true
 
   /@babel/plugin-syntax-jsx/7.21.4_@babel+core@7.21.4:
@@ -4221,16 +4216,15 @@ packages:
       '@types/node': 18.15.11
     dev: true
 
-  /@vitejs/plugin-react/3.1.0_vite@4.2.1:
-    resolution: {integrity: sha512-AfgcRL8ZBhAlc3BFdigClmTUMISmmzHn7sB2h9U1odvc5U/MjWXsAaz18b/WoppUTDBzxOJwo2VdClfUcItu9g==}
+  /@vitejs/plugin-react/4.0.0_vite@4.2.1:
+    resolution: {integrity: sha512-HX0XzMjL3hhOYm+0s95pb0Z7F8O81G7joUHgfDd/9J/ZZf5k4xX6QAMFkKsHFxaHlf6X7GD7+XuaZ66ULiJuhQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
-      vite: ^4.1.0-beta.0
+      vite: ^4.2.0
     dependencies:
       '@babel/core': 7.21.4
       '@babel/plugin-transform-react-jsx-self': 7.21.0_@babel+core@7.21.4
       '@babel/plugin-transform-react-jsx-source': 7.19.6_@babel+core@7.21.4
-      magic-string: 0.27.0
       react-refresh: 0.14.0
       vite: 4.2.1
     transitivePeerDependencies:
