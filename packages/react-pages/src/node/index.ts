@@ -75,6 +75,8 @@ function pluginFactory(opts: PluginConfig = {}): Plugin {
       optimizeDeps: {
         include: [
           'react',
+          // fix https://github.com/vitejs/vite-plugin-react-pages/issues/132#issuecomment-1536515395
+          'react/jsx-runtime',
           'react-dom',
           'react-dom/client',
           'react-router-dom',
