@@ -18,7 +18,7 @@
   "devDependencies": {
     "@types/react": "^18.0.33",
     "@vitejs/plugin-react": "^4.0.0",
-    "globby": "^13.1.3",
+    "globby": "^13.1.4",
     "playground-button": "*",
     "playground-card": "*",
     "rimraf": "^4.4.1",
