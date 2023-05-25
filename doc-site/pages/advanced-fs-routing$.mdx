@@ -30,24 +30,28 @@ As shown by the above example, here is the usual steps to customize pageStrategy
 1. Define a `findPages` function and pass it to `PageStrategy` constructor.
 2. Inside the `findPages`, use `helpers.watchFiles(baseDir, glob, fileHandler)` to find the files that you need.
    - vite-pages will pass the glob(or glob array) to [chokidar](https://github.com/paulmillr/chokidar). vite-pages use chokidar to scan the fileSystem and watch for files.
-   - Whenever a file is scaned, added or updated, vite-pages will call the fileHandler with that file. When the file is unlinked, vite-pages will automatically delete the related page data.
-3. Inside the `fileHandler`, read the infomation from `file` and register page data by calling `fileHandlerAPI.addPageData`.
+   - Whenever a file is scaned, added or updated, vite-pages will call the `fileHandler` with that file. When the file is deleted, vite-pages will automatically delete the related page data.
+3. Inside the `fileHandler`, read the infomation from the `file` and register page data by calling `fileHandlerAPI.addPageData`.
    - There are two more helpers inside `fileHandlerAPI` that help you to update page data. We will introduce them in the following section.
 
-### Handle file change and update page data
+### Handle file events and update page data
 
 The `fileHandler` should conform to this interface:
 
 ```ts
 type FileHandler = (
   file: File,
-  api: PageAPIs
+  fileHandlerAPI: PageAPIs
 ) => void | Promise<void> | DataPiece | Promise<DataPiece>
 ```
 
-The `HandlerAPI` contains a set of helpers that help you to update page data.
+It will be called when a file is added or updated. You should extract [page data](/page-data) from this file.
+
+The `fileHandlerAPI` contains a set of helpers that help you to update page data.
 
 #### fileHandlerAPI.addPageData(dataPiece)
+
+When you have extracted some [page data](/page-data) (which is called dataPiece) in the `fileHandler`, call `addPageData` to register the data. So that vite-pages will load the data into theme for rendering.
 
 The dataPiece should conform to this interface:
 
@@ -89,7 +93,9 @@ interface DataPiece {
 }
 ```
 
-In most cases, `dataPath` is the path of the currently handled file. And `staticData` is statically extracted from the file content (js docblock or markdown frontmatter). Vite-pages has exported a helper `extractStaticData` to do that.
+In normal cases, `dataPath` is the path of the currently handled file. And `staticData` is statically extracted from the file content (js docblock or markdown frontmatter). Vite-pages exports a helper `extractStaticData` to do that.
+
+> When a watched file is updated, before calling `fileHandler`, vite-pages will automatically unlink all the previous registered page data from this file. So you don't need to worry about "outdated data from old version of files".
 
 Checkout [the custom-find-pages2 fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/playground/custom-find-pages2/vite.config.ts) for an example.
 
