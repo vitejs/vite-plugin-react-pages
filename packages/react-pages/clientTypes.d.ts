@@ -18,6 +18,8 @@ export type TsInfo =
       name: string
       description: string
       properties: TsPropertyOrMethodInfo[]
+      callSignatures: CallSignatureInfo[]
+      constructSignatures: CallSignatureInfo[]
     }
   | {
       // example: interface MyInterface { k: v }
@@ -25,6 +27,8 @@ export type TsInfo =
       name: string
       description: string
       properties: TsPropertyOrMethodInfo[]
+      callSignatures: CallSignatureInfo[]
+      constructSignatures: CallSignatureInfo[]
     }
   | {
       // complex type literal
@@ -40,6 +44,10 @@ export interface TsPropertyOrMethodInfo {
   description: string
   defaultValue: string | undefined
   optional: boolean
+}
+export interface CallSignatureInfo {
+  type: string
+  description: string
 }
 
 export type UseAllPagesOutlines = (timeout: number) => any

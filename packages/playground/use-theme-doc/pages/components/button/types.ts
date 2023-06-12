@@ -41,6 +41,12 @@ export interface ButtonProps<TestGenerics extends string> extends Base {
   myExportedInterface: MyExportedInterface
   myInterface: MyInterface
   myImportedTypeAlias: MyImportedTypeAlias
+  /** test call signatures */
+  (options?: { ignorePending?: true }): Array<string | Promise<string>>
+  (options: { ignorePending: false }): string[]
+  /** test construct signatures */
+  new (options: string): MyInterface
+  new (): MyInterface
 }
 
 interface Base {
@@ -79,6 +85,12 @@ export type SomeObjectLiteralType<TestGenerics> = {
   myExportedInterface: MyExportedInterface
   myInterface: MyInterface
   myImportedTypeAlias: MyImportedTypeAlias
+  /** test call signatures */
+  (options?: { ignorePending?: true }): Array<string | Promise<string>>
+  (options: { ignorePending: false }): string[]
+  /** test construct signatures */
+  new (options: string): MyInterface
+  new (): MyInterface
 }
 
 /**

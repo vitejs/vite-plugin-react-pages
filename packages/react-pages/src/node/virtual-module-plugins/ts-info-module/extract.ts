@@ -6,37 +6,11 @@ import {
   ts,
 } from 'ts-morph'
 
-export type TsInfo =
-  | {
-      // example: type A = { k: v }
-      type: 'object-literal'
-      name: string
-      description: string
-      properties: TsPropertyOrMethodInfo[]
-    }
-  | {
-      // example: interface MyInterface { k: v }
-      type: 'interface'
-      name: string
-      description: string
-      properties: TsPropertyOrMethodInfo[]
-    }
-  | {
-      // complex type literal
-      // example: type A = 'asd' | 123
-      type: 'other'
-      name: string
-      description: string
-      text: string
-    }
-
-export interface TsPropertyOrMethodInfo {
-  name: string
-  type: string
-  description: string
-  defaultValue: string | undefined
-  optional: boolean
-}
+import type {
+  TsInfo,
+  TsPropertyOrMethodInfo,
+  CallSignatureInfo,
+} from '../../../../clientTypes'
 
 const defaultTsConfig: ts.CompilerOptions = {
   target: ts.ScriptTarget.ESNext,
@@ -92,12 +66,15 @@ export function collectInterfaceInfo(
 
     if (Node.isTypeLiteral(typeNode)) {
       // example: type A = { k: v }
-      const members = handleTypeElementMembered(typeNode, typeChecker)
+      const { members, callSignatures, constructSignatures } =
+        handleTypeElementMembered(typeNode, typeChecker)
       return {
         type: 'object-literal',
         name,
         description,
         properties: members,
+        callSignatures,
+        constructSignatures,
       }
     } else {
       // example: type A = 'asd' | 123
@@ -122,8 +99,16 @@ export function collectInterfaceInfo(
         return jsDoc.getDescription().trim()
       })
       .join('\n\n')
-    const members = handleTypeElementMembered(node, typeChecker)
-    return { type: 'interface', name, description, properties: members }
+    const { members, callSignatures, constructSignatures } =
+      handleTypeElementMembered(node, typeChecker)
+    return {
+      type: 'interface',
+      name,
+      description,
+      properties: members,
+      callSignatures,
+      constructSignatures,
+    }
   }
 
   throw new Error('unexpected node type: ' + node.getKindName())
@@ -136,12 +121,16 @@ export function collectInterfaceInfo(
 function handleTypeElementMembered(
   node: TypeElementMemberedNode & Node,
   typeChecker: TypeChecker
-): TsPropertyOrMethodInfo[] {
-  const result: TsPropertyOrMethodInfo[] = []
+): {
+  members: TsPropertyOrMethodInfo[]
+  callSignatures: CallSignatureInfo[]
+  constructSignatures: CallSignatureInfo[]
+} {
+  const members: TsPropertyOrMethodInfo[] = []
   // or use node.getSymbol()?.getMembers() ?
   const nodeType = node.getType()
-  const properties = nodeType.getProperties()
-  for (const prop of properties) {
+  // https://stackoverflow.com/a/68623960
+  for (const prop of nodeType.getProperties()) {
     const name = prop.getName()
     const description = ts.displayPartsToString(
       prop.compilerSymbol.getDocumentationComment(typeChecker.compilerObject)
@@ -165,7 +154,7 @@ function handleTypeElementMembered(
       return res
     })()
     const optional = prop.isOptional()
-    result.push({
+    members.push({
       name,
       description,
       type,
@@ -173,7 +162,32 @@ function handleTypeElementMembered(
       optional,
     })
   }
-  return result
+
+  const callSignatures: CallSignatureInfo[] = []
+  for (const sig of nodeType.getCallSignatures()) {
+    const description = ts.displayPartsToString(
+      sig.compilerSignature.getDocumentationComment(typeChecker.compilerObject)
+    )
+    const type = sig.getDeclaration().getText()
+    callSignatures.push({
+      description,
+      type,
+    })
+  }
+
+  const constructSignatures: CallSignatureInfo[] = []
+  for (const sig of nodeType.getConstructSignatures()) {
+    const description = ts.displayPartsToString(
+      sig.compilerSignature.getDocumentationComment(typeChecker.compilerObject)
+    )
+    const type = sig.getDeclaration().getText()
+    constructSignatures.push({
+      description,
+      type,
+    })
+  }
+
+  return { members, callSignatures, constructSignatures }
 }
 
 // an alternative way to implement handleTypeElementMembered

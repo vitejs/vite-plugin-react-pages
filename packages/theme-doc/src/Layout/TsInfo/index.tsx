@@ -1,73 +1,187 @@
-import React from 'react'
-import type { TsInfo as TsInfoData } from 'vite-plugin-react-pages/clientTypes'
+import React, { useMemo } from 'react'
+import type {
+  TsInfo as TsInfoData,
+  TsPropertyOrMethodInfo,
+  CallSignatureInfo,
+} from 'vite-plugin-react-pages/clientTypes'
+import { Table, Collapse } from 'antd'
+import type { CollapseProps, TableColumnsType } from 'antd'
 
-import s from './index.module.css'
+import { withMdClassName } from '../MDX'
+import s from './index.module.less'
+
+// apply md style
+const Code = withMdClassName('code')
+const Strong = withMdClassName('strong')
 
 interface Props {
   data: TsInfoData
   className?: string
 }
 
+const memberColumns: TableColumnsType<TsPropertyOrMethodInfo> = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+  },
+  {
+    title: 'Type',
+    dataIndex: 'type',
+    render: (_type) => {
+      const type = _type.trim()
+      if (!type) return null
+      return <Code>{type}</Code>
+    },
+  },
+  {
+    title: 'Default Value',
+    dataIndex: 'defaultValue',
+    render: (_, row) => {
+      if (row.defaultValue) return <Code>{row.defaultValue}</Code>
+      if (row.optional) return ''
+      return (
+        <span>
+          Required<span style={{ color: 'red' }}>*</span>
+        </span>
+      )
+    },
+  },
+]
+
+const signatureColumns: TableColumnsType<CallSignatureInfo> = [
+  {
+    title: 'Type',
+    dataIndex: 'type',
+    render: (_type) => {
+      const type = _type.trim()
+      if (!type) return null
+      return <Code>{type}</Code>
+    },
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+  },
+]
+
+const complexTypeColumns: TableColumnsType<any> = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+  },
+  {
+    title: 'Type',
+    dataIndex: 'text',
+    render: (_type) => {
+      const type = _type.trim()
+      if (!type) return null
+      return <Code>{type}</Code>
+    },
+  },
+]
+
 export function TsInfo({ data, className: _className }: Props) {
-  const className = [_className, s.table].filter(Boolean).join(' ')
+  const className = [_className, s.ctn].filter(Boolean).join(' ')
 
   if (data.type === 'interface' || data.type === 'object-literal') {
+    const items: CollapseProps['items'] = [
+      {
+        key: 'Members',
+        label: (
+          <span>
+            <Strong>Members</Strong>
+          </span>
+        ),
+        children: (
+          <Table
+            columns={memberColumns}
+            dataSource={data.properties}
+            size="middle"
+            pagination={false}
+          />
+        ),
+      },
+    ]
+    if (data.callSignatures.length > 0) {
+      items.unshift({
+        key: 'Call Signatures',
+        label: (
+          <span>
+            <Strong>Call Signatures</Strong>
+          </span>
+        ),
+        children: (
+          <Table
+            columns={signatureColumns}
+            dataSource={data.callSignatures}
+            size="middle"
+            pagination={false}
+          />
+        ),
+      })
+    }
+    if (data.constructSignatures.length > 0) {
+      items.unshift({
+        key: 'Construct Signatures',
+        label: (
+          <span>
+            <Strong>Construct Signatures</Strong>
+          </span>
+        ),
+        children: (
+          <Table
+            columns={signatureColumns}
+            dataSource={data.constructSignatures}
+            size="middle"
+            pagination={false}
+          />
+        ),
+      })
+    }
+
     return (
-      <table className={className}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Type</th>
-            <th>Default Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.properties.map((row) => {
-            const type = row.type.trim()
-            const defaultValue = (() => {
-              if (row.defaultValue) return <code>{row.defaultValue}</code>
-              if (row.optional) return ''
-              return (
-                <span>
-                  Required<span style={{ color: 'red' }}>*</span>
-                </span>
-              )
-            })()
-            return (
-              <tr key={row.name}>
-                <td>{row.name}</td>
-                <td>{row.description}</td>
-                <td>{type && <code>{type}</code>}</td>
-                <td>{defaultValue}</td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
+      <Collapse
+        className={className}
+        items={items}
+        defaultActiveKey={items.map((v) => v.key!)}
+      />
     )
   }
 
   if (data.type === 'other') {
+    const items: CollapseProps['items'] = [
+      {
+        key: 'Members',
+        label: (
+          <span>
+            <Strong>Members</Strong>
+          </span>
+        ),
+        children: (
+          <Table
+            columns={complexTypeColumns}
+            dataSource={[data]}
+            size="middle"
+            pagination={false}
+          />
+        ),
+      },
+    ]
+
     return (
-      <table className={className}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{data.name}</td>
-            <td>{data.description}</td>
-            <td>
-              <pre>{data.text}</pre>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <Collapse
+        className={className}
+        items={items}
+        defaultActiveKey={items.map((v) => v.key!)}
+      />
     )
   }
 
