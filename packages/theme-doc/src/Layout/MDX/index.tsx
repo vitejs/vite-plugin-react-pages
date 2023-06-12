@@ -40,7 +40,7 @@ const components: MDXComponents = {
   }),
   CodeBlock,
   Demo,
-  TsInfo: withMdClassName(TsInfo),
+  TsInfo,
   FileText: withMdClassName(FileText),
   a: (props: React.HTMLProps<HTMLAnchorElement>) => {
     const { href, ...rest } = props
@@ -123,7 +123,7 @@ export default MDX
  * Ref: "FlowContent" are the top-level block elements in mdast
  * https://github.com/syntax-tree/mdast#flowcontent
  */
-function withMdClassName(Component: React.FC<any> | string) {
+export function withMdClassName(Component: React.FC<any> | string) {
   return function (props: any) {
     const { className } = props
     const newClassName = className ? `${className} markdown-el` : 'markdown-el'
