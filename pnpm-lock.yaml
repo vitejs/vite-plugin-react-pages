@@ -31,8 +31,8 @@ importers:
         specifier: ^7.0.3
         version: 7.0.3
       execa:
-        specifier: ^5.1.1
-        version: 5.1.1
+        specifier: ^7.1.1
+        version: 7.1.1
       get-port:
         specifier: ^5.1.1
         version: 5.1.1
