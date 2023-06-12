@@ -90,7 +90,6 @@ const complexTypeColumns: TableColumnsType<any> = [
 
 export function TsInfo({ data, className: _className }: Props) {
   const className = [_className, s.ctn].filter(Boolean).join(' ')
-  console.log('TsInfo', _className, data)
 
   if (data.type === 'interface' || data.type === 'object-literal') {
     const items: CollapseProps['items'] = [
