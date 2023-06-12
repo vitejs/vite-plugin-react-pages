@@ -1,10 +1,10 @@
-# 📘 vite-plugin-react-page
+# 📘 vite-plugin-react-pages
 
 <p>
   <a href="https://www.npmjs.com/package/vite-plugin-react-pages" target="_blank" rel="noopener"><img src="https://img.shields.io/npm/v/vite-plugin-react-pages.svg" alt="npm package" /></a>
 </p>
 
-[vite-plugin-react-page](https://vitejs.github.io/vite-plugin-react-pages) (vite-pages) is a React app framework powered by [vite](https://github.com/vitejs/vite). It is very suitable for:
+[vite-plugin-react-pages](https://vitejs.github.io/vite-plugin-react-pages) (vite-pages) is a React app framework powered by [vite](https://github.com/vitejs/vite). It is very suitable for:
 
 - blog site
 - documentation site for your library or product
@@ -18,12 +18,17 @@ It provides many features that help developers **build a React App quickly**:
 - **Powerful [theme customization](https://vitejs.github.io/vite-plugin-react-pages/theme-customization)**. Vite-pages itself doesn't render any concrete DOM node. You can customize **anything** on the page with theme. It is easy to write a theme that is sharable and configurable. If you use typescript, the users of your theme will get type-check and intelliSense.
 - **Automatic code splitting based on pages**. Visitors don't need to download the whole app, they only load page data as needed.
 - **Support static site generation out of the box**. By pre-rendering your app into HTML at buildtime, users can see the content before any JS is loaded. With this feature, you can [deploy your single page apps on GitHub Pages](https://github.com/vitejs/vite-plugin-react-pages/tree/main/doc-site)(which [doesn't natively support single page apps](https://www.google.com/search?q=github+pages+single+page+apps&oq=github+pages+single+page+apps)).
+- **Tools for Library documentation**. Vite-pages provides [some tools](https://vitejs.github.io/vite-plugin-react-pages/library-documentation-tools) to reduce the maintenance costs for library authors and make their documents more easily to read.
 
 ## Getting stated
 
-### Play with demo projects in your browser
+### Try it online on StackBlitz
 
-Thanks to [StackBlitz WebContainers](https://blog.stackblitz.com/posts/introducing-webcontainers/), you can run vite-pages projects entirely in your browser! Checkout [vite-pages app demo](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/main/packages/create-project/template-app?file=README.md&terminal=dev) or [vite-pages library demo](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/main/packages/create-project/template-lib?file=README.md&terminal=dev).
+You can play with these demo projects in your browser, without installing anything on your machine.
+
+- [app demo](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/main/packages/create-project/template-app?file=README.md&terminal=dev)
+- [library demo](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/main/packages/create-project/template-lib?file=README.md&terminal=dev)
+- [library monorepo demo](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/main/packages/create-project/template-lib-monorepo?file=README.md&terminal=dev)
 
 ### Initialize a demo project locally
 
@@ -35,7 +40,7 @@ Thanks to [StackBlitz WebContainers](https://blog.stackblitz.com/posts/introduci
 2. `npm install`
 3. `npm run dev` and play with the local dev environment.
 4. `npm run build`.
-5. `npm run ssr`. You can [disable javascript in your browser](https://developers.google.com/web/tools/chrome-devtools/javascript/disable), to verify if it can still render.
+5. `npm run ssr`. You can [disable javascript in your browser](https://developer.chrome.com/docs/devtools/javascript/disable/), to verify if it can still render.
 
 ### Read the documentation
 

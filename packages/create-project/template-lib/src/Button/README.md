@@ -9,13 +9,21 @@ This is a **markdown** document of the `Button` component.
 
 You can put this page in a subGroup of the side menu using `staticData.subGroup`.
 
+---
+
+Here are some examples of [library documentation tools](https://vitejs.github.io/vite-plugin-react-pages/library-documentation-tools).
+
 ## Demos
 
-You can import demos like this:
+The following markdown
+
+```tsx
+<Demo src="./demos/demo1.tsx" />
+```
+
+which will result in:
 
 <Demo src="./demos/demo1.tsx" />
-
-<Demo src="./demos/demo2.tsx" />
 
 ## Extract Type info from Typescript code
 

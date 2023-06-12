@@ -18,6 +18,7 @@ It provides many features that help developers **build a React App quickly**:
 - **Powerful [theme customization](https://vitejs.github.io/vite-plugin-react-pages/theme-customization)**. Vite-pages itself doesn't render any concrete DOM node. You can customize **anything** on the page with theme. It is easy to write a theme that is sharable and configurable. If you use typescript, the users of your theme will get type-check and intelliSense.
 - **Automatic code splitting based on pages**. Visitors don't need to download the whole app, they only load page data as needed.
 - **Support static site generation out of the box**. By pre-rendering your app into HTML at buildtime, users can see the content before any JS is loaded. With this feature, you can [deploy your single page apps on GitHub Pages](https://github.com/vitejs/vite-plugin-react-pages/tree/main/doc-site)(which [doesn't natively support single page apps](https://www.google.com/search?q=github+pages+single+page+apps&oq=github+pages+single+page+apps)).
+- **Tools for Library documentation**. Vite-pages provides [some tools](https://vitejs.github.io/vite-plugin-react-pages/library-documentation-tools) to reduce the maintenance costs for library authors and make their documents more easily to read.
 
 ## Getting stated
 
