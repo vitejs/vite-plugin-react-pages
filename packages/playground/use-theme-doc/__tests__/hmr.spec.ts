@@ -77,6 +77,57 @@ test('hmr: edit file (md static data notation)', async ({
   ).toHaveCount(0)
 })
 
+test('hmr: edit md file content', async ({ page, fsUtils, testPlayground }) => {
+  // prepare locators first
+  const headingBeforeEdit = page
+    .locator('.markdown-body')
+    .getByRole('heading', { name: 'Heading one', exact: true })
+  const headingAfterEdit = page
+    .locator('.markdown-body')
+    .getByRole('heading', { name: 'Heading edited', exact: true })
+  // Also check the table-of-content
+  const outlineLinkBeforeEdit = page
+    .locator('.vp-local-outline')
+    .getByRole('link', { name: 'Heading one', exact: true })
+  const outlineLinkAfterEdit = page
+    .locator('.vp-local-outline')
+    .getByRole('link', { name: 'Heading edited', exact: true })
+  const counter = page.locator('.markdown-body').getByTestId('counter')
+  const counterStateText = counter.locator('span')
+  const counterButton = counter.getByRole('button', { name: 'add count' })
+
+  page.locator('.vp-local-sider >> text="Markdown Test Page1"').click()
+  await page.waitForURL('/md-test1')
+
+  // initial state
+  await expect(headingBeforeEdit).toHaveCount(1)
+  await expect(headingAfterEdit).toHaveCount(0)
+  await expect(outlineLinkBeforeEdit).toHaveCount(1)
+  await expect(outlineLinkAfterEdit).toHaveCount(0)
+  // update component state
+  await expect(counterStateText).toHaveText('Counter component: 0.')
+  await counterButton.click()
+  await expect(counterStateText).toHaveText('Counter component: 1.')
+
+  fsUtils.editFile('pages/md-test1$.md', (str) => {
+    return str.replace('# Heading one', '# Heading edited')
+  })
+
+  await expect(headingBeforeEdit).toHaveCount(0)
+  await expect(headingAfterEdit).toHaveCount(1)
+  await expect(outlineLinkBeforeEdit).toHaveCount(0)
+  await expect(outlineLinkAfterEdit).toHaveCount(1)
+  await expect(counterStateText).toHaveText('Counter component: 1.')
+
+  await testPlayground.restore()
+
+  await expect(headingBeforeEdit).toHaveCount(1)
+  await expect(headingAfterEdit).toHaveCount(0)
+  await expect(outlineLinkBeforeEdit).toHaveCount(1)
+  await expect(outlineLinkAfterEdit).toHaveCount(0)
+  await expect(counterStateText).toHaveText('Counter component: 1.')
+})
+
 test('hmr: delete file, add file', async ({ page, fsUtils }) => {
   const page2FileContent = fsUtils.readFile('pages/page2$.md')
   await expect(
