@@ -60,15 +60,15 @@ if (import.meta.hot) {
     setPages?.(module.default)
   })
 
-  let setAllPagesOutlines: SetAtom<any, void> | undefined
-  import.meta.hot!.accept('/@react-pages/allPagesOutlines', (module) => {
-    // console.log('@@hot update /@react-pages/allPagesOutlines', module)
-    if (!module) {
-      console.error('unexpected hot module', module)
-      return
-    }
-    setAllPagesOutlines?.(module)
-  })
+  // let setAllPagesOutlines: SetAtom<any, void> | undefined
+  // import.meta.hot!.accept('/@react-pages/allPagesOutlines', (module) => {
+  //   // console.log('@@hot update /@react-pages/allPagesOutlines', module)
+  //   if (!module) {
+  //     console.error('unexpected hot module', module)
+  //     return
+  //   }
+  //   setAllPagesOutlines?.(module)
+  // })
 
   const pagesAtom = atom(initialPages)
   const pagePathsAtom = atom(initialPagePaths.sort())
@@ -164,7 +164,7 @@ if (import.meta.hot) {
 
   useAllPagesOutlines = (timeout: number) => {
     const [data, set] = useAtom(allPagesOutlinesAtom)
-    setAllPagesOutlines = set
+    // setAllPagesOutlines = set
     useEffect(() => {
       setTimeout(() => {
         import('/@react-pages/allPagesOutlines').then((mod) => {

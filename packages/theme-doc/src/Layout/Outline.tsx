@@ -1,4 +1,4 @@
-import React, { useMemo, useContext } from 'react'
+import React, { useMemo, useContext, useEffect, useState } from 'react'
 import { Anchor } from 'antd'
 import type { AnchorProps } from 'antd'
 
@@ -12,13 +12,30 @@ interface Props {}
 const OutLine: React.FC<Props> = (props) => {
   const { loadedData, loadState } = useThemeCtx()
   const pageData = loadedData[loadState.routePath]
+  const [outline, setOutline] = useState<OutlineItem[] | undefined>(
+    () => pageData?.outlineInfo?.outline
+  )
+
+  if (import.meta.hot) {
+    // subscribe to outline info hmr update
+    useEffect(() => {
+      const cur = pageData?.outlineInfo?.outline
+      setOutline(cur)
+      const unsub = pageData?.outlineInfo?.onUpdate?.((newMod: any) => {
+        const cur = newMod?.outline
+        setOutline(cur)
+      })
+      return () => {
+        unsub?.()
+      }
+    }, [pageData])
+  }
 
   const data = useMemo(() => {
-    const outline: OutlineItem[] | undefined = pageData?.outlineInfo?.outline
     // should not render OutLine if there is only one heading
     if (!Array.isArray(outline) || outline.length < 2) return null
     return buildTree(outline)
-  }, [pageData])
+  }, [outline])
 
   const layoutCtxVal = useContext(LayoutContext)
   const isSmallScreen = !layoutCtxVal.screenWidth?.md
