@@ -22,38 +22,45 @@ jobs:
     runs-on: ${{ matrix.os }}
     # ref: https://playwright.dev/docs/ci#github-actions
     steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: '7'
+      - uses: actions/checkout@v3
+      
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+      
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        id: pnpm-install
+        with:
+          version: 'latest'
+          run_install: false
 
-      - name: Get pnpm cache directory
+      - name: Get pnpm store directory
         id: pnpm-cache
         shell: bash
-        run: echo "dir=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
         with:
-          path: ${{ steps.pnpm-cache.outputs.dir }}
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: pnpm install
+
       - name: Install Playwright
         run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
       - name: Run tests
         run: pnpm test
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.browser }}-${{ matrix.os }}-playwright-report
           path: playwright-report
