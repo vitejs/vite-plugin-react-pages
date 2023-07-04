@@ -69,8 +69,15 @@ export async function startServer(
     // in killProcess()
     detached: !isWindows,
   })
-  subprocess.stdout?.pipe(process.stdout)
-  subprocess.stderr?.pipe(process.stderr)
+  if (!subprocess.stdout || !subprocess.stderr) {
+    throw new Error('assertion fail: !subprocess.stdout || !subprocess.stderr')
+  }
+  // playwright can only collect string-form stdio into the test report
+  // https://github.com/microsoft/playwright/issues/23993
+  subprocess.stdout.setEncoding('utf-8')
+  subprocess.stderr.setEncoding('utf-8')
+  subprocess.stdout.pipe(process.stdout)
+  subprocess.stderr.pipe(process.stderr)
   // return values early so caller can handler error
   returnValues.subprocess = subprocess
   // wait for the server to be available
