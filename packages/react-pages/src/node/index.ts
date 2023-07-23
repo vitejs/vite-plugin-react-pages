@@ -280,23 +280,12 @@ export default async function setupPlugins(
     mdxExtensions: ['.md', '.mdx'],
     providerImportSource: '@mdx-js/react',
   })
-  const { default: pluginReactForMdx } = await import('@vitejs/plugin-react')
   return [
     {
       ...mdxPlugin,
       enforce: 'pre',
     },
-    // add hmr ability to .md and .mdx files
-    // https://github.com/vitejs/vite-plugin-react/issues/38
-    // https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/CHANGELOG.md#400-2023-04-20
-    // this react plugin is only used to handle mdx output
-    // users can aplly another @vitejs/plugin-react or @vitejs/plugin-react-swc on their side (to transform normal .jsx files)
-    pluginReactForMdx({
-      include: /\.mdx?$/,
-      // TODO: after https://github.com/vitejs/vite-plugin-react/pull/188 is published
-      // the next line will not be needed
-      jsxRuntime: 'classic',
-    }),
+    createMdxTransformPlugin(),
     pluginFactory(vpConfig),
   ]
 }
@@ -320,6 +309,49 @@ function getRehypePlugins(): Promise<PluggableList> {
     // use dynamic import so that it works in node commonjs
     import('rehype-slug').then((m) => m.default),
   ])
+}
+
+/**
+ * use @vitejs/plugin-react to handle the output of @mdx-js/rollup
+ * workaround this issue: https://github.com/vitejs/vite-plugin-react/issues/38
+ */
+function createMdxTransformPlugin(): Plugin {
+  let vitePluginReactTrasnform: Plugin['transform'] | undefined
+  return {
+    name: 'vite-pages:mdx-fast-refresh',
+    apply: 'serve',
+    configResolved: ({ plugins }) => {
+      // find this plugin to call it's transform function:
+      // https://github.com/vitejs/vite-plugin-react/blob/b647e74c38565696bd6fb931b8bd9ac7f3bebe88/packages/plugin-react/src/index.ts#L206
+      // or https://github.com/vitejs/vite-plugin-react-swc/blob/95e991914322e7b011d1c8d18d501b9eee21adaa/src/index.ts#L111
+      vitePluginReactTrasnform = plugins.find(
+        (p) =>
+          (p.name === 'vite:react-babel' &&
+            typeof p.transform === 'function') ||
+          (p.name === 'vite:react-swc' && typeof p.transform === 'function')
+      )?.transform
+      if (!vitePluginReactTrasnform) {
+        throw new Error(
+          `Can't find an instance of @vitejs/plugin-react or @vitejs/plugin-react-swc. You should apply either of these plugins to make mdx work.`
+        )
+      }
+    },
+    transform: (code, id, options) => {
+      const [filepath, ...qs] = id.split('?')
+      if (
+        filepath.match(/\.mdx?$/) &&
+        !id.startsWith(OUTLINE_INFO_MODULE_ID_PREFIX)
+      ) {
+        // turn file path like `/path/to/md-file$.md` into `/path/to/md-file$.jsx`
+        // make vite-plugin-react transform "the output of @mdx-js/rollup" like a jsx file
+        // https://github.com/vitejs/vite-plugin-react/blob/caa9b5330092c70288fcb94ceb96ca42438df2a2/packages/plugin-react/src/index.ts#L170
+        const newFilePath = filepath.replace(/\.mdx?$/, '.jsx')
+        const newId = [newFilePath, ...qs].join('?')
+        
+        return (vitePluginReactTrasnform as any)(code, newId, options)
+      }
+    },
+  }
 }
 
 /**
