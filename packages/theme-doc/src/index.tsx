@@ -93,6 +93,9 @@ export function createTheme(
       .sort((a, b) => {
         // sort by (order, key)
         if (a.order !== b.order) return a.order - b.order
+        // keep dataPiece with key 'main' at the front (before demos)
+        if (a.key === 'main') return -1
+        if (b.key === 'main') return 1
         return a.key.localeCompare(b.key)
       })
       .map(({ result }) => result)
