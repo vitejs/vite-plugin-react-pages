@@ -38,9 +38,16 @@ export async function setupActualTestPlayground(
       path.resolve(copyTo, subPath),
       {
         dereference: false,
-        filter(file) {
+        async filter(file, dest) {
           file = file.replace(/\\/g, '/')
-          return !file.includes('__tests__')
+          if (file.includes('__tests__')) return false
+          if ((await fs.stat(file)).isFile()) {
+            // don't overwrite when file content is same
+            const contentBuff1 = await fs.readFile(file)
+            const contentBuff2 = await fs.readFile(dest)
+            if (contentBuff1.equals(contentBuff2)) return false
+          }
+          return true
         },
       }
     )

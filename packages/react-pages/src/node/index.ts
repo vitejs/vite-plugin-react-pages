@@ -1,6 +1,6 @@
 import * as path from 'path'
 import type { PluggableList } from 'unified'
-import type { Plugin, IndexHtmlTransformContext } from 'vite'
+import type { Plugin, IndexHtmlTransformContext, PluginOption } from 'vite'
 import type { OutputPlugin } from 'rollup'
 import type { staticSiteGenerationConfig } from './types'
 
@@ -269,21 +269,25 @@ function moveScriptTagToBodyEnd(
 
 export default async function setupPlugins(
   vpConfig: PluginConfig = {}
-): Promise<Plugin[]> {
+): Promise<PluginOption[]> {
   // use dynamic import so that it supports node commonjs
   const mdx = await import('@mdx-js/rollup')
+  const mdxPlugin = mdx.default({
+    remarkPlugins: await getRemarkPlugins(),
+    rehypePlugins: await getRehypePlugins(),
+    // treat .md as mdx
+    mdExtensions: [],
+    mdxExtensions: ['.md', '.mdx'],
+    providerImportSource: '@mdx-js/react',
+  })
   return [
-    mdx.default({
-      remarkPlugins: await getRemarkPlugins(),
-      rehypePlugins: await getRehypePlugins(),
-      // treat .md as mdx
-      mdExtensions: [],
-      mdxExtensions: ['.md', '.mdx'],
-      providerImportSource: '@mdx-js/react',
-    }),
+    {
+      ...mdxPlugin,
+      enforce: 'pre',
+    },
     createMdxTransformPlugin(),
     pluginFactory(vpConfig),
-  ] as Plugin[]
+  ]
 }
 
 function getRemarkPlugins(): Promise<PluggableList> {
@@ -314,34 +318,36 @@ function getRehypePlugins(): Promise<PluggableList> {
 function createMdxTransformPlugin(): Plugin {
   let vitePluginReactTrasnform: Plugin['transform'] | undefined
   return {
-    name: 'vite-pages:mdx-transform',
+    name: 'vite-pages:mdx-fast-refresh',
+    apply: 'serve',
     configResolved: ({ plugins }) => {
       // find this plugin to call it's transform function:
       // https://github.com/vitejs/vite-plugin-react/blob/b647e74c38565696bd6fb931b8bd9ac7f3bebe88/packages/plugin-react/src/index.ts#L206
+      // or https://github.com/vitejs/vite-plugin-react-swc/blob/95e991914322e7b011d1c8d18d501b9eee21adaa/src/index.ts#L111
       vitePluginReactTrasnform = plugins.find(
         (p) =>
-          p.name === 'vite:react-babel' && typeof p.transform === 'function'
+          (p.name === 'vite:react-babel' &&
+            typeof p.transform === 'function') ||
+          (p.name === 'vite:react-swc' && typeof p.transform === 'function')
       )?.transform
       if (!vitePluginReactTrasnform) {
         throw new Error(
-          `Can't find an instance of @vitejs/plugin-react. You should apply this plugin to make mdx work.`
+          `Can't find an instance of @vitejs/plugin-react or @vitejs/plugin-react-swc. You should apply either of these plugins to make mdx work.`
         )
       }
     },
     transform: (code, id, options) => {
-      const [filepath, querystring = ''] = id.split('?')
+      const [filepath, ...qs] = id.split('?')
       if (
         filepath.match(/\.mdx?$/) &&
         !id.startsWith(OUTLINE_INFO_MODULE_ID_PREFIX)
       ) {
-        // make @vitejs/plugin-react treat the "output of @mdx-js/rollup transform" like a jsx file
-        // https://github.com/vitejs/vite-plugin-react/blob/b647e74c38565696bd6fb931b8bd9ac7f3bebe88/packages/plugin-react/src/index.ts#L215
-        let newId
-        if (querystring) {
-          newId = id + '&ext=.jsx'
-        } else {
-          newId = id + '?ext=.jsx'
-        }
+        // turn file path like `/path/to/md-file$.md` into `/path/to/md-file$.jsx`
+        // make vite-plugin-react transform "the output of @mdx-js/rollup" like a jsx file
+        // https://github.com/vitejs/vite-plugin-react/blob/caa9b5330092c70288fcb94ceb96ca42438df2a2/packages/plugin-react/src/index.ts#L170
+        const newFilePath = filepath.replace(/\.mdx?$/, '.jsx')
+        const newId = [newFilePath, ...qs].join('?')
+        
         return (vitePluginReactTrasnform as any)(code, newId, options)
       }
     },

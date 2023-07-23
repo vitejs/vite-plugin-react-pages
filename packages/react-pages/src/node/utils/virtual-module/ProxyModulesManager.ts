@@ -7,7 +7,8 @@ import { File, VirtualModulesManager } from '.'
  */
 export class ProxyModulesManager {
   private vmm = new VirtualModulesManager()
-  private register: { [proxyModuleId: string]: boolean } = {}
+  private register: Map<string, { loaded: boolean; sourceFilePath: string }> =
+    new Map()
 
   constructor(public readonly proxyModulePrefix: string) {
     if (!proxyModulePrefix)
@@ -28,12 +29,12 @@ export class ProxyModulesManager {
     key?: string
   ) {
     const proxyModuleId = this.getProxyModuleId(sourceFilePath, key)
-    if (this.register[proxyModuleId]) return proxyModuleId
+    if (this.register.has(proxyModuleId)) return proxyModuleId
     this.vmm.addFSWatcher('', [sourceFilePath], async (file, api) => {
       const proxyModuleData = await getProxyModuleData(file)
       api.addModuleData(proxyModuleId, proxyModuleData)
     })
-    this.register[proxyModuleId] = true
+    this.register.set(proxyModuleId, { loaded: false, sourceFilePath })
     return proxyModuleId
   }
 
@@ -54,17 +55,29 @@ export class ProxyModulesManager {
             )
           )
         res(moduleData[0])
+        // set loaded flag after a timeout to avoid some race condition
+        // (onProxyModuleUpdate cb is triggered before this load event)
+        setTimeout(() => {
+          const registerItem = this.register.get(proxyModuleId)
+          if (registerItem && !registerItem.loaded) {
+            this.register.set(proxyModuleId, { ...registerItem, loaded: true })
+          }
+        }, 50)
       })
     })
   }
 
   /**
-   * emit event when a proxyModule has been updated
+   * emit event when a proxyModule is updated since loaded
    */
   onProxyModuleUpdate(
     cb: (proxyModuleId: string, data: any[], prevData: any[]) => void
   ) {
     this.vmm.addModuleListener((proxyModuleId, data, prevData) => {
+      const registerItem = this.register.get(proxyModuleId)
+      const notLoaded = registerItem && !registerItem.loaded
+      // bail out if this is the first-load event
+      if (notLoaded && prevData.length === 0) return
       cb(proxyModuleId, data, prevData)
     })
   }
@@ -73,13 +86,17 @@ export class ProxyModulesManager {
     this.vmm.close()
   }
 
-  getProxyModuleId(sourceFilePath: string, key?: string) {
+  private getProxyModuleId(sourceFilePath: string, key?: string) {
     let prefix = this.proxyModulePrefix
     if (key) prefix += `--${key}--`
     return prefix + sourceFilePath
   }
 
   isProxyModuleId(id: string) {
-    return id.startsWith(this.proxyModulePrefix) && this.register[id]
+    return id.startsWith(this.proxyModulePrefix) && this.register.has(id)
+  }
+
+  getSourceFilePath(id: string) {
+    return this.register.get(id)?.sourceFilePath
   }
 }

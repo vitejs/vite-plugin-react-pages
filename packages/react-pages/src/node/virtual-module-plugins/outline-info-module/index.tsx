@@ -24,9 +24,7 @@ export class OutlineInfoModuleManager {
     })
   }
 
-  isProxyModuleId(id: string) {
-    return this.pmm.isProxyModuleId(id)
-  }
+  isProxyModuleId = this.pmm.isProxyModuleId.bind(this.pmm)
 
   async loadProxyModule(proxyModuleId: string) {
     const data = await this.pmm.getProxyModuleData(proxyModuleId)
@@ -34,7 +32,23 @@ export class OutlineInfoModuleManager {
     if (!outline)
       throw new Error(`assertion fail: invalid outline data: ${proxyModuleId}`)
 
-    return `export const outline = ${JSON.stringify(outline)};`
+    return `export const outline = ${JSON.stringify(outline)};
+export let onUpdate;
+if (import.meta.hot) {
+  const d = import.meta.hot.data;
+  if (!d.listeners) d.listeners = [];
+  onUpdate = (cb) => {
+    d.listeners.push(cb);
+    return () => {
+      d.listeners = d.listeners.filter(l => l !== cb);
+    }
+  };
+  import.meta.hot.accept((_newMod) => {
+    const newMod = {..._newMod, onUpdate: undefined};
+    d.listeners.forEach((cb) => cb(newMod));
+  })
+}
+`
   }
 
   onUpdate(cb: (reloadPath: string) => void) {

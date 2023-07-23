@@ -48,6 +48,7 @@ export function createTheme(
 
     if (loadState.type === 'load-error') {
       const errMsg = loadState.error?.message
+      console.error(loadState.error)
       return (
         <AppLayout>
           <h1>Load Error</h1>

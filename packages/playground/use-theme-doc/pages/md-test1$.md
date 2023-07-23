@@ -2,6 +2,12 @@
 
 > markdown render test data from: https://github.com/fullpipe/markdown-test-page/blob/master/test-page.md
 
+# Counter
+
+import Counter from './Counter';
+
+<Counter />
+
 # Heading one
 
 Sint sit cillum pariatur eiusmod nulla pariatur ipsum. Sit laborum anim qui mollit tempor pariatur nisi minim dolor. Aliquip et adipisicing sit sit fugiat commodo id sunt. Nostrud enim ad commodo incididunt cupidatat in ullamco ullamco Lorem cupidatat velit enim et Lorem. Ut laborum cillum laboris fugiat culpa sint irure do reprehenderit culpa occaecat. Exercitation esse mollit tempor magna aliqua in occaecat aliquip veniam reprehenderit nisi dolor in laboris dolore velit.
