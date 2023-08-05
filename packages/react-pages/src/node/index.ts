@@ -1,7 +1,11 @@
 import * as path from 'path'
 import type { PluggableList } from 'unified'
-import type { Plugin, IndexHtmlTransformContext, PluginOption } from 'vite'
-import type { OutputPlugin } from 'rollup'
+import type {
+  Plugin,
+  IndexHtmlTransformContext,
+  PluginOption,
+  Rollup,
+} from 'vite'
 import type { staticSiteGenerationConfig } from './types'
 
 import {
@@ -347,7 +351,7 @@ function createMdxTransformPlugin(): Plugin {
         // https://github.com/vitejs/vite-plugin-react/blob/caa9b5330092c70288fcb94ceb96ca42438df2a2/packages/plugin-react/src/index.ts#L170
         const newFilePath = filepath.replace(/\.mdx?$/, '.jsx')
         const newId = [newFilePath, ...qs].join('?')
-        
+
         return (vitePluginReactTrasnform as any)(code, newId, options)
       }
     },
@@ -358,7 +362,7 @@ function createMdxTransformPlugin(): Plugin {
  * Some chunk filenames may start with `_`, which will be treated as special resource by github pages. So we need to disable jekyll of github pages.
  * https://github.blog/2009-12-29-bypassing-jekyll-on-github-pages/
  */
-function outputPluginDisableJekyll(): OutputPlugin {
+function outputPluginDisableJekyll(): Rollup.OutputPlugin {
   return {
     name: 'vite-pages-disable-jekyll',
     generateBundle() {
