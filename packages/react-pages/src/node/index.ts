@@ -315,6 +315,8 @@ function getRemarkPlugins(
     {
       name: 'remark-frontmatter',
       // use dynamic import so that it works in node commonjs
+      // use lazy-eval function so that we don't import/create a plugin until we actually need it
+      // (it may be removed by modifyPlugins so we can avoid calling it)
       createPlugin: () => import('remark-frontmatter').then((m) => m.default),
     },
     {
@@ -348,6 +350,8 @@ function getRehypePlugins(
     {
       name: 'rehype-slug',
       // use dynamic import so that it works in node commonjs
+      // use lazy-eval function so that we don't import/create a plugin until we actually need it
+      // (it may be removed by modifyPlugins so we can avoid calling it)
       createPlugin: () => import('rehype-slug').then((m) => m.default),
     },
   ]
