@@ -58,7 +58,9 @@ export interface PluginConfig {
   pageStrategy?: PageStrategy
   useHashRouter?: boolean
   staticSiteGeneration?: staticSiteGenerationConfig
+  /** user can add/remove remark plugins passed to mdx */
   modifyRemarkPlugins?: ModifyNamedUnifiedPlugins
+  /** user can add/remove rehype plugins passed to mdx */
   modifyRehypePlugins?: ModifyNamedUnifiedPlugins
 }
 
