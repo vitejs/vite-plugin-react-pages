@@ -51,7 +51,7 @@
     "@types/mdx": "^2.0.5",
     "antd": "^5.6.2",
     "chokidar": "^3.5.1",
-    "concurrently": "^7.6.0",
+    "concurrently": "^8.2.0",
     "copy-to-clipboard": "^3.3.3",
     "fs-extra": "^11.1.1",
     "github-markdown-css": "^5.2.0",
