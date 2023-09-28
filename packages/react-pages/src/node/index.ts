@@ -1,5 +1,5 @@
 import * as path from 'path'
-import type { PluggableList } from 'unified'
+import type { PluggableList, Pluggable } from 'unified'
 import type {
   Plugin,
   IndexHtmlTransformContext,
@@ -58,7 +58,21 @@ export interface PluginConfig {
   pageStrategy?: PageStrategy
   useHashRouter?: boolean
   staticSiteGeneration?: staticSiteGenerationConfig
+  /** user can add/remove remark plugins passed to mdx */
+  modifyRemarkPlugins?: ModifyNamedUnifiedPlugins
+  /** user can add/remove rehype plugins passed to mdx */
+  modifyRehypePlugins?: ModifyNamedUnifiedPlugins
 }
+
+export type NamedUnifiedPlugin = {
+  /** use name so that modifier can recognize a plugin */
+  name: string
+  createPlugin: () => Pluggable | Promise<Pluggable>
+}
+
+export type ModifyNamedUnifiedPlugins = (
+  original: NamedUnifiedPlugin[]
+) => NamedUnifiedPlugin[]
 
 function pluginFactory(opts: PluginConfig = {}): Plugin {
   const { useHashRouter = false, staticSiteGeneration } = opts
@@ -277,8 +291,8 @@ export default async function setupPlugins(
   // use dynamic import so that it supports node commonjs
   const mdx = await import('@mdx-js/rollup')
   const mdxPlugin = mdx.default({
-    remarkPlugins: await getRemarkPlugins(),
-    rehypePlugins: await getRehypePlugins(),
+    remarkPlugins: await getRemarkPlugins(vpConfig.modifyRemarkPlugins),
+    rehypePlugins: await getRehypePlugins(vpConfig.modifyRehypePlugins),
     // treat .md as mdx
     mdExtensions: [],
     mdxExtensions: ['.md', '.mdx'],
@@ -294,25 +308,68 @@ export default async function setupPlugins(
   ]
 }
 
-function getRemarkPlugins(): Promise<PluggableList> {
-  return Promise.all([
-    // use dynamic import so that it works in node commonjs
-    import('remark-frontmatter').then((m) => m.default),
-    import('remark-gfm').then((m) => m.default),
-    import('remark-mdx-images').then((m) => m.default),
-
-    // plugins created for vite-pages:
-    DemoMdxPlugin,
-    TsInfoMdxPlugin,
-    FileTextMdxPlugin,
-  ])
+function getRemarkPlugins(
+  modifyPlugins?: ModifyNamedUnifiedPlugins
+): Promise<PluggableList> {
+  const originalPlugins: NamedUnifiedPlugin[] = [
+    {
+      name: 'remark-frontmatter',
+      // use dynamic import so that it works in node commonjs
+      // use lazy-eval function so that we don't import/create a plugin until we actually need it
+      // (it may be removed by modifyPlugins so we can avoid calling it)
+      createPlugin: () => import('remark-frontmatter').then((m) => m.default),
+    },
+    {
+      name: 'remark-gfm',
+      createPlugin: () => import('remark-gfm').then((m) => m.default),
+    },
+    {
+      name: 'remark-mdx-images',
+      createPlugin: () => import('remark-mdx-images').then((m) => m.default),
+    },
+    {
+      name: 'DemoMdxPlugin',
+      createPlugin: () => DemoMdxPlugin,
+    },
+    {
+      name: 'TsInfoMdxPlugin',
+      createPlugin: () => TsInfoMdxPlugin,
+    },
+    {
+      name: 'FileTextMdxPlugin',
+      createPlugin: () => FileTextMdxPlugin,
+    },
+  ]
+  return createFinalPlugins(originalPlugins, modifyPlugins)
 }
 
-function getRehypePlugins(): Promise<PluggableList> {
-  return Promise.all([
-    // use dynamic import so that it works in node commonjs
-    import('rehype-slug').then((m) => m.default),
-  ])
+function getRehypePlugins(
+  modifyPlugins?: ModifyNamedUnifiedPlugins
+): Promise<PluggableList> {
+  const originalPlugins: NamedUnifiedPlugin[] = [
+    {
+      name: 'rehype-slug',
+      // use dynamic import so that it works in node commonjs
+      // use lazy-eval function so that we don't import/create a plugin until we actually need it
+      // (it may be removed by modifyPlugins so we can avoid calling it)
+      createPlugin: () => import('rehype-slug').then((m) => m.default),
+    },
+  ]
+  return createFinalPlugins(originalPlugins, modifyPlugins)
+}
+
+function createFinalPlugins(
+  originalPlugins: NamedUnifiedPlugin[],
+  modifyPlugins: ModifyNamedUnifiedPlugins | undefined
+) {
+  const finalPlugins = (() => {
+    if (typeof modifyPlugins === 'function') {
+      const res = modifyPlugins(originalPlugins)
+      if (Array.isArray(res)) return res
+    }
+    return originalPlugins
+  })()
+  return Promise.all(finalPlugins.map(({ createPlugin }) => createPlugin()))
 }
 
 /**

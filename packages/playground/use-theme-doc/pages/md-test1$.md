@@ -8,6 +8,19 @@ import Counter from './Counter';
 
 <Counter />
 
+# test mdx plugin
+
+remark-emoji: :dog: :+1:
+
+remark-math:
+
+Lift($$L$$) can be determined by Lift Coefficient ($$C_L$$) like the following
+equation.
+
+$$
+L = \frac{1}{2} \rho v^2 S C_L
+$$
+
 # Heading one
 
 Sint sit cillum pariatur eiusmod nulla pariatur ipsum. Sit laborum anim qui mollit tempor pariatur nisi minim dolor. Aliquip et adipisicing sit sit fugiat commodo id sunt. Nostrud enim ad commodo incididunt cupidatat in ullamco ullamco Lorem cupidatat velit enim et Lorem. Ut laborum cillum laboris fugiat culpa sint irure do reprehenderit culpa occaecat. Exercitation esse mollit tempor magna aliqua in occaecat aliquip veniam reprehenderit nisi dolor in laboris dolore velit.
