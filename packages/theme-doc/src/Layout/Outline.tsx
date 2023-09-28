@@ -16,11 +16,11 @@ const OutLine: React.FC<Props> = (props) => {
     () => pageData?.outlineInfo?.outline
   )
 
-  if (import.meta.hot) {
-    // subscribe to outline info hmr update
-    useEffect(() => {
-      const cur = pageData?.outlineInfo?.outline
-      setOutline(cur)
+  useEffect(() => {
+    const outlineData = pageData?.outlineInfo?.outline
+    setOutline(outlineData)
+    if (import.meta.hot) {
+      // subscribe to outline info hmr update
       const unsub = pageData?.outlineInfo?.onUpdate?.((newMod: any) => {
         const cur = newMod?.outline
         setOutline(cur)
@@ -28,8 +28,8 @@ const OutLine: React.FC<Props> = (props) => {
       return () => {
         unsub?.()
       }
-    }, [pageData])
-  }
+    }
+  }, [pageData])
 
   const data = useMemo(() => {
     // should not render OutLine if there is only one heading
