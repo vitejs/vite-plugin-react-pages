@@ -22,6 +22,10 @@ It provides many features that help developers **build a React App quickly**:
 
 ## Getting stated
 
+## Translation
+
+- [Simplified Chinese : zh](/README-ZH.md)
+
 ### Try it online on StackBlitz
 
 You can play with these demo projects in your browser, without installing anything on your machine.
