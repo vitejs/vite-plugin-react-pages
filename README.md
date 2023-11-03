@@ -8,7 +8,7 @@
 
 - blog site
 - documentation site for your library or product
-- stories/demos/playgrounds for your React components or libraries (like [storybook](https://storybook.js.org/))
+- stories/demos/playgrounds for your React components or libraries (like [storybook.js](https://storybook.js.org/))
 
 It provides many features that help developers **build a React App quickly**:
 
@@ -20,11 +20,11 @@ It provides many features that help developers **build a React App quickly**:
 - **Support static site generation out of the box**. By pre-rendering your app into HTML at buildtime, users can see the content before any JS is loaded. With this feature, you can [deploy your single page apps on GitHub Pages](https://github.com/vitejs/vite-plugin-react-pages/tree/main/doc-site)(which [doesn't natively support single page apps](https://www.google.com/search?q=github+pages+single+page+apps&oq=github+pages+single+page+apps)).
 - **Tools for Library documentation**. Vite-pages provides [some tools](https://vitejs.github.io/vite-plugin-react-pages/library-documentation-tools) to reduce the maintenance costs for library authors and make their documents more easily to read.
 
+## Translation of this README
+
+- [Simplified Chinese (中文)](/README-ZH.md)
+
 ## Getting stated
-
-## Translation
-
-- [Simplified Chinese : zh](/README-ZH.md)
 
 ### Try it online on StackBlitz
 
