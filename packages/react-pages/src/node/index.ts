@@ -104,7 +104,7 @@ function pluginFactory(opts: PluginConfig = {}): Plugin {
       },
       define: {
         __HASH_ROUTER__: !!useHashRouter,
-        'process.env.VITE_PAGES_IS_SSR': env.ssrBuild
+        'process.env.VITE_PAGES_IS_SSR': config.build?.ssr
           ? JSON.stringify('true')
           : JSON.stringify('false'),
       },
