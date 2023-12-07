@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import { Menu, Dropdown } from 'antd'
-import { Link, matchPath, PathPattern } from 'react-router-dom'
+import { Link, matchPath, PathPattern, useLocation } from 'react-router-dom'
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -26,10 +26,15 @@ const AppHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { render: renderLocaleSelector } = useLocaleSelector()
   const themeCtxValue = useThemeCtx()
   const {
-    loadState: { routePath },
-    resolvedLocale: { locale, localeKey },
+    resolvedLocale: { locale },
     staticData,
   } = themeCtxValue
+
+  // use location.pathname instead of loadState.routePath
+  // to calculate the active nav menu items
+  // because loadState.routePath may have param placeholder like /users/[uid]
+  // and it can't tell difference between /users/1 and /users/2
+  const { pathname } = useLocation()
 
   const renderLogo = (() => {
     const logoLink = (() => {
@@ -73,7 +78,7 @@ const AppHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
     const result = (resolvedTopNavs ?? [])
       .map(getActiveKeyIfMatch)
       .filter(Boolean)
-    if (!result.includes(routePath)) result.push(routePath)
+    if (!result.includes(pathname)) result.push(pathname)
     return result as string[]
 
     function getActiveKeyIfMatch(item: MenuConfig) {
@@ -113,17 +118,15 @@ const AppHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
           } else {
             actualMatcher = matcher
           }
-          // use loadState.routePath instead of location.pathname
-          // because location.pathname may contain trailing slash
-          return !!matchPath(actualMatcher, routePath)
+          return !!matchPath(actualMatcher, pathname)
         } else {
           return matcher.some((oneMatcher) => {
-            return !!matchPath(oneMatcher, routePath)
+            return !!matchPath(oneMatcher, pathname)
           })
         }
       }
     }
-  }, [routePath, resolvedTopNavs])
+  }, [pathname, resolvedTopNavs])
 
   return (
     <header className={s.header}>
