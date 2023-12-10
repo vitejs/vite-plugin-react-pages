@@ -109,7 +109,7 @@ test('hmr: edit md file content', async ({ page, fsUtils, testPlayground }) => {
   await counterButton.click()
   await expect(counterStateText).toHaveText('Counter component: 1.')
 
-  fsUtils.editFile('pages/md-test1$.md', (str) => {
+  fsUtils.editFile('pages/md-test1$.mdx', (str) => {
     return str.replace('# Heading one', '# Heading edited')
   })
 
