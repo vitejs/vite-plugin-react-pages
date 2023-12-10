@@ -373,13 +373,15 @@ function createFinalPlugins(
 }
 
 /**
- * use @vitejs/plugin-react to handle the output of @mdx-js/rollup
+ * use @vitejs/plugin-react to transform the output of @mdx-js/rollup,
+ * adding react-refresh hmr ability to .md and .mdx files
  * workaround this issue: https://github.com/vitejs/vite-plugin-react/issues/38
  */
 function createMdxTransformPlugin(): Plugin {
   let vitePluginReactTrasnform: Plugin['transform'] | undefined
+  const PLUGIN_NAME = 'vite-pages:mdx-fast-refresh'
   return {
-    name: 'vite-pages:mdx-fast-refresh',
+    name: PLUGIN_NAME,
     apply: 'serve',
     configResolved: ({ plugins }) => {
       // find this plugin to call it's transform function:
@@ -396,6 +398,19 @@ function createMdxTransformPlugin(): Plugin {
           `Can't find an instance of @vitejs/plugin-react or @vitejs/plugin-react-swc. You should apply either of these plugins to make mdx work.`
         )
       }
+      const reactSwcPluginIndex = plugins.findIndex(
+        (p) => p.name === 'vite:react-swc' && typeof p.transform === 'function'
+      )
+      const thisPluginIndex = plugins.findIndex((p) => p.name === PLUGIN_NAME)
+      if (
+        reactSwcPluginIndex !== -1 &&
+        thisPluginIndex !== -1 &&
+        reactSwcPluginIndex > thisPluginIndex
+      ) {
+        throw new Error(
+          '[vite-plugin-react-pages]: @vitejs/plugin-react-swc should be placed before this plugin'
+        )
+      }
     },
     transform: (code, id, options) => {
       const [filepath, ...qs] = id.split('?')
@@ -403,6 +418,13 @@ function createMdxTransformPlugin(): Plugin {
         filepath.match(/\.mdx?$/) &&
         !id.startsWith(OUTLINE_INFO_MODULE_ID_PREFIX)
       ) {
+        const refreshContentRE = /\$Refresh(?:Reg|Sig)\$\(/
+        if (code.includes('/@react-refresh') && refreshContentRE.test(code)) {
+          // the mdx output has already been transformed by @vitejs/plugin-react-swc
+          // https://github.com/vitejs/vite-plugin-react-swc/blob/95e991914322e7b011d1c8d18d501b9eee21adaa/src/index.ts#L199C3-L199C3
+          // don't transform it again
+          return
+        }
         // turn file path like `/path/to/md-file$.md` into `/path/to/md-file$.jsx`
         // make vite-plugin-react transform "the output of @mdx-js/rollup" like a jsx file
         // https://github.com/vitejs/vite-plugin-react/blob/caa9b5330092c70288fcb94ceb96ca42438df2a2/packages/plugin-react/src/index.ts#L170
