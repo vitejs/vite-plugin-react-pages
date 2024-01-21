@@ -1,0 +1,45 @@
+---
+title: Upgrade from v4 to v5
+order: 0
+subGroup: upgrade-guides
+---
+
+# Upgrade from v4 to v5
+
+vite-plugin-react-pages v5 is released with following improvements:
+
+- Upgrade vite to [v5](https://vitejs.dev/guide/migration.html).
+- Upgrade mdx to [v3](https://mdxjs.com/migrating/v3/).
+
+Most migration is done inside this plugin. And our upstream libraries (vite and mdx) did't bring many significant breaking changes. So it should be **very easy** for our users to migrate! The following article will show you the migrate instructions.
+
+If you encounter problems, open an issue in the repo. Or checkout the [getting-stated templates](https://vitejs.github.io/vite-plugin-react-pages/#getting-stated) for working setup.
+
+## Upgrade Node.js to 18+
+
+As [vite v5](https://vitejs.dev/guide/migration.html) required, you should upgrade Node.js to 18+.
+
+## Upgrade project dependencies
+
+Upgrade these package versions:
+
+```json
+{
+  "devDependencies": {
+    "vite": "^5.0.12",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite-plugin-react-pages": "^5.0.0",
+    "vite-pages-theme-doc": "^5.0.0",
+    "@mdx-js/react": "^3.0.0"
+  }
+}
+```
+
+> you can replace `@vitejs/plugin-react` with latest version of `@vitejs/plugin-react-swc`.
+
+## Check Upstream libraries migration 
+
+Most migration is done inside this plugin. Although the upstream libraries (vite and mdx) did't bring many significant breaking changes for you, you should still take a look on their migration guides:
+
+- [vite v5](https://vitejs.dev/guide/migration.html)
+- [mdx v3](https://mdxjs.com/migrating/v3/)

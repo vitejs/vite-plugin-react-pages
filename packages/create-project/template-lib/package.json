@@ -23,7 +23,7 @@
     "rimraf": "^5.0.5",
     "serve": "^14.2.1",
     "vite": "^5.0.12",
-    "vite-pages-theme-doc": "workspace:*",
-    "vite-plugin-react-pages": "workspace:*"
+    "vite-pages-theme-doc": "^5.0.0",
+    "vite-plugin-react-pages": "^5.0.0"
   }
 }

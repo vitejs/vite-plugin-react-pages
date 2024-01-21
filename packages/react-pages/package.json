@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-react-pages",
-  "version": "4.1.6",
+  "version": "5.0.0",
   "type": "module",
   "types": "./dist/node-types/index.d.ts",
   "exports": {
@@ -44,7 +44,7 @@
     "prepare": "npm run build"
   },
   "peerDependencies": {
-    "vite": "^4.2.1"
+    "vite": "^5.0.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.23.8",
