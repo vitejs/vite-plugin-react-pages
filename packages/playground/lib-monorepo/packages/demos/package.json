@@ -13,17 +13,17 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.13.0"
+    "react-router-dom": "^6.21.3"
   },
   "devDependencies": {
-    "@types/react": "^18.2.13",
-    "@vitejs/plugin-react": "^4.0.1",
-    "globby": "^13.2.0",
+    "@types/react": "^18.2.48",
+    "@vitejs/plugin-react": "^4.2.1",
+    "globby": "^14.0.0",
     "playground-button": "*",
     "playground-card": "*",
-    "rimraf": "^4.4.1",
-    "serve": "^14.2.0",
-    "vite": "^4.4.8",
+    "rimraf": "^5.0.5",
+    "serve": "^14.2.1",
+    "vite": "^5.0.12",
     "vite-pages-theme-doc": "workspace:*",
     "vite-plugin-react-pages": "workspace:*"
   }

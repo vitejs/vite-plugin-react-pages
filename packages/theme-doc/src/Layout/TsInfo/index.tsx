@@ -151,7 +151,7 @@ export function TsInfo({ data, className: _className }: Props) {
       <Collapse
         className={className}
         items={items}
-        defaultActiveKey={items.map((v) => v.key!)}
+        defaultActiveKey={items.map((v) => v.key as string)}
       />
     )
   }
@@ -180,7 +180,7 @@ export function TsInfo({ data, className: _className }: Props) {
       <Collapse
         className={className}
         items={items}
-        defaultActiveKey={items.map((v) => v.key!)}
+        defaultActiveKey={items.map((v) => v.key as string)}
       />
     )
   }

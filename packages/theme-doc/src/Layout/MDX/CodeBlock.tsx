@@ -1,11 +1,8 @@
 import React, { useMemo } from 'react'
-import * as _cjsExports from 'prism-react-renderer'
-const { default: Highlight, defaultProps } = commonjsExportsInterop(_cjsExports)
-import theme from 'prism-react-renderer/themes/github/index.cjs'
+import { Highlight, themes } from 'prism-react-renderer'
 import type { Language } from 'prism-react-renderer'
 import { useCopyToClipBoard } from './useCopyToClipBoard'
 import s from './CodeBlock.module.less'
-import { commonjsExportsInterop } from '../../utils'
 
 // copied from https://mdxjs.com/guides/syntax-highlighting
 
@@ -29,7 +26,7 @@ const CodeBlock = ({
       res = match[1]
       return true
     })
-    return res
+    return res || 'tsx'
   }, [className])
 
   const ctnClassName = className
@@ -40,12 +37,7 @@ const CodeBlock = ({
     throw new Error('unexpected children of CodeBlock: should be string')
 
   return (
-    <Highlight
-      {...defaultProps}
-      theme={theme}
-      code={children.trim()}
-      language={language}
-    >
+    <Highlight theme={themes.github} code={children.trim()} language={language}>
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <pre
           className={`${className} ${ctnClassName} ${s.pre}`}

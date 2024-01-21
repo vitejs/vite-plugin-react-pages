@@ -87,6 +87,7 @@ export function createDefaultImportNode({
 /**
  * create mdast node for expression:
  * <Component {...props} />
+ * checkout the parsed node structure in https://mdxjs.com/playground/
  */
 export function createJSXWithSpreadPropsNode({
   Component,
@@ -100,7 +101,7 @@ export function createJSXWithSpreadPropsNode({
     name: Component,
     data: {
       _mdxExplicitJsx: true,
-    },
+    } as any,
     children: [],
     attributes: [
       {

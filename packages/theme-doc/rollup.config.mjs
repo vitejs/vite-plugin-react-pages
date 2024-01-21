@@ -67,7 +67,7 @@ export default {
     {
       name: 'add-css-import',
       async renderChunk(code, chunk, options, meta) {
-        debugger
+        // debugger
         if (chunk.fileName === 'index.js' && chunk.isEntry) {
           chunk.imports.push('./index.css')
           chunk.importedBindings['./index.css'] = []
@@ -82,4 +82,9 @@ export default {
       },
     },
   ],
+  onwarn(warning, warn) {
+    // ignore warning: Module level directives cause errors when bundled, "use client" in "../../node_modules/.pnpm/antd@5.13.2/node_modules/antd/es/modal/components/NormalCancelBtn.js" was ignored.
+    if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return
+    warn(warning)
+  },
 }

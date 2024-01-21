@@ -50,6 +50,18 @@ export async function ssrBuild(
           entryFileNames: '[name].mjs',
           chunkFileNames: '[name]-[hash].mjs',
         },
+        onwarn(warning, defaultHandler) {
+          // suppress warning like: /@react-pages/pages/guide/react/getting-started is dynamically imported by /@react-pages/pages but also statically imported by /@react-pages/ssrData, dynamic import will not move module into another chunk.
+          if (
+            warning.plugin === 'vite:reporter' &&
+            warning.message.includes('/@react-pages/ssrData') &&
+            warning.message.includes(
+              'dynamic import will not move module into another chunk'
+            )
+          )
+            return
+          defaultHandler(warning)
+        },
       },
       outDir: ssrOutDir,
       minify: false,

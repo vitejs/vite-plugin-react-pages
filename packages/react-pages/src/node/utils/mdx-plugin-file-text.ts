@@ -62,6 +62,7 @@ export function FileTextMdxPlugin() {
 /**
  * create mdast node for expression:
  * <FileText text={text} syntax="syntax" />
+ * checkout the parsed node structure in https://mdxjs.com/playground/
  */
 function createFileTextJSXNode({
   text,
@@ -75,7 +76,7 @@ function createFileTextJSXNode({
     name: 'FileText',
     data: {
       _mdxExplicitJsx: true,
-    },
+    } as any,
     children: [],
     attributes: [
       {

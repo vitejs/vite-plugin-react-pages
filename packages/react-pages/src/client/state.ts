@@ -1,8 +1,7 @@
 import { useMemo, useEffect, useState } from 'react'
 import { dequal } from 'dequal'
-import type { SetAtom } from 'jotai/core/atom'
-import { atom, useAtom } from 'jotai'
-import { atomFamily, useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
+import { atomFamily } from 'jotai/utils'
 import type {
   PageLoaded,
   UseStaticData,
@@ -19,6 +18,7 @@ export let useAllPagesOutlines: UseAllPagesOutlines
 interface PageModule {
   ['default']: PageLoaded
 }
+type SetAtom<Args extends any[], Result> = (...args: Args) => Result
 
 import initialPages from '/@react-pages/pages'
 import initialTheme from '/@react-pages/theme'
@@ -33,7 +33,7 @@ const initialPagePaths = Object.keys(initialPages)
 // by the same Provider. It also mutates during render, which is
 // generally discouraged, but in this case it's okay.
 if (import.meta.hot) {
-  let setTheme: SetAtom<{ Theme: Theme }, void> | undefined
+  let setTheme: SetAtom<[{ Theme: Theme }], void> | undefined
   import.meta.hot!.accept('/@react-pages/theme', (module) => {
     // console.log('@@hot update /@react-pages/theme', module)
     if (!module) {
@@ -141,7 +141,7 @@ if (import.meta.hot) {
   )
 
   usePagePaths = () => {
-    setPages = useUpdateAtom(setPagesAtom)
+    setPages = useSetAtom(setPagesAtom)
     return useAtomValue(pagePathsAtom)
   }
 
