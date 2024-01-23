@@ -77,7 +77,7 @@ test('hmr: edit file (md static data notation)', async ({
   ).toHaveCount(0)
 })
 
-test('hmr: edit md file content', async ({ page, fsUtils, testPlayground }) => {
+test.only('hmr: edit md file content', async ({ page, fsUtils, testPlayground }) => {
   // prepare locators first
   const headingBeforeEdit = page
     .locator('.markdown-body')
