@@ -16,6 +16,11 @@ export class OutlineInfoModuleManager {
     return this.pmm.registerProxyModule(datasourceFilePath, async (file) => {
       const content = await file.read()
       const { outline } = await extractOutlineInfo(content)
+      console.log('@@@OutlineInfoModuleManager 1')
+      console.log(content)
+      console.log('@@@OutlineInfoModuleManager 2')
+      console.log(JSON.stringify(outline))
+      console.log('@@@OutlineInfoModuleManager 3')
       return {
         datasourceFilePath,
         outline,
