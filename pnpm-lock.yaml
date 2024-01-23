@@ -104,8 +104,8 @@ importers:
   packages/create-project:
     dependencies:
       fs-extra:
-        specifier: ^11.2.0
-        version: 11.2.0
+        specifier: 11.1.1
+        version: 11.1.1
       minimist:
         specifier: ^1.2.8
         version: 1.2.8
@@ -524,8 +524,8 @@ importers:
         specifier: ^5.15.0
         version: 5.15.0
       fs-extra:
-        specifier: ^11.2.0
-        version: 11.2.0
+        specifier: 11.1.1
+        version: 11.1.1
       gray-matter:
         specifier: ^4.0.2
         version: 4.0.3
@@ -672,8 +672,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3
       fs-extra:
-        specifier: ^11.2.0
-        version: 11.2.0
+        specifier: 11.1.1
+        version: 11.1.1
       github-markdown-css:
         specifier: ^5.5.0
         version: 5.5.0
@@ -5037,6 +5037,14 @@ packages:
       universalify: 2.0.0
     dev: true
 
+  /fs-extra@11.1.1:
+    resolution: {integrity: sha512-MGIE4HOvQCeUCzmlHs0vXpih4ysz4wg9qiSAu6cd42lVwPbTM1TjV7RusoyQqMmk/95gdQZX72u+YW+c3eEpFQ==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      graceful-fs: 4.2.11
+      jsonfile: 6.1.0
+      universalify: 2.0.0
+
   /fs-extra@11.2.0:
     resolution: {integrity: sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==}
     engines: {node: '>=14.14'}
@@ -5044,6 +5052,7 @@ packages:
       graceful-fs: 4.2.11
       jsonfile: 6.1.0
       universalify: 2.0.0
+    dev: true
 
   /fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}

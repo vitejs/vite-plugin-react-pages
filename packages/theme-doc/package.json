@@ -54,7 +54,7 @@
     "chokidar": "^3.5.1",
     "concurrently": "^8.2.2",
     "copy-to-clipboard": "^3.3.3",
-    "fs-extra": "^11.2.0",
+    "fs-extra": "11.1.1",
     "github-markdown-css": "^5.5.0",
     "github-slugger": "^2.0.0",
     "globby": "^14.0.0",
