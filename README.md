@@ -22,7 +22,7 @@ It provides many features that help developers **build a React App quickly**:
 
 ## Translation of this README
 
-- [Simplified Chinese (中文)](/README-ZH.md)
+- [Simplified Chinese (中文)](/README-CN.md)
 
 ## Getting stated
 
