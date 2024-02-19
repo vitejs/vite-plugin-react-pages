@@ -18,11 +18,11 @@ export default defineConfig({
               srcPath,
               '*/demos/**/*.{[tj]sx,md?(x)}',
               async function fileHandler(file, api) {
-                const { relative, path: absolute } = file
+                const { relative, path: demoFilePath } = file
                 const match = relative.match(
                   /(.*)\/demos\/(.*)\.([tj]sx|mdx?)$/
                 )
-                if (!match) throw new Error('unexpected file: ' + absolute)
+                if (!match) throw new Error('unexpected file: ' + demoFilePath)
                 const [_, componentName, demoName] = match
                 const pageId = `/components/demos/${componentName}`
                 // register page data
@@ -30,9 +30,9 @@ export default defineConfig({
                   pageId,
                   key: demoName,
                   // register demo runtime data path
+                  // it will be consumed by theme-doc
                   // the ?demo query will wrap the module with useful demoInfo
-                  // that will be consumed by theme-doc
-                  dataPath: `${absolute}?demo`,
+                  dataPath: `${demoFilePath}?demo`,
                   // register demo static data
                   staticData: await helpers.extractStaticData(file),
                 })
@@ -45,18 +45,27 @@ export default defineConfig({
             srcPath,
             '*/README.md?(x)',
             async function fileHandler(file, api) {
-              const { relative, path: absolute } = file
+              const { relative, path: markdownFilePath } = file
               const match = relative.match(/(.*)\/README\.mdx?$/)
-              if (!match) throw new Error('unexpected file: ' + absolute)
+              if (!match)
+                throw new Error('unexpected file: ' + markdownFilePath)
               const [_, componentName] = match
               const pageId = `/components/${componentName}`
               // register page data
               api.addPageData({
                 pageId,
-                // register demo runtime data path
-                dataPath: absolute,
-                // register demo static data
+                // register page component
+                dataPath: markdownFilePath,
+                // register static data
                 staticData: await helpers.extractStaticData(file),
+              })
+              // register outlineInfo data
+              // it will be consumed by theme-doc
+              api.addPageData({
+                pageId,
+                key: 'outlineInfo',
+                // the ?outlineInfo query will extract title info from the markdown file and return the data as a js module
+                dataPath: `${markdownFilePath}?outlineInfo`,
               })
             }
           )
