@@ -5,15 +5,15 @@ order: 4
 
 # Magic import
 
-Vite-pages support "magic import". Magic import is **normal esModule import sytax** with **tailored path convention**. It enable users to import things with special behavior. Users can use it to do powerful things.
+Vite-pages support "magic import". Magic import is **normal esModule import syntax** with **tailored path convention**. It enables users to import things with special behavior. Users can use it to do powerful things.
 
-> If you are familiar with the webpack loader mechanism, you can easily guess how magic import works.
+> If you are familiar with the Webpack loader mechanism, you can easily guess how magic import works.
 
 ## Analyze source code
 
-When you are documenting for some JavaScript/Typescript library, you normally want to show some js/ts code to readers. This magic import help you load source code from a module. It is kind of like [raw-loader from webpack](https://webpack.js.org/loaders/raw-loader/). This is very useful for demo code displaying.
+When you are documenting for some JavaScript/Typescript library, you normally want to show some js/ts code to readers. This magic import helps you load source code from a module. It is kind of like [raw-loader from webpack](https://webpack.js.org/loaders/raw-loader/). This is very useful for demo code displaying.
 
-You can get the module tree analysis by importing the module with query `?analyzeSource`.
+You can get the module tree analysis by importing the module with the query `?analyzeSource`.
 
 For example:
 
@@ -48,7 +48,7 @@ Checkout the [analyze-source-code fixture](https://github.com/vitejs/vite-plugin
 
 ### Relative module dependencies
 
-For relative module dependencies(.e.g `import util from './dir/util.ts'`), their source code will be collected into the analyze result, as shown by the previous example.
+For relative module dependencies(.e.g `import util from './dir/util.ts'`), their source code will be collected into the analysis result, as shown by the previous example.
 
 Relative module import can be js, jsx, ts, tsx, css, sass, etc.
 
@@ -56,7 +56,7 @@ Relative module import can be js, jsx, ts, tsx, css, sass, etc.
 
 For those dependencies from `node_modules` (.e.g `import React from 'react'`), this magic import will **not** load source code for them. Instead, the dependencies' versions are recorded, as shown by the previous example.
 
-This magic import gets dependencies' versions by find `package.json` up from the importer, and find the package version from these `package.json` fields:
+This magic import gets dependencies' versions by finding a `package.json` up from the importer, and finds the package version from these `package.json` fields:
 
 - `peerDependencies`
 - `devDependencies`

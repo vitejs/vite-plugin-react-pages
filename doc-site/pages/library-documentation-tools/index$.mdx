@@ -6,13 +6,13 @@ subGroup: advanced
 
 # Library Documentation Tools
 
-Vite-pages provides some tools to reduce the maintenance costs for library authors and make their documents more easily to read.
+Vite-pages provides some tools to reduce the maintenance costs for library authors and make their documents easier to read.
 
 > These tools are mostly for library authors.
 
 ## Demos
 
-Demos (or stories) are the fixtures that you use when you  are developing your library locally.
+Demos (or stories) are the fixtures that you use when you are developing your library locally.
 Vite-pages allows you to render demos into your app (which can be the document of your library). Using this feature, vite-pages app can not only serve as your **local develop environment** (so that you can debug your demos and your libary code locally), but also the **document for your library** (so that the users of your library can see your demos and lean how to use it).
 
 The following markdown
@@ -40,7 +40,7 @@ export default function Page() {
 
 ## Extract Type info from Typescript code
 
-Vite-pages allows can help you to extract Typescript type info and render it. With this feature, you **no loger need to manually maintain API infomation in your documents**! You can reuse your interfaces (and comments in them) from your source code! This is very conveniently for API documentation.
+Vite-pages can help you to extract Typescript type info and render it. With this feature, you **no longer need to manually maintain API information in your documents**! You can reuse your interfaces (and comments in them) from your source code! This is very convenient for API documentation.
 
 ### Render Interface
 
@@ -58,7 +58,7 @@ will result in:
 
 ### Render Type Alias
 
-Besides interface, TsInfo API also support type alias.
+Besides interfaces, TsInfo API also supports type aliases.
 
 SomeObjectLiteralType (Object Literal):
 <TsInfo src="./types.ts" name="SomeObjectLiteralType" />
@@ -68,7 +68,7 @@ SomeComplexType (Complex Type):
 
 ### Using TsInfo API in JS files
 
-In jsx page, You can import and render tsInfo like this:
+In a JSX page, You can import and render tsInfo like this:
 
 ```tsx
 import tsInfoData from './types.ts?tsInfo=ButtonProps'
@@ -81,7 +81,7 @@ export default function Page() {
 
 ## Render text from files
 
-You can also render text from any files. So that these files can be both "code" and "documentation".
+You can also render text from any file. So that these files can be both "code" and "documentation".
 
 The following markdown
 
@@ -93,7 +93,7 @@ will result in:
 
 <FileText src="./types.ts" syntax="ts" />
 
-In jsx page, You can render file text like this:
+In a JSX page, You can render file text like this:
 
 ```tsx
 // https://vitejs.dev/guide/assets.html#importing-asset-as-string
@@ -107,4 +107,4 @@ export default function Page() {
 
 ## Examples
 
-You can checkout [template-lib](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib/src/Button/README.md) as an example. (You can [view it online](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/main/packages/create-project/template-lib?file=src%2FButton%2FREADME.md&terminal=dev) or [init this project locally](https://vitejs.github.io/vite-plugin-react-pages/))
+You can check out [template-lib](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib/src/Button/README.md) as an example. (You can [view it online](https://stackblitz.com/fork/github/vitejs/vite-plugin-react-pages/tree/main/packages/create-project/template-lib?file=src%2FButton%2FREADME.md&terminal=dev) or [init this project locally](https://vitejs.github.io/vite-plugin-react-pages/))

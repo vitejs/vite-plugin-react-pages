@@ -6,7 +6,7 @@ subGroup: advanced
 
 # Internationalization
 
-i18n support can be provided by theme. For example, [the official theme(vite-pages-theme-doc)](/official-theme) support i18n. This document shows how to create a multi-lingual site with it.
+i18n support can be provided by theme. For example, [the official theme(vite-pages-theme-doc)](/official-theme) supports i18n. This document shows how to create a multi-lingual site with it.
 
 ## Define i18n metadata in the theme config
 
@@ -78,17 +78,17 @@ interface LocalConfig {
 }
 ```
 
-With this i18n metadata, the theme can decide which locale to apply. For any specific page, it match its pagePath with each `LocalConfig.routePrefix`:
+With this i18n metadata, the theme can decide which locale to apply. For any specific page, it matches its pagePath with each `LocalConfig.routePrefix`:
 
-- If the pagePath match with a `LocalConfig.routePrefix`, this locale will apply to the page
+- If the pagePath matches with a `LocalConfig.routePrefix`, this locale will apply to the page
 - If the pagePath doesn't match any routePrefix, the `I18nConfig.defaultLocale` will apply to the page
 
 With the example config above, page `/foo$.tsx` will have the locale keyed with `en`. Page `/zh/foo$.tsx` will have the locale keyed with `zh`.
 
 What does it mean when we say "the page P has locale L" (or "locale L applies to page P")? It means two things:
 
-- Most site-level theme configs can decide their value based on the current applied locale. So that you can render `topNavs` and `sideNavs` with the correct language.
-- In any React Component, you can get the current applied locale from `useThemeCtx()` so that you can decide which i18n translated message to render.
+- Most site-level theme configs can decide their value based on the currently applied locale. So that you can render `topNavs` and `sideNavs` with the correct language.
+- In any React Component, you can get the currently applied locale from `useThemeCtx()` so that you can decide which i18n translated message to render.
 
 We will talk about these techniques in the following sections.
 
@@ -191,18 +191,18 @@ docs
       └─ baz.md
 ```
 
-Each page with default locale should have its translated version. For example, `/zh/foo$.md` should be the chinese-translated version of `/foo$.md`.
+Each page with the default locale should have its translated version. For example, `/zh/foo$.md` should be the Chinese-translated version of `/foo$.md`.
 
 ### Markdown pages: translate them into each locale
 
-Here is a markdown page for default locale (`/foo$.md`):
+Here is a markdown page for the default locale (`/foo$.md`):
 
 ```md
 ---
-title: This is the title written in default locale
+title: This is the title written in the default locale
 ---
 
-This is the markdown content written in default locale.
+This is the markdown content written in the default locale.
 ```
 
 Here is the translated markdown page (`/zh/foo$.md`):
@@ -258,7 +258,7 @@ const messages = {
 export default Page
 ```
 
-When defining the page for other locale (`/zh/bar$.tsx`), you can **re-export the React Component**:
+When defining the page for the other locale (`/zh/bar$.tsx`), you can **re-export the React Component**:
 
 ```tsx
 /**
@@ -272,7 +272,7 @@ Notice that we reuse the same React Component for multiple locales. And we defin
 
 > When using i18n library like `react-intl`, and you need to wrap your App with some custom React Component, you can use `ThemeConfig.AppWrapper`.
 
-### Get current locale in React Components or Hooks
+### Get the current locale in React Components or Hooks
 
 ```tsx
 import { useThemeCtx } from 'vite-pages-theme-doc'

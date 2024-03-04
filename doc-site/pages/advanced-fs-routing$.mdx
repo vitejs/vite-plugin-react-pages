@@ -8,7 +8,7 @@ subGroup: advanced
 
 > The "Basic Filesystem Routing Convention" should satisfy most users' needs. **You probably don't need to read this advanced guide**.
 
-For advanced users, vite-pages let you implement your own filesystem routing convention: you can **teach vite-pages how to collect page data from your project**.
+For advanced users, vite-pages lets you implement your own filesystem routing convention: you can **teach vite-pages how to collect page data from your project**.
 
 When [configuring vite-plugin-react-pages](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib/docs/vite.config.ts), you can pass the `pageStrategy` option. It should be an instance of `PageStrategy` class. Here is an example of customizing pageStrategy:
 
@@ -19,19 +19,19 @@ vite.config.ts:
   syntax="ts"
 />
 
-With this custom pageStrategy, page files don't need to ends with `$`. Instead, they need to match the pattern `**/index.{md,mdx,js,jsx,ts,tsx}`.
+With this custom pageStrategy, page files don't need to end with `$`. Instead, they need to match the pattern `**/index.{md,mdx,js,jsx,ts,tsx}`.
 
 > Checkout complete examples in [the custom-find-pages2 fixture](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/playground/custom-find-pages2/vite.config.ts) or [the project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib/docs/vite.config.ts).
 
 ### Steps of customizing pageStrategy
 
-As shown by the above example, here is the usual steps to customize pageStrategy:
+As shown by the above example, here are the usual steps to customize pageStrategy:
 
 1. Define a `findPages` function and pass it to `PageStrategy` constructor.
 2. Inside the `findPages`, use `helpers.watchFiles(baseDir, glob, fileHandler)` to find the files that you need.
    - vite-pages will pass the glob(or glob array) to [chokidar](https://github.com/paulmillr/chokidar). vite-pages use chokidar to scan the fileSystem and watch for files.
-   - Whenever a file is scaned, added or updated, vite-pages will call the `fileHandler` with that file. When the file is deleted, vite-pages will automatically delete the related page data.
-3. Inside the `fileHandler`, read the infomation from the `file` and register page data by calling `fileHandlerAPI.addPageData`.
+   - Whenever a file is scanned, added or updated, vite-pages will call the `fileHandler` with that file. When the file is deleted, vite-pages will automatically delete the related page data.
+3. Inside the `fileHandler`, read the information from the `file` and register page data by calling `fileHandlerAPI.addPageData`.
    - There are two more helpers inside `fileHandlerAPI` that help you to update page data. We will introduce them in the following section.
 
 ### Handle file events and update page data
@@ -51,7 +51,7 @@ The `fileHandlerAPI` contains a set of helpers that help you to update page data
 
 #### fileHandlerAPI.addPageData(dataPiece)
 
-When you have extracted some [page data](/page-data) (which is called dataPiece) in the `fileHandler`, call `addPageData` to register the data. So that vite-pages will load the data into theme for rendering.
+When you have extracted some [page data](/page-data) (which is called dataPiece) in the `fileHandler`, call `addPageData` to register the data. So that vite-pages will load the data into the theme for rendering.
 
 The dataPiece should conform to this interface:
 
@@ -114,7 +114,7 @@ Checkout [the custom-find-pages fixture](https://github.com/vitejs/vite-plugin-r
 
 #### fileHandlerAPI.getStaticData(pageId)
 
-Similar to the `fileHandlerAPI.getRuntimeData` API, you can use `fileHandlerAPI.getStaticData` to get the staticData of a certain page. And tou can read or mutate the properties of it:
+Similar to the `fileHandlerAPI.getRuntimeData` API, you can use `fileHandlerAPI.getStaticData` to get the staticData of a certain page. And you can read or mutate the properties of it:
 
 ```ts
 const staticData = fileHandlerAPI.getStaticData(pageId)
@@ -155,11 +155,11 @@ export class DefaultPageStrategy extends PageStrategy {
 
 #### Examples
 
-For real-life examples of customizing pageStrategy, checkout ["Example: develop a component library"](/examples/component-library).
+For real-life examples of customizing pageStrategy, check out ["Example: develop a component library"](/examples/component-library).
 
 #### Types
 
-Here is the relavent types:
+Here are the relavent types:
 
 <FileText
   src="../../packages/react-pages/src/node/page-strategy/types.doc.ts"

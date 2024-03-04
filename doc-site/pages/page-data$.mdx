@@ -5,7 +5,7 @@ order: 2
 
 # Page data
 
-**Essentially, vite-pages is a React app framework that collect your pages data and pass them to your theme.** So what kinds of data does it collect?
+**Essentially, vite-pages is a React app framework that collects your pages' data and passes them to your theme.** So what kinds of data does it collect?
 
 Each page consists of two kinds of data:
 
@@ -18,7 +18,7 @@ Both of these page data are passed to the theme so that it can render the app.
 
 ## Static data
 
-Static data usually contains the matadata of a page. Static data of **all pages** is loaded **eagerly** when the app bootstrap, so that the theme can render a side menu or a search box with this infomation.
+Static data usually contains the metadata of a page. Static data of **all pages** is loaded **eagerly** when the app bootstraps, so that the theme can render a side menu or a search box with this information.
 
 > You should try to keep the static data as small as possible.
 
@@ -60,7 +60,7 @@ This will be collected as:
 
 Runtime page data is whatever value you export from a page file. It contains the actual content of the page.
 
-Most themes(.e.g [the official theme](/official-theme)) ask users to `export default` a React component from each page file. But that is not a requirement from vite-pages core. We will talk about this later.
+Most themes(e.g. [the official theme](/official-theme)) ask users to `export default` a React component from each page file. But that is not a requirement from vite-pages core. We will talk about this later.
 
 ## Difference
 
@@ -69,7 +69,7 @@ Both static data and runtime data are passed to the theme, so the theme can use 
 Difference:
 
 - Static data of **all pages** is loaded **eagerly** when the app bootstrap. So you should try to keep the static data small.
-- Runtime data is loaded **lazily** when user navigate to that page.
+- Runtime data is loaded **lazily** when a user navigates to that page.
 - The value type of static data is limited (string or simple object/array), while the value of runtime data can be any javascript value (.e.g a React component).
 
 ## How themes consume these data
@@ -88,9 +88,9 @@ Here is the interface of a theme:
 
 ## Vite-pages core doesn't care what your page data looks like
 
-Vite-pages itself doesn't care what the page data looks like. How to interpret the page data and render the view, is totally decided by [the theme](/theme-customization). Vite-pages just collect your pages data and pass them to the theme. This design make the vite-pages core more "simple" and make themes more powerful.
+Vite-pages itself doesn't care what the page data looks like. How to interpret the page data and render the view, is totally decided by [the theme](/theme-customization). Vite-pages just collect your pages' data and pass them to the theme. This design makes the vite-pages core more "simple" and makes themes more powerful.
 
-Most themes(.e.g [the official theme](/official-theme)) ask users to `export default` a React component from each page file. But that is not a requirement from vite-pages core.
+Most themes(e.g. [the official theme](/official-theme)) ask users to `export default` a React component from each page file. But that is not a requirement from vite-pages core.
 
 ## Advanced topic: how vite-pages represent page data internally
 
@@ -115,10 +115,10 @@ interface PagesData {
 
 ### Composed page data
 
-You may wonder why runtimeData and staticData are maps and we use a `key` to index into them (instead of just one data for a page). This is because **vite-pages let users create a page with multiple data pieces that originate from multiple files.**
+You may wonder why runtimeData and staticData are maps and we use a `key` to index into them (instead of just one data for a page). This is because **vite-pages lets users create a page with multiple data pieces that originate from multiple files.**
 
 > We use this feature in [the project scaffold](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/create-project/template-lib/docs/vite.config.ts). We use it to display demos from multiple files in one page. You can init this sample project [with one command](/) (choose `lib` template).
 
-Most filesystem routing mechanism out there assume that each page map to only one file. But vite-pages doesn't enforce that rule! This make page data more flexible and programable.
+Most filesystem routing mechanisms out there assume that each page maps to only one file. But vite-pages doesn't enforce that rule! This makes page data more flexible and programable.
 
 Checkout [the advanced-fs-routing doc](/advanced-fs-routing) or ["Example: develop a component library"](/examples/component-library) to learn more about how to create a page with multiple data pieces that originate from multiple files.

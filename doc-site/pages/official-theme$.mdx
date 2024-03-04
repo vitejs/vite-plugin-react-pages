@@ -29,7 +29,7 @@ export default createTheme({
 
 ## Auto side menu generation
 
-Doc theme can generation a side menu automatically, based on the pages information.
+Doc theme can generate a side menu automatically, based on the pages information.
 
 You can control the title/sorting/grouping of the side menu, by notating these [page static data](/page-data#static-data):
 
@@ -55,7 +55,7 @@ For example, if your site has these pages:
 /references/error-codes/code2
 ```
 
-Firstly, the theme will divide pages into `group`s based on the **first segment** of page path:
+Firstly, the theme will divide pages into `group`s based on the **first segment** of the page path:
 
 ```
 group /:
@@ -78,11 +78,11 @@ group references:
 You can customize `group` in page static data. For example:
 
 ```
-Put this at top of a markdown page:
+Put this at the top of a markdown page:
 ---
 group: references
 ---
-Or put this at top of a tsx/jsx page:
+Or put this at the top of a TSX/JSX page:
 /**
  * @group references
  */
@@ -115,10 +115,10 @@ group references:
 
 `subGroup` can also be customized in page static data, just like `group` does.
 
-What is the meanings of `group` and `subGroup`?
+What is the meaning of `group` and `subGroup`?
 
-- `group` is a site isolation boundary: we only display **one** `group` at a time. If a user open a page in group `references`, he/she will **only see side menu items from that group**. He/She will not see menu items from `components` group.
-- `subGroup` decide how the theme sort side menu items. All side menu items with same `subGroup` will be rendered adjacently. This document site is an example.
+- `group` is a site isolation boundary: we only display **one** `group` at a time. If a user opens a page in the group `references`, he/she will **only see side menu items from that group**. He/She will not see menu items from `components` group.
+- `subGroup` decides how the theme sorts the side menu items. All side menu items with the same `subGroup` will be rendered adjacently. This document site is an example.
 
 ## Theme configs
 
@@ -128,6 +128,6 @@ The `createTheme` exported by `vite-pages-theme-doc` accepts [these options](htt
 
 ## Fully theme customization
 
-If the basic theme doesn't satisfy your need, you can [create your own theme](/theme-customization).
+If the basic theme doesn't satisfy your needs, you can [create your own theme](/theme-customization).
 
 > Contributions to [the theme](https://github.com/vitejs/vite-plugin-react-pages/tree/main/packages/theme-doc) are always welcomed.
