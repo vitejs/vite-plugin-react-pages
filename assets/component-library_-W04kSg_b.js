@@ -1,0 +1,1 @@
+const e=[{depth:1,text:"Example: develop a component library",id:"example-develop-a-component-library"},{depth:2,text:"Monorepo",id:"monorepo"}];let o;const t=Object.freeze(Object.defineProperty({__proto__:null,onUpdate:o,outline:e},Symbol.toStringTag,{value:"Module"}));export{t as p};
