@@ -6,11 +6,11 @@ subGroup: advanced
 
 # Theme customization
 
-> This is an advance guide about how to make a theme by yourself. If there is already themes that meet your needs(.e.g [the official theme](/official-theme)), you don't need to read this guide now!
+> This is an advanced guide about how to make a theme by yourself. If there are already themes that meet your needs(e.g. [the official theme](/official-theme)), you don't need to read this guide now!
 
-Vite-pages itself doesn't render any concrete DOM node. Users can customize **anything** with a theme. That's why theme is so powerful.
+Vite-pages itself doesn't render any concrete DOM node. Users can customize **anything** with a theme. That's why themes are so powerful.
 
-To use a theme, users should export their theme from `_theme.tsx`. It should export a React compoent. It will be rendered by vite-pages core, and get useful info from props:
+To use a theme, users should export their theme from `_theme.tsx`. It should export a React component. It will be rendered by vite-pages core, and get useful info from props:
 
 - All pages' static data
 - All runtime data that is already loaded
@@ -28,15 +28,15 @@ This is probably [the simplest theme](https://github.com/vitejs/vite-plugin-reac
 
 > Here is a more useful theme: [vite-pages-theme-doc](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/theme-doc/src/index.tsx). Learn more about it in [this guide](/official-theme).
 
-You can customize every bits of UI with theme. Welcome to share your theme with a npm package!
+You can customize every bit of UI with a theme. Welcome to share your theme with a npm package!
 
 ## Suggestions
 
 ### To theme providers: make your theme easier to use
 
-We encourage theme providers to export your theme as **a config function** that receive user config and return a `Theme`.
+We encourage theme providers to export your theme as **a config function** that receives the user config and returns a `Theme`.
 
-For example, the theme provider can export theme like this:
+For example, the theme provider can export a theme like this:
 
 ```tsx
 // The theme config function accepts navs config
@@ -76,13 +76,13 @@ export default createTheme({
 
 As you can see, the theme is easier to use because **theme consumers don't need to know about the `Theme` API of vite-pages**. They only need to know about `createTheme` API from the theme. Users should be talking to the theme, instead of talking directly to vite-pages framework.
 
-For this reason, we encourage theme providers to export config function like the `createTheme` above.
+For this reason, we encourage theme providers to export a config function like the `createTheme` above.
 
 > You can refer to [vite-pages-theme-doc](https://github.com/vitejs/vite-plugin-react-pages/blob/main/packages/theme-doc/src/index.tsx)
 
 #### Release the power of Typescript
 
-The above example show another benefit for users: theme users can get Typescript type-check and intelliSense when they are configuring theme. This is because users are calling the theme config function, instead of "exporting some configs".
+The above example shows another benefit for users: theme users can get Typescript type-check and intelliSense when they are configuring a theme. This is because users are calling the theme config function, instead of "exporting some configs".
 
 ## Share your theme!
 

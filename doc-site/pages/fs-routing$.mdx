@@ -11,7 +11,7 @@ Vite-pages generates page routes based on your project file structure (filesyste
 
 The basic filesystem routing convention is very intuitive. It works out of the box and doesn't need any config. It should satisfy most users' needs.
 
-**You can create a page by simply creating a file**: `page-name$.tsx`. Notice the `$` **at the end of the filename**. Vite-pages recognizes it and know it is a page entry.
+**You can create a page by simply creating a file**: `page-name$.tsx`. Notice the `$` **at the end of the filename**. Vite-pages recognizes it and knows it is a page entry.
 
 If the filename is `index$.tsx`, the page route path will be the path of the directory. See examples below.
 
@@ -30,12 +30,12 @@ If the filename is `index$.tsx`, the page route path will be the path of the dir
 | `dir-name/[id]/index$.tsx` (URL Paramater)  | `/dir-name/:id`        |
 | `dir-name/[id]/[id2]$.tsx` (URL Paramaters) | `/dir-name/:id/:id2`   |
 
-Theme can decide what to render when no page matches the url. Checkout [the theme doc](/theme-customization).
+Theme can decide what to render when no page matches the URL. Check out [the theme doc](/theme-customization).
 
-If a page path contains url paramaters, you can use [useParams](https://reactrouter.com/web/example/url-params) of `react-router-dom` to access the actual paramaters.
+If a page path contains URL parameters, you can use [useParams](https://reactrouter.com/web/example/url-params) of `react-router-dom` to access the actual parameters.
 
-Checkout [the basic fixture](https://github.com/vitejs/vite-plugin-react-pages/tree/main/packages/playground/basic/pages) for an example.
+Check out [the basic fixture](https://github.com/vitejs/vite-plugin-react-pages/tree/main/packages/playground/basic/pages) for an example.
 
 ## Advanced Filesystem Routing
 
-The "Basic Filesystem Routing Convention" should satisfy most users' needs. For advanced users, vite-pages let you implement your own filesystem routing convention: you can **teach vite-pages how to collect page data from your project**. Checkout [advanced fs routing](/advanced-fs-routing).
+The "Basic Filesystem Routing Convention" should satisfy most users' needs. For advanced users, vite-pages lets you implement your own filesystem routing convention: you can **teach vite-pages how to collect page data from your project**. Checkout [advanced fs routing](/advanced-fs-routing).

@@ -6,7 +6,7 @@ subGroup: upgrade-guides
 
 # Upgrade from v3 to v4
 
-vite-pages v4 is released with following improvements:
+vite-pages v4 is released with the following improvements:
 
 - Support [Vite v4](https://vitejs.dev/guide/migration.html).
 - Upgrade React to [18.x](https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html).
@@ -14,22 +14,22 @@ vite-pages v4 is released with following improvements:
 - Upgrade mdx to [2.x](https://mdxjs.com/migrating/v2/).
 - Upgrade antd to [5.x](https://ant.design/docs/react/migration-v5) (for vite-pages-theme-doc).
 - Support [Node.js ECMAScript modules](https://nodejs.org/api/esm.html).
-- Support markdown outline (table of content).
+- Support markdown outline (table of contents).
 - Support search.
 
 ![outline-and-search](./_assets/outline-and-search.jpg)
 
-The following article will show you the migrate instructions. If you encounter problems, open an issue in the repo. Or checkout the [getting-stated templates](https://vitejs.github.io/vite-plugin-react-pages/#getting-stated) for reference.
+The following article will show you the migration instructions. If you encounter problems, open an issue in the repo. Or check out the [getting-stated templates](https://vitejs.github.io/vite-plugin-react-pages/#getting-stated) for reference.
 
 ## Upstream libraries migration
 
-Most upgrade work for upstream libraries is already done inside `vite-plugin-react-pages` and `vite-pages-theme-doc`. But some migration need to be done in userland, if you are using some old APIs that are dropped by these upstream libraries. For example, you can no longer use `<Switch>` of `react-router`. Checkout the links above for the migration guides of upstream libraries.
+Most upgrade work for upstream libraries is already done inside `vite-plugin-react-pages` and `vite-pages-theme-doc`. But some of the migration needs to be done in userland, if you are using some old APIs that are dropped by these upstream libraries. For example, you can no longer use `<Switch>` of `react-router`. Check out the links above for the migration guides of upstream libraries.
 
-We expect upstream libraries migration to be very easy for framwork users, unless you used many `react-router` v5-only APIs.
+We expect upstream libraries migration to be very easy for framework users unless you used many `react-router` v5-only APIs.
 
 ## Remove vite-plugin-mdx
 
-Since `vite-plugin-mdx` doesn't support mdx v2, vite-pages now includes a builtin mdx plugin. So you should remove the `vite-plugin-mdx` in vite-pages v5.
+Since `vite-plugin-mdx` doesn't support mdx v2, vite-pages now includes a built-in MDX plugin. So you should remove the `vite-plugin-mdx` in vite-pages v5.
 
 Update `vite.config.ts`:
 
@@ -48,12 +48,12 @@ export default defineConfig({
 })
 ```
 
-Notice that `pages()` now return an array of vite plugins(instead of return a plugin). But vite can understand that and apply every plugin in that array. So the invoke pattern of `vite-plugin-react-pages` looks exactly the same as before! You don't need to apply the new builtin mdx plugin manually.
+Notice that `pages()` now returns an array of Vite plugins(instead of returning a plugin). But Vite can understand that and apply every plugin in that array. So the invoke pattern of `vite-plugin-react-pages` looks exactly the same as before! You don't need to apply the new built-in MDX plugin manually.
 
 Update `package.json`:
 
 - Remove `vite-plugin-mdx` and `@mdx-js/mdx`.
-- You should upgrade `@mdx-js/react` to `^2.1.5`. It is a peerDependencies of mdx, so it should be installed by your vite project.
+- You should upgrade `@mdx-js/react` to `^2.1.5`. It is a peerDependencies of mdx, so it should be installed by your Vite project.
 
 ```diff
 {
@@ -68,19 +68,19 @@ Update `package.json`:
 
 ## MDX Comment Syntax Change
 
-mdx v2 drops support for HTML comment syntax `<!-- html comment -->` (actually it drops all HTML syntax), and [the document](https://mdxjs.com/docs/what-is-mdx/#markdown) recommends using jsx comment syntax instead:
+MDX v2 drops support for HTML comment syntax `<!-- html comment -->` (actually it drops all HTML syntax), and [the document](https://mdxjs.com/docs/what-is-mdx/#markdown) recommends using JSX comment syntax instead:
 > HTML syntax doesn’t work in MDX as it’s replaced by JSX. Instead of HTML comments, you can use JavaScript comments in braces: `{/* comment! */}`.
 
-The author explain the reason behind this at [this rfc](https://github.com/mdx-js/mdx/issues/1042#issuecomment-622281752). The author hopes that the mdx syntax is only composed of markdown syntax + JSX syntax. The introduction of HTML syntax is not necessary and it would increase the mental burden.
+The author explains the reason behind this at [this rfc](https://github.com/mdx-js/mdx/issues/1042#issuecomment-622281752). The author hopes that the MDX syntax is only composed of markdown syntax + JSX syntax. The introduction of HTML syntax is not necessary and it would increase the mental burden.
 
-> Although many markdown parsers support HTML syntax, it is technically not the syntax of markdown itself. Those markdown parsers support it because markdown was not expressive enough in the past (without mdx). mdx has already solved the lack of expressiveness (via JSX syntax), so there is no need to support HTML syntax.
+> Although many markdown parsers support HTML syntax, it is technically not the syntax of markdown itself. Those markdown parsers support it because markdown was not expressive enough in the past (without MDX). MDX has already solved the lack of expressiveness (via JSX syntax), so there is no need to support HTML syntax.
 
-The removing of html comment syntax does bring some migration costs. You can quickly migrate it by regular search and replacement: `<!--(.*?)-->` replace to `{/*$0*/}`.
+The removal of HTML comment syntax does bring some migration costs. You can quickly migrate it by regular search and replacement: `<!--(.*?)-->` replace to `{/*$0*/}`.
 
 ## Use Node.js ECMAScript modules
 
-The Node.js community is quickly migrating from CommonJS to ECMAScript modules (esm). And we encourage you to run vite on the esm mode of Node.js.
+The Node.js community is quickly migrating from CommonJS to ECMAScript modules (esm). And we encourage you to run Vite on the esm mode of Node.js.
 
-How to enable esm for Node.js? Just add a `"type": "module"` field to the `package.json` of your vite project!
+How to enable ESM for Node.js? Just add a `"type": "module"` field to the `package.json` of your Vite project!
 
-> It is encouraged to have a dedicated `package.json` for your vite project. Your vite project should not share a `package.json` with the npm package that you are publishing (or the worspace package in the project root directory, if you are using monorepo).
+> It is encouraged to have a dedicated `package.json` for your Vite project. Your Vite project should not share a `package.json` with the npm package that you are publishing (or the workspace package in the project root directory, if you are using monorepo).
