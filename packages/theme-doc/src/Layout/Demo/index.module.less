@@ -55,10 +55,12 @@
 }
 
 .code {
-  border-top: 1px dashed @colorSplit;
-  overflow: auto;
+  position: relative;
+  transition: height 0.3s ease-in-out;
+  overflow: hidden;
 }
 
 .code .codeInner {
-  padding: 0px 8px;
+  border-top: 1px dashed @colorSplit;
+  padding: 1em 8px;
 }
