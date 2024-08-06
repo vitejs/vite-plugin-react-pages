@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { Code } from './icons'
 import CodeBlock from '../MDX/CodeBlock'
@@ -34,6 +34,15 @@ If you use it in markdown, you should use it exactly like "<Demo src="./demos/de
   }
   const { code, title, desc } = demoMeta
   const [showCode, setShowCode] = useState(false)
+
+  const codeInnerRef = useRef<HTMLDivElement>(null)
+  const [CodeBlockHeight, setCodeBlockHeight] = useState(0)
+  useEffect(() => {
+    if (codeInnerRef.current) {
+      setCodeBlockHeight(codeInnerRef.current.offsetHeight)
+    }
+  }, [code])
+
   return (
     <div
       className={[s.demoBox, className].filter(Boolean).join(' ')}
@@ -59,18 +68,21 @@ If you use it in markdown, you should use it exactly like "<Demo src="./demos/de
         </div>
       </div>
 
-      {showCode && (
-        <div className={s.code}>
-          <div className={s.codeInner}>
-            <CodeBlock
-              className="language-tsx"
-              style={{ background: 'transparent', overflow: 'visible' }}
-            >
-              {code}
-            </CodeBlock>
-          </div>
+      <div
+        className={s.code}
+        style={{
+          height: showCode ? CodeBlockHeight : 0,
+        }}
+      >
+        <div className={s.codeInner} ref={codeInnerRef}>
+          <CodeBlock
+            className="language-tsx"
+            style={{ background: 'transparent', overflow: 'visible' }}
+          >
+            {code}
+          </CodeBlock>
         </div>
-      )}
+      </div>
     </div>
   )
 }
