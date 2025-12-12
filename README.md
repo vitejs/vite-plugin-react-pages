@@ -1,4 +1,9 @@
-# 📘 vite-plugin-react-pages
+# [ARCHIVED] 📘 vite-plugin-react-pages
+
+This plugin is no longer maintained.
+
+<details>
+<summary>Old content</summary>
 
 <p>
   <a href="https://www.npmjs.com/package/vite-plugin-react-pages" target="_blank" rel="noopener"><img src="https://img.shields.io/npm/v/vite-plugin-react-pages.svg" alt="npm package" /></a>
@@ -49,3 +54,5 @@ You can play with these demo projects in your browser, without installing anythi
 ### Read the documentation
 
 Read [the documentation of vite-plugin-react-pages](https://vitejs.github.io/vite-plugin-react-pages/).
+
+</details>
